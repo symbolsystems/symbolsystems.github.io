@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not modify the alignment of objects by calling realloc() [CERT_C-MEM36-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not modify the alignment of objects by calling realloc() [CERT_C-MEM36-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Do not invoke realloc() to modify the size of allocated objects that have stricter 
+alignment requirements than those guaranteed by malloc(). Storage allocated 
+by a call to the standard aligned_alloc() function, for example, can have stricter 
+than normal alignment requirements. The C standard requires only that a pointer 
+returned by realloc() be suitably aligned so that it may be assigned to a pointer 
+to any type of object with a fundamental alignment requirement."
+[SEI CERT C Coding Standard,  MEM36-C. Do not modify the alignment of objects
+by calling realloc()]
+
+This rule detects when a pointer that has a strict alignment requirement 
+is modified by the realloc() function.
+
+A list of the allocated functions:
+	void *aligned_alloc( size_t alignment, size_t size );
+	int posix_memalign(void **memptr, size_t alignment, size_t size);
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid improper alignment.
+
+"Improper alignment can lead to arbitrary memory locations being accessed 
+and written to."
+[SEI CERT C Coding Standard, MEM36-C. Do not modify the alignment of objects
+by calling realloc()]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void func(void) {
+    size_t resize = 1024;
+    size_t alignment = 1 &lt;&lt; 12;
+    int *ptr;
+    int *ptr1;
+
+    if (NULL == (ptr = (int *)aligned_alloc(alignment, sizeof(int)))) {
+        /* Handle error */
+    }
+
+    if (NULL == (ptr1 = (int *)realloc(ptr, resize))) {	// VIOLATION
+        /* Handle error */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Do not invoke the realloc() function.
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void func(void) {
+    size_t resize = 1024;
+    size_t alignment = 1 &lt;&lt; 12;
+    int *ptr;
+    int *ptr1;
+
+    if (NULL == (ptr = (int *)aligned_alloc(alignment, sizeof(int)))) {
+      /* Handle error */
+    }
+
+    if (NULL == (ptr1 = (int *)aligned_alloc(alignment, resize))) {
+        /* Handle error */
+    }
+
+    if (NULL == (memcpy(ptr1, ptr, sizeof(int))) {
+        /* Handle error */
+    }
+
+    free(ptr);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+MEM36-C. Do not modify the alignment of objects by calling realloc()
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152255">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152255</A>
+
+</PRE>
+</BODY>
+</HTML>

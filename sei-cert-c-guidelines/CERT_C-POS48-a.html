@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not destroy another thread's mutex [CERT_C-POS48-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not destroy another thread's mutex [CERT_C-POS48-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a lock is destroyed without ensuring that all the threads that may be using
+this lock have finished. 
+The rule must be parameterized with a list of user-defined functions that are called to ensure
+that the threads have finished. If the list is not provided, the rule will report a violation
+each time a lock-destroying function is used in code. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Some functions may be defined as simple wrappers for lock-destroying functions and may not ensure that
+all the threads that use a lock have finished. Violations will be reported in such wrappers, unless their own
+multithreading API is defined in test configurations where the wrappers are defined as lock-destroying functions.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Destroying a mutex while it is locked may result in invalid control flow and data corruption".
+SEI CERT C Coding Standard,
+CON31-C. Do not destroy a mutex while it is locked
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Functions that ensure that all the threads have finished" parameter allows you to specify a list
+of functions that can be used to check if all the threads that use a lock have finished. When one of these
+functions is called before destroying a lock, a violation will not be reported.
+
+The following columns allow you to define different aspects of functions in the tables: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions
+  for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide
+  the fully qualified name of the type or namespace where the function is declared.
+  Use '*' if you want to describe a function declared in any type or namespace, or
+  a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' column should contain the name of the described function.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current row will apply
+  to functions with the given name defined in subclasses of the given class. Note that this
+  applies to both instance and non-instance functions.
+  
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent data corruption and violation of data integrity, as well as maintain
+proper control flow. 
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t theLock;
+int data;
+ 
+int cleanupAndFinish(void) {
+    int result;
+   
+    if ((result = pthread_mutex_destroy(&amp;theLock)) != 0) { // VIOLATION
+        /* Handle error */
+    }
+    data++;
+    return data;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The example can be repaired by adding a function that ensures that all the threads are finished
+before the lock is destroyed.
+
+#include &lt;pthread.h&gt;
+
+void wait_for_all_threads_to_finish();
+
+pthread_mutex_t theLock;
+int data;
+ 
+int cleanupAndFinish(void) {
+    int result;
+   
+    wait_for_all_threads_to_finish();
+    if ((result = pthread_mutex_destroy(&amp;theLock)) != 0) { // NO VIOLATION
+        /* Handle error */
+    }
+    data++;
+    return data;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+CON31-C. Do not destroy a mutex while it is locked,
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON31-C.+Do+not+destroy+a+mutex+while+it+is+locked">https://wiki.sei.cmu.edu/confluence/display/c/CON31-C.+Do+not+destroy+a+mutex+while+it+is+locked</A>
+
+SEI CERT C Coding Standard
+POS48-C. Do not unlock or destroy another POSIX thread's mutex,
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS48-C.+Do+not+unlock+or+destroy+another+POSIX+thread's+mutex">https://wiki.sei.cmu.edu/confluence/display/c/POS48-C.+Do+not+unlock+or+destroy+another+POSIX+thread's+mutex</A>
+
+SEI CERT C++ Coding Standard
+CON50-CPP. Do not destroy a mutex while it is locked
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON50-CPP.+Do+not+destroy+a+mutex+while+it+is+locked">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON50-CPP.+Do+not+destroy+a+mutex+while+it+is+locked</A>
+
+</PRE>
+</BODY>
+</HTML>

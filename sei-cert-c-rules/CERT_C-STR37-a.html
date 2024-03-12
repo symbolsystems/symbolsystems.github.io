@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass incorrect values to ctype.h library functions [CERT_C-STR37-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass incorrect values to ctype.h library functions [CERT_C-STR37-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when an unexpected value is passed to a &lt;ctype.h&gt; library
+function as a parameter. 
+The expected value of the int argument of a relevant &lt;ctype.h&gt; function is either 
+in the range of the unsigned char type or is a negative value equivalent to EOF. 
+
+This rule checks values that are passed to the following functions:
+
+Condition: c&gt;=-1 &amp;&amp; c&lt;=255
+    isalnum ( c );
+    isalpha ( c );
+    isblank ( c ); 
+    iscntrl ( c );
+    isdigit ( c );
+    isgraph ( c );
+    islower ( c );
+    isprint ( c );
+    ispunct ( c );
+    isspace ( c );
+    isupper ( c );
+    isxdigit ( c );
+    tolower ( c ); 
+    toupper ( c );
+ 
+See also BD-API-BADPARAM, BD-API-NEGPARAM, BD-API-VALPARAM.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The use of any other values than in the range of the unsigned char type or
+a negative value equivalent to EOF results in undefined behavior.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Use heuristics to detect calls to functions from the ctype.h header" parameter
+is enabled, the rule will use heuristics to determine whether the code contains any calls
+to functions from the &lt;ctype.h&gt; header.
+
+The "Sensitive mode" parameter allows you to enable reporting violations
+when the value passed to a &lt;ctype.h&gt; library function may possibly be incorrect.
+With this option enabled, the rule triggers when it detects incorrect values,
+as well as values that may (but may not) be incorrect. This results in more violations
+being reported.
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent API violations caused by passing an unexpected
+parameter to a function. Such violations could cause runtime errors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;ctype.h&gt;
+
+void foo ()
+{
+    int a = 256;
+    if(isalpha (a)) {    // VIOLATION
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;ctype.h&gt;
+
+void foo ()
+{
+    int a = 256;
+    if(a &gt;= -1 &amp;&amp; a &lt;= 255) {
+        if(isalpha (a)) {    // NO VIOLATION
+              //...
+          }
+    } 
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 2: New rules, Rule 21.13
+
+SEI CERT C Coding Standard
+STR37-C. Arguments to character-handling functions must be representable as an unsigned char
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR37-C.+Arguments+to+character-handling+functions+must+be+representable+as+an+unsigned+char">https://wiki.sei.cmu.edu/confluence/display/c/STR37-C.+Arguments+to+character-handling+functions+must+be+representable+as+an+unsigned+char</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A21-8-1 Arguments to character-handling functions shall be representable as an unsigned char
+
+</PRE>
+</BODY>
+</HTML>

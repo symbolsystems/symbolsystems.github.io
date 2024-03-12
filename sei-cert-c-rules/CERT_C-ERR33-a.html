@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value returned by a standard library function that may return an error should be used [CERT_C-ERR33-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value returned by a standard library function that may return an error should be used [CERT_C-ERR33-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The majority of the standard library functions, including I/O functions and
+memory allocation functions, return either a valid value or a value of the
+correct return type that indicates an error (e.g. -1 or a null pointer).
+Assuming that all calls to such functions will succeed and failing to check
+the return value for an indication of an error is a dangerous practice that
+may lead to unexpected or undefined behavior when an error occurs. It is
+essential that programs detect and appropriately handle all errors in
+accordance with an error-handling policy." [SEI CERT C Coding Standard]
+
+This rule detects when the value returned from the following standard library
+functions is not used:
+aligned_alloc, asctime_s, at_quick_exit, atexit, bsearch, bsearch_s, btowc,
+c16rtomb, c32rtomb, calloc, clock, cnd_broadcast, cnd_init, cnd_signal,
+cnd_timedwait, cnd_wait, ctime_s, fclose, fflush, fgetc, fgetpos, fgets,
+fgetwc, fopen, fopen_s, fprintf, fprintf_s, fputc, fputs, fputwc, fputws,
+fread, freopen, freopen_s, fscanf, fscanf_s, fseek, fsetpos, ftell, fwprintf,
+fwprintf_s, fwrite, fwscanf, fwscanf_s, getc, getchar, getenv, getenv_s,
+gets_s, getwc, getwchar, gmtime, gmtime_s, localtime, localtime_s, malloc,
+mblen, mbrlen, mbrtoc16, mbrtoc32, mbrtowc, mbsrtowcs, mbsrtowcs_s, mbstowcs,
+mbstowcs_s, mbtowc, memchr, mktime, mtx_init, mtx_lock, mtx_timedlock, rename,
+mtx_trylock, mtx_unlock, printf_s, putc, putwc, raise, realloc, remove,
+setlocale, setvbuf, scanf, scanf_s, signal, snprintf, snprintf_s, sprintf,
+sprintf_s, sscanf, sscanf_s, strchr, strerror_s, strftime, strpbrk, strrchr,
+strstr, strtod, strtof, strtoimax, strtok, strtok_s, strtol, strtold, strtoll,
+strtoumax, strtoul, strtoull, strxfrm, swprintf, swprintf_s, swscanf, time,
+swscanf_s, thrd_create, thrd_detach, thrd_join, thrd_sleep, timespec_get,
+tmpfile, tmpfile_s, tmpnam, tmpnam_s, tss_create, tss_get, tss_set, ungetc,
+ungetwc, vfprintf, vfprintf_s, vfscanf, vfscanf_s, vfwprintf, vfwprintf_s,
+vfwscanf, vfwscanf_s, vprintf_s, vscanf, vscanf_s, vsnprintf, vsnprintf_s,
+vsprintf, vsprintf_s, vsscanf, vsscanf_s, vswprintf, vswprintf_s, vswscanf,
+vswscanf_s, vwprintf_s, vwscanf, vwscanf_s, wcrtomb, wcschr, wcsftime, wcstok,
+wcsrchr, wcsrtombs, wcsrtombs_s, wcsstr, wcstod, wcstof, wcstoimax, wcspbrk,
+wcstok_s, wcstol, wcstold, wcstoll, wcstombs, wcstombs_s, wcstoumax, wcstoul,
+wcstoull, wcsxfrm, wctob, wctomb, wctomb_s, wctrans, wctype, wmemchr,
+wprintf_s, wscanf, wscanf_s.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that the function return value is used when it is assigned
+to a variable, returned from a function, checked in a selection or iteration
+statement, used to call a function, etc.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected or undefined behavior when an error
+occurs during the call to the standard library function.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of unused function return value: */
+#include &lt;stdio.h&gt;
+#define HEAD_NUM 10
+void bar (FILE* fin, char *buff)
+{
+    fseek(fin, 0, SEEK_SET);                                  // Violation
+    fread(buff, sizeof(char), HEAD_NUM, fin);                 // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of used function value: */
+#include &lt;stdio.h&gt;
+#define HEAD_NUM 10
+int bar (FILE* fin, char *buff)
+{
+    if(0 != fseek(fin, 0, SEEK_SET))                          // OK
+    {
+        return 1;
+    }
+    if(HEAD_NUM != fread(buff, sizeof(char), HEAD_NUM, fin))  // OK
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   ERR33-C. Detect and handle standard library errors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR33-C.+Detect+and+handle+standard+library+errors">https://wiki.sei.cmu.edu/confluence/display/c/ERR33-C.+Detect+and+handle+standard+library+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

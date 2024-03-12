@@ -1,0 +1,219 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against file name injection [APSC_DV-002520-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against file name injection [APSC_DV-002520-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when possibly tainted data is used as a filename or a path in file
+manipulating functions, which could lead to file name injection. The rule supports file manipulation
+functions from the standard C and C++ libraries as well as those defined by POSIX.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Unverified data in file names may enable a potential attacker to gain access
+to any file on the system with specially-prepared malicious data.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+
+The "Validating functions" parameter allows you to specify functions that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating functions is called. 
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the validating function. If disabled, the rule
+    does not consider the function to be a validating function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to function with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance functions.
+- "'this' object is validated" - if enabled,  the function cleans the object it
+    is called on.
+- 'Returns validated data' - if enabled, the function cleans its return value.
+- 'Validated parameters' - specifies which function parameters are cleaned by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+See the SECURITY RELEVANCE section.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Consider an application that stores some user-specific data in files on a server, e.g. a library with user stories
+that uses the story name provided by the user as the file name.
+
+The following code may be used to create a specific file and add the
+story contents:
+
+#include &lt;stdio.h&gt;
+
+void saveStory(FILE* f)
+{
+    char storyName[50];
+    char storyContent[200];
+    fread(storyName, sizeof(char), 50, f); /* Read story name from a file */
+    fread(storyContent, sizeof(char), 200, f); /* Read story from a file */
+    FILE* out = fopen(storyName, "w"); /* File name injection */
+    fprintf(out, "%s", storyContent);
+    fclose(out);
+}
+
+Assume that an attacker provides "c:\\windows\\system.ini" as a story name
+and some specially prepared configuration file contents as the story contents.
+After saving this "story", the system-critical .ini file can be modified
+and some dangerous contents can be saved there.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Validate data prior to its usage:
+
+#include &lt;stdio.h&gt;
+
+char* validate(char*); /* properly implement validation function */
+
+void saveStory(FILE* f)
+{
+    char storyName[50];
+    char storyContent[200];
+    fread(storyName, sizeof(char), 50, f); /* Read story name from a file */
+    fread(storyContent, sizeof(char), 200, f); /* Read story from a file */
+    FILE* out = fopen(validate(storyName), "w"); /* OK, protected from command injection provided that validate() is implemented properly */
+    fprintf(out, "%s", validate(storyContent));
+    fclose(out);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+OWASP Top 10-2021
+A01:2021 - Broken Access Control
+<A HREF="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">https://owasp.org/Top10/A01_2021-Broken_Access_Control/</A>
+   
+OWASP Top 10 2017
+A5-Broken Access Control
+<A HREF="https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html">https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="http://cwe.mitre.org/data/definitions/20.html">http://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')
+<A HREF="http://cwe.mitre.org/data/definitions/22.html">http://cwe.mitre.org/data/definitions/22.html</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-668: Exposure of Resource to Wrong Sphere
+<A HREF="https://cwe.mitre.org/data/definitions/668.html">https://cwe.mitre.org/data/definitions/668.html</A>
+
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 1: New directives, Dir 4.14
+
+SEI CERT C Coding Standard
+FIO32-C. Do not perform operations on devices that are only appropriate for files
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO32-C.+Do+not+perform+operations+on+devices+that+are+only+appropriate+for+files">https://wiki.sei.cmu.edu/confluence/display/c/FIO32-C.+Do+not+perform+operations+on+devices+that+are+only+appropriate+for+files</A>
+
+SEI CERT C Coding Standard
+STR02-C. Sanitize data passed to complex subsystems
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR02-C.+Sanitize+data+passed+to+complex+subsystems">https://wiki.sei.cmu.edu/confluence/display/c/STR02-C.+Sanitize+data+passed+to+complex+subsystems</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002520: The application must protect from canonical representation vulnerabilities.
+APSC-DV-002530: The application must validate all input.
+APSC-DV-002550: The application must not be vulnerable to XML-oriented attacks.
+APSC-DV-002560: The application must not be subject to input handling vulnerabilities.
+
+</PRE>
+</BODY>
+</HTML>

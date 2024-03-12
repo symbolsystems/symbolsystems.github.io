@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not hard code string literals [CWE-798-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not hard code string literals [CWE-798-a-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Hard coding sensitive information, such as passwords or encryption keys can
+expose the information to attackers. Anyone who has access to the executable
+or dynamic library files can examine them for strings or other critical data,
+revealing the sensitive information.
+Hard coding sensitive information also increases the need to manage
+and accommodate changes to the code." [CERT-MSC41-C]
+
+This rule detects string literals that are embedded directly in code.
+The rule does not check if detected strings contain sensitive information.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not report when:
+- string literals are directly passed as arguments to functions whose
+names end with 'printf',
+- string literals are passed to the standard output streams 'std::cout',
+- wide string literals are used.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Attackers can easily extract information from hard-coded strings.
+This rule improves code security by helping you avoid hard-coding
+string literals.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f() {
+    const char login[] = "admin";    /* Violation */
+    const char passwd[] = "admin1";  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+void f() {
+    char login[10];                          /* OK */
+    char passwd[10];                         /* OK */
+    printf("Please enter your login:\n");    /* OK - Exception */
+    fgets(login, sizeof(login), stdin);
+    printf("Please enter your password:\n"); /* OK - Exception */
+    fgets(passwd, sizeof(passwd), stdin);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MSC41-C. Never hard code sensitive information
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC41-C.+Never+hard+code+sensitive+information">https://wiki.sei.cmu.edu/confluence/display/c/MSC41-C.+Never+hard+code+sensitive+information</A>
+
+2. 2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-798: Use of Hard-coded Credentials
+   <A HREF="https://cwe.mitre.org/data/definitions/798.html">https://cwe.mitre.org/data/definitions/798.html</A>
+
+3. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-003110: The application must not contain embedded authentication data
+
+</PRE>
+</BODY>
+</HTML>

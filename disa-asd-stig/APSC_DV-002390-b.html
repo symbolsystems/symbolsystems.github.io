@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not process structured text data natively [APSC_DV-002390-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not process structured text data natively [APSC_DV-002390-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Creating and modifying XML and HTML documents using raw text is error-prone.
+Instead, it is recommended to use existing libraries, as it allows you to
+perform security checks.
+
+This rule detects when a string constant that may contain an XML or HTML
+tag is:
+- used as an argument of the concatenation operator (+,+=) defined in
+  a string library
+- passed as an argument to the call of one of the following functions from
+  a string library:
+  find(), rfind(), find_first_of(), find_last_of(), find_first_not_of(),
+  find_last_not_of(), compare(), replace(), append(), copy(), insert()
+  memcmp(), memcpy(), memmove(), strcat(), strncat(), strchr(), strcmp(),
+  strncmp(), strcoll(), strcpy(), strncpy(), strpbrk(), strstr(), strtok(),
+  strxfrm()
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a string constant is an XML or HTML tag if it contains
+a left angle bracket that is directly followed by a letter, slash (/), or
+negation operator(!), and does not contain a combination of special signs
+that are not supported by the XML/HTML standards.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code quality and prevent attacks that involve
+text formats.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule does not check whether XML/HTML data structures are correct, so it
+might report false positives when a string contains a pattern the rule is aimed
+to detect that is not an element of the XML/HTML language.
+
+#include &lt;string&gt;
+
+void foo(std::string&amp; cstr) {
+    // Violation is reported even if a string is not a XML/HTML tag
+    int pos = cstr.find("compare a&lt;b");  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string&gt;
+
+void foo(std::string&amp; cstr) {
+    int pos = cstr.find("&lt;node key=\"value\"&gt; ");  // Violation
+    cstr.append("&lt;/node&gt;");                        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use an existing library to process XML or HTML.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002390: XML-based applications must mitigate DoS attacks by using XML filters, parser options, or gateways
+
+</PRE>
+</BODY>
+</HTML>

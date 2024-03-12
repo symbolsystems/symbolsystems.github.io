@@ -1,0 +1,204 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always check the returned value of non-void function [CERT_C-ERR33-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always check the returned value of non-void function [CERT_C-ERR33-d-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when returned values of functions are not checked.
+The list of library functions that should have their returned values checked includes:
+- void* bsearch(const void* key, const void* base, size_t num, size_t size,
+                 int (*compar)(const void*, const void*))
+- void* calloc(size_t num, size_t size)
+- int fgetc(FILE* stream)
+- char* fgets(char* str, int num, FILE* stream)
+- FILE* fopen(const char* filename, const char* mode)
+- size_t fread(void* ptr, size_t size, size_t count, FILE* stream)
+- void* malloc(size_t size)
+- void* aligned_alloc(size_t alignment, size_t size)
+- (const)void* memchr ((const)void* ptr, int value, size_t num)
+- void* realloc (void* ptr, size_t size)
+- (const)char* strchr((const)char * str, int character)
+- (const)char* strpbrk((const)char* str1, const char* str2)
+- (const)char* strrchr((const)char* str, int character)
+- (const)char* strstr((const)char* str1, const char* str2)
+- char* strtok(char* str, const char* delimiters)
+- (const)wchar_t* wcschr((const)wchar_t* ws, wchar_t wc)
+- (const)wchar_t* wcspbrk((const)wchar_t* wcs1, const wchar_t* wcs2)
+- (const)wchar_t* wcsrchr((const)wchar_t* ws, wchar_t wc)
+- (const)wchar_t* wcsstr((const)wchar_t* wcs1, const wchar_t* wcs2)
+- wchar_t* wcstok(wchar_t* wcs, const wchar_t* delimiters(, wchar_t **ptr))
+- (const)wchar_t* wmemchr((const)wchar_t* ptr, wchar_t wc, size_t num)
+
+Returned values can be checked in one of the following ways:
+- the returned value is used in a conditional statement (if, switch, while etc.)
+- the returned value is used in a binary expression with &gt;, &lt;, &gt;=, &lt;=, !=, == operators
+- the returned value is passed to a validating method as a parameter.
+
+Using the returned value means:
+- passing it as a parameter to a method other than a validating method
+- dereferencing a pointer, accessing its fields, invoking its methods etc.
+
+The returned value is considered unchecked if:
+- it is used before it has been checked
+- it has not been checked at all
+- it is not used.
+
+This rule works only on a scope of one method. For this reason, the returned values that are
+passed further to another method are counted neither as checked nor as unchecked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+If returned values are unchecked, then an attacker may force the function to fail or return a value
+that is not expected. This may lead to a software state that the programmer assumed would not be possible.
+For example, if a program calls a function to drop privileges, but does not check the return code to ensure
+that privileges were successfully dropped, then the program may continue to operate with the higher privileges.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Analyze library functions" parameter allows you to specify if the default library functions
+(listed above) should always have their values checked. This option is enabled by default.
+
+The "Validating functions" parameter allows you to specify a list of functions that can be used to check returned values.
+The returned value will be considered to be checked if it is passed to one of the listed functions as a parameter.
+
+The "Additional functions which return value should be checked" parameter allows you to specify additional functions
+whose returned values should always be checked.
+
+The "Library functions which return value does not need to be checked" parameter allows you to specify the builtin 
+functions whose returned values should not be checked.
+
+The following columns allow you to define different aspects of functions in the tables: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions
+  for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide
+  the fully qualified name of the type or namespace where the function is declared.
+  Use '*' if you want to describe function declared in any type or namespace, or
+  a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' column should contain the name of the described function.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current row will apply
+  to functions with the given name defined in subclasses of the given class. Note that this
+  applies to both instance and non-instance functions.
+  
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives being reported. In this mode, Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Checking the value returned form a function can prevent unexpected states and conditions that may
+lead to crashes or other unintended behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void uncheckedFread(FILE* file, int size, char* buffer)
+{
+    int result = fread(buffer, 1, size, file); // VIOLATION
+    fclose(file);
+}
+
+If the "fread" returned value differs from its third parameter, a reading error can occur.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void uncheckedFreadOk(FILE* file, int size, char* buffer)
+{
+    int result = fread(buffer, 1, size, file);
+    if (result != size) {
+        fputs("Reading error", stderr);
+        return;
+    }
+    fclose(file);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-252: Unchecked Return Value
+<A HREF="http://cwe.mitre.org/data/definitions/252.html">http://cwe.mitre.org/data/definitions/252.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.7
+
+SEI CERT C Coding Standard
+ERR33-C. Detect and handle standard library errors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR33-C.+Detect+and+handle+standard+library+errors">https://wiki.sei.cmu.edu/confluence/display/c/ERR33-C.+Detect+and+handle+standard+library+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

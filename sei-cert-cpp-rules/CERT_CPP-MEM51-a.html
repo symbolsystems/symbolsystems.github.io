@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the same form in corresponding calls to new/malloc and delete/free [CERT_CPP-MEM51-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the same form in corresponding calls to new/malloc and delete/free [CERT_CPP-MEM51-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Use the same form in corresponding calls to new/malloc and delete/free.
+This rule checks calls to new, delete, malloc, and free to make sure that they 
+use the same form; it reports a violation if you call new and free( ).
+If you do not use the same form in corresponding calls to to new, delete, 
+malloc, and free, an incorrect number of destructors may be called.
+See also: MRM-08, MRM-09, MRM-10, MRM-11, MRM-30
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule will trigger if the same variable is allocated memory in two different 
+incompatible ways in the same function.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using different kinds of 'new/malloc' and 'delete/free' calls.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void foo( ) {
+    char* ptr1 = (char*) malloc( 19 );
+    char* ptr2 = new char[ 10 ];
+    delete ptr1;                     // Violation
+    free( ptr2 );                    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void foo( ) {
+    char* ptr1 = (char*) malloc( 19 );
+    char* ptr2 = new char[ 10 ];
+    free( ptr1 );                    // OK
+    delete[] ptr2;                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-5. Memory management functions shall ensure the following: (a)
+   deterministic behavior resulting with the existence of worst-case execution
+   time, (b) avoiding memory fragmentation, (c) avoid running out of memory,
+   (d) avoiding mismatched allocations or deallocations, (e) no dependence on
+   non-deterministic calls to kernel
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. SEI CERT C++ Coding Standard
+   MEM51-CPP. Properly deallocate dynamically allocated resources
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM51-CPP.+Properly+deallocate+dynamically+allocated+resources">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM51-CPP.+Properly+deallocate+dynamically+allocated+resources</A>
+
+</PRE>
+</BODY>
+</HTML>

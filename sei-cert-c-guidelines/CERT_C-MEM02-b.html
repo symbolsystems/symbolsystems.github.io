@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The result of the memory allocation function should be cast immediately into a pointer to the allocated type [CERT_C-MEM02-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The result of the memory allocation function should be cast immediately into a pointer to the allocated type [CERT_C-MEM02-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Casting the result of 'malloc()' to the appropriate pointer type enables
+the compiler to catch subsequent inadvertent pointer conversions.
+When allocating individual objects, the 'appropriate pointer type' is a
+pointer to the type argument in the sizeof expression passed to 'malloc()'."
+[CERT-MEM02-C]
+
+This rule detects when the result of a call to a standard C memory
+allocation function (malloc, calloc, realloc, or align_alloc) is cast
+to a type other than a pointer to the type that is used as the operand of
+the 'sizeof' expression used in the function argument.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent incorrect memory allocation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void bar()
+{
+    int *p = (int*)malloc(sizeof(char));           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void bar ()
+{
+    int *p = (int*)malloc(sizeof(int));            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MEM02-C. Immediately cast the result of a memory allocation function call
+   into a pointer to the allocated type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM02-C.+Immediately+cast+the+result+of+a+memory+allocation+function+call+into+a+pointer+to+the+allocated+type">https://wiki.sei.cmu.edu/confluence/display/c/MEM02-C.+Immediately+cast+the+result+of+a+memory+allocation+function+call+into+a+pointer+to+the+allocated+type</A>
+
+</PRE>
+</BODY>
+</HTML>

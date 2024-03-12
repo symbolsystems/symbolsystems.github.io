@@ -1,0 +1,37 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+CERT-INT31_C (RULE) Ensure that integer conversions do not result in lost or misinterpreted data [CERT_C-INT31]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+CERT_C-INT31
+</STRONG>
+<PRE>
+CERT-INT31_C (RULE) Ensure that integer conversions do not result in lost or misinterpreted data
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="CERT_C-INT31-a.html">An expression of essentially Boolean type should always be used where an operand is interpreted as a Boolean value [CERT_C-INT31-a-2]</a></code><br>
+<code><a href="CERT_C-INT31-b.html">An operand of essentially Boolean type should not be used where an operand is interpreted as a numeric value [CERT_C-INT31-b-2]</a></code><br>
+<code><a href="CERT_C-INT31-c.html">An operand of essentially character type should not be used where an operand is interpreted as a numeric value [CERT_C-INT31-c-2]</a></code><br>
+<code><a href="CERT_C-INT31-d.html">An operand of essentially enum type should not be used in an arithmetic operation [CERT_C-INT31-d-2]</a></code><br>
+<code><a href="CERT_C-INT31-e.html">Shift and bitwise operations should not be performed on operands of essentially signed or enum type [CERT_C-INT31-e-2]</a></code><br>
+<code><a href="CERT_C-INT31-f.html">An operand of essentially signed or enum type should not be used as the right hand operand to the bitwise shifting operator [CERT_C-INT31-f-2]</a></code><br>
+<code><a href="CERT_C-INT31-g.html">An operand of essentially unsigned type should not be used as the operand to the unary minus operator [CERT_C-INT31-g-2]</a></code><br>
+<code><a href="CERT_C-INT31-h.html">The value of an expression shall not be assigned to an object with a narrower essential type [CERT_C-INT31-h-2]</a></code><br>
+<code><a href="CERT_C-INT31-i.html">The value of an expression shall not be assigned to an object of a different essential type category [CERT_C-INT31-i-2]</a></code><br>
+<code><a href="CERT_C-INT31-j.html">Both operands of an operator in which the usual arithmetic conversions are performed shall have the same essential type category [CERT_C-INT31-j-2]</a></code><br>
+<code><a href="CERT_C-INT31-k.html">The second and third operands of the ternary operator shall have the same essential type category [CERT_C-INT31-k-2]</a></code><br>
+<code><a href="CERT_C-INT31-l.html">The value of a composite expression shall not be assigned to an object with wider essential type [CERT_C-INT31-l-2]</a></code><br>
+<code><a href="CERT_C-INT31-m.html">If a composite expression is used as one operand of an operator in which the usual arithmetic conversions are performed then the other operand shall not have wider essential type [CERT_C-INT31-m-2]</a></code><br>
+<code><a href="CERT_C-INT31-n.html">If a composite expression is used as one (second or third) operand of a conditional operator then the other operand shall not have wider essential type [CERT_C-INT31-n-2]</a></code><br>
+<code><a href="CERT_C-INT31-o.html">Avoid data loss when converting between integer types [CERT_C-INT31-o-2]</a></code><br>
+<code><a href="CERT_C-INT31-p.html">Avoid value change when converting between integer types [CERT_C-INT31-p-2]</a></code><br>
+</BODY>
+</HTML>

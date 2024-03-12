@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Octal and hexadecimal escape sequences shall be terminated [CERT_C-DCL18-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Octal and hexadecimal escape sequences shall be terminated [CERT_C-DCL18-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An octal or hexadecimal escape sequence shall be terminated by either:
+  - The start of another escape sequence, or
+  - The end of the character constant or the end of a string literal.
+There is potential for confusion if an octal or hexadecimal escape sequence
+is followed by other characters. For example, the character constant '\x1f'
+consists of a single character whereas the character constant '\x1g' consists
+of the two characters '\x1' and 'g'. The manner in which multi-character
+constants are represented as integers is implementation-defined.
+The potential for confusion is reduced if every octal or hexadecimal escape
+sequence in a character constant or string literal is terminated."
+
+See also: MISRA2004-4_1
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents implementation-defined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrectly terminated escape sequences: */
+int c1 = '\141t';            /* Violation */
+const char *s1 = "\x41g";    /* Violation */
+s1 = "\01 \02";              /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correctly terminated escape sequences: */
+int c1 = '\141\t';           /* OK */
+const char *s1 = "\x41" "g"; /* OK */
+s1 = "\001 \002";            /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1999 Programming languages -- C
+   6.4.4.4 Character constants
+   6.4.5 String literals
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.2 Octal escape sequences, hexadecimal escape sequences and universal character names shall be terminated
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 4.1
+
+4. SEI CERT C Coding Standard
+   DCL18-C. Do not begin integer constants with 0 when specifying a decimal
+   value
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL18-C.+Do+not+begin+integer+constants+with+0+when+specifying+a+decimal+value">https://wiki.sei.cmu.edu/confluence/display/c/DCL18-C.+Do+not+begin+integer+constants+with+0+when+specifying+a+decimal+value</A>
+
+</PRE>
+</BODY>
+</HTML>

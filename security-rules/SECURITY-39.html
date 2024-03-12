@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use secure temporary file name functions [SECURITY-39]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use secure temporary file name functions [SECURITY-39-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation when an insecure function that generates
+a pathname that may be used for a temporary file:
+    mktemp, tempnam, tmpnam, tmpnam_r, tmpnam_s
+
+These functions only create pathnames. It is the application's responsibility
+to create and remove the files. Between when a pathname is created and the
+file is opened, it is possible for another process to create a file with the
+same name.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+There are additional issues related to those functions:
+
+1. tmpnam has implementation-defined behavior if called more than TMP_MAX times
+   in a single process. 
+
+2. tmpnam, when called with null pointer, returns a string that points to an
+   internal static buffer that will be overwritten by subsequent calls from the
+   same process.
+
+3. tmpnam_r is a function proposed in a POSIX draft and implemented by few
+   systems. It uses tmpnam internally and has the same security issues.
+
+4. tmpnam_s is a slightly improved variant implemented on Windows. It has the
+   same security issues as tmpnam.
+
+5. tempnam in some implementations uses tmpnam internally and has the same
+   security issues.
+
+6. tempnam is marked obsolescent since Issue 7 of The Open Group Base
+   Specifications (POSIX) and may be removed in future versions.
+
+7. mktemp is removed from The Open Group Base Specifications (POSIX) since
+   Issue 7.
+
+8. mktemp follows 4.3BSD in some implementations and creates a pathname with the
+   current process ID and a single letter. As a result, up to 26 different names
+   can be returned.
+
+Consider using functions that open files instead of only creating pathname:
+tmpfile, mkstemp, mkdtemp
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Detects uses of selected functions with known security issues related to
+creation of temporary file names.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+char filename[L_tmpnam + 1];
+static FILE * foo()
+{
+    /* Use of tmpnam is not recommended: */
+    tmpnam(filename);       /* Violation */
+    return fopen(filename, "w");
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+static FILE * foo()
+{
+    /* Consider using functions without such security issues: */
+    return tmpfile();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. C standard ISO/IEC 9899:1999
+   7.19.4.3 The tmpfile function
+   7.19.4.4 The tmpnam function
+
+2. The Open Group Base Specifications Issue 7, IEEE Std 1003.1, 2013 Edition
+   <A HREF="http://pubs.opengroup.org/onlinepubs/9699919799/functions/tempnam.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/tempnam.html</A>
+
+3. The Open Group Base Specifications Issue 6, IEEE Std 1003.1, 2004 Edition
+   <A HREF="http://pubs.opengroup.org/onlinepubs/009695399/functions/mktemp.html">http://pubs.opengroup.org/onlinepubs/009695399/functions/mktemp.html</A>
+
+4. CWE-377: Insecure Temporary File
+   <A HREF="http://cwe.mitre.org/data/definitions/377.html">http://cwe.mitre.org/data/definitions/377.html</A>
+
+</PRE>
+</BODY>
+</HTML>

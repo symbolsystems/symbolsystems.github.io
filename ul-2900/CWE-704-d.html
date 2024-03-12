@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A cast shall not be performed between a pointer to object type and a pointer to a different object type [CWE-704-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A cast shall not be performed between a pointer to object type and a pointer to a different object type [CWE-704-d-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversion of a pointer to object into a pointer to a different object may
+result in a pointer that is not correctly aligned, resulting in undefined
+behaviour.
+Even if conversion is known to produce a pointer that is correctly aligned,
+the behaviour may be undefined if that pointer is used to access an object.
+For example, if an object whose type is int is accessed as a short the behaviour
+is undefined even if int and short have the same representation and alignment
+requirements." [MISRA C:2012 Rule 11.3 with Amendment 4]
+
+This rule reports a violation when a pointer to an object type is cast as a 
+pointer to a different object type. This rule applies to the unqualified
+types that are pointed to by the pointers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"It is permitted to convert a pointer to a non-atomic qualified object type
+into a pointer to one of the object types char, signed char or unsigned char. 
+The Standard guarantees that pointers to these types can be used
+to access the individual bytes of an object."
+[MISRA C:2012 Rule 11.3 with Amendment 4]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule does not report a violation if a cast is used between pointers
+to typedefs to different unnamed types.
+
+typedef struct {int i; int j;} *TS1;
+typedef struct {int i; float j;} *TS2;
+
+void func()
+{
+    TS1 ps1;
+    (TS2)ps1;     /* should be Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void func()
+{
+    unsigned char* uc;
+    unsigned int*  ui;
+    const int* const* cpci;
+    
+    (unsigned int*)uc;       /* Violation */
+    (signed int*)ui;         /* Violation */
+    (int* const*)cpci;       /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void func()
+{
+    unsigned char* uc;
+    signed int* si;
+    const int* const* cpci;
+    
+    (char*)uc;               /* OK - Exception */
+    (int*)si;                /* OK - the same types */
+    (const int**)cpci;       /* OK - the rule is applied to unqualified types */
+    (int)si;                 /* OK - the cast is not to the pointer type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.3
+
+2. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.5 Rule 11.3
+
+3. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+
+4. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5 Expressions
+
+5. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

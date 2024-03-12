@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Specify the access permission bits if a file is created using the 'open' or 'openat' system call [CWE-732-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Specify the access permission bits if a file is created using the 'open' or 'openat' system call [CWE-732-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If the second argument of the open() call contains the O_CREAT flag, then the
+file will be created if it does not yet exist. In this case you should specify
+the access permission bits in the third argument of the open() call.
+
+Similarly, you should also specify the access permission bits in the fourth
+argument of the openat() call if the O_CREAT flag is specified in the third
+argument of the call.
+
+When the access permission bits are not set, then the effect is unspecified
+and the file can have random permissions.
+
+This rule reports a violation if:
+- open() is called with O_CREAT flag and 3rd argument is missing, or
+- openat() is called with O_CREAT flag and 4th argument is missing
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule can help minimize security risks.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The rule does not report a violation if the flag O_CREAT is passed indirectly
+   to a function call.
+
+   #include &lt;fcntl.h&gt;
+
+   void foo1(const char *path)
+   {
+      int open_flags = O_RDWR | O_CREAT | O_TRUNC;
+      open(path, open_flags);                      /* Violation not reported */
+   }
+
+   #define FLAG O_RDWR | O_CREAT | O_TRUNC
+
+   void foo2(const char *path)
+   {
+      open(path, FLAG);                            /* Violation not reported */
+   }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;fcntl.h&gt;
+
+void foo1(const char *path)
+{
+    open(path, O_EXCL | O_CREAT | O_WRONLY);        /* Violation */
+    openat(AT_FDCWD, path, O_CREAT);                /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;fcntl.h&gt;
+
+void foo1(const char *path)
+{
+    open(path, O_EXCL | O_CREAT | O_WRONLY, 00700);        /* OK */
+    openat(AT_FDCWD, path, O_CREAT, 00070);                /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. The Open Group Base Specifications Issue 7
+   IEEE Std 1003.1, 2013 Edition
+   <A HREF="http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html</A>
+
+2. 2022 CWE Weaknesses On the Cusp
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-732: Incorrect Permission Assignment for Critical Resource
+   <A HREF="https://cwe.mitre.org/data/definitions/732.html">https://cwe.mitre.org/data/definitions/732.html</A>
+
+3. SEI CERT C Coding Standard
+   EXP37-C. Call functions with the correct number and type of arguments
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments">https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments</A>
+
+</PRE>
+</BODY>
+</HTML>

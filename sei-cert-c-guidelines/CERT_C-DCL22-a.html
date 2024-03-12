@@ -1,0 +1,175 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused values [CERT_C-DCL22-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused values [CERT_C-DCL22-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a local variable or function parameter is assigned with 
+a value that is never subsequently read because either:
+- variable is unused, i.e. there is no possible path on which the variable is
+  subsequently used, or
+- value is overwritten, i.e. the variable is always assigned a new value before
+  it is read
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not report violations:
+- on declarations of const variables of primitive type
+- on volatile variables
+
+The rule does not report when the function parameter is not used at all.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"This weakness could be an indication of a bug in the program or a deprecated
+variable that was not removed and is an indication of poor quality. This could
+lead to further bugs and the introduction of weaknesses." [CWE-563]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Reporting on variable declarations" group of parameters allows you to
+specify how the rule should behave regarding variable declarations.
+- If the "Report on variable declarations" parameter is enabled, the rule
+  checks variable declarations. With this parameter disabled, no violations
+  are reported on variable declarations. This parameter is enabled by default.
+- If the "including unused non-initialized primitives and pointers" parameter
+  is enabled, the rule triggers on declarations of variables of primitive and
+  pointer types, which are not assigned any explicit value, if these variables
+  are not used on any reachable path. This parameter is enabled by default.
+  Note: This parameter requires the "Reporting on variable declarations"
+  parameter to be enabled.
+- If the "including overwritten values of primitives" parameter is enabled,
+  the rule triggers on declarations of primitive type variables if the variables
+  are initialized with values that are never subsequently used, because they are
+  overwritten on all paths where they are used. This parameter is disabled by default.
+  Note: This parameter requires the "Reporting on variable declarations"
+  parameter to be enabled.
+
+The "Reporting on function parameters" group of parameters allows you to
+specify how the rule should behave regarding function parameters.
+- If the "Report on function parameters" parameter is enabled, the rule checks 
+  function parameters. This parameter is enabled by default.
+- If the "including overwritten initial values" parameter is enabled, the
+  rule triggers on unused(overwritten) initial values of function parameters.
+  This parameter is enabled by default.
+  Note: This parameter requires the "Report on function parameters" parameter
+  to be enabled.
+  
+If the "Report when null value is assigned to a pointer" parameter is enabled,
+the rule triggers when null is assigned to a pointer. This parameter is
+disabled by default.
+
+If the "Report when there is at least one path where the value of the variable
+is not used" parameter is enabled, the rule triggers when there is one or more
+paths where the value of a non-volatile variable is never used. This parameter
+is disabled by default.
+
+SEE ALSO
+BD-PB-POVR
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid unused values to improve code quality and security.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is sample code that triggers a violation:
+
+extern int fun1();
+extern int fun2();
+
+int fun(int a)
+{
+    int b;
+    if (a &gt; 0) {
+        b = fun1(); // VIOLATION
+    }
+    b = fun2();
+    return b;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+extern int fun1();
+extern int fun2();
+
+int fun(int a)
+{
+    /* when fun1 does not produce any side effects */
+    return fun2();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-563: Assignment to Variable without Use ('Unused Variable')
+<A HREF="http://cwe.mitre.org/data/definitions/563.html">http://cwe.mitre.org/data/definitions/563.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 0, Rule 0-1-6
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 2.2
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 0.1.1 A value should not be unnecessarily written to a local object
+
+SEI CERT C Coding Standard
+DCL22-C. Use volatile for data that cannot be cached
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL22-C.+Use+volatile+for+data+that+cannot+be+cached">https://wiki.sei.cmu.edu/confluence/display/c/DCL22-C.+Use+volatile+for+data+that+cannot+be+cached</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A0-1-1 A project shall not contain instances of non-volatile variables being given values that are not subsequently used
+
+</PRE>
+</BODY>
+</HTML>

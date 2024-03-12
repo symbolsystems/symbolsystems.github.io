@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When using enum, the values of each member should be explicitly declared [OWASP2019-API9-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When using enum, the values of each member should be explicitly declared [OWASP2019-API9-b-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When using enum, the values of each member should be explicitly declared.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Explicit declarations of each member’s values is valuable documentation
+when using an emulator, logic analyzer or other debugging device.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum my_enum1 
+{
+    a,      // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum my_enum2
+{
+    a = 0  // OK       
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Motorola Coding Standards G-15
+
+2. OWASP API Security Top 10-2019
+   API9-Improper Assets Management
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,200 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There should be no mismatch between the '%i' and '%d' format specifiers in the string and their corresponding arguments in the invocation of a string formatting function [CERT_C-FIO47-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There should be no mismatch between the '%i' and '%d' format specifiers in the string and their corresponding arguments in the invocation of a string formatting function [CERT_C-FIO47-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The variable arguments to a variadic function are not checked for type by
+the compiler. As a result, the programmer is responsible for ensuring that
+they are compatible with the corresponding parameter after the default argument
+promotions." [DCL11-C.]
+
+This rule identifies a mismatch between the type specified by the format
+specifier included in the string argument and the type of the corresponding
+argument that is passed to the invocation of a string formatting function.
+
+The rule detects 'printf' function calls where:
+a) a function argument that corresponds to a "%i", "%d", "%li", "%ld", "%Ii",
+"%Id", "%I32i", or "%I32d" format specifier in the string argument is other
+than:
+- parameter/variable of type signed int, signed long, short, char, enum,
+  or bool
+- expression of type int, long, short, char, enum, or bool
+- typedefs to the above types
+- constant of int or long type in the range of -2147483648 to 2147483647
+
+b) a function argument that corresponds to a "%hi" or "%hd" format specifier
+in the string argument is other than:
+- parameter/variable of type signed short, char, enum, or bool
+- expression of type short, char, enum, or bool
+- typedefs to the above types
+- constant in the range of -32768 to 32767
+
+c) a function argument that corresponds to a "%hhi" or "%hhd" format specifier
+in the string argument is other than:
+- parameter/variable of type signed char
+- expression of type char, enum, or bool
+- typedefs to the above types
+- constant in the range of -128 to 127
+
+d) a function argument that corresponds to a "%lli" or "%lld" format specifier
+in the string argument is other than:
+- signed long long
+- typedef to the above type
+- constant of long long type
+
+The rule detects 'scanf' function calls where:
+a) a function argument that corresponds to a "%i", "%d", "%li", "%ld", "%Ii",
+"%Id", "%I32i", or "%I32d" format specifier in the string argument is other
+than:
+- pointer to signed int or signed long type
+
+b) a function argument that corresponds to a "%hi" or "%hd" format specifier
+in the string argument is other than:
+- pointer to signed short type
+
+c) a function argument that corresponds to a "%hhi" or "%hhd" format specifier
+in the string argument is other than:
+- pointer to signed char type
+
+d) a function argument that corresponds to a "%lli" or "%lld" format specifier
+in the string argument is other than:
+- pointer to a signed long long type
+
+This rule checks the string formatting functions that fulfill the following
+conditions:
+- their names include "printf" or "scanf", for example, printf(), fprintf(),
+scanf(), fscanf() (case insensitive)
+- they are variadic functions with the ellipsis preceded by a parameter of
+string type
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check if the number of format specifiers in the argument
+of string type and the number of optional function arguments are equal (see
+PB-50 rule to compare the numbers).
+
+This rule only detects mismatching "%i", "%d", "%li", "%ld", "%Ii", "%Id",
+"%I32i", "%I32d", "%hi", "%hd", "%hhi", "%hhd", "%hhi", "%hhd", "%lli", and
+"%lld" format specifiers (see the following rules to check other format
+specifier types: PB-45, PB-46, PB-48,PB-49).
+
+This rule assumes the following values in the string argument to be format
+specifiers:
+%c, %d, %i, %e, %E, %f, %g, %G, %a, %A, %o, %s, %u, %x, %X, %p, %n, %[
+Other values are not supported and will be ignored while determining
+the corresponding arguments of the function call.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent abnormal program termination or unintended
+information disclosure.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    unsigned int value = 10;
+    int i;
+    float f;
+
+    scanf("Value signed int: %i", &amp;value);           // Violation
+    printf("Value signed int: %i", value);           // Violation
+    scanf("Value signed short: %hi", &amp;i);            // Violation
+    printf("Value signed short: %hi", i);            // Violation
+    scanf("Value signed char: %hhi", &amp;f);            // Violation
+    printf("Value signed char: %hhi", f);            // Violation
+    scanf("Value signed long long: %lli", &amp;i);       // Violation
+    printf("Value signed long long: %lli", 100);     // Violation
+    scanf("Value signed long: %ld", i);              // Violation
+    printf("Value signed long: %ld", &amp;i);            // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by changing the format specifier or the argument type.
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    int si;
+    short ss;
+    signed char sc;
+    long l;
+    long long ll;
+
+    scanf("Value signed int: %i", &amp;si);             // OK
+    printf("Value signed int: %i", si);             // OK
+    scanf("Value signed short: %hi", &amp;ss);          // OK
+    printf("Value signed short: %hi", ss);          // OK
+    scanf("Value signed char: %hhi", &amp;sc);          // OK
+    printf("Value signed char: %hhi", sc);          // OK
+    scanf("Value signed long long: %lli", &amp;ll);     // OK
+    printf("Value signed long long: %lli", 100ll);  // OK
+    scanf("Value signed long: %ld", &amp;l);            // OK
+    printf("Value signed long: %ld", l);            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1999 Programming languages -- C
+   7.19.6 Formatted input/output functions
+
+2. <A HREF="http://www.cplusplus.com/reference/clibrary/cstdio/printf/">http://www.cplusplus.com/reference/clibrary/cstdio/printf/</A>
+
+3. <A HREF="http://www.cplusplus.com/reference/clibrary/cstdio/scanf/">http://www.cplusplus.com/reference/clibrary/cstdio/scanf/</A>
+
+4. SEI CERT C Coding Standard
+   FIO47-C. Use valid format strings
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO47-C.+Use+valid+format+strings">https://wiki.sei.cmu.edu/confluence/display/c/FIO47-C.+Use+valid+format+strings</A>
+
+5. SEI CERT C Coding Standard
+   DCL11-C. Understand the type issues associated with variadic functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions">https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

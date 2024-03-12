@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the 'data()' function from the 'string' class of the standard library [SECURITY-09]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the 'data()' function from the 'string' class of the standard library [SECURITY-09-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'data()' function writes string characters to an array. It returns a pointer
+to the array that contains the same sequence of characters as the characters
+in the string object. That character sequence can be not terminated by a null
+character, which might result in buffer overflows.
+
+This rule detects when the 'data()' member function is called for a string
+object.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid buffer overflows.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string&gt;
+
+void bar(const char* param);
+
+void f1()
+{
+    using namespace std;
+    string str1 ( "example string" );
+    bar(str1.data());                   // Violation
+
+    string *ptr;
+    ptr=&amp;str1;
+    const char *ptr2 = ptr-&gt;data();     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string&gt;
+
+void bar(const char* param);
+
+void f1()
+{
+    using namespace std;
+    string str1 ( "example string" );
+    bar(str1.c_str());                   // OK
+
+    string *ptr;
+    ptr=&amp;str1;
+    const char *ptr2 = ptr-&gt;c_str();     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Secure Programming HOWTO
+   Chapter 6. Restrict Operations to Buffer Bounds (Avoid Buffer Overflow)
+   <A HREF="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html#STD-STRING">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html#STD-STRING</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Beware of functions which may return the current directory or the windows directory [SECURITY-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Beware of functions which may return the current directory or the windows directory [SECURITY-23-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if in code is used the function GetTempPath().
+"GetTempPath() returns the file path to the temporary directory.
+GetTempPath() raises two concerns. First, a buffer overflow condition could
+exist if the path to the temporary directory is longer than the buffer
+allocated to store this information. Second, a path to an insecure directory
+could be returned. Also, Windows does not guarantee that the returned paths
+are valid or useable (e.g. writable) for temporary files."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"An attacker could take advantage of either weakness in the functionality
+of GetTempPath(). First, if Windows returns a path to which the attacker
+can read or write (e.g. c:\temp), he or she will be able to read or alter
+any data in the temporary files. This would result in a breach
+of confidentiality and integrity, respectively.
+The second attack vector is to implement a buffer overflow attack.
+There is no indication that the value in any of the environment
+variables (TMP, TEMP) is truncated to MAX_PATH. Therefore, an attacker
+could specify an environment variable whose length is longer than that
+of the path buffer if the buffer's length is not set properly. When the
+program was run in this environment, the path buffer would be overflowed."
+The rule prevents such attacks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;afx.h&gt;
+
+const char * virus_temp_sig = "XXX";
+
+char * get_temp_file()
+
+{
+    char wintemp_path[1024];
+    char *temp_path=new char[1024];
+
+    GetTempPath(1024,wintemp_path);                              // Violation
+    GetTempFileName(wintemp_path,virus_temp_sig,1234,temp_path);
+    return temp_path;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the GetTempPath() functions or at least be careful what you place
+in locations returned by them.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/758-BSI.html">https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/758-BSI.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+</PRE>
+</BODY>
+</HTML>

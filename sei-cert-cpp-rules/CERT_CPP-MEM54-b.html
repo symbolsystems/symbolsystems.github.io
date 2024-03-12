@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An overhead should be used when an array of objects is passed to the placement 'new' allocation function [CERT_CPP-MEM54-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An overhead should be used when an array of objects is passed to the placement 'new' allocation function [CERT_CPP-MEM54-b-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not pass a pointer that has insufficient storage capacity for the
+object being constructed, including the overhead required for arrays.
+Doing so may result in initialization of memory outside of the bounds
+of the object being constructed, which results in undefined behavior."
+
+"The overhead (commonly referred to as a cookie) is necessary to store
+the number of elements in the array so that the array delete expression
+or the exception unwinding mechanism can invoke the type's destructor
+on each successfully constructed element of the array." [CERT-CPP-MEM54]
+
+This rule detects when an array passed as the placement argument to
+an allocation function (placement 'new') allocates sufficient and suitably
+aligned storage, but does not contain an overhead.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior, including a buffer overflow
+and an abnormal termination.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+
+struct S {
+    S ();
+    ~S ();
+};
+
+void f(int n) {
+    const unsigned N = 32;
+    alignas(S) unsigned char buffer[sizeof(S) * N];
+    S *sp = ::new (buffer) S[N];                       // Violation
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstddef&gt;
+#include &lt;new&gt;
+
+const size_t overhead = sizeof(size_t);
+
+struct S {
+    S ();
+    ~S ();
+};
+
+void f(int n) {
+    const unsigned N = 32;
+    alignas(S) unsigned char buffer[sizeof(S) * N + overhead];
+    S *sp = ::new (buffer) S[N];                                // OK
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-10. Placement new shall be used only with properly aligned pointers
+   to sufficient storage capacity
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   5.3.4 New
+
+3. SEI CERT C++ Coding Standard
+   MEM54-CPP. Provide placement new with properly aligned pointers to sufficient storage capacity
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM54-CPP.+Provide+placement+new+with+properly+aligned+pointers+to+sufficient+storage+capacity">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM54-CPP.+Provide+placement+new+with+properly+aligned+pointers+to+sufficient+storage+capacity</A>
+
+</PRE>
+</BODY>
+</HTML>

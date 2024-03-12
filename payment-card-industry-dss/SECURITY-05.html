@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling functions printf/wprintf with only one argument other than string constant [SECURITY-05]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling functions printf/wprintf with only one argument other than string constant [SECURITY-05-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Never use unfiltered data from an untrusted user as the format parameter.
+Failing to follow this guideline usually results in a format string
+vulnerability" [Secure Programming HOWTO]
+"A formatting string should almost always be a constant string, possibly
+involving a function call to implement a lookup for internationalization"
+[Secure Programming HOWTO]
+
+This rule detects when functions printf/wprintf are called with only one
+argument other than a string constant.
+
+See also: BD-SECURITY-TDCONSOLE
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check if arguments passed to printf/wprintf functions
+originate from an untrusted source, so it can report violations even if
+arguments contain safe data.
+
+#include &lt;stdio.h&gt;
+void f1() {
+    char* msg = "message";
+    printf(msg);           /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents security attacks with format strings.
+
+"When an attacker can modify an externally-controlled format
+string, this can lead to buffer overflows, denial of service,
+or data representation problems." [CWE-134]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;wchar.h&gt;
+#include &lt;stdio.h&gt;
+
+wchar_t f1(void);
+int main(int argc, char** argv) {
+    wchar_t msg_t = f1();
+    printf(argv[1]);           /* Violation */
+    wprintf(&amp;msg_t);           /* Violation */
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;wchar.h&gt;
+#include &lt;stdio.h&gt;
+
+wchar_t f1(void);
+int main(int argc, char** argv) {
+    wchar_t msg_t = f1();
+    printf("%s", argv[1]);    /* OK */
+    wprintf(L"%s", &amp;msg_t);   /* OK */
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. "Secure Programming HOWTO", David A. Wheeler
+   9.4. Control Data Formatting (Format Strings)
+
+2. AUTOSAR C++14 Coding Guidelines
+   A27-0-1. Inputs from independent components shall be validated
+
+3. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+4. SEI CERT C Coding Standard
+   FIO30-C. Exclude user input from format strings
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO30-C.+Exclude+user+input+from+format+strings">https://wiki.sei.cmu.edu/confluence/display/c/FIO30-C.+Exclude+user+input+from+format+strings</A>
+
+</PRE>
+</BODY>
+</HTML>

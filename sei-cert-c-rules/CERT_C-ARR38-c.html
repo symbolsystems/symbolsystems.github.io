@@ -1,0 +1,187 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid buffer overflow due to defining incorrect format limits [CERT_C-ARR38-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid buffer overflow due to defining incorrect format limits [CERT_C-ARR38-c-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+The rule detects cases of possible overflow when writing to a buffer due to either:
+ * an incorrectly-defined format specifier for the scanf family of functions, or
+ * insufficient size of the buffer to hold resulting string for the sprintf function.
+A violation is reported when the write operation can overflow the given buffer.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The possibility of buffer overflow is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to
+execute arbitrary code and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+FILE* file;
+
+void read(char* buff, int buffSize)
+{
+    char formatString[100];
+    char sizeString[100];
+    strcpy(formatString, "%");
+    strcat(formatString, itoa(buffSize, sizeString, 10));
+    strcat(formatString, "s");
+     // Overflow writing to buff (size of 100) using "%101s" format
+    fscanf(file, formatString, buff);
+}
+
+void test()
+{
+    char buffer[100];
+    read(buffer, 101);
+}
+
+void write(char *dest, int id, char *msg)
+{
+    // Overflow writing 11 characters (incl. trailing zero) to dest (size of 10)
+    sprintf(dest, "%d:%s", id, msg);
+}
+
+void test2()
+{
+    char dest[10];
+    write(dest, 100, "sample");
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+If the value passed as the "buffSize" parameter of the read() function is changed
+to correspond to the real buffer size, no violation is reported.
+If the size of the "dest" buffer passed to the write() function is increased to
+hold written string, no violation is reported. 
+
+void test()
+{
+    char buffer[100];
+    read(buffer, 100);
+}
+
+void test2()
+{
+    char dest[11];
+    write(dest, 100, "sample");
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="http://cwe.mitre.org/data/definitions/787.html">http://cwe.mitre.org/data/definitions/787.html</A>
+
+CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')
+<A HREF="http://cwe.mitre.org/data/definitions/120.html">http://cwe.mitre.org/data/definitions/120.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+SEI CERT C Coding Standard
+ARR38-C. Guarantee that library functions do not form invalid pointers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR38-C.+Guarantee+that+library+functions+do+not+form+invalid+pointers">https://wiki.sei.cmu.edu/confluence/display/c/ARR38-C.+Guarantee+that+library+functions+do+not+form+invalid+pointers</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+</PRE>
+</BODY>
+</HTML>

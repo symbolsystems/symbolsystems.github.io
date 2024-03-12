@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing arrays and pointers out of bounds [CERT_C-EXP39-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing arrays and pointers out of bounds [CERT_C-EXP39-c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects pointer dereference operations that may result in accessing allocated memory that 
+is out of bounds. A violation is reported when pointer is dereferenced and points to an array
+(address of array variable was assigned to it or array was dynamically created by new[] operator).
+Also, a violation is triggered if memory is allocated using new() operator and the pointer is moved
+and accessed.
+
+See also : BD-PB-ARRAY
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The potential to access arrays beyond their boundaries is a severe security threat. If an
+application has a vulnerability of this kind, it can be exploited to execute arbitrary code
+and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+void bar(int* p) {
+    *p = 1;
+    p++;
+    *p = 2;
+    p++;
+    *p = 3; // VIOLATION
+}
+
+void foo() {
+    int* arr = new int[2];
+    bar(arr);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following is fixed example for which no violations will be reported:
+
+void bar(int* p) {
+    *p = 1;
+    p++;
+    *p = 2;
+    p++;
+    *p = 3;
+}
+
+void foo() {
+    int* arr = new int[3];
+    bar(arr);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-125: Out-of-bounds Read
+<A HREF="http://cwe.mitre.org/data/definitions/125.html">http://cwe.mitre.org/data/definitions/125.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="http://cwe.mitre.org/data/definitions/787.html">http://cwe.mitre.org/data/definitions/787.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 18.1
+
+High Integrity C++ Coding Standard
+5.2.1 Ensure that pointer or array access is demonstrably within bounds of a valid object
+
+SEI CERT C Coding Standard
+EXP39-C. Do not access a variable through a pointer of an incompatible type
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP39-C.+Do+not+access+a+variable+through+a+pointer+of+an+incompatible+type">https://wiki.sei.cmu.edu/confluence/display/c/EXP39-C.+Do+not+access+a+variable+through+a+pointer+of+an+incompatible+type</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-2-5 An array or container shall not be accessed beyond its range
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

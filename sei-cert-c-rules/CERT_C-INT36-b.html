@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A conversion should not be performed between a pointer to object type and an integer type other than 'uintptr_t' or 'intptr_t' [CERT_C-INT36-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A conversion should not be performed between a pointer to object type and an integer type other than 'uintptr_t' or 'intptr_t' [CERT_C-INT36-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An integer may be converted to any pointer type. The result is
+implementation-defined, might not be correctly aligned, might not point to an
+entity of the referenced type, and might be a trap representation.
+Any pointer or array type may be converted to an integer type. The result is
+implementation-defined. If the result cannot be represented in the integer type,
+the behavior is undefined. The result need not be in the range of values of any
+integer type." [ISO/IEC 9899:1999]
+
+The rule detects when a conversion (explicit or implicit) is performed between
+an integral type and a pointer to object type.
+
+Implicit conversion of a pointer is detected in the following cases:
+- using an assignment operator,
+- using an expression to initialize all or part of an object,
+- passing an argument to a function call,
+- returning an expression from a function,
+- using equality, relational and logical operators.
+
+The rule checks only conversions to a pointer to object type. Conversions
+to pointer to function, pointer to void and to pointer to incomplete types
+are not reported.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule detects 'array of type' in the same way as 'pointer to type'.
+
+"Except when it is the operand of the sizeof operator or the unary &amp; operator,
+or is a string literal used to initialize an array, an expression that has type
+'array of type' is converted to an expression with type 'pointer to type' that
+points to the initial element of the array object and is not an lvalue."
+[ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. A null pointer constant that has an integer type may be converted
+   into a pointer to object.
+2. The C99 types intptr_t and uintptr_t, declared in &lt;stdint.h&gt;,
+   are respectively signed and unsigned integer types which are capable
+   of representing pointer values. Explicit casts between pointer
+   types and 'intptr_t' and 'uintptr_t' types are allowed by this rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined and implementation-defined behaviors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrect code */
+void f1 (int*);
+void f2 (int );
+
+int foo (int* ptr1)
+{
+    int i;
+    unsigned char c = ptr1;  /* Violation - an implicit conversion
+                                from a pointer to int type to an unsigned
+                                char type in initialization */
+
+    int arr1[10];
+    unsigned char c1 = arr1; /* Violation - an implicit conversion
+                                from array of int type to unsigned
+                                char type in initialization */
+
+    signed int* ptr2 = c;    /* Violation - an implicit conversion
+                                from an unsigned char type to a pointer
+                                to int type in initialization */
+
+    i = (int) ptr1;          /* Violation - the explicit cast is not allowed */
+
+    f1(0x0FF);               /* Violation - an implicit conversion of an integer
+                                constant to a pointer to int type in a function
+                                call */
+
+    f2(ptr1 - 1);            /* Violation - an implicit conversion of an
+                                expression of a pointer to int type to an int
+                                type in a function call */
+
+    return ptr2;             /* Violation - an implicit conversion from
+                                a pointer to int type to an int type
+                                in a function return */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by the rule */
+#include &lt;stdint.h&gt;
+
+#ifndef NULL
+#define NULL 0
+#endif
+
+void f1 (int );
+
+int foo (int* ptr1, void* vptr, intptr_t pint, uintptr_t u)
+{
+    signed int* ptr2 = NULL; /* OK - exception for null pointer constant */
+    u = (uintptr_t)ptr1;     /* OK - exception - explicit cast from a pointer
+                                     type to 'uintptr_t' is allowed */
+
+    f2(ptr1 - ptr2);         /* OK - the expression passed as argument to
+                                     function f2 has integral type */
+
+    ptr1 += 1;               /* OK - no conversion is used */
+    ptr1 = (int*)pint;       /* OK - exception - explicit cast from 'intptr_t'
+                                     to a pointer type is allowed */
+
+    return vptr;             /* OK - the rule does not check conversion
+                                between pointer to void type and integer type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   INT36-C. Converting a pointer to integer or integer to pointer
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT36-C.+Converting+a+pointer+to+integer+or+integer+to+pointer">https://wiki.sei.cmu.edu/confluence/display/c/INT36-C.+Converting+a+pointer+to+integer+or+integer+to+pointer</A>
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2 Other operands, 6.5 Expressions
+   7.18.1.4 Integer types capable of holding object pointers
+
+4. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

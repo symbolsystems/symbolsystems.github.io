@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The plain char type shall be used only for the storage and use of character values [CERT_C-STR04-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The plain char type shall be used only for the storage and use of character values [CERT_C-STR04-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"There are three distinct char types, plain char, signed char and unsigned char.
+Signed char and unsigned char shall be used for numeric data and plain char
+shall be used for character data. The signedness of the plain char type
+is implementation-defined and should not be relied upon.
+
+The permissible operators on plain char types are the simple assignment 
+operator (=), equality operators( ==, != ) and explicit casts to integral
+types. Additionally, the second and third operands of the ternary conditional
+operator may both be of plain char type."
+
+The rule reports a violation if parameter, variable or expression of plain char
+type is used for numerical data. If a plain char is used as operand of operator
+other than assignment (=), equality ( ==, != ), explicit cast or ternary
+conditional operator then violation is reported as well.
+
+See also: MISRA2004-6_2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Explicit casts to non integral types are not reported.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule makes the code more readable and less confusing.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(char ch)
+{
+    if (65 &lt;= ch &amp;&amp; ch &lt;= 67)   /* Violation - plain char used with
+                                               non-compliant operator (&lt;=) */ 
+    {
+        ch = 66;                /* Violation - numerical data assigned
+                                               to plain char */
+    }
+}
+
+/* Examples of incorrect code */
+
+void fooc(char pc);
+int fooi(int pi);
+
+char foo1(char p)
+{
+    char ch = 65; /* Violation - plain char initialized with numerical data */
+    int i;
+    i = i + p; /* Violation - plain char used with non-compliant operator (+) */
+
+    fooc(i);   /* Violation - numerical value used as argument in a function
+                              with plain char parameter type */
+
+    switch(p){
+    case 1:            /* Violation - numerical data used in case for switch
+                                      with plain char in condition */
+         p = fooi(1);  /* Violation - numerical data assigned to plain char */
+         break;
+    case 'x':
+         p = 'x' + 1;  /* Violation - numerical data assigned to plain char */
+         break;
+    }
+
+    return 0;  /* Violation - numerical value returned from function
+                              with plain char return type */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(char ch)
+{
+    if ('A' == ch || 'B' == ch || 'C' == ch)  /* OK */ 
+    {
+        ch = 'B';                             /* OK */
+    }
+}
+
+/* Examples of correct code */
+
+void fooc(char pc);
+int fooi(int pi);
+
+char foo1(char p, signed char sc)
+{
+    char ch = 'A';  /* OK */
+    int i;
+    i = i + (int)p; /* OK - plain char used as operand of
+                            explicit cast to integral type */
+    fooc((char)i);  /* OK */
+
+    switch(p){
+    case '\001':       /* OK */
+         sc = fooi(1); /* OK */
+         break;
+    case 'x':
+         sc = 'x' + 1; /* OK - 'x' does not have "plain char" type */
+         break;
+    }
+
+    return '\0';       /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-11. The plain char type shall only be used for the storage and use of
+   character values
+
+2. High Integrity C++ Coding Standard
+   7.1.6. Use class types or typedefs to abstract scalar quantities and
+   standard integer types
+
+3. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-12
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.3 The numerical value of a character shall not be used
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6
+
+6. SEI CERT C Coding Standard
+   INT07-C. Use only explicitly signed or unsigned char type for numeric
+   values
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values">https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values</A>
+
+7. SEI CERT C Coding Standard
+   STR00-C. Represent characters using an appropriate type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR00-C.+Represent+characters+using+an+appropriate+type">https://wiki.sei.cmu.edu/confluence/display/c/STR00-C.+Represent+characters+using+an+appropriate+type</A>
+
+8. SEI CERT C Coding Standard
+   STR04-C. Use plain char for characters in the basic character set
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR04-C.+Use+plain+char+for+characters+in+the+basic+character+set">https://wiki.sei.cmu.edu/confluence/display/c/STR04-C.+Use+plain+char+for+characters+in+the+basic+character+set</A>
+
+</PRE>
+</BODY>
+</HTML>

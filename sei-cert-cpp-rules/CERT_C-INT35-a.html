@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use correct integer precisions when checking the right hand operand of the shift operator [CERT_C-INT35-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use correct integer precisions when checking the right hand operand of the shift operator [CERT_C-INT35-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Integer types in C have both a size and a precision. The size indicates
+the number of bytes used by an object and can be retrieved for any object or
+type using the sizeof operator.  The precision of an integer type is the number
+of bits it uses to represent values, excluding any sign and padding bits.
+Padding bits contribute to the integer's size, but not to its precision.
+Consequently, inferring the precision of an integer type from its size may
+result in too large a value, which can then lead to incorrect assumptions about
+the numeric range of these types.  Programmers should use correct integer
+precisions in their code, and in particular, should not use the sizeof operator
+to compute the precision of an integer type on architectures that use padding
+bits or in strictly conforming (that is, portable) programs." [CERT-INT35-C]
+
+The rule reports a violation if all the following conditions are fulfilled:
+- the variable of an integer type is compared inside the 'if' condition with
+  an expression that contains a multiplication when the operand is the 'sizeof'
+  operator
+- this variable is used as the right hand operand of the shift operator
+- the type of the left hand operand of the shift operator is the same as the
+  type of the operand of the 'sizeof' operator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents incorrect shift operations on systems when the size
+and precision of an integer type use different number of bits.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;limits.h&gt;
+
+unsigned int pow2(unsigned int exp) {
+    if (exp &gt;= sizeof(unsigned int) * CHAR_BIT) {    /* Violation */
+        /* Handle error */
+    }
+    /* ... */
+    return 1 &lt;&lt; exp;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;limits.h&gt;
+
+/* Returns the number of set bits */
+size_t popcount(uintmax_t num) {
+    size_t precision = 0;
+    while (num != 0) {
+        if (num % 2 == 1) {
+            precision++;
+        }
+        num &gt;&gt;= 1;
+    }
+    return precision;
+}
+
+#define PRECISION(umax_value) popcount(umax_value)
+unsigned int pow2(unsigned int exp) {
+    if (exp &gt;= PRECISION(UINT_MAX)) {                 /* OK */
+        /* Handle error */
+    }
+    /* ... */
+    return 1 &lt;&lt; exp;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   INT35-C. Use correct integer precisions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT35-C.+Use+correct+integer+precisions">https://wiki.sei.cmu.edu/confluence/display/c/INT35-C.+Use+correct+integer+precisions</A>
+
+</PRE>
+</BODY>
+</HTML>

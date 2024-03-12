@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid token concatenation that may produce universal character names [CERT_C-PRE30-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid token concatenation that may produce universal character names [CERT_C-PRE30-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For both object-like and function-like macro invocations, before
+the replacement list is reexamined for more macro names to replace,
+each instance of a '##' preprocessing token in the replacement list
+(not from an argument) is deleted and the preceding preprocessing
+token is concatenated with the following preprocessing token.
+If the result is not a valid preprocessing token, the behavior
+is undefined." [ISO/IEC 14882:2003]
+
+"If a character sequence that matches the syntax
+of a universal-character-name is produced by token concatenation,
+the behavior is undefined." [ISO/IEC 14882:2003]
+
+This rule detects when the '##' operator used in macro definitions
+may produce a universal character name.
+
+See also: MISRA2004-19_13, PREPROC-16
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Universal character names have the form \uhhhh or \Uhhhhhhhh,
+where h stands for a hexadecimal digit.
+The rule assumes that a universal character name can be produced by token
+concatenation when a '##' preprocessing token is preceded by a macro
+parameter and followed by a macro parameter or by a token that starts
+with a hexadecimal digit.
+
+Examples of incorrect code:
+    #define M1(a, b) ( a##b )              /* Violation */
+    #define M2(a) ( a##23 )                /* Violation */
+    #define M3(a) ( a##FF )                /* Violation */
+    #define M4(a) ( a##abc )               /* Violation */
+Examples of correct code:
+    #defien M5(a, b) ( prefix_##a = b )    /* OK */
+    #defien M6(a) ( prefix_##a )           /* OK */
+    #defien M7(a) ( a##_suffix )           /* OK */
+    #define M8(a) ( a##xyz )               /* OK */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M1(a, b, v) a##b = v        /* Violation */
+
+void foo(void) {
+    int \u07f0;
+    M1(\u07, f0, 3);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define M1(a, v) a = v              /* OK */
+
+void foo(void) {
+    int \u07f0;
+    M1(\u07f0, 3);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:2011 Programming languages -- C
+   6.10.3.3 The ## operator, 5.1.1.2 Translation phases
+   6.4.3 Universal character names
+
+2. ISO/IEC 14882:2003 Programming languages -- C++
+   16.3.3 The ## operator, 2.1 Phases of translation
+
+3. SEI CERT C Coding Standard
+   PRE30-C. Do not create a universal character name through concatenation
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE30-C.+Do+not+create+a+universal+character+name+through+concatenation">https://wiki.sei.cmu.edu/confluence/display/c/PRE30-C.+Do+not+create+a+universal+character+name+through+concatenation</A>
+
+</PRE>
+</BODY>
+</HTML>

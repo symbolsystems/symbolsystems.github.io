@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Conversions shall not be performed between a pointer to a function and any other type than pointer to function [CWE-704-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Conversions shall not be performed between a pointer to a function and any other type than pointer to function [CWE-704-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to a function shall only be converted into or from a pointer
+to a function with a compatible type.
+
+The conversion of a pointer to a function into or from any of:
+  - Pointer to object;
+  - Pointer to incomplete;
+  - void *
+results in undefined behaviour." [MISRA C:2012 Rule 11.1]
+
+This rule reports a violation if a function pointer is converted (implicit or
+explicit) into or from a type different than function pointer.
+
+The implicit conversion of a pointer is detected in the following cases:
+- assignment expression
+- comparison expression
+- initialization (only simple variables and arrays)
+- passing argument to function call
+- returning value from function
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language. Conversions of a function pointer
+in C++ are checked by rule CODSTA-62.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A null pointer constant may be converted into a pointer to a function".
+The C standard defines a null pointer constant as an integer constant
+expression with the value 0 or such an expression cast to type void *.
+
+"A pointer to a function may be converted into void.
+Casting the return value into void is compliant with this rule."
+
+"A function type may be implicitly converted into a pointer to that function
+type. These conversions commonly occur when:
+  - A function is called directly, i.e. using a function identifier to denote
+    the function to be called;
+  - A function is assigned to a function pointer."
+[MISRA C:2012 Rule 11.1]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviors
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef void (*FP)(int n);
+void f (FP);
+
+void foo (void* vptr)
+{
+    FP fp;
+    int i;
+    int* ptr;
+    struct S* sp;
+  
+    /* Examples of incorrect code */  
+    i = fp;                 /* Violation */
+    ptr = (int*)fp;         /* Violation */
+    f(sp);                  /* Violation */
+    fp = (FP)vptr;          /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define NULL (void*)0
+
+typedef void (*FP)(int n);
+void f (int n);
+
+void foo (void* vptr)
+{
+    FP fp1;
+    void (*fp2)(int n);  
+    int (*fp3)();  
+
+    /* Examples of correct code and exceptions */  
+    fp1 = fp2;              /* OK - compatible types */
+    fp1 = f;                /* OK - compatible types */
+    fp1 = 0;                /* OK - exception */
+    fp1 = NULL;             /* OK - exception */
+    (void)( fp3( ) );       /* OK - exception */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.1
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.4 Cast operators
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5.2.2 Function calls, 6.5.4 Cast operators
+
+4. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

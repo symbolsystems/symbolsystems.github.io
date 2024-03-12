@@ -1,0 +1,201 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use resources that have been freed [CERT_CPP-EXP54-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use resources that have been freed [CERT_CPP-EXP54-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects uses of resources that have been freed. In particular, a violation is reported
+when a pointer or reference to a freed resource is:
+
+   * returned from a function,
+   * passed as a parameter to a function,
+   * used in an arithmetic operation,
+   * dereferenced, or
+   * assigned to a variable/field/array element.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violation when pointer to freed resource is compared to null" check box
+unsupresses/suppresses  violations where a pointer to a freed resource is compared to a null
+pointer. This may be allowed by the code writing policy and application design.
+By default, such violations are not reported.
+
+The "Report violation when pointer to freed resource is compared to other pointers" check box
+unsuppresses/suppresses violations where a pointer to a freed resource is compared to other
+pointers. This may be allowed by the code writing policy and application design.
+By default, such violations are not reported.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+The types of resources handled by this rule can be viewed and edited in test configuration section:
+Static Analysis -&gt; Flow Analysis Advanced Settings -&gt; Resources
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents strange, often non-deterministic errors related to the use of freed resources.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+int compute(int* buffer, const int size)
+{
+    int result = 0;
+    // perform computations
+    delete[] buffer;
+    return result;
+}
+
+void process(const int size)
+{
+    int* buffer = new int[size];
+    int result = compute(buffer, size);
+    delete[] buffer;
+    // do something
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Removing delete in the compute() function repairs the example above.
+
+int compute(int* buffer, const int size)
+{
+    int result = 0;
+    // perform computations
+    return result;
+}
+
+void process(const int size)
+{
+    int* buffer = new int[size];
+    int result = compute(buffer, size);
+    delete[] buffer;
+    // do something
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-416: Use After Free
+<A HREF="http://cwe.mitre.org/data/definitions/416.html">http://cwe.mitre.org/data/definitions/416.html</A>
+
+2019 CWE Weaknesses On the Cusp
+CWE-415: Double Free
+<A HREF="http://cwe.mitre.org/data/definitions/415.html">http://cwe.mitre.org/data/definitions/415.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 22.2, Rule 22.6
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 1.3
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.13
+
+High Integrity C++ Coding Standard
+8.4.1 Do not access an invalid object or an object with indeterminate value
+
+SEI CERT C Coding Standard
+CON31-C. Do not destroy a mutex while it is locked,
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON31-C.+Do+not+destroy+a+mutex+while+it+is+locked">https://wiki.sei.cmu.edu/confluence/display/c/CON31-C.+Do+not+destroy+a+mutex+while+it+is+locked</A>
+
+SEI CERT C Coding Standard
+FIO46-C. Do not access a closed file
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO46-C.+Do+not+access+a+closed+file">https://wiki.sei.cmu.edu/confluence/display/c/FIO46-C.+Do+not+access+a+closed+file</A>
+
+SEI CERT C Coding Standard
+MEM00-C. Allocate and free memory in the same module, at the same level of abstraction
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM00-C.+Allocate+and+free+memory+in+the+same+module%2C+at+the+same+level+of+abstraction">https://wiki.sei.cmu.edu/confluence/display/c/MEM00-C.+Allocate+and+free+memory+in+the+same+module%2C+at+the+same+level+of+abstraction</A>
+
+SEI CERT C Coding Standard
+MEM01-C. Store a new value in pointers immediately after free()
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152148">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152148</A>
+
+SEI CERT C Coding Standard
+MEM30-C. Do not access freed memory
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM30-C.+Do+not+access+freed+memory">https://wiki.sei.cmu.edu/confluence/display/c/MEM30-C.+Do+not+access+freed+memory</A>
+
+SEI CERT C++ Coding Standard
+EXP54-CPP. Do not access an object outside of its lifetime
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP54-CPP.+Do+not+access+an+object+outside+of+its+lifetime">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP54-CPP.+Do+not+access+an+object+outside+of+its+lifetime</A>
+
+SEI CERT C++ Coding Standard
+MEM50-CPP. Do not access freed memory
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM50-CPP.+Do+not+access+freed+memory">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM50-CPP.+Do+not+access+freed+memory</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A3-8-1 An object shall not be accessed outside of its lifetime
+
+</PRE>
+</BODY>
+</HTML>

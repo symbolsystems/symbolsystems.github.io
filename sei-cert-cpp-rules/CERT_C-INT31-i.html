@@ -1,0 +1,238 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value of an expression shall not be assigned to an object of a different essential type category [CERT_C-INT31-i]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value of an expression shall not be assigned to an object of a different essential type category [CERT_C-INT31-i-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C language allows the programmer considerable freedom and will permit 
+assignments between different arithmetic types to be performed automatically.
+However, the use of these implicit conversions can lead to unintended results,
+with the potential for loss of value, sign or precision. The use of stronger
+typing, as enforced by the MISRA essential type model, reduces the likelihood
+of these problems occurring." [MISRA C:2012 Rule 10.3]
+
+This rule detects cases when the value of an expression is assigned to an
+object with a different essential type category or if the constant expression
+in a switch statement's case label is converted to a different essential type
+category.
+
+The term "essential type" is defined by the MISRA C:2012 standard, 
+but tools may also provide additional ways of identifying "essentially 
+Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The following operations are covered by this rule:
+- Assignment by means of one of the assignment operators;
+- Passing an argument to a function, in which case the argument is copied as 
+  if by assignment to the corresponding parameter;
+- Returning an expression from a function, in which case the result is copied
+  as if by assignment to an object with the function's return type;
+- Using an expression to initialize all or part of an object, including a 
+  compound literal in C99, in which case the expression is copied as if by 
+  assignment to the destination;
+- The conversion of the constant expression in a switch statement’s case label
+  to the promoted type of the controlling expression."
+[MISRA C:2012 Rule 10.3, Appendix J]
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in the C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+Integer constants with values '0' and '1' are considered to be constants of
+"essentially Boolean" type.
+
+This rule does not check compound assignment operators. Such operators
+are checked by the CODSTA-164_a rule. The only exceptions are:
+
+- the compound additive operator when the first operand has the essentially
+  signed or essentially unsigned type and the second operand has essentially
+  character type
+
+void foo(void) {
+    signed int si;
+    unsigned int ui;
+    char c;
+    si += c;    /* Violation - correct for rule CODSTA-164_a */
+    ui += c;    /* Violation - correct for rule CODSTA-164_a */
+    si += ui;   /* OK - incorrect for rule CODSTA-164_a */
+}
+
+- the compound binary operator when the first operand has the essentially
+  real floating type and the second operand has essentially complex floating
+  type
+
+void foo(void) {
+    float f;
+    double d;
+    _Complex float cf;
+    f += cf;           /* Violation - correct for rule CODSTA-164_a */
+    d *= cf;           /* Violation - correct for rule CODSTA-164_a */
+}
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A non-negative integer constant expression of essentially signed type may be
+assigned to an object of essentially unsigned type if its value can be 
+represented in that type." [MISRA C:2012 Rule 10.3]
+
+This exception refers only to simple integer constants. If a complex constant
+expression is used in an assignment, a violation will still be reported.
+
+void foo(void) {
+    unsigned int ui;
+    ui = 10;          /* OK */
+    ui = 5 + 5;       /* reported Violation */
+}
+ 
+"The initializer { 0 } may be used to initialize an aggregate or union type."
+[MISRA C:2012 Rule 10.3]
+
+"An essentially real floating expression may be assigned to an object
+of essentially complex floating type provided that its corresponding
+real type is not narrower than the type of the expression."
+[MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents the loss of value, sign or precision.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void short_int( int i){ };
+
+double foo(int i)
+{
+    char ch = 10;             /* Violation - character and signed */
+    i = 20.0;                 /* Violation - signed and floating */
+    short_int(1UL);           /* Violation - signed and unsigned */
+    switch(i)
+    {
+        case 'a':             /* Violation - character and signed */
+            i = 'a' + 1;      /* Violation - character and signed */
+        case 3u:              /* Violation - signed and unsigned */
+            i = 'a' - 1;      /* Violation - character and signed */
+    }
+    return i;                 /* Violation - signed and floating */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+
+void short_int(unsigned long i){ };
+
+double foo1(int i)
+{
+    char ch = 'a';            /* OK */
+    i = (int)20.0;            /* OK */
+    short_int(1UL);           /* OK */
+    switch(i)
+    {
+        case 0:               /* OK */
+            ch = 'a' + 1;     /* OK */
+        case 1:               /* OK */
+            ch = 'a' - 1;     /* OK */
+    }
+    return (double)i;         /* OK */
+}
+
+void foo2(unsigned char uc1)
+{
+    unsigned char uc2 = 10u;  /* OK */
+    uc1 = uc1 + uc2;          /* OK */
+}
+
+void foo3(unsigned int ui)
+{
+    char ch[10] = { 0 };      /* OK - Exception */
+    ui = 10;                  /* OK - Exception */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.3
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.8 Rule 10.3
+
+3. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

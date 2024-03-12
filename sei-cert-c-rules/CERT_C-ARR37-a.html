@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointer arithmetic shall not be applied to pointers that address variables of non-array type [CERT_C-ARR37-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointer arithmetic shall not be applied to pointers that address variables of non-array type [CERT_C-ARR37-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Pointer arithmetic shall only be applied to pointers that address an array or 
+array element.
+Addition and subtraction of integers (including increment and decrement) from 
+pointers that do not point to an array or array element results in undefined 
+behaviour."
+See also: MISRA2004-17_1
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that a pointer does not point to an array or array element
+if to pointer is assigned null or an address of variable of non-array type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule makes the code more readable and less confusing.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* example of incorrect code */
+void func(int* ptr1, int a[5]){
+    int i;
+    int* ptr2 = 0;
+    int* ptr3;
+    ptr1 = &amp;i;
+
+    ptr1++;          /* Violation */
+    ptr3 = ptr2 + 1; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* example of correct code */
+void func(int* ptr1, int a[5]){
+    int i;
+    int* ptr2 = &amp;a;
+    int* ptr3 = &amp;a[3];
+
+    ptr1++;          /* OK - ptr1 may points to whatever */
+    ptr1 = ptr2 + 1; /* OK - ptr2 points to an array */
+    ptr3++;          /* OK - ptr3 points to an array element */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 17
+
+2. SEI CERT C Coding Standard
+   ARR37-C. Do not add or subtract an integer to a pointer to a non-array
+   object
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR37-C.+Do+not+add+or+subtract+an+integer+to+a+pointer+to+a+non-array+object">https://wiki.sei.cmu.edu/confluence/display/c/ARR37-C.+Do+not+add+or+subtract+an+integer+to+a+pointer+to+a+non-array+object</A>
+
+</PRE>
+</BODY>
+</HTML>

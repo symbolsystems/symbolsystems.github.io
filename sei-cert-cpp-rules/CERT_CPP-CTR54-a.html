@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not compare iterators from different containers [CERT_CPP-CTR54-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not compare iterators from different containers [CERT_CPP-CTR54-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+The rule reports a violation on comparisons of iterators from different
+containers.
+
+Using one of the following operators on iterators is considered as comparison:
+	operator&gt;
+	operator&lt;
+	operator&gt;=
+	operator&lt;=
+	operator==
+	operator!=
+	operator-
+
+The following types of containers are checked:
+  	std::list
+  	std::map
+  	std::multimap
+  	std::set
+  	std::multiset
+  	std::vector
+    
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The comparison of iterators from different containers may cause implementation
+defined or undefined behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;list&gt;
+#include &lt;vector&gt;
+
+void comp_vect()
+{
+    std::vector&lt;int&gt; myvector1;
+    std::vector&lt;int&gt; myvector2;
+
+    for (std::vector&lt;int&gt;::iterator it = myvector1.begin(); it != myvector2.end(); ++it) { // VIOLATION
+        //...
+    }
+}
+
+void comp_iter(std::list&lt;int&gt;&amp; l1, std::list&lt;int&gt;&amp; l2)
+{
+    if (l1.begin() == l2.end()) {    // VIOLATION
+            //...
+    }
+}
+
+void def_iter()
+{
+    std::list&lt;int&gt; mylist1;
+    std::list&lt;int&gt; mylist2;
+
+    comp_iter(mylist1, mylist2);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;list&gt;
+#include &lt;vector&gt;
+
+void comp_vect()
+{
+    std::vector&lt;int&gt; myvector;
+
+    for (std::vector&lt;int&gt;::iterator it = myvector.begin(); it != myvector.end(); ++it) { // OK
+        //...
+    }
+}
+
+void comp_iter(std::list&lt;int&gt;&amp; l1, std::list&lt;int&gt;&amp; l2)
+{
+    if (l1.begin() == l1.end()) { // OK
+            //...
+        if (l2.begin() == l2.end()) { // OK
+                //...
+        }
+    }
+}
+
+void def_iter()
+{
+    std::list&lt;int&gt; mylist1;
+    std::list&lt;int&gt; mylist2;
+
+    comp_iter(mylist1, mylist2);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+CTR53-CPP. Use valid iterator ranges
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR53-CPP.+Use+valid+iterator+ranges">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR53-CPP.+Use+valid+iterator+ranges</A>
+
+SEI CERT C++ Coding Standard
+CTR54-CPP. Do not subtract iterators that do not refer to the same container
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR54-CPP.+Do+not+subtract+iterators+that+do+not+refer+to+the+same+container">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR54-CPP.+Do+not+subtract+iterators+that+do+not+refer+to+the+same+container</A>
+
+</PRE>
+</BODY>
+</HTML>

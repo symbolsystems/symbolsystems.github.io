@@ -1,0 +1,245 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Properly define signal handlers [CERT_C-SIG31-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Properly define signal handlers [CERT_C-SIG31-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule analyzes functions registered as signal handlers, and triggers in the following cases: 
+
+ * A signal handler calls a function that is not asynchronous-signal-safe
+ * A signal handler accesses a shared object that is not of atomic type
+
+The function is considered to be asynchronous-signal-safe on one of the following conditions:
+ * It is required by the standard (see the PARAMETERS section)
+ * It calls only asynchronous-signal-safe functions, and does not access any shared objects
+
+The rule reports all signal handler calls to functions that are not asynchronous-signal-safe.
+
+As a rule, shared data should not be accessed in signal handlers.
+"The two exceptions (C Standard, 5.1.2.3, paragraph 5) to this rule are the ability to read 
+from and write to lock-free atomic objects and variables of type volatile sig_atomic_t. 
+Accessing any other type of object from a signal handler is undefined behavior."
+[SEI CERT C Coding Standard SIG31-C. Do not access shared objects in signal handlers]
+
+The rule reports each access to a shared object which is not of atomic type.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Accessing or modifying shared objects in signal handlers can result in race conditions that can leave 
+data in an inconsistent state"
+[SEI CERT C Coding Standard SIG31-C. Do not access shared objects in signal handlers]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Consider asynchronous-signal-safe functions from POSIX standard" parameter allows you to specify 
+the Posix Standard the rule should consider, as different standards added or removed requirements for
+functions to be asynchronous-signal-safe. Alternatively, you can select the "Strict" option:
+"For strictly conforming programs, only the C standard library functions abort(), _Exit(), quick_exit(), 
+and signal() can be safely called from within a signal handler."
+[SIG30-C. Call only asynchronous-safe functions within signal handlers]
+
+The available options are:
+- None
+- Strict
+- POSIX.1-2001
+- POSIX.1-2003
+- POSIX.1-2004
+- POSIX.1-2008
+- POSIX.1-2013
+- POSIX.1-2016(default)
+
+See references for more details about the list of signal-asynchronous-free functions required by each standard.
+
+The "Additional functions which are asynchronous-signal-safe" parameter allows to define additional, third-party
+functions that the rule should consider to be signal-asynchronous-free. The rule will not trigger when the specified
+functions are called from signal handlers.
+
+The following columns allow you to define different aspects of functions in the functions table:
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide the fully qualified name 
+  of the type or namespace where the function is declared. Use '*' if you want to describe a function declared in any
+  type or namespace, or a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' should contain the name of the described function.
+
+* The '+ definitions in subclasses' is used to indicate whether the current entry will apply
+  to functions with the given name defined in subclasses of the given class.
+  Note that this applies to both instance and non-instance functions.
+  
+The "Report violations when signal() function is called from within signal handler" parameter allows you to enable
+reporting violations when the signal() function is called from within the signal handler.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+ 
+#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+enum {
+    MAXLINE = 1024
+};
+char *info = NULL;
+
+void log_message(void) {
+    fputs(info, stderr);
+}
+
+void handler(int signum) {
+    log_message(); // VIOLATION - calling "log_message", which is not asynchronous-signal-safe
+    free(info); // VIOLATION x2 - calling "free", which is not asynchronous-signal-safe, accessing "info"
+    info = NULL; // VIOLATION - accessing "info"
+}
+
+int main(void) {
+    if (signal(SIGINT, handler) == SIG_ERR) {
+        /* Handle error */
+    }
+    info = (char *) malloc(MAXLINE);
+    if (info == NULL) {
+        /* Handle Error */
+    }
+    while (1) {
+        /* Main loop program code */
+        log_message();
+        /* More program code */
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+enum {
+    MAXLINE = 1024
+};
+volatile sig_atomic_t eflag = 0;
+char *info = NULL;
+
+void log_message(void) {
+    fputs(info, stderr);
+}
+
+void handler(int signum) {
+    eflag = 1; // NO VIOLATION - "eflag" is of type "volatile sig_atomic_t"
+}
+
+int main(void) {
+    if (signal(SIGINT, handler) == SIG_ERR) {
+        /* Handle error */
+    }
+    info = (char *) malloc(MAXLINE);
+    if (info == NULL) {
+        /* Handle error */
+    }
+    while (!eflag) {
+        /* Main loop program code */
+        log_message();
+        /* More program code */
+    }
+    log_message();
+    free(info);
+    info = NULL;
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+SIG30-C. Call only asynchronous-safe functions within signal handlers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/SIG30-C.+Call+only+asynchronous-safe+functions+within+signal+handlers">https://wiki.sei.cmu.edu/confluence/display/c/SIG30-C.+Call+only+asynchronous-safe+functions+within+signal+handlers</A>
+
+SEI CERT C Coding Standard
+SIG31-C. Do not access shared objects in signal handlers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/SIG31-C.+Do+not+access+shared+objects+in+signal+handlers">https://wiki.sei.cmu.edu/confluence/display/c/SIG31-C.+Do+not+access+shared+objects+in+signal+handlers</A>
+
+SEI CERT C Coding Standard
+SIG34-C. Do not call signal() from within interruptible signal handlers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/SIG34-C.+Do+not+call+signal%28%29+from+within+interruptible+signal+handlers">https://wiki.sei.cmu.edu/confluence/display/c/SIG34-C.+Do+not+call+signal%28%29+from+within+interruptible+signal+handlers</A>
+
+SEI CERT C++ Coding Standard
+MSC54-CPP. A signal handler must be a plain old function
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MSC54-CPP.+A+signal+handler+must+be+a+plain+old+function">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MSC54-CPP.+A+signal+handler+must+be+a+plain+old+function</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001995: The application must not be vulnerable to race conditions.
+
+Linux Programmer's Manual
+signal-safety - async-signal-safe functions
+<A HREF="http://man7.org/linux/man-pages/man7/signal-safety.7.html">http://man7.org/linux/man-pages/man7/signal-safety.7.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implicit conversions from wider to narrower integral type which may result in a loss of information shall not be used [CWE-704-j]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implicit conversions from wider to narrower integral type which may result in a loss of information shall not be used [CWE-704-j-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C and C++ perform many type conversions implicitly and silently,
+so as to harmonize types within an expression before evaluating it.
+Some of these conversions can result in loss of information. 
+Such implicit conversions shall not be used, but explicit casts
+should be used instead."
+
+The rule reports a violation if an expression of integral type
+is implicitly converted to a narrower integral type.
+
+See also: MISRA2004-10_1_b, MISRA2004-10_1_d, MISRA2004-10_2_a,
+MISRA2004-10_2_b, PORT-27, PORT-28, PB-56
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes the following order of sizes:
+char &lt; short &lt; int &lt; long &lt; long long
+signed 'type' &lt; unsigned 'type'  e.g. signed int &lt; unsigned int
+
+The rule assumes that the size of an enumeration type in the same
+as the size of signed int type.
+
+The integral type of expression is detected as the type
+that would be obtained from evaluating an expression
+if it were not for the effects of integral promotion.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report violation if a conversion is used:
+- on a constant expression
+- on a bit field
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicit casts should normally only be used in the case where a conversion 
+which could result in a loss of information is specifically required by the 
+programmer. If the static checking of implicit conversions is overridden by
+the use of explicit casts in this way, then the programmer should be aware
+of the issues of truncation and lost of precision associated with the operation,
+and should provide appropriate checking of values in the code"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(unsigned char c);
+
+long sl;
+int foo(unsigned int ui, short s)
+{
+    signed int si;
+    signed char sc;
+    unsigned short us = ui; /* Violation: int assigned to short */
+    sc = s;                 /* Violation: short assigned to char */
+    bar(ui);                /* Violation: int assigned to char */
+    si = ui;                /* Violation: unsigned int assigned to signed int */
+    return sl + us;         /* Violation: long assigned to int */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar(unsigned char c);
+
+long sl;
+int foo(unsigned int ui, short s)
+{
+    signed int si;
+    signed char sc;
+
+    /* Some hints on how to handle conversions which may result
+     * in information loss: */
+
+    /* Use explicit cast if you are sure no information loss is possible */
+    unsigned short us = (unsigned short)ui; /* OK (explicit cast) */
+
+    /* Check if value can be assigned without loss of information.
+     * The example below uses some arbitrary chosen values. */
+    if (s &gt;= 0 &amp;&amp; s &lt; 10) {
+       sc = (signed char)s;           /* OK (explicit cast still needed) */
+    } else {
+       /* Probably some error handling is be required */
+    }
+
+    bar((unsigned char)ui);          /* OK (explicit cast) */
+    si = (signed int)ui;             /* OK (explicit cast) */
+    return (int)sl + us;             /* OK (explicit cast) */
+}
+
+/* exceptions */
+
+struct S {unsigned int uib : 3;} s;
+
+void except(unsigned int ui, unsigned short us){
+    unsigned char uc = 300;       /* OK - constant expression */
+    unsigned short us1 = us + us; /* OK - in spite of integral promotion */
+    uc = s.uib;                   /* OK - bit field */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-7-1. An integer expression shall not lead to data loss
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 180
+
+3. Origin: Misra Guidelines rule 43
+
+4. SEI CERT C Coding Standard
+   INT02-C. Understand integer conversion rules
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules">https://wiki.sei.cmu.edu/confluence/display/c/INT02-C.+Understand+integer+conversion+rules</A>
+
+5. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

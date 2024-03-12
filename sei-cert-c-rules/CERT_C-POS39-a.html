@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the correct byte ordering when transferring data between systems [CERT_C-POS39-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the correct byte ordering when transferring data between systems [CERT_C-POS39-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Different system architectures use different byte ordering, either little
+endian (least significant byte first) or big endian (most significant byte
+first). When transferring data between systems of different endianness,
+the programmer must take care to reverse the byte ordering before interpreting
+the data.
+The functions htonl(), htons(), ntohl(), and ntohs() can be used to transfer
+between network byte ordering (big endian) and the host's byte ordering".
+[SEI CERT C Coding Standard]
+
+The rule detects when data is transferred between systems without using
+the appropriate functions htonl(), htons(), ntohl(), or ntohs().
+A violation is reported in the following cases:
+- A call to the sending function is not preceded by a call to htonl() or htons().
+- The use of a variable that was passed as a buffer to the receiving function
+  is not preceded by a call to ntohl() or ntohs().
+
+The rule applies to buffers of the uint16_t and uint32_t types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+"ntohs(), ntohl(), htons(), and htonl() are not part of the C Standard and
+are consequently not guaranteed to be portable to non-POSIX systems".
+[SEI CERT C Coding Standard]
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Failing to take care to reverse the byte ordering before interpreting the data
+may result in unintended program behavior or program malfunction, such as
+printing incorrect results.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Consider all elements of an array to be converted if at least one of
+the elements is converted in a loop" parameter is enabled, the rule assumes
+that all elements of an array are converted if at least one element of this
+array is converted in a loop.
+With this parameter enabled, the rule may not report correct violations if
+only a subset of array elements is converted in a loop.
+See the test2 function in the EXAMPLE section.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent incorrect byte ordering.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+/* #include &lt;sys/socket.h&gt; */
+ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+
+void test(int sock)
+{
+	uint32_t num;
+	if (recv(sock, (void*) &amp;num, sizeof(uint32_t), 0) &lt; (int) sizeof(uint32_t)) {
+		/* Handle error */
+	}
+	printf("We received %u from the network!\n", (unsigned int) num);// VIOLATION
+}
+
+Here is an example that will trigger violation when the "Consider all elements
+of an array to be converted if at least one of the elements is converted in a loop"
+parameter is disabled.
+
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+/* #include &lt;sys/socket.h&gt; */
+ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+
+void test2(int sock, uint16_t buf[], int x)
+{
+	if(x &gt; 0) {
+		for (int i = 0; i &lt; x; i++) {
+			buf[i] = htons(buf[i]);
+		}
+		send(sock, (const SOCKET_BUF_TYPE *)buf, sizeof(buf), 0);	// VIOLATION with parameter disabled
+	}	 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To fix the code, use the ntohl (network to host long) function:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+/* #include &lt;sys/socket.h&gt; */
+size_t recv(int sockfd, void *buf, size_t len, int flags);
+
+/* #include &lt;arpa/inet.h&gt; */
+uint32_t ntohl(uint32_t netlong);
+
+void test(int sock)
+{
+	uint32_t num;
+	if (recv(sock, (void*) &amp;num, sizeof(uint32_t), 0) &lt; (int) sizeof(uint32_t)) {
+		/* Handle error */
+	}
+	num = ntohl(num);
+	printf("We received %u from the network!\n", (unsigned int) num);// VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+POS39-C. Use the correct byte ordering when transferring data between systems
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS39-C.+Use+the+correct+byte+ordering+when+transferring+data+between+systems">https://wiki.sei.cmu.edu/confluence/display/c/POS39-C.+Use+the+correct+byte+ordering+when+transferring+data+between+systems</A>
+
+</PRE>
+</BODY>
+</HTML>

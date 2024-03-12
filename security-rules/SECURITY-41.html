@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'chdir' if you call 'chroot' [SECURITY-41]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'chdir' if you call 'chroot' [SECURITY-41-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'chroot(dir)' function changes the apparent root directory to the specified 
+directory for the process being called. This directory is used for pathnames
+beginning with slash. 
+
+The directory structure created with chroot is called the jail because it confines
+processes to the defined space. But the chroot call does not actually change the
+working directory, so if the new root is a child of the current directory, the
+application can still access outside resources.
+
+The application should explicitly change to a directory within the jail before
+running chroot:
+    chdir(dir);
+    chroot(dir);
+or change to a directory relative to the new root dir after the chroot call:
+    chroot(dir);
+    chdir("/");
+
+This rule reports a violation if you call 'chroot' but do not call to
+'chdir' at any point in the same function as the chroot call.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mitigates the risk of jail break due to current directory being left outside of
+the chroot jail.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+void Example(const char *path)
+{
+    chroot(path); /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+void Repair(const char *path)
+{
+    chdir(path);
+    chroot(path); /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-243: Creation of chroot Jail Without Changing Working Directory
+   <A HREF="http://cwe.mitre.org/data/definitions/243.html">http://cwe.mitre.org/data/definitions/243.html</A>
+
+2. Best Practices for UNIX chroot() Operations
+   <A HREF="http://www.unixwiz.net/techtips/chroot-practices.html">http://www.unixwiz.net/techtips/chroot-practices.html</A>
+
+3. How to break out of a chroot() jail
+   <A HREF="http://www.bpfh.net/simes/computing/chroot-break.html">http://www.bpfh.net/simes/computing/chroot-break.html</A>
+
+</PRE>
+</BODY>
+</HTML>

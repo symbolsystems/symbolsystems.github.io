@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Observe correct revocation order while relinquishing privileges [SECURITY-44]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Observe correct revocation order while relinquishing privileges [SECURITY-44-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In case of set-user-ID and set-group-ID programs, when the effective user ID
+and group ID are different from those of the real user, it is important to drop
+not only the user-level privileges but also the group privileges. While doing
+so, the order of revocation must be correct." [CERT-POS36-C]
+
+This rule detects when a call to the setgid() function follows a call to
+the setuid() function, and both calls are within one function.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects only direct calls to the setgid() and setuid() functions.
+The rule does not check the flow.
+
+#include &lt;unistd.h&gt;
+void foo(int i)
+{
+    if(i &gt; 0) {
+        setuid(1);
+    } else {
+        setgid(1);  /* Violation reported */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents an attacker from regaining elevated privileges.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+void foo()
+{
+    if (setuid(getuid()) == -1) {
+    }
+
+    if (setgid(getgid()) == -1) {     /* Violation */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+void foo()
+{
+    if (setgid(getgid()) == -1) {     /* OK */
+    }
+
+    if (setuid(getuid()) == -1) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   POS36-C. Observe correct revocation order while relinquishing privileges
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS36-C.+Observe+correct+revocation+order+while+relinquishing+privileges">https://wiki.sei.cmu.edu/confluence/display/c/POS36-C.+Observe+correct+revocation+order+while+relinquishing+privileges</A>
+
+2. OWASP Top 10 2017
+   A5-Broken Access Control
+   <A HREF="https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html">https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html</A>
+
+3. OWASP Top 10-2021
+   A01:2021 - Broken Access Control
+   <A HREF="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">https://owasp.org/Top10/A01_2021-Broken_Access_Control/</A>
+
+4. 2022 CWE Weaknesses On the Cusp
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-269: Improper Privilege Management
+   <A HREF="https://cwe.mitre.org/data/definitions/269.html">https://cwe.mitre.org/data/definitions/269.html</A>
+
+5. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-000500: The application must prevent non-privileged users from executing privileged functions to include disabling,
+   circumventing, or altering implemented security safeguards/countermeasures
+
+</PRE>
+</BODY>
+</HTML>

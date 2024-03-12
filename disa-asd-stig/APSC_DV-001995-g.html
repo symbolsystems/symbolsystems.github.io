@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Usage of functions prone to race is not allowed [APSC_DV-001995-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Usage of functions prone to race is not allowed [APSC_DV-001995-g-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A "race condition" can be defined as "Anomalous behavior due to unexpected 
+critical dependence on the relative timing of events". 
+Race conditions generally involve one or more processes accessing 
+a shared resource (such a file or variable), 
+where this multiple access has not been properly controlled.
+Rule checks if the following functions are used:
+access, creat, pathconf, opendir, dirname, scandir, 
+fopen, lstat, stat, open, rename, remove, lexecve, 
+execl, execlp, execle, execv, execvp, freopen, mktemp, 
+link, unlink
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents anomalous behavior of race conditions functions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifdef __GNUC__
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#else
+#include &lt;io.h&gt;
+#endif
+
+void foo( ) {
+    access( "path", 0 );    // Violation
+    unlink( "/pathname" );  // Violation
+    mktemp( "template" );   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove usage of prone to race functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/avoid-race.html">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/avoid-race.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. SEI CERT C Coding Standard
+   FIO01-C. Be careful using functions that use file names for identification
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO01-C.+Be+careful+using+functions+that+use+file+names+for+identification">https://wiki.sei.cmu.edu/confluence/display/c/FIO01-C.+Be+careful+using+functions+that+use+file+names+for+identification</A>
+
+4. SEI CERT C Coding Standard
+   FIO21-C. Do not create temporary files in shared directories
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO21-C.+Do+not+create+temporary+files+in+shared+directories">https://wiki.sei.cmu.edu/confluence/display/c/FIO21-C.+Do+not+create+temporary+files+in+shared+directories</A>
+
+5. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Weaknesses On the Cusp
+   CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')
+   <A HREF="https://cwe.mitre.org/data/definitions/362.html">https://cwe.mitre.org/data/definitions/362.html</A>
+
+6. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-001995: The application must not be vulnerable to race conditions
+
+</PRE>
+</BODY>
+</HTML>

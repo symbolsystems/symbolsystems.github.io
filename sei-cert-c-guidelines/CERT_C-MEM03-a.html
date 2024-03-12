@@ -1,0 +1,205 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Sensitive data should be cleared before being deallocated [CERT_C-MEM03-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Sensitive data should be cleared before being deallocated [CERT_C-MEM03-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when sensitive data is not cleared before deallocation.
+The rule must be parameterized to define sensitive data; see PARAMETERS.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When sensitive data such as a password or an encryption key is not removed 
+from memory, it could be exposed to an attacker using a "heap inspection" 
+attack that reads the sensitive data using memory dumps or other methods".
+[CWE-244]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The 'Clearing data functions' parameter allows you to specify
+functions that can sanitize sensitive data.
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the clearing function. If disabled, the rule
+    does not consider the data processed by the function to be cleared.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to functions with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- 'Returns clear data' - if enabled, the function clears its return value.
+- 'Cleared parameters' - specifies which function parameters are cleared by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are cleared.
+By default, the following function is considered to clear the data it processes:
+ - 'memset*'
+
+The 'Deallocating functions' parameter allows you to specify deallocation functions. 
+The rule triggers when sensitive data is passed as a parameter to one of the listed functions.
+Fill in the following columns to configure additional deallocating functions.
+- 'Enabled' - enables or disables the deallocating function. If disabled, the rule
+    does not consider the function to be a deallocating function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to functions with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- 'Deallocated parameters' - specifies which function parameters are deallocated.
+    List 1-based indexes of parameters separated by a comma
+    or use "*" to specify that all function parameters should be checked.
+By default, the rule checks the parameters of the following functions:
+- the "free" function 
+- the "realloc" function 
+
+The 'Sensitive variables' parameter allows you to specify the names of
+variables that the rule considers to be sensitive.
+Fill in the following columns to configure a sensitive variable:
+- 'Enabled' - enables or disables the sensitive variable. If disabled, the rule
+    does not consider the variable to be sensitive.
+- 'Fully qualified variable name (wildcard)' - specifies the fully qualified
+    name of the variable. You can use "*" to specify that all variables are
+    considered to be sensitive.
+By default, the following variable names are considered to be sensitive:
+- '*[Pp]assword*'
+- '*[Pp]asswd*'
+ 
+The 'Sensitive functions' parameter allows you to specify functions the rule
+considers to be sensitive.
+- 'Enabled' - enables or disables the sensitive function. If disabled, the rule
+    does not consider the function to be a sensitive function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies the fully qualified name
+    of the type that declares the function. You can use "*" for a function
+    declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to functions with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- ''this' object is sensitive' - if enabled, the function makes the object it is
+    called on sensitive.
+- 'Returns sensitive data' - if enabled, the function makes its return value
+    sensitive.
+- 'Sensitive parameters' - specifies which function parameters are made
+    sensitive by the function. List 1-based indexes of parameters separated by
+    a comma or use "*" to specify that all function parameters are sensitive.
+By default, the following function is considered to be sensitive:
+- '*[Pp]assword*'
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent the exposure of sensitive data to potential
+attackers.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the memory holding sensitive data (password) is
+deallocated without clearing the data first.
+
+#include &lt;stdlib.h&gt;
+
+char* getPassword();
+
+void test()
+{
+    char *password = getPassword();
+     
+    /* Process password... */
+
+    free(password);   // VIOLATION
+    password = NULL;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+The code can be fixed by clearing the password before the memory is deallocated.
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+char* getPassword();
+
+void test()
+{
+    char *password = getPassword();
+     
+    /* Process password... */
+
+    /* Clear password */
+    memset((volatile char*)password, '\0', strlen(password));
+
+    free(password);   // NO VIOLATION
+    password = NULL;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+MEM03-C. Clear sensitive information stored in reusable resources
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM03-C.+Clear+sensitive+information+stored+in+reusable+resources">https://wiki.sei.cmu.edu/confluence/display/c/MEM03-C.+Clear+sensitive+information+stored+in+reusable+resources</A>
+
+CWE-226: Sensitive Information in Resource Not Removed Before Reuse
+<A HREF="http://cwe.mitre.org/data/definitions/226.html">http://cwe.mitre.org/data/definitions/226.html</A>
+
+CWE-244: Improper Clearing of Heap Memory Before Release ('Heap Inspection')
+<A HREF="http://cwe.mitre.org/data/definitions/244.html">http://cwe.mitre.org/data/definitions/244.html</A>
+
+</PRE>
+</BODY>
+</HTML>

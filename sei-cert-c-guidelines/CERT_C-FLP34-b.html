@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions of floating point numbers from wider to narrower floating type [CERT_C-FLP34-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions of floating point numbers from wider to narrower floating type [CERT_C-FLP34-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The value of an expression of floating type shall
+not be implicitly converted to a different type if:
+a) it is not a conversion to a wider floating type, or
+b) the expression is complex, or
+c) the expression is a function argument, or
+d) the expression is a return expression."
+[MISRA C:2004 Rule 10.2]
+
+This rule detects cases when the floating point number is assigned
+to an object with a narrower 'underlying type'.
+
+"The term 'underlying type' is defined as describing the type that would
+be obtained from evaluating an expression if it were not for the effects
+of integral promotion." [MISRA C:2004 Rule 10.1]
+
+The complete definition of the 'underlying type' is described
+by the MISRA C:2004 (6.10.4 Underlying type) and the MISRA C++:2008
+(6.5 Expressions - Underlying type) standards.
+
+See also: MISRA-043, PORT-27, PORT-28
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following operations are covered by this rule:
+- Assignment by means of one of the assignment operators;
+- Passing an argument to a function, in which case the argument is copied as 
+  if by assignment to the corresponding parameter;
+- Returning an expression from a function, in which case the result is copied
+  as if by assignment to an object with the function's return type;
+- Using an expression to initialize all or part of an object, including a 
+  compound literal in C99, in which case the expression is copied as if by 
+  assignment to the destination;
+- The conversion of the constant expression in a switch statement's case label
+  to the promoted type of the controlling expression.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"An implicit conversion that results in the size of a type being reduced
+may result in a loss of information." [MISRA C++:2008 Rule 5-0-6]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(double f);
+
+float foo(double d)
+{
+    float f1 = 0.0;   // Violation
+    f1 = 1.23;        // Violation
+    bar(2.0L);        // Violation
+    return -121.13;   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar(double f);
+
+double foo(double d)
+{
+    float f1 = 0.0F;  // OK - suffix 'F' was added 
+    f1 = (float)1.23; // OK - explicit cast to float was added
+    bar(2.0);         // OK - unnecessary suffix was removed
+    return -121.13;   // OK - function's return type was changed to double
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-6. An implicit integral or floating-point conversion shall not reduce
+   the size of the underlying type
+
+2. High Integrity C++ Coding Standard
+   4.3.1. Do not convert an expression of wider floating point type to a
+   narrower floating point type
+
+3. ISO/DIS 26262
+   point 8.4.4
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-6
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10
+
+6. Origin: Misra Guidelines rule 43
+
+7. SEI CERT C Coding Standard
+   FLP03-C. Detect and handle floating-point errors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors">https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors</A>
+
+8. SEI CERT C Coding Standard
+   FLP34-C. Ensure that floating-point conversions are within range of the new
+   type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP34-C.+Ensure+that+floating-point+conversions+are+within+range+of+the+new+type">https://wiki.sei.cmu.edu/confluence/display/c/FLP34-C.+Ensure+that+floating-point+conversions+are+within+range+of+the+new+type</A>
+
+</PRE>
+</BODY>
+</HTML>

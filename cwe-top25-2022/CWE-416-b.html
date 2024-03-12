@@ -1,0 +1,175 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not point to a wrapped object that has been freed [CWE-416-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not point to a wrapped object that has been freed [CWE-416-b-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule reports a violation when a local or temporary variable is destroyed and one of the
+following occurs:
+a) a pointer to the freed data is returned from a function, or
+b) a variable still exists within the scope of the function that points to the freed data. 
+
+A violation is reported if the variable that is referenced outside its scope has a freed pointer
+field that points to the same location as a variable from a bigger scope.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Referencing memory after it has been freed can cause a program to crash, use unexpected values, or
+execute code.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The use of previously-freed memory can have any number of adverse consequences, ranging from the
+corruption of valid data to the execution of arbitrary code, depending on the instantiation and
+timing of the flaw. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;string&gt;
+
+using namespace std;
+
+const char* returnWrapped() {
+    string s = "abc";
+    s.append("def");
+    return s.c_str(); // VIOLATION
+}
+
+struct A {
+    int *p;
+    A() {
+        p = new int(8);
+    }
+    ~A() {
+        delete (p);
+    }
+};
+
+void foo() {
+    int *p;
+    {
+        A a;
+        p = a.p;
+    } // VIOLATION
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string&gt;
+
+using namespace std;
+
+const char* returnNotWrapped(string&amp; s) {
+    s = "abc";
+    s.append("def");
+    return s.c_str();
+}
+
+struct A {
+    int *p;
+    A() {
+        p = new int(8);
+    }
+    ~A() {
+        delete (p);
+    }
+};
+
+void foo() {
+    int *p;
+    {
+        A a;
+        p = new int(8);
+    }
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-416: Use After Free
+<A HREF="http://cwe.mitre.org/data/definitions/416.html">http://cwe.mitre.org/data/definitions/416.html</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A3-8-1 An object shall not be accessed outside of its lifetime
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 6.8.1 An object shall not be accessed outside of its lifetime
+
+</PRE>
+</BODY>
+</HTML>

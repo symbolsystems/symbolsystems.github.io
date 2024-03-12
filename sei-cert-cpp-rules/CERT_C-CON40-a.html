@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not refer to an atomic variable twice in an expression [CERT_C-CON40-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not refer to an atomic variable twice in an expression [CERT_C-CON40-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the same atomic variable appears twice in an expression, then two atomic
+reads, or an atomic read and an atomic write, are required. Such a pair of
+atomic operations is not thread-safe, as another thread can modify the atomic
+variable between the two operations." [CERT-CON40-C]
+
+The rule detects when an atomic global variable is used more than once in
+a full expression.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"A full expression is an expression that is not part of another expression
+or of a declarator. Each of the following is a full expression:
+an initializer that is not part of a compound literal; the expression
+in an expression statement; the controlling expression of a selection
+statement ('if' or 'switch'); the controlling expression of a 'while'
+or 'do' statement; each of the (optional) expressions of a 'for' statement;
+the (optional) expression in a 'return' statement." [ISO/IEC 9899:2011]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid incorrect results when an atomic global variable
+changes between two atomic reads, or between an atomic read and an atomic
+write in an expression.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+atomic_int n = ATOMIC_VAR_INIT(0);
+
+int f1(void) {
+    return n * (n + 1) / 2;          // Violation
+}
+
+void f2(int* p) {
+    *p = f1();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+atomic_int n = ATOMIC_VAR_INIT(0);
+
+int f1(int x) {
+    return x * (x + 1) / 2;          // OK
+}
+
+void f2(int* p) {
+    *p = f1(n);                      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   CON40-C. Do not refer to an atomic variable twice in an expression
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON40-C.+Do+not+refer+to+an+atomic+variable+twice+in+an+expression">https://wiki.sei.cmu.edu/confluence/display/c/CON40-C.+Do+not+refer+to+an+atomic+variable+twice+in+an+expression</A>
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.8 Statements and blocks
+   7.17 Atomics &lt;stdatomic.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,189 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overflow when reading from a buffer [CWE-125-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overflow when reading from a buffer [CWE-125-c-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+The rule detects when code reads from a buffer and the read operation can go beyond
+the buffer boundary.
+
+Specifically, a violation is reported if an execution path with obvious buffer
+overflow is possible. This occurs when a value of the 'size' parameter is negative
+or greater than the actual buffer size.
+
+This rule checks for buffer overflows for uses of the following functions:
+
+&lt;cstring&gt;
+    void* memchr (void * ptr, int value, size_t num);
+    int memcmp (const void * ptr1, const void * ptr2, size_t num);
+    void* memcpy (void * destination, const void * source, size_t num);    
+    void* memmove ( void * destination, const void * source, size_t num);
+
+&lt;cwchar&gt;
+    int wmemcmp (const wchar_t* ptr1, const wchar_t* ptr2, size_t num);
+    wchar_t* wmemcpy (wchar_t* destination, const wchar_t* source, size_t num);
+    wchar_t* wmemmove (wchar_t* destination, const wchar_t* source, size_t num);
+        
+&lt;strings.h&gt;
+    void bcopy (const void *src, void *dest, size_t n);
+   
+&lt;unistd.h&gt;
+    size_t write(int fildes, const void *buf, size_t nbytes);
+        
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The possibility of buffer overflow is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to
+execute arbitrary code and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violations when access within the bounds of the structure is out of the array bounds"
+parameter enables reporting violations in two cases:
+- the buffer that is accessed out of bounds is the last field of the structure and it is an array
+with size declared to have a length of 0 or 1,
+- the buffer that is accessed out of bounds is a field of the structure, but the access points to
+a location within the structure.
+
+This option is enabled by default.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;string.h&gt;
+
+void example()
+{
+    int src[100];
+    int dest[200];
+    // ...
+    memcpy(dest, src, sizeof(dest)); // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+#include &lt;string.h&gt;
+
+void example()
+{
+    int src[100];
+    int dest[200];
+    // ...
+    memcpy(dest, src, sizeof(src)); // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-125: Out-of-bounds Read
+<A HREF="http://cwe.mitre.org/data/definitions/125.html">http://cwe.mitre.org/data/definitions/125.html</A>
+
+CWE-131: Incorrect Calculation of Buffer Size
+<A HREF="http://cwe.mitre.org/data/definitions/131.html">http://cwe.mitre.org/data/definitions/131.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 1.3
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 8.7.1 Pointer arithmetic shall not form an invalid pointer
+
+SEI CERT C Coding Standard
+ARR38-C. Guarantee that library functions do not form invalid pointers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR38-C.+Guarantee+that+library+functions+do+not+form+invalid+pointers">https://wiki.sei.cmu.edu/confluence/display/c/ARR38-C.+Guarantee+that+library+functions+do+not+form+invalid+pointers</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+</PRE>
+</BODY>
+</HTML>

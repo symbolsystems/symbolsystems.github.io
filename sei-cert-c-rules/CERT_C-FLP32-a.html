@@ -1,0 +1,201 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate values passed to library functions [CERT_C-FLP32-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate values passed to library functions [CERT_C-FLP32-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule cases when the value that is passed to a standard library function
+as a parameter may be different than the value that the function expects.
+
+This rule checks values that are passed to the following functions:
+
+&lt;ctype.h&gt;
+    Condition: c&gt;=-1 &amp;&amp; c&lt;=255
+        isalnum ( c );
+        isalpha ( c );
+        isblank ( c ); 
+        iscntrl ( c );
+        isdigit ( c );
+        isgraph ( c );
+        islower ( c );
+        isprint ( c );
+        ispunct ( c );
+        isspace ( c );
+        isupper ( c );
+        isxdigit ( c );
+        tolower ( c );
+        toupper ( c );
+
+&lt;math.h&gt;
+    Condition: x&gt;=-1 &amp;&amp; x&lt;=1
+        acos[fl]  ( x );
+        asin[fl]  ( x );    
+        
+    Condition: x&gt;-1 &amp;&amp; x&lt;1
+        atanh[fl]  ( x );    
+    
+    Condition: x&gt;=0
+        sqrt[fl]  ( x );
+        log[fl]  ( x );
+        log10[fl]  ( x );
+        log2[fl]  ( x );
+    
+    Condition: x&gt;=1
+        acosh[fl]  ( x );
+    
+    Condition: x&gt;=-1
+        log1p[fl]  ( x );    
+    
+    Condition:  denom != 0
+        remainder[fl]  ( numer, denom );
+        remquo[fl]  ( numer, denom, quot );
+        fmod[fl]  ( numer, denom );
+    
+&lt;stdio.h&gt;
+
+    Condition: character&gt;=-128 &amp;&amp; character&lt;=255
+        fputc ( character, stream );
+        putc ( character, stream );
+        ungetc ( character, stream );
+        putchar ( character );
+        
+    Condition: non_neg&gt;=0
+        fgets ( str, non_neg, stream );
+        fseek ( stream, non_neg, origin );
+        
+&lt;string.h&gt;
+
+    Condition: value&gt;=-128 &amp;&amp; value&lt;=255
+        memchr ( ptr, value, size_t num );
+        memset ( ptr, value, size_t num );
+        strchr ( str, value );
+        strrchr ( str, value );
+
+&lt;wchar.h&gt;
+    Condition: c&gt;=0 &amp;&amp; c&lt;=255
+        btowc ( c );
+        
+&lt;stdlib.h&gt;
+    Condition: denom != 0
+        div ( numer, denom );
+        ldiv ( numer, denom );
+        lldiv ( numer, denom );
+        
+    Condition: n != INT_MIN
+        abs ( int n );
+ 
+See also BD-API-BADPARAM, BD-API-CTYPE, BD-API-NEGPARAM
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Passing a value that is out of the expected range as a function parameter
+violates API. This may lead to runtime errors.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Use heuristics to detect calls to functions from the ctype.h header" parameter
+is enabled, the rule will use heuristics to determine whether the code contains any calls
+to functions from the &lt;ctype.h&gt; header.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps prevent API violations caused by passing an unexpected
+parameter to a function. Such violations could cause runtime errors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;math.h&gt;
+
+double example() {
+    int tab[3] = { -1, 2, 3 };
+    double sum = 0.0;
+    for (int i = 0; i &lt; 3; i++) {
+        sum += sqrt(tab[i]); // VIOLATION
+    }
+    return sum;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Always check if the correct value is passed to a function.
+
+#include &lt;math.h&gt;
+
+double repair() {
+    int tab[3] = { -1, 2, 3 };
+    double sum = 0.0;
+    for (int i = 0; i &lt; 3; i++) {
+        if (tab[i] &gt;= 0) {
+            sum += sqrt(tab[i]); // NO VIOLATION
+        }
+    }
+    return sum;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.11
+
+SEI CERT C Coding Standard
+FLP32-C. Prevent or detect domain and range errors in math functions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP32-C.+Prevent+or+detect+domain+and+range+errors+in+math+functions">https://wiki.sei.cmu.edu/confluence/display/c/FLP32-C.+Prevent+or+detect+domain+and+range+errors+in+math+functions</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A0-4-4 Range, domain and pole errors shall be checked when using math functions
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the 'c_str()' and 'data()' functions for string objects [SECURITY-54]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the 'c_str()' and 'data()' functions for string objects [SECURITY-54-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is required that an underlying buffer for a C-style string needs
+to be of sufficient size to hold character data and a null terminator.
+In addition, a C-style string implies all other disadvantages
+of built-in arrays." [AUTOSAR A27-0-4]
+
+This rule detects when the 'c_str()' and 'data()' functions are called
+for string objects. These functions return pointers to the c-string
+representation of the string object's value.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid calls to the functions that might cause
+buffer overflows.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string&gt;
+#include &lt;cstdio&gt;
+void f1(){
+    std::string s1;
+    printf("%s", s1.data()); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+void f1(){
+    std::string s1;
+    std::cout &lt;&lt; s1;        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A27-0-4. C-style strings shall not be used.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'abort()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [CERT_CPP-ERR50-l]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'abort()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [CERT_CPP-ERR50-l-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The library functions 'abort', 'exit', 'getenv' and 'system' from library
+&lt;stdlib.h&gt; shall not be used." [MISRA-C:2004]
+"The library functions 'abort', 'exit', 'getenv' and 'system' from library
+&lt;cstdlib&gt; shall not be used. The use of these functions leads to
+implementation-defined behaviour." [MISRA C++:2008]
+
+This rule detects calls to the 'abort()' function from the 'stdlib.h'
+and 'cstdlib' standard libraries.
+
+See also: SECURITY-48_b, SECURITY-52, PB-75_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined or implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include  &lt;stdlib.h&gt;
+
+void f1( int i ) {
+    /*...*/
+    abort( );                 /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the call to the 'abort()' function.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A15-5-2. Program shall not be abruptly terminated. In particular,
+    an implicit or explicit invocation of std::abort(), std::quick_exit(),
+    std::_Exit(), std::terminate() shall not be done
+
+2.  AUTOSAR C++14 Coding Guidelines
+    M18-0-3. The library functions abort, exit, getenv and system from library
+    &lt;cstdlib&gt; shall not be used
+
+3.  ISO/IEC 9899:1990 Programming languages -- C
+    7.10.4 Communication with the environment
+
+4.  ISO/IEC 9899:1999 Programming languages -- C
+    7.20.4 Communication with the environment
+
+5.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.5 Libraries, AV Rule 24
+
+6.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 18, Rule 18-0-3
+
+7.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 18.5.2 Program-terminating functions should not be used
+
+8.  MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+    2.10 Section 8 - Rules, 2.10.41 Rule 21.8
+
+9.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 20, Rule 20.11
+
+10. Origin: Misra Guidelines - Rule 126
+
+11. SEI CERT C Coding Standard
+    ERR04-C. Choose an appropriate termination strategy
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR04-C.+Choose+an+appropriate+termination+strategy">https://wiki.sei.cmu.edu/confluence/display/c/ERR04-C.+Choose+an+appropriate+termination+strategy</A>
+
+12. SEI CERT C Coding Standard
+    ERR05-C. Application-independent code should provide error detection
+    without dictating error handling
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR05-C.+Application-independent+code+should+provide+error+detection+without+dictating+error+handling">https://wiki.sei.cmu.edu/confluence/display/c/ERR05-C.+Application-independent+code+should+provide+error+detection+without+dictating+error+handling</A>
+
+13. SEI CERT C++ Coding Standard
+    ERR50-CPP. Do not abruptly terminate the program
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+</PRE>
+</BODY>
+</HTML>

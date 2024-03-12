@@ -1,0 +1,215 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid accessing arrays out of bounds [CERT_C-STR31-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid accessing arrays out of bounds [CERT_C-STR31-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects array access operations which may result in out of bounds access.
+Specifically, a violation is reported if an execution path with obvious out-of-bounds
+access is possible. This occurs when an index value is negative, equal to,
+or greater than the array size.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.0.22
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The potential to access arrays beyond their boundaries is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to
+execute arbitrary code and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violations when access within the bounds of the structure is out of the array bounds"
+parameter enables reporting violations in two cases:
+- the array that is accessed out of bounds is the last field of the structure and its size is
+declared to have a length of 0 or 1,
+- the array that is accessed out of bounds is a field of the structure, but the access points to
+a location within the structure.
+
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Application of the rule helps to keep the code free from as serious problem as accessing 
+an array out of its bounds is. This helps to ensure robustness of the application 
+as a whole.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+void fillArray(int array[], int size)
+{
+    int i;
+    for (i = 0; i &lt;= size; i++) { // iterate from 0 to 100
+        array[i] = 0; // VIOLATION
+    }
+}
+
+void example()
+{
+    int array[100];
+    fillArray(array, 100);
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In order to get rid of the violation, replace '&lt;=' comparison operator with '&lt;':
+
+void fillArray(int array[], int size)
+{
+    int i;
+    for (i = 0; i &lt; size; i++) { // iterate from 0 to 99
+        array[i] = 0; // NO VIOLATION
+    }
+}
+
+void example()
+{
+    int array[100];
+    fillArray(array, 100);
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-125: Out-of-bounds Read
+<A HREF="http://cwe.mitre.org/data/definitions/125.html">http://cwe.mitre.org/data/definitions/125.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="http://cwe.mitre.org/data/definitions/787.html">http://cwe.mitre.org/data/definitions/787.html</A>
+
+CWE-129: Improper Validation of Array Index
+<A HREF="http://cwe.mitre.org/data/definitions/129.html">http://cwe.mitre.org/data/definitions/129.html</A>
+
+CWE-131: Incorrect Calculation of Buffer Size
+<A HREF="http://cwe.mitre.org/data/definitions/131.html">http://cwe.mitre.org/data/definitions/131.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 5, Rule 5-0-16
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 18.1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 8.7.1 Pointer arithmetic shall not form an invalid pointer
+
+SEI CERT C Coding Standard
+ARR30-C. Do not form or use out-of-bounds pointers or array subscripts
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR30-C.+Do+not+form+or+use+out-of-bounds+pointers+or+array+subscripts">https://wiki.sei.cmu.edu/confluence/display/c/ARR30-C.+Do+not+form+or+use+out-of-bounds+pointers+or+array+subscripts</A>
+
+SEI CERT C Coding Standard
+ARR39-C. Do not add or subtract a scaled integer to a pointer
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer">https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer</A>
+
+SEI CERT C Coding Standard
+EXP08-C. Ensure pointer arithmetic is used correctly
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly">https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly</A>
+
+SEI CERT C Coding Standard
+FIO37-C. Do not assume that fgets() or fgetws() returns a nonempty string when successful
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO37-C.+Do+not+assume+that+fgets%28%29+or+fgetws%28%29+returns+a+nonempty+string+when+successful">https://wiki.sei.cmu.edu/confluence/display/c/FIO37-C.+Do+not+assume+that+fgets%28%29+or+fgetws%28%29+returns+a+nonempty+string+when+successful</A>
+
+SEI CERT C Coding Standard
+MSC19-C. For functions that return an array, prefer returning an empty array over a null value
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC19-C.+For+functions+that+return+an+array%2C+prefer+returning+an+empty+array+over+a+null+value">https://wiki.sei.cmu.edu/confluence/display/c/MSC19-C.+For+functions+that+return+an+array%2C+prefer+returning+an+empty+array+over+a+null+value</A>
+
+SEI CERT C Coding Standard
+STR31-C. Guarantee that storage for strings has sufficient space for character data and the null terminator
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR31-C.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator">https://wiki.sei.cmu.edu/confluence/display/c/STR31-C.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator</A>
+
+High Integrity C++ Coding Standard
+5.2.1 Ensure that pointer or array access is demonstrably within bounds of a valid object
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-2-5 An array or container shall not be accessed beyond its range
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-2 A C-style string shall guarantee sufficient space for data and the null terminator
+
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+AUTOSAR C++14 Coding Guidelines
+Rule M5-0-16 A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

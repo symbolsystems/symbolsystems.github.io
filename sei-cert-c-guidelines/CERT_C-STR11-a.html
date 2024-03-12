@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not specify the bound of a character array initialized with a string literal [CERT_C-STR11-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not specify the bound of a character array initialized with a string literal [CERT_C-STR11-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An array of character type may be initialized by a character string literal
+or UTF-8 string literal, optionally enclosed in braces. Successive bytes
+of the string literal (including the terminating null character if there
+is room or if the array is of unknown size) initialize the elements
+of the array." [ISO/IEC 9899:2011]
+
+"[I]f the string is intended to be used as a null-terminated byte string,
+then the array will have one too few characters to hold the string because
+it does not account for the terminating null character. Such a sequence
+of characters has limited utility and has the potential to cause
+vulnerabilities if a null-terminated byte string is assumed." [CERT-STR11-C]
+
+"A better approach is to not specify the bound of a string initialized
+with a string literal because the compiler will automatically allocate
+sufficient space for the entire string literal, including the terminating null
+character." [CERT-STR11-C]
+
+The rule detects when a character array initialized with a string literal
+is declared with an explicitly specified dimension.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not trigger when a character array is initialized with a braced
+list of separated characters.
+
+char s[3] = { 'a', 'b', 'c' };
+
+The rule does not trigger when a non-const character array is larger than
+the string literal that initializes the array.
+
+char buffer[10] = "abc";         // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you make your code easier to maintain.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define SIZE 4
+const char s[SIZE] = "abc";       // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const char s[] = "abc";           // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   STR11-C. Do not specify the bound of a character array initialized with a
+   string literal
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR11-C.+Do+not+specify+the+bound+of+a+character+array+initialized+with+a+string+literal">https://wiki.sei.cmu.edu/confluence/display/c/STR11-C.+Do+not+specify+the+bound+of+a+character+array+initialized+with+a+string+literal</A>
+
+</PRE>
+</BODY>
+</HTML>

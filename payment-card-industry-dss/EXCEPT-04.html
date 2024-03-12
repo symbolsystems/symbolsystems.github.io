@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All exceptions should be rethrown or logged with standard logger [EXCEPT-04]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All exceptions should be rethrown or logged with standard logger [EXCEPT-04-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if an exception handling does not ensure a proper
+error logging procedure. As a proper error logging procedure is recognized:
+- call of function that begins with 'log' or 'warning' or
+- use std::cout, std::cerr, std::clog to generate a log message. 
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+If an exception is rethrown and could be logged somewhere else, then the rule
+does not report violation.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+An exception is an indication of an abnormal condition during the application 
+runtime. When debugging abnormal conditions from the security standpoint, 
+it is critical to have a proper log of suspicious events. 
+This rule enforces that proper logging is performed for such exceptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// example of incorrect code
+
+class Exception { };
+void x();
+
+void foo1() {
+    try {
+        x(); // might throw Exception
+    }
+    catch (const Exception&amp; e) { // Violation - no logging
+        return;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// examples of correct code
+
+#include &lt;iostream&gt;
+
+class Exception{};
+void x();
+void log(char* msg); // error logging procedure
+
+void foo1() {
+    try {
+        x(); // might throw Exception
+    }
+    catch (const Exception&amp; e) { // OK
+        std::cerr &lt;&lt; "Error";
+        return;
+    }
+    catch (int * e) { // OK
+        std::cout &lt;&lt; "Error";
+        return;
+    }
+    catch (float e) { // OK
+        std::clog &lt;&lt; "Error";
+        return;
+    }
+}
+
+void foo2() {
+    try {
+        x(); // might throw Exception
+    }
+    catch (const Exception&amp; e) { // OK
+         log("Error");
+    }
+}
+
+void foo3() {
+    try {
+        x(); // might throw Exception
+    }
+    catch (const Exception&amp; e) { // OK
+         throw;
+    }
+}
+
+class MyException { };
+void foo4() {
+    try {
+        x(); // might throw Exception
+    }
+    catch (const Exception&amp; e) { // OK
+         throw MyException();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://cwe.mitre.org/data/definitions/391.html">http://cwe.mitre.org/data/definitions/391.html</A>
+
+2. <A HREF="http://freshsources.com/HTML/12.07/ALLISON/ALLISON.HTM">http://freshsources.com/HTML/12.07/ALLISON/ALLISON.HTM</A>
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+4. OWASP Top 10 2017
+   A10-Insufficient Logging&amp;Monitoring
+   <A HREF="https://owasp.org/www-project-top-ten/2017/A10_2017-Insufficient_Logging%2526Monitoring.html">https://owasp.org/www-project-top-ten/2017/A10_2017-Insufficient_Logging%2526Monitoring.html</A>
+
+5. OWASP API Security Top 10-2019
+   API10-Insufficient Logging &amp; Monitoring
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+6. OWASP Top 10-2021
+   A09:2021 – Security Logging and Monitoring Failures
+   <A HREF="https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/">https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/</A>
+
+</PRE>
+</BODY>
+</HTML>

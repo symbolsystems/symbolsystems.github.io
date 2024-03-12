@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not check for null after dereferencing [CWE-476-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not check for null after dereferencing [CWE-476-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where a reference checked for being null gets dereferenced
+on any path leading to this check.
+
+In some cases, the checks for null might have become redundant in the course of
+refactoring. In other cases, it is possible that the dereference was introduced
+into code that already had the null check, but the developer mistakenly added
+the dereference before the null check. This usually results in a null reference
+exception. In any case, such a condition usually points to an inconsistency in
+the code, which should be reviewed for correctness.
+
+How it works:
+The rule inspects null checks present in the code and determines whether they
+are redundant. To do this, it examines all the code paths that lead to
+the null check (for example, of variable "foo"). If it finds a dereferencing
+of the variable "foo" along all these paths, then it reports a violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+When both the dereference and the null check are within the same function,
+this almost always indicates a problem with the logic. When one of these
+is in a different function, a more careful review is needed before
+proceeding to fix the reported violation. Even though
+an obvious solution may be to remove the null check, it is possible that
+the null check is a protection against future changes.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Assume that the following functions can be passed arbitrary values" parameter can be configured to assume that the
+specified functions can be passed arbitrary values.
+
+It is controlled by "global functions", "functions with internal linkage", "member functions of the following visibility:"
+checkboxes and the group of radio buttons representing member functions visibilities. 
+
+"global functions" and "functions with internal linkage" parameters define the rule assumptions about global functions 
+and functions with internal linkage (static global functions or functions from anonymous namespaces)
+"member functions of the following visibility:" parameter determines the assumptions for member functions.
+If the checkbox is unchecked, we will assume that there is no such member function to which an arbitrary variable can be
+passed. If the checkbox is checked, it indicates that there is a subset of functions to which arbitrary values can
+be passed.
+In this case, the options are the following:  
+   * public 
+   * public, protected 
+   * member functions of any visibility (least aggressive, most accurate)
+
+Choosing the default options will result in fewer
+violations being reported, and a very low number of false
+positives. Choosing "public, protected" and "functions with internal linkage"
+also usually produces good results. You may want to try different options and 
+pick the one best suited to your code base.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps you detect code that is fraught with the danger of null dereferencing and find
+fragments of dead code.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation due to a problem with logic:
+
+#include "stdio.h"
+
+static void checkSequence(char cur[])
+{
+    if (cur[0] == '-') {
+        printf("Error: only positive values are permitted");
+        return;
+    }
+    // misplaced null check
+    if (cur == 0) {
+        printf("Error: null argument provided");
+        return;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The misplaced null check should precede the array processing code:
+
+#include "stdio.h"
+
+static void checkSequence(char cur[])
+{
+    if (cur == 0) {
+        printf("Error: null argument provided");
+        return;
+    }
+    if (cur[0] == '-') {
+        printf("Error: only positive values are permitted");
+        return;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-476: NULL Pointer Dereference
+<A HREF="http://cwe.mitre.org/data/definitions/476.html">http://cwe.mitre.org/data/definitions/476.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call 'umask' before calling 'mkstemp' [CWE-732-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call 'umask' before calling 'mkstemp' [CWE-732-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'mkstemp' function creates a unique temporary file. On modern systems,
+the file should be created with secure permissions, as mandated by the latest
+POSIX standard (2013 Edition). However, previous versions of the POSIX standard
+did not have this requirement, and some systems might create a file that can be
+read or written by other people.
+
+To ensure the file is opened with secure permissions, always call 'umask' with
+the appropriate permissions before you call 'mkstemp'.
+
+This rule reports a violation when you call 'mkstemp' but do not call 'umask'
+in the same code block. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule reduces the risk of creating a temporary file that can be
+read/written by other people.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;sys/stat.h&gt;
+
+void Example(int x)
+{
+    char template[] = "/tmp/fileXXXXXX";
+    int fd;
+    fd = mkstemp(template); /* Violation - no umask call before */
+
+    if (x) {
+        umask(S_IRUSR | S_IWUSR);
+    }
+    mkstemp(template); /* Violation - umask call not in the same code block */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;sys/stat.h&gt;
+
+void Repair(void)
+{
+    char template[] = "/tmp/fileXXXXXX";
+    int fd;
+    umask(S_IRUSR | S_IWUSR);
+    fd = mkstemp(template); /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. The Open Group Base Specifications Issue 6, IEEE Std 1003.1, 2004 Edition
+   <A HREF="http://pubs.opengroup.org/onlinepubs/009695399/functions/mkstemp.html">http://pubs.opengroup.org/onlinepubs/009695399/functions/mkstemp.html</A>
+
+2. The Open Group Base Specifications Issue 7, IEEE Std 1003.1, 2013 Edition
+   <A HREF="http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkstemp.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkstemp.html</A>
+
+3. The Open Group Base Specifications Issue 7, IEEE Std 1003.1, 2013 Edition
+   <A HREF="http://pubs.opengroup.org/onlinepubs/9699919799/functions/umask.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/umask.html</A>
+
+4. 2022 CWE Weaknesses On the Cusp
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-732: Incorrect Permission Assignment for Critical Resource
+   <A HREF="https://cwe.mitre.org/data/definitions/732.html">https://cwe.mitre.org/data/definitions/732.html</A>
+
+</PRE>
+</BODY>
+</HTML>

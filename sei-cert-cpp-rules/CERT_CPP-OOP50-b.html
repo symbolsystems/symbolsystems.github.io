@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling virtual functions from destructors [CERT_CPP-OOP50-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling virtual functions from destructors [CERT_CPP-OOP50-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Inside destructors virtual functions do not behave "virtually." Called while
+executing a destructor, a virtual function will always be resolved to the type
+of the destructor. Further, a call from a destructor to a pure virtual
+function has undefined behavior.
+
+The same applies to constructors, but this rule checks only destructors.
+Enable OOP-16 to check constructors.
+
+Hence, in general, using virtual functions in destructors is error prone, and
+may lead to defects ranging from memory leaks to program crashes.
+
+This rule detects when you call virtual functions from destructors.
+
+See also: OOP-16, BD-PB-VDTOR, BD-PB-VCTOR
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports violations only if virtual functions are directly called
+from destructors. Indirect calls are not detected.
+
+class A {
+    ~A();
+    virtual void fVirt();
+    virtual void fNonVirt();
+};
+
+void A::fVirt(){}
+void A::fNonVirt(){ fVirt(); }
+A::~A(){ A::fNonVirt(); }       // Violation not reported
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves code reliability and maintainability, may identify runtime bugs
+in the application.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    ~Base( ) {
+        finalize_Base( );          // Violation
+    }
+    virtual void finalize_Base( );
+};
+
+class Derived : public Base {
+        Derived* derived;
+public:
+    ~Derived( ) {
+        finalize_Base( );           // Violation
+        finalize_Derived1( );       // Violation
+        this-&gt;finalize_Derived2( ); // Violation
+    }
+    virtual void finalize_Derived1( );
+    virtual void finalize_Derived2( );
+};
+
+void Base::finalize_Base(){}
+void Derived::finalize_Derived1( ) {}
+void Derived::finalize_Derived2( ) {}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    ~Base( ) {
+        Base::finalize_Base( );        // OK
+    }
+    virtual void finalize_Base( );
+};
+
+class Derived : public Base {
+        Derived* derived;
+public:
+    ~Derived( ) {
+        Base::finalize_Base( );        // OK
+        Derived::finalize_Derived1( ); // OK
+        derived-&gt;finalize_Derived2( ); // OK
+        not_virtual( );                // OK
+    }
+    virtual void finalize_Derived1( );
+    virtual void finalize_Derived2( );
+    void not_virtual( );
+};
+
+void Base::finalize_Base(){}
+void Derived::finalize_Derived1( ) {}
+void Derived::finalize_Derived2( ) {}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 49
+
+2. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 9
+
+3. Scott Meyers and Martin Klaus, "Examining C++ Program Analyzers", 
+   Dr. Dobbs' Journal, the February 1997,
+   Chapter: "Constructors/Destructors/Assignment", Item 13
+   <A HREF="http://www.aristeia.com/ddjpaper1_frames.html">http://www.aristeia.com/ddjpaper1_frames.html</A>
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 71.1
+
+5. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+6. ISO/IEC 14882:2003 Programming languages -- C++
+   10.4 Abstract classes, point 6
+   12.7 Construction and destruction, point 3
+
+7. SEI CERT C++ Coding Standard
+   OOP50-CPP. Do not invoke virtual functions from constructors or destructors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP50-CPP.+Do+not+invoke+virtual+functions+from+constructors+or+destructors">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP50-CPP.+Do+not+invoke+virtual+functions+from+constructors+or+destructors</A>
+
+</PRE>
+</BODY>
+</HTML>

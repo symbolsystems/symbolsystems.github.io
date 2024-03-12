@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use care to ensure that LoadLibrary() will load the correct library [CWE-426-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use care to ensure that LoadLibrary() will load the correct library [CWE-426-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Ensure that you specify a fully-qualified filename for the library to ensure
+that the correct library is always loaded.
+When a library needs to be loaded you should consider using LoadLibraryEx with
+the LOAD_WITH_ALTERED_SEARCH_PATH parameter to ensure that the correct library
+is loaded."
+The rule reports a violation if in code is used the function LoadLibrary
+or the function LoadLibraryEx without LOAD_WITH_ALTERED_SEARCH_PATH argument.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"If you cannot use LoadLibraryEx, ensure that the lpszFileName parameter
+is a fully qualified filename, including the file extension. If it is not fully
+qualified, then the intended module can be substituted by an attacker.
+Also, the system will use '.dll' for the file extension if it is not specified,
+so '.' should be appended to the end if the intended library file does not have
+an extension."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The use of this rule prevents than an attacker could inject a Trojan horse DLL
+within your process by placing a 'tainted' DLL in a location in the DLL search
+path that is found before the intended DLL.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;windows.h&gt;
+
+void foo()
+{
+    HMODULE hModule1 = LoadLibrary(TEXT("someapp.dll"));  // Violation
+
+    HMODULE hModule2 = LoadLibraryEx(                     // Violation
+        TEXT("someapp.dll"),
+        NULL,
+        0
+    );
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;windows.h&gt;
+
+void foo()
+{
+    HMODULE hModule = LoadLibraryEx(                      // OK
+        TEXT("C:\\The\\Right\\Directory\\someapp.dll"),
+        NULL,
+        LOAD_WITH_ALTERED_SEARCH_PATH
+    );
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/766-BSI.html">https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/766-BSI.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. SEI CERT C Coding Standard
+   WIN00-C. Be specific when dynamically loading libraries
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/WIN00-C.+Be+specific+when+dynamically+loading+libraries">https://wiki.sei.cmu.edu/confluence/display/c/WIN00-C.+Be+specific+when+dynamically+loading+libraries</A>
+
+4. 2022 CWE Weaknesses On the Cusp
+   CWE-427: Uncontrolled Search Path Element
+   <A HREF="https://cwe.mitre.org/data/definitions/427.html">https://cwe.mitre.org/data/definitions/427.html</A>
+
+5. 2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-426: Untrusted Search Path
+   <A HREF="https://cwe.mitre.org/data/definitions/426.html">https://cwe.mitre.org/data/definitions/426.html</A>
+
+6. OWASP API Security Top 10-2019
+   API8-Injection
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+7. OWASP Top 10-2021
+   A08:2021 – Software and Data Integrity Failures
+   <A HREF="https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/">https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/</A>
+
+</PRE>
+</BODY>
+</HTML>

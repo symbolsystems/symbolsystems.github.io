@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Guarantee that container indices are within the valid range [CERT_CPP-CTR50-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Guarantee that container indices are within the valid range [CERT_CPP-CTR50-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Ensuring that array references are within the bounds of the array is almost entirely
+the responsibility of the programmer. Likewise, when using standard template library
+vectors, the programmer is responsible for ensuring integer indexes are within
+the bounds of the vector."
+[SEI CERT C++ Coding Standard, CTR50-CPP]
+
+Arrays and containers must be accessed within the valid range.
+
+This rule can detect when a container or an array is accessed at an index without ensuring
+that the index is within the valid range.
+
+By default, the rule detects access to containers. Detecting access to arrays must be enabled with a parameter (see PARAMETERS).
+
+The rule reports indices that do not meet the following conditions:
+- an index must be greater or equal to 0 
+- an index must have an upper bound specified
+
+The following types of containers are checked:
+    std::vector
+    std::array
+    std::deque
+    std::basic_string
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Using an invalid array or container index can result in an arbitrary memory overwrite
+or abnormal program termination."
+[SEI CERT C++ Coding Standard, CTR50-CPP]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violations on access to array" parameter allows you to enable reporting 
+rule violation on access to arrays. This setting will result in better bug detection, 
+but it will increase the number of false alarms. By default this parameter is set to false.
+
+The "Aggressive mode" parameter allows you to enable reporting rule violation
+when a negative integer literal is directly passed as the index of an array, or when
+such a value is subtracted from a pointer.
+This parameter allows you to enable reporting of any potential problems, even if there
+is a high probability that they may be false positives. This setting will result in better
+bug detection, but it will increase the number of false alarms.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid arbitrary memory access and overwrite.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;vector&gt;
+
+void insert_in_table(std::vector&lt;int&gt; &amp;table, int pos, int value) {
+    if (pos &gt;= table.size()) {
+        // Handle error
+        return;
+    }
+    table[pos] = value;    // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Parameter "pos" is of unsigned type, so it cannot be negative.
+
+#include &lt;vector&gt;
+
+void insert_in_table(std::vector&lt;int&gt; &amp;table, std::size_t pos, int value) {
+    if (pos &gt;= table.size()) {
+        // Handle error
+        return;
+    }
+    table[pos] = value;    // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+CTR50-CPP. Guarantee that container indices and iterators are within the valid range
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR50-CPP.+Guarantee+that+container+indices+and+iterators+are+within+the+valid+range">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR50-CPP.+Guarantee+that+container+indices+and+iterators+are+within+the+valid+range</A>
+
+SEI CERT C++ Coding Standard
+STR53-CPP. Range check element access
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR53-CPP.+Range+check+element+access">https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR53-CPP.+Range+check+element+access</A>
+
+</PRE>
+</BODY>
+</HTML>

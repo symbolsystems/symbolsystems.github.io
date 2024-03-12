@@ -1,0 +1,780 @@
+<HTML><HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<TITLE>Enabled Rules</TITLE></HEAD>
+<BODY BGCOLOR=white><FONT FACE="Arial, Helvetica"><H1>Enabled Rules</H1>
+<UL>
+<LI><B><A HREF="CERT_C.html">SEI CERT C [CERT_C]</A></B>
+<UL>
+<LI><B><A HREF="CERT_C-ARR30.html">CERT-ARR30_C (RULE) Do not form or use out-of-bounds pointers or array subscripts [CERT_C-ARR30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ARR30-a.html">Avoid accessing arrays out of bounds [CERT_C-ARR30-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ARR37.html">CERT-ARR37_C (RULE) Do not add or subtract an integer to a pointer to a non-array object [CERT_C-ARR37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ARR37-a.html">Pointer arithmetic shall not be applied to pointers that address variables of non-array type [CERT_C-ARR37-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ARR38.html">CERT-ARR38_C (RULE) Guarantee that library functions do not form invalid pointers [CERT_C-ARR38]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ARR38-a.html">Avoid overflow when reading from a buffer [CERT_C-ARR38-a-1]</A>
+<LI><A HREF="CERT_C-ARR38-b.html">Avoid overflow when writing to a buffer [CERT_C-ARR38-b-1]</A>
+<LI><A HREF="CERT_C-ARR38-c.html">Avoid buffer overflow due to defining incorrect format limits [CERT_C-ARR38-c-1]</A>
+<LI><A HREF="CERT_C-ARR38-d.html">Avoid overflow due to reading a not zero terminated string [CERT_C-ARR38-d-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ARR39.html">CERT-ARR39_C (RULE) Do not add or subtract a scaled integer to a pointer [CERT_C-ARR39]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ARR39-a.html">Avoid accessing arrays out of bounds [CERT_C-ARR39-a-2]</A>
+<LI><A HREF="CERT_C-ARR39-b.html">Pointer arithmetic should not be used [CERT_C-ARR39-b-2]</A>
+<LI><A HREF="CERT_C-ARR39-c.html">Do not add or subtract a scaled integer to a pointer [CERT_C-ARR39-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-CON33.html">CERT-CON33_C (RULE) Avoid race conditions when using library functions [CERT_C-CON33]</A></B>
+<UL>
+<LI><A HREF="CERT_C-CON33-a.html">Avoid using thread-unsafe functions [CERT_C-CON33-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-CON37.html">CERT-CON37_C (RULE) Do not call signal() in a multithreaded program [CERT_C-CON37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-CON37-a.html">The signal handling facilities of &lt;signal.h&gt; shall not be used [CERT_C-CON37-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-CON40.html">CERT-CON40_C (RULE) Do not refer to an atomic variable twice in an expression [CERT_C-CON40]</A></B>
+<UL>
+<LI><A HREF="CERT_C-CON40-a.html">Do not refer to an atomic variable twice in an expression [CERT_C-CON40-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-CON41.html">CERT-CON41_C (RULE) Wrap functions that can fail spuriously in a loop [CERT_C-CON41]</A></B>
+<UL>
+<LI><A HREF="CERT_C-CON41-a.html">Wrap functions that can fail spuriously in a loop [CERT_C-CON41-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-CON43.html">CERT-CON43_C (RULE) Do not allow data races in multithreaded code [CERT_C-CON43]</A></B>
+<UL>
+<LI><A HREF="CERT_C-CON43-a.html">Do not use global variable with different locks set [CERT_C-CON43-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-DCL30.html">CERT-DCL30_C (RULE) Declare objects with appropriate storage durations [CERT_C-DCL30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-DCL30-a.html">The address of an object with automatic storage shall not be returned from a function [CERT_C-DCL30-a-2]</A>
+<LI><A HREF="CERT_C-DCL30-b.html">The address of an object with automatic storage shall not be assigned to another object that may persist after the first object has ceased to exist [CERT_C-DCL30-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-DCL39.html">CERT-DCL39_C (RULE) Avoid information leakage when passing a structure across a trust boundary [CERT_C-DCL39]</A></B>
+<UL>
+<LI><A HREF="CERT_C-DCL39-a.html">A pointer to a structure should not be passed to a function that can copy data to the user space [CERT_C-DCL39-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-DCL40.html">CERT-DCL40_C (RULE) Do not create incompatible declarations of the same function or object [CERT_C-DCL40]</A></B>
+<UL>
+<LI><A HREF="CERT_C-DCL40-a.html">All declarations of an object or function shall have compatible types [CERT_C-DCL40-a-3]</A>
+<LI><A HREF="CERT_C-DCL40-b.html">If objects or functions are declared more than once their types shall be compatible [CERT_C-DCL40-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ENV30.html">CERT-ENV30_C (RULE) Do not modify the object referenced by the return value of certain functions [CERT_C-ENV30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ENV30-a.html">The pointers returned by the Standard Library functions 'localeconv', 'getenv', 'setlocale' or, 'strerror' shall only be used as if they have pointer to const-qualified type [CERT_C-ENV30-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ENV31.html">CERT-ENV31_C (RULE) Do not rely on an environment pointer following an operation that may invalidate it [CERT_C-ENV31]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ENV31-a.html">Do not rely on an environment pointer following an operation that may invalidate it [CERT_C-ENV31-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ENV32.html">CERT-ENV32_C (RULE) All exit handlers must return normally [CERT_C-ENV32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ENV32-a.html">Properly define exit handlers [CERT_C-ENV32-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ENV33.html">CERT-ENV33_C (RULE) Do not call system() [CERT_C-ENV33]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ENV33-a.html">Do not call the 'system()' function from the 'stdlib.h' or 'cstdlib' library with an argument other than '0' (null pointer) [CERT_C-ENV33-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ENV34.html">CERT-ENV34_C (RULE) Do not store pointers returned by certain functions [CERT_C-ENV34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ENV34-a.html">Pointers returned by certain Standard Library functions should not be used following a subsequent call to the same or related function [CERT_C-ENV34-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ERR30.html">CERT-ERR30_C (RULE) Set errno to zero before calling a library function known to set errno, and check errno only after the function returns a value indicating failure [CERT_C-ERR30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ERR30-a.html">Properly use errno value [CERT_C-ERR30-a-2]</A>
+<LI><A HREF="CERT_C-ERR30-b.html">Provide error handling for file opening errors right next to the call to fopen [CERT_C-ERR30-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ERR32.html">CERT-ERR32_C (RULE) Do not rely on indeterminate values of errno [CERT_C-ERR32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ERR32-a.html">Properly use errno value [CERT_C-ERR32-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ERR33.html">CERT-ERR33_C (RULE) Detect and handle standard library errors [CERT_C-ERR33]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ERR33-a.html">The value returned by a standard library function that may return an error should be used [CERT_C-ERR33-a-1]</A>
+<LI><A HREF="CERT_C-ERR33-d.html">Always check the returned value of non-void function [CERT_C-ERR33-d-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-ERR34.html">CERT-ERR34_C (RULE) Detect errors when converting a string to a number [CERT_C-ERR34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-ERR34-a.html">The library functions atof, atoi and atol from library stdlib.h shall not be used [CERT_C-ERR34-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP34.html">CERT-EXP34_C (RULE) Do not dereference null pointers [CERT_C-EXP34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP34-a.html">Avoid null pointer dereferencing [CERT_C-EXP34-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP35.html">CERT-EXP35_C (RULE) Do not modify objects with temporary lifetime [CERT_C-EXP35]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP35-a.html">Do not modify objects with temporary lifetime [CERT_C-EXP35-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP36.html">CERT-EXP36_C (RULE) Do not cast pointers into more strictly aligned pointer types [CERT_C-EXP36]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP36-a.html">Do not cast pointers into more strictly aligned pointer types [CERT_C-EXP36-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP37.html">CERT-EXP37_C (RULE) Call functions with the correct number and type of arguments [CERT_C-EXP37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP37-a.html">Conversions shall not be performed between non compatible pointer to a function types [CERT_C-EXP37-a-3]</A>
+<LI><A HREF="CERT_C-EXP37-b.html">Specify the access permission bits if a file is created using the 'open' or 'openat' system call [CERT_C-EXP37-b-3]</A>
+<LI><A HREF="CERT_C-EXP37-d.html">Functions shall always have visible prototype at the function call [CERT_C-EXP37-d-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP39.html">CERT-EXP39_C (RULE) Do not access a variable through a pointer of an incompatible type [CERT_C-EXP39]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP39-a.html">There shall be no implicit conversions from integral to floating type [CERT_C-EXP39-a-3]</A>
+<LI><A HREF="CERT_C-EXP39-b.html">A cast should not be performed between a pointer to object type and a different pointer to object type [CERT_C-EXP39-b-3]</A>
+<LI><A HREF="CERT_C-EXP39-c.html">Avoid accessing arrays and pointers out of bounds [CERT_C-EXP39-c-3]</A>
+<LI><A HREF="CERT_C-EXP39-d.html">Avoid buffer overflow from tainted data due to defining incorrect format limits [CERT_C-EXP39-d-3]</A>
+<LI><A HREF="CERT_C-EXP39-e.html">Avoid buffer read overflow from tainted data [CERT_C-EXP39-e-3]</A>
+<LI><A HREF="CERT_C-EXP39-f.html">Avoid buffer write overflow from tainted data [CERT_C-EXP39-f-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP42.html">CERT-EXP42_C (RULE) Do not compare padding data [CERT_C-EXP42]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP42-a.html">Don't memcpy or memcmp non-PODs [CERT_C-EXP42-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP45.html">CERT-EXP45_C (RULE) Do not perform assignments in selection statements [CERT_C-EXP45]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP45-b.html">Assignment operators shall not be used in conditions without brackets [CERT_C-EXP45-b-2]</A>
+<LI><A HREF="CERT_C-EXP45-d.html">Assignment operators shall not be used in expressions that yield a Boolean value [CERT_C-EXP45-d-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP46.html">CERT-EXP46_C (RULE) Do not use a bitwise operator with a Boolean-like operand [CERT_C-EXP46]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP46-b.html">Expressions that are effectively Boolean should not be used as operands to operators other than (&amp;&amp;, ||, !, =, ==, !=, ?:) [CERT_C-EXP46-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-EXP47.html">CERT-EXP47_C (RULE) Do not call va_arg with an argument of the incorrect type [CERT_C-EXP47]</A></B>
+<UL>
+<LI><A HREF="CERT_C-EXP47-a.html">Do not call va_arg with an argument of the incorrect type [CERT_C-EXP47-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO30.html">CERT-FIO30_C (RULE) Exclude user input from format strings [CERT_C-FIO30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO30-a.html">Avoid calling functions printf/wprintf with only one argument other than string constant [CERT_C-FIO30-a-1]</A>
+<LI><A HREF="CERT_C-FIO30-b.html">Avoid using functions fprintf/fwprintf with only two parameters, when second parameter is a variable [CERT_C-FIO30-b-1]</A>
+<LI><A HREF="CERT_C-FIO30-c.html">Never use unfiltered data from an untrusted user as the format parameter [CERT_C-FIO30-c-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO32.html">CERT-FIO32_C (RULE) Do not perform operations on devices that are only appropriate for files [CERT_C-FIO32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO32-a.html">Protect against file name injection [CERT_C-FIO32-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO34.html">CERT-FIO34_C (RULE) Distinguish between characters read from a file and EOF or WEOF [CERT_C-FIO34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO34-a.html">The macro EOF should be compared with the unmodified return value from the Standard Library function [CERT_C-FIO34-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO37.html">CERT-FIO37_C (RULE) Do not assume that fgets() or fgetws() returns a nonempty string when successful [CERT_C-FIO37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO37-a.html">Avoid accessing arrays out of bounds [CERT_C-FIO37-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO38.html">CERT-FIO38_C (RULE) Do not copy a FILE object [CERT_C-FIO38]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO38-a.html">A pointer to a FILE object shall not be dereferenced [CERT_C-FIO38-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO39.html">CERT-FIO39_C (RULE) Do not alternately input and output from a stream without an intervening flush or positioning call [CERT_C-FIO39]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO39-a.html">Do not alternately input and output from a stream without an intervening flush or positioning call [CERT_C-FIO39-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO40.html">CERT-FIO40_C (RULE) Reset strings on fgets() or fgetws() failure [CERT_C-FIO40]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO40-a.html">Reset strings on fgets() or fgetws() failure [CERT_C-FIO40-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO41.html">CERT-FIO41_C (RULE) Do not call getc(), putc(), getwc(), or putwc() with a stream argument that has side effects [CERT_C-FIO41]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO41-a.html">Do not call 'getc()', 'putc()', 'getwc()', or 'putwc()' with a stream argument containing assignments, increment or decrement operators [CERT_C-FIO41-a-3]</A>
+<LI><A HREF="CERT_C-FIO41-b.html">Do not call 'getc()', 'putc()', 'getwc()', or 'putwc()' with a stream argument containing function calls or function-like macro calls [CERT_C-FIO41-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO42.html">CERT-FIO42_C (RULE) Close files when they are no longer needed [CERT_C-FIO42]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO42-a.html">Ensure resources are freed [CERT_C-FIO42-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO44.html">CERT-FIO44_C (RULE) Only use values for fsetpos() that are returned from fgetpos() [CERT_C-FIO44]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO44-a.html">Only use values for fsetpos() that are returned from fgetpos() [CERT_C-FIO44-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO45.html">CERT-FIO45_C (RULE) Avoid TOCTOU race conditions while accessing files [CERT_C-FIO45]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO45-a.html">Avoid race conditions while accessing files [CERT_C-FIO45-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO46.html">CERT-FIO46_C (RULE) Do not access a closed file [CERT_C-FIO46]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO46-a.html">Do not use resources that have been freed [CERT_C-FIO46-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FIO47.html">CERT-FIO47_C (RULE) Use valid format strings [CERT_C-FIO47]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FIO47-a.html">There should be no mismatch between the '%s' and '%c' format specifiers in the format string and their corresponding arguments in the invocation of a string formatting function [CERT_C-FIO47-a-2]</A>
+<LI><A HREF="CERT_C-FIO47-b.html">There should be no mismatch between the '%f' format specifier in the format string and its corresponding argument in the invocation of a string formatting function [CERT_C-FIO47-b-2]</A>
+<LI><A HREF="CERT_C-FIO47-c.html">There should be no mismatch between the '%i' and '%d' format specifiers in the string and their corresponding arguments in the invocation of a string formatting function [CERT_C-FIO47-c-2]</A>
+<LI><A HREF="CERT_C-FIO47-d.html">There should be no mismatch between the '%u' format specifier in the format string and its corresponding argument in the invocation of a string formatting function [CERT_C-FIO47-d-2]</A>
+<LI><A HREF="CERT_C-FIO47-e.html">There should be no mismatch between the '%p' format specifier in the format string and its corresponding argument in the invocation of a string formatting function [CERT_C-FIO47-e-2]</A>
+<LI><A HREF="CERT_C-FIO47-f.html">The number of format specifiers in the format string and the number of corresponding arguments in the invocation of a string formatting function should be equal [CERT_C-FIO47-f-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FLP30.html">CERT-FLP30_C (RULE) Do not use floating-point variables as loop counters [CERT_C-FLP30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FLP30-a.html">Do not use floating point variables as loop counters [CERT_C-FLP30-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FLP32.html">CERT-FLP32_C (RULE) Prevent or detect domain and range errors in math functions [CERT_C-FLP32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FLP32-a.html">Validate values passed to library functions [CERT_C-FLP32-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FLP34.html">CERT-FLP34_C (RULE) Ensure that floating-point conversions are within range of the new type [CERT_C-FLP34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FLP34-a.html">Avoid implicit conversions from wider to narrower floating type [CERT_C-FLP34-a-3]</A>
+<LI><A HREF="CERT_C-FLP34-b.html">Avoid implicit conversions of floating point numbers from wider to narrower floating type [CERT_C-FLP34-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FLP36.html">CERT-FLP36_C (RULE) Preserve precision when converting integral values to floating-point type [CERT_C-FLP36]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FLP36-a.html">Implicit conversions from integral to floating type which may result in a loss of information shall not be used [CERT_C-FLP36-a-3]</A>
+<LI><A HREF="CERT_C-FLP36-b.html">Implicit conversions from integral constant to floating type which may result in a loss of information shall not be used [CERT_C-FLP36-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-FLP37.html">CERT-FLP37_C (RULE) Do not use object representations to compare floating-point values [CERT_C-FLP37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-FLP37-c.html">Do not use object representations to compare floating-point values [CERT_C-FLP37-c-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT30.html">CERT-INT30_C (RULE) Ensure that unsigned integer operations do not wrap [CERT_C-INT30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT30-a.html">Avoid wraparounds when performing arithmetic integer operations [CERT_C-INT30-a-2]</A>
+<LI><A HREF="CERT_C-INT30-b.html">Integer overflow or underflow in constant expression in '+', '-', '*' operator [CERT_C-INT30-b-2]</A>
+<LI><A HREF="CERT_C-INT30-c.html">Integer overflow or underflow in constant expression in '&lt;&lt;' operator [CERT_C-INT30-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT31.html">CERT-INT31_C (RULE) Ensure that integer conversions do not result in lost or misinterpreted data [CERT_C-INT31]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT31-a.html">An expression of essentially Boolean type should always be used where an operand is interpreted as a Boolean value [CERT_C-INT31-a-2]</A>
+<LI><A HREF="CERT_C-INT31-b.html">An operand of essentially Boolean type should not be used where an operand is interpreted as a numeric value [CERT_C-INT31-b-2]</A>
+<LI><A HREF="CERT_C-INT31-c.html">An operand of essentially character type should not be used where an operand is interpreted as a numeric value [CERT_C-INT31-c-2]</A>
+<LI><A HREF="CERT_C-INT31-d.html">An operand of essentially enum type should not be used in an arithmetic operation [CERT_C-INT31-d-2]</A>
+<LI><A HREF="CERT_C-INT31-e.html">Shift and bitwise operations should not be performed on operands of essentially signed or enum type [CERT_C-INT31-e-2]</A>
+<LI><A HREF="CERT_C-INT31-f.html">An operand of essentially signed or enum type should not be used as the right hand operand to the bitwise shifting operator [CERT_C-INT31-f-2]</A>
+<LI><A HREF="CERT_C-INT31-g.html">An operand of essentially unsigned type should not be used as the operand to the unary minus operator [CERT_C-INT31-g-2]</A>
+<LI><A HREF="CERT_C-INT31-h.html">The value of an expression shall not be assigned to an object with a narrower essential type [CERT_C-INT31-h-2]</A>
+<LI><A HREF="CERT_C-INT31-i.html">The value of an expression shall not be assigned to an object of a different essential type category [CERT_C-INT31-i-2]</A>
+<LI><A HREF="CERT_C-INT31-j.html">Both operands of an operator in which the usual arithmetic conversions are performed shall have the same essential type category [CERT_C-INT31-j-2]</A>
+<LI><A HREF="CERT_C-INT31-k.html">The second and third operands of the ternary operator shall have the same essential type category [CERT_C-INT31-k-2]</A>
+<LI><A HREF="CERT_C-INT31-l.html">The value of a composite expression shall not be assigned to an object with wider essential type [CERT_C-INT31-l-2]</A>
+<LI><A HREF="CERT_C-INT31-m.html">If a composite expression is used as one operand of an operator in which the usual arithmetic conversions are performed then the other operand shall not have wider essential type [CERT_C-INT31-m-2]</A>
+<LI><A HREF="CERT_C-INT31-n.html">If a composite expression is used as one (second or third) operand of a conditional operator then the other operand shall not have wider essential type [CERT_C-INT31-n-2]</A>
+<LI><A HREF="CERT_C-INT31-o.html">Avoid data loss when converting between integer types [CERT_C-INT31-o-2]</A>
+<LI><A HREF="CERT_C-INT31-p.html">Avoid value change when converting between integer types [CERT_C-INT31-p-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT32.html">CERT-INT32_C (RULE) Ensure that operations on signed integers do not result in overflow [CERT_C-INT32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT32-a.html">Avoid signed integer overflows [CERT_C-INT32-a-2]</A>
+<LI><A HREF="CERT_C-INT32-b.html">Integer overflow or underflow in constant expression in '+', '-', '*' operator [CERT_C-INT32-b-2]</A>
+<LI><A HREF="CERT_C-INT32-c.html">Integer overflow or underflow in constant expression in '&lt;&lt;' operator [CERT_C-INT32-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT33.html">CERT-INT33_C (RULE) Ensure that division and remainder operations do not result in divide-by-zero errors [CERT_C-INT33]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT33-a.html">Avoid division by zero [CERT_C-INT33-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT34.html">CERT-INT34_C (RULE) Do not shift an expression by a negative number of bits or by greater than or equal to the number of bits that exist in the operand [CERT_C-INT34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT34-a.html">Avoid incorrect shift operations [CERT_C-INT34-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT35.html">CERT-INT35_C (RULE) Use correct integer precisions [CERT_C-INT35]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT35-a.html">Use correct integer precisions when checking the right hand operand of the shift operator [CERT_C-INT35-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-INT36.html">CERT-INT36_C (RULE) Converting a pointer to integer or integer to pointer [CERT_C-INT36]</A></B>
+<UL>
+<LI><A HREF="CERT_C-INT36-b.html">A conversion should not be performed between a pointer to object type and an integer type other than 'uintptr_t' or 'intptr_t' [CERT_C-INT36-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MEM30.html">CERT-MEM30_C (RULE) Do not access freed memory [CERT_C-MEM30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MEM30-a.html">Do not use resources that have been freed [CERT_C-MEM30-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MEM31.html">CERT-MEM31_C (RULE) Free dynamically allocated memory when no longer needed [CERT_C-MEM31]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MEM31-a.html">Ensure resources are freed [CERT_C-MEM31-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MEM34.html">CERT-MEM34_C (RULE) Only free memory allocated dynamically [CERT_C-MEM34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MEM34-a.html">Do not free resources using invalid pointers [CERT_C-MEM34-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MEM35.html">CERT-MEM35_C (RULE) Allocate sufficient memory for an object [CERT_C-MEM35]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MEM35-a.html">Do not use sizeof operator on pointer type to specify the size of the memory to be allocated via 'malloc', 'calloc' or 'realloc' function [CERT_C-MEM35-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MEM36.html">CERT-MEM36_C (RULE) Do not modify the alignment of objects by calling realloc() [CERT_C-MEM36]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MEM36-a.html">Do not modify the alignment of objects by calling realloc() [CERT_C-MEM36-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC30.html">CERT-MSC30_C (RULE) Do not use the rand() function for generating pseudorandom numbers [CERT_C-MSC30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC30-a.html">Do not use the rand() function for generating pseudorandom numbers [CERT_C-MSC30-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC32.html">CERT-MSC32_C (RULE) Properly seed pseudorandom number generators [CERT_C-MSC32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC32-d.html">Properly seed pseudorandom number generators [CERT_C-MSC32-d-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC33.html">CERT-MSC33_C (RULE) Do not pass invalid data to the asctime() function [CERT_C-MSC33]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC33-a.html">The 'asctime()' and 'asctime_r()' functions should not be used [CERT_C-MSC33-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC37.html">CERT-MSC37_C (RULE) Ensure that control never reaches the end of a non-void function [CERT_C-MSC37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC37-a.html">All exit paths from a function, except main(), with non-void return type shall have an explicit return statement with an expression [CERT_C-MSC37-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC38.html">CERT-MSC38_C (RULE) Do not treat a predefined identifier as an object if it might only be implemented as a macro [CERT_C-MSC38]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC38-a.html">A function-like macro shall not be invoked without all of its arguments [CERT_C-MSC38-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC39.html">CERT-MSC39_C (RULE) Do not call va_arg() on a va_list that has an indeterminate value [CERT_C-MSC39]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC39-a.html">Use macros for variable arguments correctly [CERT_C-MSC39-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC40.html">CERT-MSC40_C (RULE) Do not violate constraints [CERT_C-MSC40]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC40-a.html">An inline definition of a function with external linkage shall not contain definitions and uses of static objects [CERT_C-MSC40-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-MSC41.html">CERT-MSC41_C (RULE) Never hard code sensitive information [CERT_C-MSC41]</A></B>
+<UL>
+<LI><A HREF="CERT_C-MSC41-a.html">Do not hard code string literals [CERT_C-MSC41-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-PRE30.html">CERT-PRE30_C (RULE) Do not create a universal character name through concatenation [CERT_C-PRE30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-PRE30-a.html">Avoid token concatenation that may produce universal character names [CERT_C-PRE30-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-PRE31.html">CERT-PRE31_C (RULE) Avoid side effects in arguments to unsafe macros [CERT_C-PRE31]</A></B>
+<UL>
+<LI><A HREF="CERT_C-PRE31-b.html">Assertions should not contain assignments, increment, or decrement operators [CERT_C-PRE31-b-3]</A>
+<LI><A HREF="CERT_C-PRE31-c.html">Assertions should not contain function calls nor function-like macro calls [CERT_C-PRE31-c-3]</A>
+<LI><A HREF="CERT_C-PRE31-d.html">Avoid side effects in arguments to unsafe macros [CERT_C-PRE31-d-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-PRE32.html">CERT-PRE32_C (RULE) Do not use preprocessor directives in invocations of function-like macros [CERT_C-PRE32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-PRE32-a.html">Arguments to a function-like macro shall not contain tokens that look like preprocessing directives [CERT_C-PRE32-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-SIG31.html">CERT-SIG31_C (RULE) Do not access shared objects in signal handlers [CERT_C-SIG31]</A></B>
+<UL>
+<LI><A HREF="CERT_C-SIG31-a.html">Properly define signal handlers [CERT_C-SIG31-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-SIG34.html">CERT-SIG34_C (RULE) Do not call signal() from within interruptible signal handlers [CERT_C-SIG34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-SIG34-a.html">Properly define signal handlers [CERT_C-SIG34-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-SIG35.html">CERT-SIG35_C (RULE) Do not return from a computational exception signal handler [CERT_C-SIG35]</A></B>
+<UL>
+<LI><A HREF="CERT_C-SIG35-a.html">Do not return from a computational exception signal handler [CERT_C-SIG35-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-STR30.html">CERT-STR30_C (RULE) Do not attempt to modify string literals [CERT_C-STR30]</A></B>
+<UL>
+<LI><A HREF="CERT_C-STR30-a.html">A string literal shall not be modified [CERT_C-STR30-a-2]</A>
+<LI><A HREF="CERT_C-STR30-b.html">Do not modify string literals [CERT_C-STR30-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-STR31.html">CERT-STR31_C (RULE) Guarantee that storage for strings has sufficient space for character data and the null terminator [CERT_C-STR31]</A></B>
+<UL>
+<LI><A HREF="CERT_C-STR31-a.html">Avoid accessing arrays out of bounds [CERT_C-STR31-a-1]</A>
+<LI><A HREF="CERT_C-STR31-b.html">Avoid overflow when writing to a buffer [CERT_C-STR31-b-1]</A>
+<LI><A HREF="CERT_C-STR31-c.html">Prevent buffer overflows from tainted data [CERT_C-STR31-c-1]</A>
+<LI><A HREF="CERT_C-STR31-d.html">Avoid buffer write overflow from tainted data [CERT_C-STR31-d-1]</A>
+<LI><A HREF="CERT_C-STR31-e.html">Avoid using unsafe string functions which may cause buffer overflows [CERT_C-STR31-e-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-STR32.html">CERT-STR32_C (RULE) Do not pass a non-null-terminated character sequence to a library function that expects a string [CERT_C-STR32]</A></B>
+<UL>
+<LI><A HREF="CERT_C-STR32-a.html">Avoid overflow due to reading a not zero terminated string [CERT_C-STR32-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_C-STR34.html">CERT-STR34_C (RULE) Cast characters to unsigned char before converting to larger integer sizes [CERT_C-STR34]</A></B>
+<UL>
+<LI><A HREF="CERT_C-STR34-b.html">Cast characters to unsigned char before assignment to larger integer sizes [CERT_C-STR34-b-2]</A>
+<LI><A HREF="CERT_C-STR34-c.html">An expressions of the 'signed char' type should not be used as an array index [CERT_C-STR34-c-2]</A>
+<LI><A HREF="CERT_C-STR34-d.html">Cast characters to unsigned char before converting to larger integer sizes [CERT_C-STR34-d-2]</A>
+</UL>
+<LI><B><A HREF="CERT_C-STR37.html">CERT-STR37_C (RULE) Arguments to character-handling functions must be representable as an unsigned char [CERT_C-STR37]</A></B>
+<UL>
+<LI><A HREF="CERT_C-STR37-a.html">Do not pass incorrect values to ctype.h library functions [CERT_C-STR37-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_C-STR38.html">CERT-STR38_C (RULE) Do not confuse narrow and wide character strings and functions [CERT_C-STR38]</A></B>
+<UL>
+<LI><A HREF="CERT_C-STR38-a.html">Do not confuse narrow and wide character strings and functions [CERT_C-STR38-a-1]</A>
+</UL>
+</UL>
+<LI><B><A HREF="CERT_CPP.html">SEI CERT C++ [CERT_CPP]</A></B>
+<UL>
+<LI><B><A HREF="CERT_CPP-CON50.html">CERT-CON50_CPP (RULE) Do not destroy a mutex while it is locked [CERT_CPP-CON50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON50-a.html">Do not destroy another thread's mutex [CERT_CPP-CON50-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CON51.html">CERT-CON51_CPP (RULE) Ensure actively held locks are released on exceptional conditions [CERT_CPP-CON51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON51-a.html">Do not call lock() directly on a mutex [CERT_CPP-CON51-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CON52.html">CERT-CON52_CPP (RULE) Prevent data races when accessing bit-fields from multiple threads [CERT_CPP-CON52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON52-a.html">Use locks to prevent race conditions when modifying bit fields [CERT_CPP-CON52-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CON53.html">CERT-CON53_CPP (RULE) Avoid deadlock by locking in a predefined order [CERT_CPP-CON53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON53-a.html">Do not acquire locks in different order [CERT_CPP-CON53-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CON54.html">CERT-CON54_CPP (RULE) Wrap functions that can spuriously wake up in a loop [CERT_CPP-CON54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON54-a.html">Wrap functions that can spuriously wake up in a loop [CERT_CPP-CON54-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CON55.html">CERT-CON55_CPP (RULE) Preserve thread safety and liveness when using condition variables [CERT_CPP-CON55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON55-a.html">Do not use the 'notify_one()' function when multiple threads are waiting on the same condition variable [CERT_CPP-CON55-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CON56.html">CERT-CON56_CPP (RULE) Do not speculatively lock a non-recursive mutex that is already owned by the calling thread [CERT_CPP-CON56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CON56-a.html">Avoid double locking [CERT_CPP-CON56-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR50.html">CERT-CTR50_CPP (RULE) Guarantee that container indices and iterators are within the valid range [CERT_CPP-CTR50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR50-a.html">Guarantee that container indices are within the valid range [CERT_CPP-CTR50-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR51.html">CERT-CTR51_CPP (RULE) Use valid references, pointers, and iterators to reference elements of a container [CERT_CPP-CTR51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR51-a.html">Do not modify container while iterating over it [CERT_CPP-CTR51-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR52.html">CERT-CTR52_CPP (RULE) Guarantee that library functions do not overflow [CERT_CPP-CTR52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR52-a.html">Do not pass empty container iterators to std algorithms as destinations [CERT_CPP-CTR52-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR53.html">CERT-CTR53_CPP (RULE) Use valid iterator ranges [CERT_CPP-CTR53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR53-a.html">Do not use an iterator range that isn't really a range [CERT_CPP-CTR53-a-2]</A>
+<LI><A HREF="CERT_CPP-CTR53-b.html">Do not compare iterators from different containers [CERT_CPP-CTR53-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR54.html">CERT-CTR54_CPP (RULE) Do not subtract iterators that do not refer to the same container [CERT_CPP-CTR54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR54-a.html">Do not compare iterators from different containers [CERT_CPP-CTR54-a-2]</A>
+<LI><A HREF="CERT_CPP-CTR54-b.html">Do not compare two unrelated pointers [CERT_CPP-CTR54-b-2]</A>
+<LI><A HREF="CERT_CPP-CTR54-c.html">Do not subtract two pointers that do not address elements of the same array [CERT_CPP-CTR54-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR55.html">CERT-CTR55_CPP (RULE) Do not use an additive operator on an iterator if the result would overflow [CERT_CPP-CTR55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR55-a.html">Do not add or subtract a constant with a value greater than one from an iterator [CERT_CPP-CTR55-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR56.html">CERT-CTR56_CPP (RULE) Do not use pointer arithmetic on polymorphic objects [CERT_CPP-CTR56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR56-a.html">Don't treat arrays polymorphically [CERT_CPP-CTR56-a-2]</A>
+<LI><A HREF="CERT_CPP-CTR56-b.html">A pointer to an array of derived class objects should not be converted to a base class pointer [CERT_CPP-CTR56-b-2]</A>
+<LI><A HREF="CERT_CPP-CTR56-c.html">Do not treat arrays polymorphically [CERT_CPP-CTR56-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR57.html">CERT-CTR57_CPP (RULE) Provide a valid ordering predicate [CERT_CPP-CTR57]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR57-a.html">For associative containers never use comparison function returning true for equal values [CERT_CPP-CTR57-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-CTR58.html">CERT-CTR58_CPP (RULE) Predicate function objects should not be mutable [CERT_CPP-CTR58]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-CTR58-a.html">Make predicates const pure functions [CERT_CPP-CTR58-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL50.html">CERT-DCL50_CPP (RULE) Do not define a C-style variadic function [CERT_CPP-DCL50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL50-a.html">Functions shall not be defined with a variable number of arguments [CERT_CPP-DCL50-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL51.html">CERT-DCL51_CPP (RULE) Do not declare or define a reserved identifier [CERT_CPP-DCL51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL51-a.html">Do not #define or #undef identifiers with names which start with underscore [CERT_CPP-DCL51-a-3]</A>
+<LI><A HREF="CERT_CPP-DCL51-b.html">Do not redefine reserved words [CERT_CPP-DCL51-b-3]</A>
+<LI><A HREF="CERT_CPP-DCL51-c.html">Do not #define nor #undef identifier 'defined' [CERT_CPP-DCL51-c-3]</A>
+<LI><A HREF="CERT_CPP-DCL51-d.html">The names of standard library macros, objects and functions shall not be reused [CERT_CPP-DCL51-d-3]</A>
+<LI><A HREF="CERT_CPP-DCL51-e.html">The names of standard library macros, objects and functions shall not be reused (C90) [CERT_CPP-DCL51-e-3]</A>
+<LI><A HREF="CERT_CPP-DCL51-f.html">The names of standard library macros, objects and functions shall not be reused (C99) [CERT_CPP-DCL51-f-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL52.html">CERT-DCL52_CPP (RULE) Never qualify a reference type with const or volatile [CERT_CPP-DCL52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL52-a.html">Never qualify a reference type with 'const' or 'volatile' [CERT_CPP-DCL52-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL53.html">CERT-DCL53_CPP (RULE) Do not write syntactically ambiguous declarations [CERT_CPP-DCL53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL53-a.html">Parameter names in function declarations should not be enclosed in parentheses [CERT_CPP-DCL53-a-3]</A>
+<LI><A HREF="CERT_CPP-DCL53-b.html">Local variable names in variable declarations should not be enclosed in parentheses [CERT_CPP-DCL53-b-3]</A>
+<LI><A HREF="CERT_CPP-DCL53-c.html">Avoid function declarations that are syntactically ambiguous [CERT_CPP-DCL53-c-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL54.html">CERT-DCL54_CPP (RULE) Overload allocation and deallocation functions as a pair in the same scope [CERT_CPP-DCL54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL54-a.html">Always provide new and delete together [CERT_CPP-DCL54-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL55.html">CERT-DCL55_CPP (RULE) Avoid information leakage when passing a class object across a trust boundary [CERT_CPP-DCL55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL55-a.html">A pointer to a structure should not be passed to a function that can copy data to the user space [CERT_CPP-DCL55-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL56.html">CERT-DCL56_CPP (RULE) Avoid cycles during initialization of static objects [CERT_CPP-DCL56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL56-a.html">Avoid initialization order problems across translation units by replacing non-local static objects with local static objects [CERT_CPP-DCL56-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL57.html">CERT-DCL57_CPP (RULE) Do not let exceptions escape from destructors or deallocation functions [CERT_CPP-DCL57]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL57-a.html">Never allow an exception to be thrown from a destructor, deallocation, and swap [CERT_CPP-DCL57-a-2]</A>
+<LI><A HREF="CERT_CPP-DCL57-b.html">Always catch exceptions [CERT_CPP-DCL57-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL58.html">CERT-DCL58_CPP (RULE) Do not modify the standard namespaces [CERT_CPP-DCL58]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL58-a.html">Do not modify the standard namespaces 'std' and 'posix' [CERT_CPP-DCL58-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL59.html">CERT-DCL59_CPP (RULE) Do not define an unnamed namespace in a header file [CERT_CPP-DCL59]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL59-a.html">There shall be no unnamed namespaces in header files [CERT_CPP-DCL59-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-DCL60.html">CERT-DCL60_CPP (RULE) Obey the one-definition rule [CERT_CPP-DCL60]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-DCL60-a.html">The One Definition Rule shall not be violated [CERT_CPP-DCL60-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR50.html">CERT-ERR50_CPP (RULE) Do not abruptly terminate the program [CERT_CPP-ERR50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR50-a.html">The execution of a function registered with 'std::atexit()' or 'std::at_quick_exit()' should not exit via an exception [CERT_CPP-ERR50-a-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-b.html">Never allow an exception to be thrown from a destructor, deallocation, and swap [CERT_CPP-ERR50-b-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-c.html">Do not throw from within destructor [CERT_CPP-ERR50-c-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-d.html">There should be at least one exception handler to catch all otherwise unhandled exceptions [CERT_CPP-ERR50-d-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-e.html">An empty throw (throw;) shall only be used in the compound-statement of a catch handler [CERT_CPP-ERR50-e-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-f.html">Exceptions shall be raised only after start-up and before termination of the program [CERT_CPP-ERR50-f-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-g.html">Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [CERT_CPP-ERR50-g-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-h.html">Where a function's declaration includes an exception-specification, the function shall only be capable of throwing exceptions of the indicated type(s) [CERT_CPP-ERR50-h-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-i.html">Function called in global or namespace scope shall not throw unhandled exceptions [CERT_CPP-ERR50-i-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-j.html">Always catch exceptions [CERT_CPP-ERR50-j-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-k.html">Properly define exit handlers [CERT_CPP-ERR50-k-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-l.html">The 'abort()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [CERT_CPP-ERR50-l-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-m.html">Avoid throwing exceptions from functions that are declared not to throw [CERT_CPP-ERR50-m-3]</A>
+<LI><A HREF="CERT_CPP-ERR50-n.html">The 'quick_exit()' and '_Exit()' functions from the 'stdlib.h' or 'cstdlib' library shall not be used [CERT_CPP-ERR50-n-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR51.html">CERT-ERR51_CPP (RULE) Handle all exceptions [CERT_CPP-ERR51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR51-a.html">Always catch exceptions [CERT_CPP-ERR51-a-3]</A>
+<LI><A HREF="CERT_CPP-ERR51-b.html">Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [CERT_CPP-ERR51-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR52.html">CERT-ERR52_CPP (RULE) Do not use setjmp() or longjmp() [CERT_CPP-ERR52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR52-a.html">The facilities provided by &lt;setjmp.h&gt; should not be used [CERT_CPP-ERR52-a-3]</A>
+<LI><A HREF="CERT_CPP-ERR52-b.html">The standard header files &lt;setjmp.h&gt; or &lt;csetjmp&gt; shall not be used [CERT_CPP-ERR52-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR53.html">CERT-ERR53_CPP (RULE) Do not reference base classes or class data members in a constructor or destructor function-try-block handler [CERT_CPP-ERR53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR53-a.html">Handlers of a function-try-block implementation of a class constructor or destructor shall not reference nonstatic members from this class or its bases [CERT_CPP-ERR53-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR54.html">CERT-ERR54_CPP (RULE) Catch handlers should order their parameter types from most derived to least derived [CERT_CPP-ERR54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR54-a.html">Where multiple handlers are provided in a single try-catch statement or function-try-block for a derived class and some or all of its bases, the handlers shall be ordered most-derived to base class [CERT_CPP-ERR54-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR55.html">CERT-ERR55_CPP (RULE) Honor exception specifications [CERT_CPP-ERR55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR55-a.html">Where a function's declaration includes an exception-specification, the function shall only be capable of throwing exceptions of the indicated type(s) [CERT_CPP-ERR55-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR56.html">CERT-ERR56_CPP (RULE) Guarantee exception safety [CERT_CPP-ERR56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR56-a.html">Always catch exceptions [CERT_CPP-ERR56-a-2]</A>
+<LI><A HREF="CERT_CPP-ERR56-b.html">Do not leave 'catch' blocks empty [CERT_CPP-ERR56-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR57.html">CERT-ERR57_CPP (RULE) Do not leak resources when handling exceptions [CERT_CPP-ERR57]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR57-a.html">Ensure resources are freed [CERT_CPP-ERR57-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR58.html">CERT-ERR58_CPP (RULE) Handle all exceptions thrown before main() begins executing [CERT_CPP-ERR58]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR58-a.html">Exceptions shall be raised only after start-up and before termination of the program [CERT_CPP-ERR58-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR59.html">CERT-ERR59_CPP (RULE) Do not throw an exception across execution boundaries [CERT_CPP-ERR59]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR59-a.html">Do not throw an exception across execution boundaries [CERT_CPP-ERR59-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR60.html">CERT-ERR60_CPP (RULE) Exception objects must be nothrow copy constructible [CERT_CPP-ERR60]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR60-a.html">Exception objects must be nothrow copy constructible [CERT_CPP-ERR60-a-3]</A>
+<LI><A HREF="CERT_CPP-ERR60-b.html">An explicitly declared copy constructor for a class that inherits from 'std::exception' should have a non-throwing exception specification [CERT_CPP-ERR60-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR61.html">CERT-ERR61_CPP (RULE) Catch exceptions by lvalue reference [CERT_CPP-ERR61]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR61-a.html">A class type exception shall always be caught by reference [CERT_CPP-ERR61-a-3]</A>
+<LI><A HREF="CERT_CPP-ERR61-b.html">Throw by value, catch by reference [CERT_CPP-ERR61-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-ERR62.html">CERT-ERR62_CPP (RULE) Detect errors when converting a string to a number [CERT_CPP-ERR62]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-ERR62-a.html">The library functions atof, atoi and atol from library stdlib.h shall not be used [CERT_CPP-ERR62-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP50.html">CERT-EXP50_CPP (RULE) Do not depend on the order of evaluation for side effects [CERT_CPP-EXP50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP50-a.html">The value of an expression shall be the same under any order of evaluation that the standard permits [CERT_CPP-EXP50-a-2]</A>
+<LI><A HREF="CERT_CPP-EXP50-b.html">Don't write code that depends on the order of evaluation of function arguments [CERT_CPP-EXP50-b-2]</A>
+<LI><A HREF="CERT_CPP-EXP50-c.html">Don't write code that depends on the order of evaluation of function designator and function arguments [CERT_CPP-EXP50-c-2]</A>
+<LI><A HREF="CERT_CPP-EXP50-d.html">Don't write code that depends on the order of evaluation of expression that involves a function call [CERT_CPP-EXP50-d-2]</A>
+<LI><A HREF="CERT_CPP-EXP50-e.html">Between sequence points an object shall have its stored value modified at most once by the evaluation of an expression [CERT_CPP-EXP50-e-2]</A>
+<LI><A HREF="CERT_CPP-EXP50-f.html">Don't write code that depends on the order of evaluation of function calls [CERT_CPP-EXP50-f-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP51.html">CERT-EXP51_CPP (RULE) Do not delete an array through a pointer of the incorrect type [CERT_CPP-EXP51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP51-a.html">Do not treat arrays polymorphically [CERT_CPP-EXP51-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP52.html">CERT-EXP52_CPP (RULE) Do not rely on side effects in unevaluated operands [CERT_CPP-EXP52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP52-a.html">The operand of the sizeof operator shall not contain any expression which has side effects [CERT_CPP-EXP52-a-3]</A>
+<LI><A HREF="CERT_CPP-EXP52-b.html">Object designated by a volatile lvalue should not be accessed in the operand of the sizeof operator [CERT_CPP-EXP52-b-3]</A>
+<LI><A HREF="CERT_CPP-EXP52-c.html">The function call that causes the side effect shall not be the operand of the sizeof operator [CERT_CPP-EXP52-c-3]</A>
+<LI><A HREF="CERT_CPP-EXP52-d.html">The operand of the 'typeid' operator shall not contain any expression that has side effects [CERT_CPP-EXP52-d-3]</A>
+<LI><A HREF="CERT_CPP-EXP52-e.html">The operand of the 'typeid' operator shall not contain a function call that causes side effects [CERT_CPP-EXP52-e-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP53.html">CERT-EXP53_CPP (RULE) Do not read uninitialized memory [CERT_CPP-EXP53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP53-a.html">Avoid use before initialization [CERT_CPP-EXP53-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP54.html">CERT-EXP54_CPP (RULE) Do not access an object outside of its lifetime [CERT_CPP-EXP54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP54-a.html">Do not use resources that have been freed [CERT_CPP-EXP54-a-2]</A>
+<LI><A HREF="CERT_CPP-EXP54-b.html">The address of an object with automatic storage shall not be returned from a function [CERT_CPP-EXP54-b-2]</A>
+<LI><A HREF="CERT_CPP-EXP54-c.html">The address of an object with automatic storage shall not be assigned to another object that may persist after the first object has ceased to exist [CERT_CPP-EXP54-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP55.html">CERT-EXP55_CPP (RULE) Do not access a cv-qualified object through a cv-unqualified type [CERT_CPP-EXP55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP55-a.html">A cast shall not remove any 'const' or 'volatile' qualification from the type of a pointer or reference [CERT_CPP-EXP55-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP56.html">CERT-EXP56_CPP (RULE) Do not call a function with a mismatched language linkage [CERT_CPP-EXP56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP56-a.html">Do not call a function with a mismatched language linkage [CERT_CPP-EXP56-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP57.html">CERT-EXP57_CPP (RULE) Do not cast or delete pointers to incomplete classes [CERT_CPP-EXP57]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP57-a.html">Do not delete objects with incomplete class at the point of deletion [CERT_CPP-EXP57-a-3]</A>
+<LI><A HREF="CERT_CPP-EXP57-b.html">Conversions shall not be performed between a pointer to an incomplete type and any other type [CERT_CPP-EXP57-b-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP58.html">CERT-EXP58_CPP (RULE) Pass an object of the correct type to va_start [CERT_CPP-EXP58]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP58-a.html">Use macros for variable arguments correctly [CERT_CPP-EXP58-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP59.html">CERT-EXP59_CPP (RULE) Use offsetof() on valid types and members [CERT_CPP-EXP59]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP59-a.html">Use offsetof() on valid types and members [CERT_CPP-EXP59-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP60.html">CERT-EXP60_CPP (RULE) Do not pass a nonstandard-layout type object across execution boundaries [CERT_CPP-EXP60]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP60-a.html">Do not pass a nonstandard-layout type object across execution boundaries [CERT_CPP-EXP60-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP61.html">CERT-EXP61_CPP (RULE) A lambda object must not outlive any of its reference captured objects [CERT_CPP-EXP61]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP61-a.html">Never return lambdas that capture local objects by reference [CERT_CPP-EXP61-a-2]</A>
+<LI><A HREF="CERT_CPP-EXP61-b.html">Never capture local objects from an outer lambda by reference [CERT_CPP-EXP61-b-2]</A>
+<LI><A HREF="CERT_CPP-EXP61-c.html">The lambda that captures local objects by reference should not be assigned to the variable with a greater lifetime [CERT_CPP-EXP61-c-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP62.html">CERT-EXP62_CPP (RULE) Do not access the bits of an object representation that are not part of the object's value representation [CERT_CPP-EXP62]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP62-a.html">Do not compare objects of a class that may contain padding bits with C standard library functions [CERT_CPP-EXP62-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-EXP63.html">CERT-EXP63_CPP (RULE) Do not rely on the value of a moved-from object [CERT_CPP-EXP63]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-EXP63-a.html">Do not rely on the value of a moved-from object [CERT_CPP-EXP63-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-FIO50.html">CERT-FIO50_CPP (RULE) Do not alternately input and output from a file stream without an intervening positioning call [CERT_CPP-FIO50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-FIO50-a.html">Do not alternately input and output from a stream without an intervening flush or positioning call [CERT_CPP-FIO50-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-FIO51.html">CERT-FIO51_CPP (RULE) Close files when they are no longer needed [CERT_CPP-FIO51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-FIO51-a.html">Ensure resources are freed [CERT_CPP-FIO51-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-INT50.html">CERT-INT50_CPP (RULE) Do not cast to an out-of-range enumeration value [CERT_CPP-INT50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-INT50-a.html">An expression with enum underlying type shall only have values corresponding to the enumerators of the enumeration [CERT_CPP-INT50-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM50.html">CERT-MEM50_CPP (RULE) Do not access freed memory [CERT_CPP-MEM50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM50-a.html">Do not use resources that have been freed [CERT_CPP-MEM50-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM51.html">CERT-MEM51_CPP (RULE) Properly deallocate dynamically allocated resources [CERT_CPP-MEM51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM51-a.html">Use the same form in corresponding calls to new/malloc and delete/free [CERT_CPP-MEM51-a-1]</A>
+<LI><A HREF="CERT_CPP-MEM51-b.html">Always provide empty brackets ([]) for delete when deallocating arrays [CERT_CPP-MEM51-b-1]</A>
+<LI><A HREF="CERT_CPP-MEM51-c.html">Both copy constructor and copy assignment operator should be declared for classes with a nontrivial destructor [CERT_CPP-MEM51-c-1]</A>
+<LI><A HREF="CERT_CPP-MEM51-d.html">Properly deallocate dynamically allocated resources [CERT_CPP-MEM51-d-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM52.html">CERT-MEM52_CPP (RULE) Detect and handle memory allocation errors [CERT_CPP-MEM52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM52-a.html">Check the return value of new [CERT_CPP-MEM52-a-1]</A>
+<LI><A HREF="CERT_CPP-MEM52-b.html">Do not allocate resources in function argument list because the order of evaluation of a function's parameters is undefined [CERT_CPP-MEM52-b-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM53.html">CERT-MEM53_CPP (RULE) Explicitly construct and destruct objects when manually managing object lifetime [CERT_CPP-MEM53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM53-a.html">Do not invoke malloc/realloc for objects having constructors [CERT_CPP-MEM53-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM54.html">CERT-MEM54_CPP (RULE) Provide placement new with properly aligned pointers to sufficient storage capacity [CERT_CPP-MEM54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM54-a.html">Do not pass a pointer that has insufficient storage capacity or that is not suitably aligned for the object being constructed to placement 'new' [CERT_CPP-MEM54-a-1]</A>
+<LI><A HREF="CERT_CPP-MEM54-b.html">An overhead should be used when an array of objects is passed to the placement 'new' allocation function [CERT_CPP-MEM54-b-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM55.html">CERT-MEM55_CPP (RULE) Honor replacement dynamic storage management requirements [CERT_CPP-MEM55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM55-a.html">The user defined 'new' operator should throw the 'std::bad_alloc' exception when the allocation fails [CERT_CPP-MEM55-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM56.html">CERT-MEM56_CPP (RULE) Do not store an already-owned pointer value in an unrelated smart pointer [CERT_CPP-MEM56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM56-a.html">Do not store an already-owned pointer value in an unrelated smart pointer [CERT_CPP-MEM56-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MEM57.html">CERT-MEM57_CPP (RULE) Avoid using default operator new for over-aligned types [CERT_CPP-MEM57]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MEM57-a.html">Avoid using the default operator 'new' for over-aligned types [CERT_CPP-MEM57-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MSC50.html">CERT-MSC50_CPP (RULE) Do not use std::rand() for generating pseudorandom numbers [CERT_CPP-MSC50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MSC50-a.html">Do not use the rand() function for generating pseudorandom numbers [CERT_CPP-MSC50-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MSC51.html">CERT-MSC51_CPP (RULE) Ensure your random number generator is properly seeded [CERT_CPP-MSC51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MSC51-a.html">Properly seed pseudorandom number generators [CERT_CPP-MSC51-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MSC52.html">CERT-MSC52_CPP (RULE) Value-returning functions must return a value from all exit paths [CERT_CPP-MSC52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MSC52-a.html">All exit paths from a function, except main(), with non-void return type shall have an explicit return statement with an expression [CERT_CPP-MSC52-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MSC53.html">CERT-MSC53_CPP (RULE) Do not return from a function declared [[noreturn]] [CERT_CPP-MSC53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MSC53-a.html">Never return from functions that should not return [CERT_CPP-MSC53-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-MSC54.html">CERT-MSC54_CPP (RULE) A signal handler must be a plain old function [CERT_CPP-MSC54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-MSC54-a.html">Properly define signal handlers [CERT_CPP-MSC54-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP50.html">CERT-OOP50_CPP (RULE) Do not invoke virtual functions from constructors or destructors [CERT_CPP-OOP50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP50-a.html">Avoid calling virtual functions from constructors [CERT_CPP-OOP50-a-3]</A>
+<LI><A HREF="CERT_CPP-OOP50-b.html">Avoid calling virtual functions from destructors [CERT_CPP-OOP50-b-3]</A>
+<LI><A HREF="CERT_CPP-OOP50-c.html">Do not use dynamic type of an object under construction [CERT_CPP-OOP50-c-3]</A>
+<LI><A HREF="CERT_CPP-OOP50-d.html">Do not use dynamic type of an object under destruction [CERT_CPP-OOP50-d-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP51.html">CERT-OOP51_CPP (RULE) Do not slice derived objects [CERT_CPP-OOP51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP51-a.html">Do not slice derived objects [CERT_CPP-OOP51-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP52.html">CERT-OOP52_CPP (RULE) Do not delete a polymorphic object without a virtual destructor [CERT_CPP-OOP52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP52-a.html">Define a virtual destructor in classes used as base classes which have virtual functions [CERT_CPP-OOP52-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP53.html">CERT-OOP53_CPP (RULE) Write constructor member initializers in the canonical order [CERT_CPP-OOP53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP53-a.html">List members in an initialization list in the order in which they are declared [CERT_CPP-OOP53-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP54.html">CERT-OOP54_CPP (RULE) Gracefully handle self-copy assignment [CERT_CPP-OOP54]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP54-a.html">Check for assignment to self in operator= [CERT_CPP-OOP54-a-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP55.html">CERT-OOP55_CPP (RULE) Do not use pointer-to-member operators to access nonexistent members [CERT_CPP-OOP55]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP55-a.html">A cast shall not convert a pointer to a function to any other pointer type, including a pointer to function type [CERT_CPP-OOP55-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP56.html">CERT-OOP56_CPP (RULE) Honor replacement handler requirements [CERT_CPP-OOP56]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP56-a.html">Properly define terminate handlers [CERT_CPP-OOP56-a-3]</A>
+<LI><A HREF="CERT_CPP-OOP56-b.html">Properly define unexpected handlers [CERT_CPP-OOP56-b-3]</A>
+<LI><A HREF="CERT_CPP-OOP56-c.html">Properly define new handlers [CERT_CPP-OOP56-c-3]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP57.html">CERT-OOP57_CPP (RULE) Prefer special member functions and overloaded operators to C Standard Library functions [CERT_CPP-OOP57]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP57-a.html">Do not initialize objects with a non-trivial class type using C standard library functions [CERT_CPP-OOP57-a-2]</A>
+<LI><A HREF="CERT_CPP-OOP57-b.html">Do not compare objects of nonstandard-layout class type with C standard library functions [CERT_CPP-OOP57-b-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-OOP58.html">CERT-OOP58_CPP (RULE) Copy operations must not mutate the source object [CERT_CPP-OOP58]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-OOP58-a.html">Copy operations must not mutate the source object [CERT_CPP-OOP58-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-STR50.html">CERT-STR50_CPP (RULE) Guarantee that storage for strings has sufficient space for character data and the null terminator [CERT_CPP-STR50]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-STR50-b.html">Avoid overflow due to reading a not zero terminated string [CERT_CPP-STR50-b-1]</A>
+<LI><A HREF="CERT_CPP-STR50-c.html">Avoid overflow when writing to a buffer [CERT_CPP-STR50-c-1]</A>
+<LI><A HREF="CERT_CPP-STR50-e.html">Prevent buffer overflows from tainted data [CERT_CPP-STR50-e-1]</A>
+<LI><A HREF="CERT_CPP-STR50-f.html">Avoid buffer write overflow from tainted data [CERT_CPP-STR50-f-1]</A>
+<LI><A HREF="CERT_CPP-STR50-g.html">Do not use the 'char' buffer to store input from 'std::cin' [CERT_CPP-STR50-g-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-STR51.html">CERT-STR51_CPP (RULE) Do not attempt to create a std::string from a null pointer [CERT_CPP-STR51]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-STR51-a.html">Avoid null pointer dereferencing [CERT_CPP-STR51-a-1]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-STR52.html">CERT-STR52_CPP (RULE) Use valid references, pointers, and iterators to reference elements of a basic_string [CERT_CPP-STR52]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-STR52-a.html">Use valid references, pointers, and iterators to reference elements of a basic_string [CERT_CPP-STR52-a-2]</A>
+</UL>
+<LI><B><A HREF="CERT_CPP-STR53.html">CERT-STR53_CPP (RULE) Range check element access [CERT_CPP-STR53]</A></B>
+<UL>
+<LI><A HREF="CERT_CPP-STR53-a.html">Guarantee that container indices are within the valid range [CERT_CPP-STR53-a-2]</A>
+</UL>
+</UL>
+</UL>
+</BODY></HTML>

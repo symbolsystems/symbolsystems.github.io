@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use blocking functions while holding a lock [CERT_C-POS52-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use blocking functions while holding a lock [CERT_C-POS52-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where functions that cease thread execution for a certain time
+(such as sleep()) are called from critical sections--thus unnecessarily increasing
+resource contention between threads.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps prevent unnecessary resource contention between threads as well as
+thread starvation.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+#include &lt;unistd.h&gt;
+
+pthread_mutex_t* mutex;
+
+static void testLock()
+{
+    pthread_mutex_lock(mutex);
+    sleep(10);
+    /* do something */
+    pthread_mutex_unlock(mutex);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Removing the call to sleep() repairs the code:
+
+#include &lt;pthread.h&gt;
+#include &lt;unistd.h&gt;
+
+pthread_mutex_t* mutex;
+
+static void testLock()
+{
+    pthread_mutex_lock(mutex);
+    /* do something */
+    pthread_mutex_unlock(mutex);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+CON05-C. Do not perform operations that can block while holding a lock
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON05-C.+Do+not+perform+operations+that+can+block+while+holding+a+lock">https://wiki.sei.cmu.edu/confluence/display/c/CON05-C.+Do+not+perform+operations+that+can+block+while+holding+a+lock</A>
+
+SEI CERT C Coding Standard
+POS52-C. Do not perform operations that can block while holding a POSIX lock
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS52-C.+Do+not+perform+operations+that+can+block+while+holding+a+POSIX+lock">https://wiki.sei.cmu.edu/confluence/display/c/POS52-C.+Do+not+perform+operations+that+can+block+while+holding+a+POSIX+lock</A>
+
+</PRE>
+</BODY>
+</HTML>

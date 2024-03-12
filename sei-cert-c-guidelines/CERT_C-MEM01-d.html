@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always assign a new value to parameter or local variable that points to deallocated memory [CERT_C-MEM01-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always assign a new value to parameter or local variable that points to deallocated memory [CERT_C-MEM01-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+All pointers should be set to either 0 or to a valid address immediately
+after delete statement.
+The rule reports a violation if directly after delete used on 
+local variable there is no assignment to this variable.
+See also: MRM-09, MRM-10, MRM-31
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violation is not reported if delete is a last statement in function
+(ignoring other delete and return statements).
+Some violations can be not reported on MSVC compiler
+if an assignment is used before delete statement inside macro.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents accessing a pointer or a reference to a deleted object.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int* p){
+    p = new int;
+    int* q = new int(5);
+    //....
+    delete p;	// Violation - set deleted pointer in next expression
+    delete q;	// Violation - set deleted pointer in next expression
+    p = 0;
+    q = new int(10);
+    //...
+    return;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int* p){
+    p = new int;
+    int* q = new int(5);
+    //....
+    delete p;	// OK
+    p = 0;
+    delete q;	// OK
+    q = new int(10);
+    //...
+    delete q;	// OK
+    return;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 16 Memory Allocation - Rec. 59
+
+2. SEI CERT C Coding Standard
+   MEM01-C. Store a new value in pointers immediately after free()
+   <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152148">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152148</A>
+
+</PRE>
+</BODY>
+</HTML>

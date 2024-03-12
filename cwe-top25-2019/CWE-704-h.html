@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An implicit conversion shall not be performed between pointer to void and an arithmetic type [CWE-704-h]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An implicit conversion shall not be performed between pointer to void and an arithmetic type [CWE-704-h-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversion of an integer into a pointer to void may result in a pointer that
+is not correctly aligned, resulting in undefined behaviour. 
+Conversion of a pointer to void into an integer may produce a value that cannot
+be represented in the chosen integer type resulting in undefined behaviour.
+Conversion between any non-integer arithmetic type and pointer to void
+is undefined." [MISRA C:2012 Rule 11.6]
+
+The rule reports a violation if an implicit conversion between a pointer to
+void type and arithmetic type is used.
+
+Implicit conversion of pointer is detected by rule in the following cases:
+- assignment expression
+- initialization (only simple variables and arrays)
+- passing argument to function call
+- returning value from function
+
+"The type char, the signed and unsigned integer types, and the enumerated 
+types are collectively called integer types. Integer and floating types
+are collectively called arithmetic types." [ISO/IEC 9899:1999]
+
+See also: CODSTA-129_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An integer constant expression with value 0 may be cast into pointer to void."
+[MISRA C:2012 Rule 11.6]
+The violation is not reported if an integer constant expression with value 0 
+is converted to pointer to void type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrect code: */
+
+void* getVoid ( void );
+void f1 ( short );
+void f2 ( void* );
+enum E { E1, E2 } e;
+
+char foo1 ( void* vptr )
+{
+  signed int si = vptr; /* Violation */
+  f1 ( vptr );          /* Violation */
+  return getVoid ( );   /* Violation */
+}
+
+void* foo2 ( unsigned int ui )
+{
+  void* vptr = 0x001;   /* Violation */
+  f2 ( ui );            /* Violation */
+  return e;             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by the rule: */
+
+typedef void* VOID_PTR;
+
+VOID_PTR foo ( int* int_p )
+{
+  /* Exception: null pointer: */
+  void* vptr = 0;               /* OK */
+
+  /* Not reported: conversions not involving arithmetic types */
+  int_p = vptr;                 /* OK */
+
+  /* Not reported: explicit conversions (casts) */
+  return ( VOID_PTR ) 1;        /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.6
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.4 Cast operators
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5.4 Cast operators
+
+4. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

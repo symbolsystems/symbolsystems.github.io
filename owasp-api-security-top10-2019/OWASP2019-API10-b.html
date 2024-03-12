@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'syslog' function for logging purposes [OWASP2019-API10-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'syslog' function for logging purposes [OWASP2019-API10-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Method 'syslog' should not be used for logging purposes. 
+This function does not check the validity of 
+file system environment variable.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents using insecure 'syslog' function.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;syslog.h&gt;
+int main()
+{
+  syslog(LOG_INFO, "Some info"); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'syslog' function in your code.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+2. OWASP API Security Top 10-2019
+   API10-Insufficient Logging &amp; Monitoring
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xaa-insufficient-logging-monitoring.md</A>
+
+</PRE>
+</BODY>
+</HTML>

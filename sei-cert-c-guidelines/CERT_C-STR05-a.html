@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A string literal shall not be modified [CERT_C-STR05-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A string literal shall not be modified [CERT_C-STR05-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The declaration
+
+      char s[] = "abc", t[3] = "abc";
+
+ defines 'plain' char array objects 's' and 't' whose elements are initialized
+ with character string literals. This declaration is identical to
+
+      char s[] = { 'a', 'b', 'c', '\0' },
+      t[] = { 'a', 'b', 'c' };
+
+ The contents of the arrays are modifiable.
+
+ On the other hand, the declaration
+
+      char *p = "abc";
+
+ defines p with type 'pointer to char' and initializes it to point to an object
+ with type 'array of char' with length 4 whose elements are initialized with
+ a character string literal. If an attempt is made to use p to modify
+ the contents of the array, the behavior is undefined."
+
+"Since string literals are constant, they should only be assigned
+ to constant pointers"
+
+The violation is reported by rule if string literal or wide string literal:
+  - is modified directly
+  - initializes pointer to non-const object
+  - is assigned to pointer to non-const object
+  - is passed to function as pointer to non-const object or as non-const array
+  - is returned from function as pointer to non-const object
+  - is casted to pointer to non-const object
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void getcharptr(char* ptc);
+void getchararr(char arr[]);
+
+char* foo() {
+  char* c1 = "Hello";    // Violation
+  char* c2;
+  int* p1;
+  c2 = "Hello";          // Violation
+  p1 = (int*)"Hello";    // Violation
+  getcharptr("Hello");   // Violation
+  getchararr("Hello");   // Violation
+
+  return "Hello";        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void getcharptr(const char* ptc);
+void getchararr(const char arr[]);
+
+const char* foo() {
+  const char* c1 = "Hello"; // OK
+  char arr1[] = "Hello";    // OK
+  char arr2[6] = "Hello";   // OK
+  const char* c2;
+  c2 = "Hello";             // OK
+  getcharptr("Hello");      // OK
+  getchararr("Hello");      // OK
+
+  return "Hello";           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-13-4. String literals shall not be assigned to non-constant pointers
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. ISO/IEC 9899:1990 Programming languages -- C
+   6.1.4 String literals
+
+4. ISO/IEC 9899:1999 Programming languages -- C
+   6.4.5 String literals
+
+5. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.18 Constants, AV Rule 151.1
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 7.4
+
+7. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.15 Rule 7.4
+
+8. SEI CERT C Coding Standard
+   STR05-C. Use pointers to const when referring to string literals
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR05-C.+Use+pointers+to+const+when+referring+to+string+literals">https://wiki.sei.cmu.edu/confluence/display/c/STR05-C.+Use+pointers+to+const+when+referring+to+string+literals</A>
+
+9. SEI CERT C Coding Standard
+   STR30-C. Do not attempt to modify string literals
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR30-C.+Do+not+attempt+to+modify+string+literals">https://wiki.sei.cmu.edu/confluence/display/c/STR30-C.+Do+not+attempt+to+modify+string+literals</A>
+
+</PRE>
+</BODY>
+</HTML>

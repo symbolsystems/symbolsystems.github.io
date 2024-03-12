@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the 'cnd_signal()' function with a unique condition variable [SECURITY-49]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the 'cnd_signal()' function with a unique condition variable [SECURITY-49-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'cnd_signal()' function unblocks one of the threads that are blocked
+on the specified condition variable at the time of the call. If multiple
+threads are waiting on the same condition variable, the scheduler can select
+any of those threads to be awakened (assuming that all threads have the same
+priority level). The 'cnd_broadcast()' function unblocks all of the threads
+that are blocked on the specified condition variable at the time of the call."
+[CERT-CON38-C]
+
+"The use of 'cnd_signal()' is safe if each thread uses a unique condition
+variable. If multiple threads share a condition variable, the use of
+'cnd_signal()' is safe only if the following conditions are met:
+- All threads must perform the same set of operations after waking up, which
+  means that any thread can be selected to wake up and resume for a single
+  invocation of 'cnd_signal()'.
+- Only one thread is required to wake upon receiving the signal.
+The 'cnd_broadcast()' function can be used to unblock all of the threads
+that are blocked on the specified condition variable if the use of
+'cnd_signal()' is unsafe." [CERT-CON38-C]
+
+This rule detects when the address of a global condition variable is passed
+as an argument to the 'cnd_signal()' function. If multiple threads share
+the same condition variable, the liveness property may be violated.
+The compliant solution is to use the 'cnd_broadcast()' function, or to ensure
+that a unique condition variable is used for each thread.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you preserve the liveness when using condition variables.
+"The liveness property requires that every operation or function invocation
+execute to completion without interruption; for example, there is no deadlock."
+[CERT-CON38-C]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+cnd_t cond;
+
+void foo() {
+    /* ... */
+    if (thrd_success != cnd_signal(&amp;cond)) {      /* Violation */
+        /* ... */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+cnd_t cond;
+
+void foo() {
+    /* ... */
+    if (thrd_success != cnd_broadcast(&amp;cond)) {   /* OK */
+        /* ... */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   CON38-C. Preserve thread safety and liveness when using condition variables
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON38-C.+Preserve+thread+safety+and+liveness+when+using+condition+variables">https://wiki.sei.cmu.edu/confluence/display/c/CON38-C.+Preserve+thread+safety+and+liveness+when+using+condition+variables</A>
+
+</PRE>
+</BODY>
+</HTML>

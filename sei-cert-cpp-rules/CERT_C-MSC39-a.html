@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use macros for variable arguments correctly [CERT_C-MSC39-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use macros for variable arguments correctly [CERT_C-MSC39-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a variable argument list is used incorrectly. 
+The rule assumes that the following uses are incorrect:
+- Calling va_start() with an incorrect object as the second argument:
+	* object other than the last named parameter of the function
+	* object of a reference type
+	* object of a type that undergoes default argument promotion
+	* object of a class type that has a nontrivial copy constructor, 
+	  a nontrivial move constructor, or a nontrivial destructor
+- Calling functions that require initialized object with an uninitialized va_list object: 
+  va_arg(), va_copy() - as the second argument, va_end(), the library methods (listed below).
+- Calling functions that require an uninitialized object with an initialized va_list object: 
+  va_start(), va_copy() - as the first argument.
+- Failing to terminate an initialized va_list object with a call to va_end().
+
+List of checked library methods using initialized va_list object as argument :
+- void verr(int eval, const char* format, va_list arg)
+- void verrx(int eval, const char* format, va_list arg)
+- int vfprintf(FILE* stream, const char* format, va_list arg)
+- int vfscanf(FILE* stream, const char* format, va_list arg)
+- int vfwprintf(FILE* stream, const wchar_t* format, va_list arg)
+- int vfwscanf (FILE* stream, const wchar_t* format, va_list arg)
+- int vprintf(const char* format, va_list arg)
+- int vscanf(const char* format, va_list arg)
+- int vslogf(int opcode, int severity, const char* format, va_list arg)
+- int vsnprintf(char* s, size_t n, const char* format, va_list arg)
+- int vsprintf(char* s, const char* format, va_list arg)
+- int vsscanf(const char* s, const char* format, va_list arg)
+- int vswprintf(wchar_t* ws, size_t len, const wchar_t* format, va_list arg)
+- int vswscanf(const wchar_t* ws, const wchar_t* format, va_list arg)
+- void vsyslog(int priority, const char* format, va_list arg)
+- void vwarn(const char* format, va_list arg)
+- void vwarnx(const char* format, va_list arg)
+- int vwprintf(const wchar_t* format, va_list arg)
+- int vwscanf(const wchar_t* format, va_list arg)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Aggressive mode" encourages Flow Analysis to report a violation any time that Flow Analysis 
+suspects a problem - even if there is high probability that such a case may be a false positive.
+Applying this configuration will result in more bugs being reported, but it can also increase
+the number of false alarms. 
+For this rule for some compilers (e.g., gcc) aggressive mode is recommended, as it should
+find more good violations. If you are getting false positives with this rule, switch off aggressive
+mode. By default it is turned off.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;stdarg.h&gt;
+
+int return_max(int n_args, ...) {
+    va_list ap;
+    va_start(ap, n_args);
+    if (n_args &lt;= 0) {
+        return 0;
+    }
+    int max = va_arg(ap, int);
+    for (int i = 2; i &lt;= n_args; i++) {
+        int a = va_arg(ap, int);
+        if (a &gt; max)
+            max = a;
+    }
+    va_end(ap);
+    return max;
+} // VIOLATION
+
+In the example above if n_arg is less or equal to 0, "ap" object is not terminated properly.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdarg.h&gt;
+
+int return_max(int n_args, ...) {
+    va_list ap;
+    va_start(ap, n_args);
+    if (n_args &lt;= 0) {
+        va_end(ap);
+        return 0;
+    }
+    int max = va_arg(ap, int);
+    for (int i = 2; i &lt;= n_args; i++) {
+        int a = va_arg(ap, int);
+        if (a &gt; max)
+            max = a;
+    }
+    va_end(ap);
+    return max;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+MSC39-C. Do not call va_arg() on a va_list that has an indeterminate value
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC39-C.+Do+not+call+va_arg%28%29+on+a+va_list+that+has+an+indeterminate+value">https://wiki.sei.cmu.edu/confluence/display/c/MSC39-C.+Do+not+call+va_arg%28%29+on+a+va_list+that+has+an+indeterminate+value</A>
+
+SEI CERT C++ Coding Standard
+EXP58-CPP. Pass an object of the correct type to va_start
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP58-CPP.+Pass+an+object+of+the+correct+type+to+va_start">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP58-CPP.+Pass+an+object+of+the+correct+type+to+va_start</A>
+
+</PRE>
+</BODY>
+</HTML>

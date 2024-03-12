@@ -1,0 +1,190 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There should be no mismatch between the '%u' format specifier in the format string and its corresponding argument in the invocation of a string formatting function [CERT_C-FIO47-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There should be no mismatch between the '%u' format specifier in the format string and its corresponding argument in the invocation of a string formatting function [CERT_C-FIO47-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The variable arguments to a variadic function are not checked for type by
+the compiler. As a result, the programmer is responsible for ensuring that
+they are compatible with the corresponding parameter after the default argument
+promotions." [DCL11-C.]
+
+This rule identifies a mismatch between the type specified by the format
+specifier included in the string argument and the type of the corresponding
+argument that is passed to the invocation of a string formatting function.
+
+The rule detects 'printf' function calls where:
+a) a function argument that corresponds to a "%u", "%lu", "%Iu", or "%I32u"
+format specifier in the string argument is other than:
+- parameter/variable/expression of type unsigned char, unsigned short,
+  unsigned int, or unsigned long
+- typedefs to the above types
+- constant of int or long type in the range of 0 to 4294967295
+
+b) a function argument that corresponds to a "%hu" format specifier
+in the string argument is other than:
+- parameter/variable/expression of type unsigned char or unsigned short
+- typedefs to the above types
+- constant in the range of 0 to 65535
+
+c) a function argument that corresponds to a "%hhu" format specifier
+in the string argument is other than:
+- parameter/variable/expression of type unsigned char
+- typedef to unsigned char type
+- constant in the range of 0 to 255
+
+d) a function argument that corresponds to a "%llu" format specifier
+in the string argument is other than:
+- parameter/variable/expression of type unsigned long long
+- typedef to the above type
+- constant of long long type
+
+The rule detects 'scanf' function calls where:
+a) a function argument that corresponds to a "%u", "%lu", "%Iu", or "%I32u"
+format specifier in the string argument is other than:
+- pointer to unsigned char, unsigned short, unsigned int, or unsigned long type
+
+b) a function argument that corresponds to a "%hu" format specifier
+in the string argument is other than:
+- pointer to unsigned char or unsigned short type
+
+c) a function argument that corresponds to a "%hhu" format specifier
+in the string argument is other than:
+- pointer to unsigned char type
+
+d) a function argument that corresponds to a "%llu" format specifier
+in the string argument is other than:
+- pointer to unsigned long long type
+
+This rule checks the string formatting functions that fulfill the following
+conditions:
+- their names include "printf" or "scanf", for example, printf(), fprintf(),
+scanf(), fscanf() (case insensitive)
+- they are variadic functions with the ellipsis preceded by a parameter of
+string type
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check if the number of format specifiers in the argument
+of string type and the number of optional function arguments are equal (see
+PB-50 rule to compare the numbers).
+
+This rule only detects mismatching "%u", "%lu", "%Iu", "%I32u", "%hu", "%hhu",
+and "%llu" format specifiers (see the following rules to check other format
+specifier types: PB-45, PB-46, PB-47, PB-49).
+
+This rule assumes the following values in the string argument to be format
+specifiers:
+%c, %d, %i, %e, %E, %f, %g, %G, %a, %A, %o, %s, %u, %x, %X, %p, %n, %[
+Other values are not supported and will be ignored while determining
+the corresponding arguments of the function call.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent abnormal program termination or unintended
+information disclosure.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    int i;
+    unsigned short us;
+    float f;
+    long long ll;
+
+    scanf("Value unsigned int: %u", &amp;i);             // Violation
+    printf("Value unsigned int: %u", i);             // Violation
+    scanf("Value unsigned short: %hu", &amp;f);          // Violation
+    printf("Value unsigned short: %hu", f);          // Violation
+    scanf("Value unsigned char: %hhu", &amp;us);         // Violation
+    printf("Value unsigned char: %hhu", us);         // Violation
+    scanf("Value unsigned long long: %llu", &amp;ll);    // Violation
+    printf("Value unsigned long long: %llu", 100);   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by changing the format specifier or the argument type.
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    unsigned int ui;
+    unsigned short us;
+    unsigned char uc;
+    unsigned long long ull;
+
+    scanf("Value unsigned int: %u", &amp;ui);             // OK
+    printf("Value unsigned int: %u", ui);             // OK
+    scanf("Value unsigned short: %hu", &amp;us);          // OK
+    printf("Value unsigned short: %hu", us);          // OK
+    scanf("Value unsigned char: %hhu", &amp;uc);          // OK
+    printf("Value unsigned char: %hhu", uc);          // OK
+    scanf("Value unsigned long long: %llu", &amp;ull);    // OK
+    printf("Value unsigned long long: %llu", 100ull); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1999 Programming languages -- C
+   7.19.6 Formatted input/output functions
+
+2. <A HREF="http://www.cplusplus.com/reference/clibrary/cstdio/printf/">http://www.cplusplus.com/reference/clibrary/cstdio/printf/</A>
+
+3. <A HREF="http://www.cplusplus.com/reference/clibrary/cstdio/scanf/">http://www.cplusplus.com/reference/clibrary/cstdio/scanf/</A>
+
+4. SEI CERT C Coding Standard
+   FIO47-C. Use valid format strings
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO47-C.+Use+valid+format+strings">https://wiki.sei.cmu.edu/confluence/display/c/FIO47-C.+Use+valid+format+strings</A>
+
+5. SEI CERT C Coding Standard
+   DCL11-C. Understand the type issues associated with variadic functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions">https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

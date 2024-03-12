@@ -1,0 +1,210 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not compare two unrelated pointers [CERT_C-ARR36-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not compare two unrelated pointers [CERT_C-ARR36-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when two unrelated pointers are compared.
+
+By default, the rule assumes that two pointers are related if they store
+addresses of two elements of the same array. Additionally, the rule can be
+parameterized to assume that two pointers that point to two elements of
+the same structure object are related (see PARAMETERS).
+ 
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule assumes that the following operators can be used for pointer
+comparison:
+	operator&gt;
+	operator&lt;
+	operator&gt;=
+	operator&lt;=
+	std::less()
+	std::greater()
+	std::less_equal()
+	std::greater_equal()
+
+You can parameterize the rule to customize the list of operators the rule
+will check (see PARAMETERS).
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Comparison of unrelated pointers may cause undefined behavior.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Report when the pointers are compared using relational operators"
+parameter is enabled, the rule detects when pointers are compared with
+the following operators:
+	operator&gt;
+	operator&lt;
+	operator&gt;=
+	operator&lt;=
+This option is enabled by default.
+	
+If the "Report when the pointers are compared using standard functions" parameter 
+is enabled, the rule detects when pointers are compared with the following
+operators:
+	std::less()
+	std::greater()
+	std::less_equal()
+	std::greater_equal()
+This option is enabled by default.
+	
+If the "Treat pointers addressing fields of the same object as related"
+parameter is enabled, the rule assumes that that two pointers that address
+elements of the same structure object (for example, two fields of the same
+object) are related. This option is disabled by default.
+
+If "Aggressive mode" is enabled, the rule additionally reports pointer
+comparison in cases when Flow Analysis is unable to positively verify that
+the compared pointers are related and there is probability that reported
+violations are false positives. Enabling this parameter results in better
+bug detection, but it may increase the number of false alarms. 
+With this parameter disabled, the rule only triggers when Flow Analysis can
+conclusively determine that the compared pointers are not related. This option
+is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior that may be caused by
+comparing unrelated pointers.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;cstddef&gt;
+#include &lt;iostream&gt;
+  
+template &lt;typename Ty&gt;
+bool in_range(const Ty *test, const Ty *r, size_t n) {
+    return (test &gt;= r) &amp;&amp; (test &lt; (r + (std::ptrdiff_t)n));  // VIOLATION x2
+}
+  
+void f() {
+    double foo[10];
+    double *x = &amp;foo[0];
+    double bar;
+    std::cout &lt;&lt; std::boolalpha &lt;&lt; in_range(&amp;bar, x, 10);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+#include &lt;iostream&gt;
+  
+template &lt;typename Ty&gt;
+bool in_range(const Ty *test, const Ty *r, size_t n) {
+    auto *cur = reinterpret_cast&lt;const unsigned char *&gt;(r);
+    auto *end = reinterpret_cast&lt;const unsigned char *&gt;(r + n);
+    auto *testPtr = reinterpret_cast&lt;const unsigned char *&gt;(test);
+  
+    for (; cur != end; ++cur) {
+        if (cur == testPtr) {
+            return true;
+        }
+    }
+    return false;
+}
+  
+void f() {
+    double foo[10];
+    double *x = &amp;foo[0];
+    double bar;
+    std::cout &lt;&lt; std::boolalpha &lt;&lt; in_range(&amp;bar, x, 10);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1. Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+AUTOSAR C++14 Coding Guidelines
+Rule M5-0-18. &gt;, &gt;=, &lt;, &lt;= shall not be applied to objects of pointer type, except where they point to the same array
+
+High Integrity C++ Coding Standard
+3.5.1 Do not make any assumptions about the internal representation of a value or object
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+Chapter 4.22 Pointers &amp; References, AV Rule 171
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 5, Rule 5-0-18
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 18.3
+  
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 8.9.1 The built-in relational operators &gt;, &gt;=, &lt; and &lt;= shall not be applied to objects of pointer type, except where they point to elements of the same array
+
+MISRA-C:2004 Guidelines for the use of the C language in critical systems
+Chapter 6, Section 17, Rule 17.3
+
+MISRA-C Guidelines
+Rule 103
+
+SEI CERT C Coding Standard
+ARR36-C. Do not subtract or compare two pointers that do not refer to the same array
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR36-C.+Do+not+subtract+or+compare+two+pointers+that+do+not+refer+to+the+same+array">https://wiki.sei.cmu.edu/confluence/display/c/ARR36-C.+Do+not+subtract+or+compare+two+pointers+that+do+not+refer+to+the+same+array</A>
+
+SEI CERT C++ Coding Standard
+CTR54-CPP. Do not subtract iterators that do not refer to the same container
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR54-CPP.+Do+not+subtract+iterators+that+do+not+refer+to+the+same+container">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR54-CPP.+Do+not+subtract+iterators+that+do+not+refer+to+the+same+container</A>
+
+</PRE>
+</BODY>
+</HTML>

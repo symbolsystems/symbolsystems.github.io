@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use locks to prevent race conditions when modifying bit fields [CERT_CPP-CON52-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use locks to prevent race conditions when modifying bit fields [CERT_CPP-CON52-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+When multiple threads access or modify a shared variable, they may inadvertently
+access other variables that are adjacent in memory. This rule detects when a bit field
+that has another bit field adjacent in the same byte is accessed outside of the critical
+section.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps you prevent data corruption due to unintended modifications of adjacent bit fields.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+struct multi_threaded_flags {
+    unsigned int flag1 : 2;
+    unsigned int flag2 : 2;
+};
+ 
+struct multi_threaded_flags flags;
+ 
+void thread1(void) {
+    flags.flag1 = 1;	// VIOLATION
+}
+ 
+void thread2(void) {
+    flags.flag2 = 2;	// VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include&lt;pthread.h&gt;
+
+struct multi_threaded_flags {
+    unsigned int flag1 : 2;
+    unsigned int flag2 : 2;
+};
+
+struct multi_threaded_flags flags;
+pthread_mutex_t mutex;
+
+void thread1(void) {
+    int result;
+    if ((result = pthread_mutex_lock(&amp;mutex)) != 0) {
+        return;
+    }
+    flags.flag1 = 1;	// NO VIOLATION
+    if ((result = pthread_mutex_unlock(&amp;mutex)) != 0) {
+        /* Handle error */
+    }
+}
+ 
+void thread2(void) {
+    int result;
+    if ((result = pthread_mutex_lock(&amp;mutex)) != 0) {
+        return;
+    }
+    flags.flag2 = 2;	// NO VIOLATION
+    if ((result = pthread_mutex_unlock(&amp;mutex)) != 0) {
+        /* Handle error */
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Weaknesses On the Cusp
+CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')
+<A HREF="http://cwe.mitre.org/data/definitions/362.html">http://cwe.mitre.org/data/definitions/362.html</A>
+
+SEI CERT C Coding Standard
+CON32-C. Prevent data races when accessing bit-fields from multiple threads
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON32-C.+Prevent+data+races+when+accessing+bit-fields+from+multiple+threads">https://wiki.sei.cmu.edu/confluence/display/c/CON32-C.+Prevent+data+races+when+accessing+bit-fields+from+multiple+threads</A>
+
+SEI CERT C Coding Standard
+POS49-C. When data must be accessed by multiple threads, provide a mutex and guarantee no adjacent data is also accessed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS49-C.+When+data+must+be+accessed+by+multiple+threads,+provide+a+mutex+and+guarantee+no+adjacent+data+is+also+accessed">https://wiki.sei.cmu.edu/confluence/display/c/POS49-C.+When+data+must+be+accessed+by+multiple+threads,+provide+a+mutex+and+guarantee+no+adjacent+data+is+also+accessed</A>
+
+SEI CERT C++ Coding Standard
+CON52-CPP. Prevent data races when accessing bit-fields from multiple threads
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON52-CPP.+Prevent+data+races+when+accessing+bit-fields+from+multiple+threads">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON52-CPP.+Prevent+data+races+when+accessing+bit-fields+from+multiple+threads</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001995: The application must not be vulnerable to race conditions.
+
+</PRE>
+</BODY>
+</HTML>

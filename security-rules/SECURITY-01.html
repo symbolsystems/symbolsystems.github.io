@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'asctime()' and 'asctime_r()' functions should not be used [SECURITY-01]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'asctime()' and 'asctime_r()' functions should not be used [SECURITY-01-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The POSIX Base Specifications [IEEE Std 1003.1:2013] says the following about
+the 'asctime()' and 'asctime_r()' functions:
+These functions are included only for compatibility with older implementations.
+They have undefined behavior if the resulting string would be too long, so the
+use of these functions should be discouraged. On implementations that do not
+detect output string length overflow, it is possible to overflow the output
+buffers in such a way as to cause applications to fail, or possible system
+security violations. Also, these functions do not support localized date
+and time formats. To avoid these problems, applications should use 'strftime()'
+to generate strings from broken-down times." [SEI CERT C Coding Standard]
+
+This rule detects when the 'asctime()' and 'asctime_r()' functions are used.
+
+See also: MISRA2004-20_12, MISRA2004-20_12_b, MISRA2004-20_12_c
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The C Standard, Annex K, also defines 'asctime_s()', which can be used
+as a secure substitute for asctime()." [SEI CERT C Coding Standard]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;time.h&gt;
+void f1 ( void )
+{
+    struct tm * timeinfo;
+    char* str_time;
+    char* buf;
+
+    str_time = asctime ( timeinfo );         // Violation
+    str_time = asctime_r ( timeinfo, buf );  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by removing the 'asctime()' and 'asctime_r()'
+functions or replacing them with the 'asctime_s()' function.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MSC33-C. Do not pass invalid data to the asctime() function
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC33-C.+Do+not+pass+invalid+data+to+the+asctime%28%29+function">https://wiki.sei.cmu.edu/confluence/display/c/MSC33-C.+Do+not+pass+invalid+data+to+the+asctime%28%29+function</A>
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.27.3.1 The asctime function
+
+</PRE>
+</BODY>
+</HTML>

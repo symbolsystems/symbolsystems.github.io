@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Allocate structures containing a flexible array member dynamically [CERT_C-MEM33-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Allocate structures containing a flexible array member dynamically [CERT_C-MEM33-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"To avoid the potential for undefined behavior, structures that contain
+a flexible array member should always be allocated dynamically."
+[CERT-MEM33-C]
+
+This rule detects when the declared type of a variable is a structure
+or an array of structures containing a flexible array member. As a result,
+there is no space allocated for the data member.
+The compliant solution is to declare a variable of a pointer type, and
+allocate storage for it.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct flex_array_struct {
+    int m1;
+    int farr[];
+};
+
+void func(void) {
+    struct flex_array_struct flex_struct;              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+struct flex_array_struct {
+    int m1;
+    int farr[];
+};
+
+void func(void) {
+    struct flex_array_struct *flex_struct;             // OK
+    int array_size = 4;
+
+    /* Dynamically allocate memory for the struct */
+    flex_struct = (struct flex_array_struct *) malloc(
+        sizeof(struct flex_array_struct) + sizeof(int) * array_size);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.2.1 Structure and union specifiers
+
+2. SEI CERT C Coding Standard
+   MEM33-C. Allocate and copy structures containing a flexible array member
+   dynamically
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM33-C.++Allocate+and+copy+structures+containing+a+flexible+array+member+dynamically">https://wiki.sei.cmu.edu/confluence/display/c/MEM33-C.++Allocate+and+copy+structures+containing+a+flexible+array+member+dynamically</A>
+
+</PRE>
+</BODY>
+</HTML>

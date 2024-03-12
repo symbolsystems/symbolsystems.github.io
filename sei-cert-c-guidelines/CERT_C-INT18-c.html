@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid possible integer overflow in expressions in which the result is cast to a wider integer type [CERT_C-INT18-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid possible integer overflow in expressions in which the result is cast to a wider integer type [CERT_C-INT18-c-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In an expression, sub-expressions are evaluated at the precision appropriate
+to the types of the operands. This may be less than the precision of the final
+result. It is therefore possible to be misled into creating sub-expressions
+which are evaluated at the wrong precision, which may result in values which
+are not as the programmer intended." [MISRA C:1998]
+
+"If an integer expression involving an operation is assigned to a larger
+integer size, that integer expression should be evaluated in that larger
+size by explicitly casting one of the operands." [CERT C: INT18-C]
+
+If the result of integer multiplication, addition, subtraction,
+or left-shift operation is converted to a wider integer type, 
+then unexpected integer overflow is possible.
+
+This rule reports a violation if the result of multiplication, addition,
+subtraction or left-shift operation is explicitly cast from an integer
+type to a wider integer type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(int i, int j) {
+    long l;
+    long long ll = (long long)(i * 1024); // Violation
+    ll = (long long)(i + j);              // Violation
+    ll = (long long)(j - 1024);           // Violation
+    ll = (long long)(i &lt;&lt; 8);             // Violation
+    l = (long)(i * 10);         // Violation only if sizeof(long) &gt; sizeof(int)
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(int i, int j) {
+    long l;
+    long long ll = (long long)i * 1024; // OK
+    ll = (i + (long long)j);            // OK
+    ll = j - 1024LL;                    // OK
+    ll = (long long)i &lt;&lt; 8;             // OK
+    l = (long)i * 10;                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 48
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.5 Expressions
+
+4. ISO/IEC 14882:2003 Programming languages -- C++
+   5 Expressions
+
+5. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-190: Integer Overflow or Wraparound
+   <A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+6. SEI CERT C Coding Standard
+   INT18-C. Evaluate integer expressions in a larger size before comparing or
+   assigning to that size
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT18-C.+Evaluate+integer+expressions+in+a+larger+size+before+comparing+or+assigning+to+that+size">https://wiki.sei.cmu.edu/confluence/display/c/INT18-C.+Evaluate+integer+expressions+in+a+larger+size+before+comparing+or+assigning+to+that+size</A>
+
+</PRE>
+</BODY>
+</HTML>

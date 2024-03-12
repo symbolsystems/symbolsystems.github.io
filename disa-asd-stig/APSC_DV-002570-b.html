@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not print potentially sensitive information, resulting from an application error into exception messages [APSC_DV-002570-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not print potentially sensitive information, resulting from an application error into exception messages [APSC_DV-002570-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Do not print potentially sensitive information,
+resulting from an application error into exception messages.
+Rule disallows printing messages in catch block.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents the application from leaking potentially sensitive information, 
+resulting from an application error.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+class LoginException{ 
+public:
+	int tmp;
+	char* getMessage();
+};
+
+class CLogin {
+public:
+	void login(){};
+};
+
+void log( char *text){};
+
+void foo( int i ) {
+	CLogin lc;
+	try {
+		lc.login();		
+	} catch (LoginException le1) {
+		// login failed
+		::printf( le1.getMessage() );  // Violation
+		exit( 1 );
+	}
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+class LoginException{ 
+public:
+	int tmp;
+	char* getMessage();
+};
+
+class CLogin {
+public:
+	void login(){};
+};
+
+void log( char *text){};
+
+void foo( int i ) {
+	CLogin lc;
+	try {
+		lc.login();		
+	} catch (LoginException le2) {  // OK
+		exit( 1 );
+	}
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://www.atsec.com/downloads/pdf/secure-coding-guidelines.pdf">http://www.atsec.com/downloads/pdf/secure-coding-guidelines.pdf</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. 2022 CWE Weaknesses On the Cusp
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-200: Information Exposure
+   <A HREF="https://cwe.mitre.org/data/definitions/200.html">https://cwe.mitre.org/data/definitions/200.html</A>
+
+4. OWASP API Security Top 10-2019
+   API3-Excessive Data Exposure
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+5. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-000650: The application must not write sensitive data into the application logs
+
+6. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002480: The application must not disclose unnecessary information to users
+
+7. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002570: The application must generate error messages that provide information necessary 
+   for corrective actions without revealing information that could be exploited by adversaries
+
+</PRE>
+</BODY>
+</HTML>

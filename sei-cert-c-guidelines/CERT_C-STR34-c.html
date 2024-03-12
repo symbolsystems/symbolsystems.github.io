@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An expressions of the 'signed char' type should not be used as an array index [CERT_C-STR34-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An expressions of the 'signed char' type should not be used as an array index [CERT_C-STR34-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+An expression of the 'signed char' type used as an array index is converted
+to the 'int' type because of integer promotions. After conversion, the character
+data can be interpreted as negative values and may result in accessing memory
+outside of the array.
+
+This rule detects when an expression of the 'signed char' type is used
+as an array index.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"This rule is applicable only in cases where the character data may contain
+values that can be interpreted as negative numbers. For example, if the char
+type is represented by a two's complement 8-bit value, any character value
+greater than +127 is interpreted as a negative value." [CERT-STR34-C]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents conversions that may result in accessing memory outside
+of an array.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(char* ch_ptr)
+{
+    char array[100];
+    array[*ch_ptr] = *ch_ptr;                     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(char* ch_ptr)
+{
+    char array[100];
+    array[(unsigned char)*ch_ptr] = *ch_ptr;      /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   STR34-C. Cast characters to unsigned char before converting to larger
+   integer sizes
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR34-C.+Cast+characters+to+unsigned+char+before+converting+to+larger+integer+sizes">https://wiki.sei.cmu.edu/confluence/display/c/STR34-C.+Cast+characters+to+unsigned+char+before+converting+to+larger+integer+sizes</A>
+
+</PRE>
+</BODY>
+</HTML>
