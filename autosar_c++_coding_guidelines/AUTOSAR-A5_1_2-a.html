@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid default capture modes [AUTOSAR-A5_1_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid default capture modes [AUTOSAR-A5_1_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+There are two default capture modes for lambdas: by-reference [&amp;] and
+by-value [=]. Both modes can lead to security concerns:
+   - default by-reference capture can lead to dangling references.
+   - default by-value capture is susceptible to dangling pointers,
+     and may misleadingly suggest that lambdas are self-contained.
+
+This rule detects when default capture modes are used in lambda expressions
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves the security of code by preventing crashes and corrupted
+memory (stack and heap).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;functional&gt;
+
+using Filters = std::vector&lt;std::function&lt;bool (int)&gt;&gt;;
+
+Filters filters1;
+Filters filters2;
+
+void addFilter(int p_low, int p_high)
+{
+    int l_high = 10;
+    int l_low = 20;
+
+    filters1.emplace_back(
+        [&amp;](int value) { return (value &gt;= p_low) &amp;&amp;    // Violation
+                                (value &lt; p_high); }
+    );
+
+    filters2.emplace_back(
+        [=](int value) { return (value &gt;= l_low) &amp;&amp;    // Violation
+                                (value &lt; l_high); }
+    );
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;functional&gt;
+
+using Filters = std::vector&lt;std::function&lt;bool (int)&gt;&gt;;
+
+Filters filters1;
+Filters filters2;
+
+void addFilter(int p_low, int p_high)
+{
+    int l_high = 10;
+    int l_low = 20;
+
+    filters1.emplace_back(
+        [&amp;p_low, &amp;p_high](int value) { return (value &gt;= p_low) &amp;&amp;         // OK
+                                              (value &lt; p_high); }
+    );
+
+    filters2.emplace_back(
+        [low=l_low, high=l_high](int value) { return (value &gt;= low) &amp;&amp;    // OK
+                                                     (value &lt; high); }
+    );
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-2. Variables shall not be implicitly captured in a lambda expression
+
+2. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 6: Lambda Expressions, Item 31: "Avoid default capture modes"
+
+</PRE>
+</BODY>
+</HTML>

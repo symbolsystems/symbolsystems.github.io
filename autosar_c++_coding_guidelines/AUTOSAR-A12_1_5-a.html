@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use delegating constructors to reduce code duplication [AUTOSAR-A12_1_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use delegating constructors to reduce code duplication [AUTOSAR-A12_1_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Delegating constructors enables you to consolidate initializing steps into a
+single target constructor. This helps you reduce code duplication and remove
+potential performance issues associated with using an ’init’ method where
+initialization for some members occurs twice.
+
+The rule detects classes that meet the following conditions:
+- The class contains at least one declaration of a non-const member variable.
+- The class has more than one constructor (except copy and move constructors)
+  that does not call another constructor from that class in the constructor
+  initializer list.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you reduce code duplication and improve code efficiency.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {                                 // Violation
+  public:
+    C() { init(10, 20); }
+    C(int i) { init(i, 20); }
+  private:
+    void init(int i, int j);
+
+    int m_i;
+    int m_j;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C {                                 // OK
+  public:
+    C() : C(10, 20) {}
+    C(int i) : C(i, 20) {} // OK
+  private:
+    C(int i, int j) : m_i(i), m_j(j) {}
+
+  private:
+    int m_i;
+    int m_j;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-1-5. Common class initialization for non-constant members shall be done
+   by a delegating constructor
+
+2. High Integrity C++ Coding Standard
+   12.4.5. Use delegating constructors to reduce code duplication
+
+</PRE>
+</BODY>
+</HTML>

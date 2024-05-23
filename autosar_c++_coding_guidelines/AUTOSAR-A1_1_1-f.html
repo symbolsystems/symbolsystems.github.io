@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'binder1st' and 'binder2nd' identifiers should not be used [AUTOSAR-A1_1_1-f]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'binder1st' and 'binder2nd' identifiers should not be used [AUTOSAR-A1_1_1-f-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All code shall conform to ISO/IEC 14882:2014 - Programming Language C++ and
+shall not use deprecated features." [AUTOSAR-A1-1-1]
+
+The 'binder1st' and 'binder2nd' template classes from the Standard Library
+were deprecated in the C++11 and removed in the C++17 version of the C++
+Language Standard.
+
+This rule detects when the 'binder1st' and 'binder2nd' identifiers are used
+in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports all occurrences of the 'binder1st' and 'binder2nd'
+identifiers. For this reason, the rule may report 'binder1st' or 'binder2nd'
+that does not represent the class from the Standard Library. For example:
+
+void binder1st (); // Violation
+void binder2nd (); // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that your code complies with the up-to-date version
+of the C++ Language Standard. This allows you to increase longevity of
+an application and address the defects and vulnerabilities that may emerge
+as deployment environments evolve.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+
+void foo ()
+{
+    std::binder1st&lt;equal_to&lt;int&gt;&gt; equal_to_10 (equal_to&lt;int&gt;(),10); // Violation
+    std::binder2nd&lt;less&lt;int&gt;&gt; is_negative (less&lt;int&gt;(),0);          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'binder1st' and 'binder2nd' identifiers.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A1-1-1. All code shall conform to ISO/IEC 14882:2014 - Programming Language
+   C++ and shall not use deprecated features.
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   D.9 Binders
+
+3. Programming languages -- C++ ISO/IEC 14882:2014
+   D.9 Binders
+
+</PRE>
+</BODY>
+</HTML>

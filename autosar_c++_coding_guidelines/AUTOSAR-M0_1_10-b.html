@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every defined function with internal linkage shall be used at least once [AUTOSAR-M0_1_10-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every defined function with internal linkage shall be used at least once [AUTOSAR-M0_1_10-b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects definitions of unused functions that cannot be referred to
+from scopes of other translation units.
+The rule assumes that a function is used when it is called
+or has its address taken.
+
+This rule checks:
+- functions with internal linkage
+- functions with no linkage
+- functions with external C++ linkage that are defined in anonymous namespaces
+  (except default constructors, destructors and virtual functions)
+
+See also: GLOBAL-UNUSEDFUNC
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Note that an unused prototype is not a violation of this rule."
+[MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Functions or procedures that are not called may be symptomatic
+of a serious problem, such as missing paths." [MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* The functions 'foo1', 'foo2', foo3' are not used in the translation unit */
+static void foo1() { /* ... */ }   /* Violation */
+
+namespace {
+    void foo2() { /* ... */ }      /* Violation */
+    struct S {
+        void foo3() { /* ... */ }  /* Violation */
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static void foo1() { /* ... */ }   /* OK */
+
+namespace {
+    void foo2() { /* ... */ }      /* OK */
+    struct S {
+        void foo3() { /* ... */ }  /* OK */
+    };
+}
+
+static void foo4(int);             /* OK - prototype */
+
+void f_use() {
+    void (*fp)() = foo1;
+    struct S* sp;
+    foo2();
+    sp-&gt;foo3();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A0-1-3. Every function defined in an anonymous namespace, or static
+   function with internal linkage, or private member function shall be used
+
+2. AUTOSAR C++14 Coding Guidelines
+   M0-1-10. Every defined function should be called at least once
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 186
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-10
+
+</PRE>
+</BODY>
+</HTML>

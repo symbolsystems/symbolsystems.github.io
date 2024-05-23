@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If a function is declared with an exception-specification, then all declarations of the same function (in other translation units) shall be declared with the same set of type-ids [AUTOSAR-A15_4_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If a function is declared with an exception-specification, then all declarations of the same function (in other translation units) shall be declared with the same set of type-ids [AUTOSAR-A15_4_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If any declaration of a function has an exception-specification, all
+declarations, including the definition and an explicit specialization, of that
+function shall have an exception-specification with the same set of type-ids".
+[ISO/IEC 14882:1998 Programming languages � C++ 15.4 Exception specifications]
+
+This rule detects when functions with external linkage that are declared
+with an 'exception-specification' have other declarations (in other
+translation units) with a different set of 'type-ids'.
+
+This rule assumes that a "set of type-ids" is a set of direct types that are
+used in an 'exception-specification'.
+
+This rule detects the 'noexcept' specifier (used from the C++11 version)
+and reports violations if one declaration is equivalent
+to 'noexcept(true)', and another declaration to 'noexcept(false)'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"It is undefined behaviour if a function has different exception-specifications
+in different translation units". [MISRA C++:2008, Rule 15-4-1]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule incorrectly detects some types to be the same, although they are not
+identical. For this reason, violations will not be reported for the following
+cases (when declarations are used in different translation units):
+- types with cv-qualifiers
+  void f1() throw(const int);       // type-id: int
+  void f1() throw(volatile int);    // type-id: int
+  void f1() throw(int);             // type-id: int
+- arrays and pointers
+  void f2() throw(int*);            // type-id: int*
+  void f2() throw(int[]);           // type-id: int*
+  void f2() throw(int[5]);          // type-id: int*
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+void f1() throw(char, int);         /* Violation */
+void f2() throw(int*);              /* Violation */
+void f3() throw(double);            /* Violation */
+
+/* test2.cpp */
+void f1() throw(int);               /* Violation */
+void f2() throw();                  /* Violation */
+void f3();                          /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+void f1() throw(char, int);         /* OK */
+void f2() throw(int*);              /* OK */
+void f3();                          /* OK */
+
+/* test2.cpp */
+void f1() throw(int, char);         /* OK */
+void f2() throw(int*);              /* OK */
+void f3();                          /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Section 6: Rules, Rule 15-4-1
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.2.2 All declarations of a variable or function shall have the same type
+
+3. ISO/IEC 14882:1998 Programming languages � C++
+   15.4 Exception specifications
+
+4. AUTOSAR C++14 Coding Guidelines
+   A15-4-3. The noexcept specification of a function shall either be identical
+   across all translation units, or identical or more restrictive between 
+   a virtual member function and an overrider
+
+</PRE>
+</BODY>
+</HTML>

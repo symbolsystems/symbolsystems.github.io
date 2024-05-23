@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using reinterpret_cast [AUTOSAR-A5_2_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using reinterpret_cast [AUTOSAR-A5_2_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Don't try to use reinterpret_cast to force the compiler to reinterpret the 
+bits of an object of one type as being the bits of an object of a different 
+type. That's the opposite of maintaining type safety, and reinterpret_cast 
+isn't even guaranteed to do that or anything else in particular."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents assumptions how data is represented, which may dramatically affect 
+the safety and reliability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A{};
+class B{};
+
+void foo( ) {
+    A *a;
+    B *b = reinterpret_cast&lt;B*&gt;( a );  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A{};
+class B{};
+
+void foo( ) {
+    A *a;
+    void *pv = a;
+    B *b = static_cast&lt;B*&gt;( pv );      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-2-4. reinterpret_cast shall not be used
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Type Safety", Rule 92
+
+3. High Integrity C++ Coding Standard
+   5.4.1. Only use casting forms: static cast (excl. void*), dynamic cast or
+   explicit constructor call
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 183
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.5 reinterpret_cast shall not be used
+
+</PRE>
+</BODY>
+</HTML>

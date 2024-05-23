@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only one of virtual, override or final should be specified in a member function declaration [AUTOSAR-A10_3_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only one of virtual, override or final should be specified in a member function declaration [AUTOSAR-A10_3_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Specifying more than one of these three specifiers along with virtual function
+declaration is redundant and a potential source of errors." [AUTOSAR A10-3-1]
+
+This rule detects virtual function declarations that:
+- contain more than one of the following specifiers: virtual, override, final.
+- do not contain any of the above specifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"It is recommended to use the virtual specifier only for new virtual function
+declaration, the override specifier for overrider declaration, and the final
+specifier for final overrider declaration." [AUTOSAR A10-3-1]
+
+This rule does not check if a virtual function declaration has an appropriate
+specifier.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability and prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base
+{
+    Base();
+    virtual ~Base();
+    virtual void operator()();
+    virtual void foo1();
+    virtual void foo2();
+};
+
+class Derived : public Base
+{
+    Derived();
+    virtual ~Derived() override;          // Violation
+    virtual void operator()() final;      // Violation
+    virtual void foo1() override final;   // Violation
+    void foo2();                          // Violation
+};
+
+class Derived2 : public Derived
+{
+    Derived2();
+    ~Derived2() override final;           // Violation
+    void foo2();                          // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base
+{
+    Base();
+    virtual ~Base();
+    virtual void operator()();
+    virtual void foo1();
+    virtual void foo2();
+};
+
+class Derived : public Base
+{
+    Derived();
+    ~Derived() override;      // OK
+    void operator()() final;  // OK
+    void foo1() final;        // OK
+    void foo2() override;     // OK
+};
+
+class Derived2 : public Derived
+{
+    Derived2();
+    ~Derived2() final;        // OK
+    void foo2() final;        // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-3-1. Virtual function declaration shall contain exactly one of the
+   three specifiers: (1) virtual, (2) override, (3) final.
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 13.3.1 User-declared member functions shall use the virtual, override and final specifiers appropriately
+
+</PRE>
+</BODY>
+</HTML>

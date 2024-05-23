@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A parameter of const reference to a 'cheap to copy' type should be passed by value [AUTOSAR-A8_4_7-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A parameter of const reference to a 'cheap to copy' type should be passed by value [AUTOSAR-A8_4_7-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Passing an argument by value documents that the argument won't be modified.
+Copying the value (instead of passing by reference to const) also ensures that
+no indirection is needed in the function body to access the value."
+[AUTOSAR A8-4-7]
+
+This rule detects when a parameter of const reference to a 'cheap to copy' type
+is declared.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"For the purpose of this rule, 'cheap to copy' is defined as a trivially
+copyable type that is no longer than two words (i.e. pointers)."
+[AUTOSAR A8-4-7]
+
+This rule assumes that the size of a 'word' is 32 bits.
+
+The 'trivially copyable' type is detected according to the definition
+of the 'trivially copyable' type in the C++17 standard.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to improve the efficiency of your code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1(const int &amp;p1)  // Violation
+{
+    // ...
+}
+
+struct S                // Trivially copyable type
+{
+    unsigned int m1;
+    unsigned int m2;
+};
+
+void f2(const S&amp; s)     // Violation
+{
+    //...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by changing the parameter type.
+
+void f1(int p1)         // OK
+{
+    // ...
+}
+
+// An example of the correct code
+class A                 // Non-trivially copyable type
+{
+public:
+    A();
+    A(const A&amp; rhs);
+private:
+    unsigned int* p1;
+    unsigned int* p2;
+};
+
+void f2(const A&amp; s)     // OK
+{
+    //...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-7. "in" parameters for "cheap to copy" types shall be passed by value
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley,
+   (C) 2005 Pearson Education, Inc. Chapter: "Take Parameters Appropriately
+   by Value, (Smart) Pointer, or Reference", Rule 25
+
+3. ISO/IEC 14882:2017 Programming languages - C++
+   12 Classes
+
+</PRE>
+</BODY>
+</HTML>

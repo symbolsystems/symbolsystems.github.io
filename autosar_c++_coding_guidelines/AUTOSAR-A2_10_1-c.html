@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers declared in a local scope should not hide identifiers declared in a class scope [AUTOSAR-A2_10_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers declared in a local scope should not hide identifiers declared in a class scope [AUTOSAR-A2_10_1-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an identifier is declared in an inner scope and it uses the same name
+as an identifier that already exists in an outer scope, then the innermost
+declaration will "hide" the outer one. This may lead to developer confusion."
+
+The rule reports a violation if an identifier declared in a local scope 
+of member function hides an identifier declared in a class scope
+or in public/protected section class's parents.
+
+See also: CODSTA-44, CODSTA-45, CODSTA-CPP-84, CODSTA-CPP-85,
+MISRA2004-5_2_a, MISRA2004-5_2_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hiding names of identifiers can lead to errors and confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A1 {
+    int m1;
+    int m2;
+    int m3;
+    typedef enum E {EN1, EN2} ET;	
+	
+    void foo1(){
+        int m1;              // Violation
+        int ET;              // Violation
+        
+        m1 = sizeof(ET);     // possible mistake
+    }
+
+    void foo2();
+
+    void foo3(int m3);       // OK - reported on function's definition 
+
+    void foo4(){
+        int (*foo1)();       // Violation
+    }
+};
+
+void A1::foo2(){
+    int m2;                  // Violation
+}
+
+void A1::foo3(int m3){}      // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A1 {
+    int m1;
+    int m2;
+    int m3;
+    typedef enum E {EN1, EN2} ET;	
+    
+    // Names of local identifiers were changed
+    void foo1(){
+        int l_m1;              // OK
+        int l_ET;              // OK
+        
+        l_m1 = sizeof(ET);
+    }
+
+    void foo2();
+
+    void foo3(int p_m3);       // OK
+
+    void foo4(){
+        void (*pfoo1)();       // OK
+    }
+};
+
+void A1::foo2(){
+    int l_m2;                  // OK
+}
+
+void A1::foo3(int p_m3){}      // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-10-1. An identifier declared in an inner scope shall not hide an
+   identifier declared in an outer scope
+
+2. High Integrity C++ Coding Standard
+   3.1.1. Do not hide declarations
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 135
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.4.1 A variable declared in an inner scope shall not hide a variable declared in an outer scope
+
+</PRE>
+</BODY>
+</HTML>

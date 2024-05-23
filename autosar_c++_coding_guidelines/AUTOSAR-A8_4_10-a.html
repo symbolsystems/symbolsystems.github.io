@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A parameter shall be passed by reference if it can't be NULL [AUTOSAR-A8_4_10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A parameter shall be passed by reference if it can't be NULL [AUTOSAR-A8_4_10-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Passing a parameter by pointer suggests that it can be NULL. If it can't be
+NULL (i.e. it's not optional) it should therefore be passed by reference
+instead. Only parameters that can be NULL shall be passed by pointer."
+[AUTOSAR A8-4-10]
+
+This rule detects when a parameter of a function is passed by pointer and
+is not checked for being NULL before it is dereferenced.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule does not trigger in the following cases:
+- the function is virtual
+- the parameter is used as array
+- pointer arithmetic is done on the parameter 
+- the parameter is pointer to function
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Passing a parameter of a function by pointer may result in NullPointerException.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent null pointer exception (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+ 
+#include &lt;cstdint&gt;
+#include &lt;numeric&gt;
+#include &lt;vector&gt;
+
+// Non-Compliant: non-optional parameter passed by pointer
+int32_t Sum(const std::vector&lt;int32_t&gt; *v) { // VIOLATION
+    return std::accumulate(v-&gt;begin(), v-&gt;end(), 0);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In the following code, the parameter is passed by reference and it cannot be NULL.
+
+#include &lt;cstdint&gt;
+#include &lt;numeric&gt;
+#include &lt;vector&gt;
+
+// Compliant: non-optional parameter passed by reference
+int32_t Sum(const std::vector&lt;int32_t&gt; &amp;v) { // NO VIOLATION
+    return std::accumulate(v.begin(), v.end(), 0);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+AUTOSAR C++14 Coding Guidelines
+Rule A8-4-10 A parameter shall be passed by reference if it can't be NULL
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overloading logical operators AND, OR (&amp;&amp;, ||) [AUTOSAR-M5_2_11-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overloading logical operators AND, OR (&amp;&amp;, ||) [AUTOSAR-M5_2_11-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The built-in &amp;&amp; and || enjoy special treatment from the compiler.
+If you overload them, they become ordinary functions with very different
+semantics, and this is a sure way to introduce subtle bugs and fragilities.
+You cannot implement the full semantics of the builtin operators in those
+two cases, and programmers commonly expect those semantics.
+In particular, the built-in versions evaluate left-to-right, and also use
+short circuit evaluation. For overloaded operator calls all arguments
+are always evaluated before the call and the order of evaluation 
+is unspecified"
+This rule detects when you overload operator &amp;&amp;, ||.
+
+See also: CODSTA-CPP-80
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Overloading these operators changes the way the compiler reads the 
+semantics of an expression, resulting in unpredictable program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A {
+   bool operator||(const A&amp;);           // Violation
+};
+bool operator&amp;&amp;(const A&amp;, const A&amp;);    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not overload operators &amp;&amp; or ||.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-2-11. The comma operator, &amp;&amp; operator and the || operator shall not be
+   overloaded
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Functions and Operators", Rule 30
+
+4. High Integrity C++ Coding Standard
+   13.2.1. Do not overload operators with special semantics
+
+5. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 159
+
+6. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-2-11
+
+7. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 16.5.1 The logical AND and logical OR operators shall not be overloaded
+
+8. Scott Meyers, "More Effective C++: 35 New Ways to Improve 
+   Your Programs and Designs", Addison-Wesley, Copyright 1996,
+   Chapter: "Operators", Item 7
+
+</PRE>
+</BODY>
+</HTML>

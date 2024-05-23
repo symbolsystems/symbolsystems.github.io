@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer 'nullptr' over 'NULL' or '0'(zero) [AUTOSAR-A4_10_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer 'nullptr' over 'NULL' or '0'(zero) [AUTOSAR-A4_10_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The literal 0, (zero), is type int not pointer, it can be implicitly cast to
+a pointer, (but that will only happen where it cannot be interpreted as an
+int type). Basically, the same is true for NULL. In earlier versions of C++,
+we always had a problem in that overloading between pointer and integer types
+could lead to nasty surprises.
+
+This rule detects the cases when 0 or NULL are assigned to pointer type objects.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents calling incorrect functions, and "surprises".
+Generally improves code behavior, as well as readability.
+Make it obvious to both compilers and humans that a pointer is intended.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+ 
+This rule reports a false positive violation when an object
+is initialized with an empty initializer list '{}'.
+For example:
+   #include &lt;initializer_list&gt;
+   int* a = {};                       // reported Violation
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include&lt;cstdio&gt;
+
+void bar(const char* p);
+
+void foo(const char *p)
+{
+    if (p != (const char*) NULL)    // Violation
+    {
+        p = NULL;                   // Violation
+    } else
+    {
+        bar(0);                     // Violation
+    }
+    p = (const char*) 0L;           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include&lt;cstdio&gt;
+
+void bar(const char* p);
+
+void foo(const char *p)
+{
+    if (p != nullptr)    // OK
+    {
+        p = nullptr;     // OK
+    } else
+    {
+        bar(nullptr);    // OK
+    }
+    p = nullptr;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-10-1. Only nullptr literal shall be used as the null-pointer-constant
+
+2. High Integrity C++ Coding Standard
+   2.5.3. Use nullptr for the null pointer constant
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.11.1 nullptr shall be the only form of the null-pointer-constant
+
+4. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use 
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 3: "Moving to Modern C++", Item 8: "Prefer nullptr to 0 and NULL"
+
+</PRE>
+</BODY>
+</HTML>

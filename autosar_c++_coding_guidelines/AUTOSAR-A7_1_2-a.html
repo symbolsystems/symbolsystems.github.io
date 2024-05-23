@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use constexpr to declare const variables whenever possible [AUTOSAR-A7_1_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use constexpr to declare const variables whenever possible [AUTOSAR-A7_1_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'constexpr' specifier indicates that an objects is a constant whose value is
+known at compile time. It should be used instead of the 'const' qualifier
+whenever possible.
+
+A variable can be declared with 'constexpr' if it has a literal type, it is
+immediately initialized and every full-expression that appears in its
+initializer is a constant expression.
+
+This rule detects const variables that can be declared with the 'constexpr'
+specifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a full-expression is not a constant expression
+if it contains at least one of the following:
+- a function call;
+- a non-constexpr variable;
+- a parameter;
+- a 'new' or 'typeid' operator;
+- a left shift operator (&lt;&lt;) with a left hand operand of signed type.
+
+The 'constexpr' specifier for static data members should be used only when they
+are initialized inside a class body.
+
+struct Z {
+    static const int z1 = 0;  // Violation
+    static const int z2;
+};
+
+const int Z::z2 = 0; // OK - the definition outside the class body
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that 'constexpr' is used whenever possible.
+'constexpr' variables are stored in the read-only memory, which prevents
+exploits and improves security.
+
+Also, they can be employed in a wider range of contexts. For example, you can
+use variables declared with 'constexpr' when the C++ Standard requires integral
+constant expressions, such as array sizes, integral template arguments,
+enumerator values, alignment specifiers and more.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+const int a = 1;              // Violation
+const char b[] = "test";      // Violation
+
+void foo()
+{
+  static const int m = 0;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+constexpr int a = 1;           // OK
+constexpr char b[] = "test";   // OK
+
+void foo()
+{
+  static constexpr int m = 0;  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-2. The constexpr specifier shall be used for values that can be
+   determined at compile time
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   7.1.5 The constexpr specifier
+
+3. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 3: Moving to Modern C++, Item 15: "Use constexpr whenever possible"
+
+</PRE>
+</BODY>
+</HTML>

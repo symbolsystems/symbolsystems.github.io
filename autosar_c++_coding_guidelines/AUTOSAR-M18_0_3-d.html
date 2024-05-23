@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'getenv()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-M18_0_3-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'getenv()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-M18_0_3-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The library functions 'abort', 'exit', 'getenv' and 'system' from library
+&lt;stdlib.h&gt; shall not be used." [MISRA-C:2004]
+"The library functions 'abort', 'exit', 'getenv' and 'system' from library
+&lt;cstdlib&gt; shall not be used. The use of these functions leads to
+implementation-defined behaviour." [MISRA C++:2008]
+
+This rule detects calls to the 'getenv()' function from the 'stdlib.h'
+and 'cstdlib' standard libraries.
+
+See also: CODSTA-185_a, BD-PB-INVRET, SECURITY-48_b, PB-75, PB-75_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The standard "MISRA C:2012 Amendment 1" allows you to use the 'getenv'
+function if it is compliant with rules 21.19 and 21.20. However, this
+rule reports every use of this function.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined or implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include  &lt;stdlib.h&gt;
+
+void f1( int i ) {
+    char *libvar;
+    libvar = getenv( "LIB" );  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the call to the 'getenv()' function.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M18-0-3. The library functions abort, exit, getenv and system from library
+   &lt;cstdlib&gt; shall not be used
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   7.10.4 Communication with the environment
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   7.20.4 Communication with the environment
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.5 Libraries, AV Rule 24
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 18, Rule 18-0-3
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 20, Rule 20.11
+
+7. Origin: Misra Guidelines - Rule 126
+
+8. SEI CERT C Coding Standard
+   MSC24-C. Do not use deprecated or obsolescent functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions">https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

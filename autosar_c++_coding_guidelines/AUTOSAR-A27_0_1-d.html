@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid buffer overflow from tainted data due to defining incorrect format limits [AUTOSAR-A27_0_1-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid buffer overflow from tainted data due to defining incorrect format limits [AUTOSAR-A27_0_1-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects possible overflow when writing to a buffer as a result of 
+insufficient buffer size for holding the string that results from the sprintf function.
+
+To prevent buffer overflow errors, ensure that the destination buffer has sufficient 
+size to hold both the input and the null-terminator character.
+
+The rule will report a violation when the following conditions are detected:
+   * Destination buffer size is known or when it's smallest size can be approximated  
+   * Input size was not compared to buffer size
+   * Buffer input is considered tainted
+   * Formatting the string did not restrict the size of the input or restrictions are 
+     incorrect (allows larger input than size of buffer)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The possibility of buffer overflow is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to execute 
+arbitrary code, enabling the exploiter to gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+  
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+void func(char *name) {
+    char filename[128];
+    sprintf(filename, "%s.txt", name); // VIOLATION
+}
+
+int main(int argc, char* argv[]) {
+    func(argv[0]);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+void func(char *name) {
+    char filename[128];
+    sprintf(filename, "%.123s.txt", name); // NO VIOLATION
+}
+
+int main(int argc, char* argv[]) {
+    func(argv[0]);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')
+<A HREF="http://cwe.mitre.org/data/definitions/120.html">http://cwe.mitre.org/data/definitions/120.html</A>
+
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 1: New directives, Dir 4.14
+
+SEI CERT C Coding Standard
+EXP39-C. Do not access a variable through a pointer of an incompatible type
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP39-C.+Do+not+access+a+variable+through+a+pointer+of+an+incompatible+type">https://wiki.sei.cmu.edu/confluence/display/c/EXP39-C.+Do+not+access+a+variable+through+a+pointer+of+an+incompatible+type</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-1 Inputs from independent components shall be validated
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-2 A C-style string shall guarantee sufficient space for data and the null terminator
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+</PRE>
+</BODY>
+</HTML>

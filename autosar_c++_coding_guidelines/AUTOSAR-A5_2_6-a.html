@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The operands of a logical &amp;&amp; or || shall be parenthesized if the operands contain binary operators [AUTOSAR-A5_2_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The operands of a logical &amp;&amp; or || shall be parenthesized if the operands contain binary operators [AUTOSAR-A5_2_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if an operand of a logical operator '&amp;&amp;' or '||'
+containing the binary operator is not parenthesized.
+
+Where an expression consists of either a sequence of only logical '&amp;&amp;'
+or a sequence of only logical '||', extra parentheses are not required.
+
+See also: CODSTA-90, MISRA2004-12_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Parenthesizing operands (that contain binary operators) of the logical
+operators '&amp;&amp;' or '||' enhances readability" 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( int x, int y, int z )
+{
+    if ( x != y &amp;&amp; x != z );   // Violation
+    if ( x == y || x == z );   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( int x, int y, int z )
+{
+    if ( (x != y) &amp;&amp; (x != z) );   // OK
+    if ( (x == y) || (x == z) );   // OK
+}
+
+bool foo_b(int a);
+
+void foo2(int x, int y, int z){
+    if ( (x != y) &amp;&amp; (x != z) &amp;&amp; (x !=0 ) );   // OK
+    if ( (x == y) || (x == z) || (x !=0 ) );   // OK
+    
+    if(foo_b(x + y) &amp;&amp; foo_b(x - y));          // OK
+    
+    if(!(x == 0) &amp;&amp; !(x == 1));                // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 158
+
+2. AUTOSAR C++14 Coding Guidelines
+   A5-2-6. The operands of a logical &amp;&amp; or || shall be parenthesized if the
+   operands contain binary operators
+
+</PRE>
+</BODY>
+</HTML>

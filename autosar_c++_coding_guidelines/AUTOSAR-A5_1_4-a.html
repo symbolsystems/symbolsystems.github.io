@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Never return lambdas that capture local objects by reference [AUTOSAR-A5_1_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Never return lambdas that capture local objects by reference [AUTOSAR-A5_1_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When a lambda captures local variables or parameters by reference, then it is
+capable of modifying objects from the enclosing scope.
+
+A captured reference is only valid if it refers to a variable that still exists.
+If a lambda with a reference capture is used after the original variable goes
+out of scope, the results are undefined.
+
+This rule detects when lambdas that capture local variables or parameters by
+reference are returned from a function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent dangling references that may lead to memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+auto returnLambda(){
+    int var = 2;
+    return [&amp;var]() {             // Violation
+    	var += 2;
+    	return var;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+auto returnLambda(){
+    int var = 2;
+    return [var]() {              // OK
+    	int varL = var + 2;
+    	return varL;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-4. A lambda expression object shall not outlive any of its reference-
+   captured objects
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.8.2 A function must not return a reference or a pointer to a local variable with automatic storage duration
+
+3. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 6: Lambda Expressions, Item 31: "Avoid default capture modes"
+
+4. SEI CERT C++ Coding Standard
+   EXP61-CPP. A lambda object must not outlive any of its reference captured
+   objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP61-CPP.+A+lambda+object+must+not+outlive+any+of+its+reference+captured+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP61-CPP.+A+lambda+object+must+not+outlive+any+of+its+reference+captured+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,1672 @@
+<HTML><HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<TITLE>Enabled Rules</TITLE></HEAD>
+<BODY BGCOLOR=white><FONT FACE="Arial, Helvetica"><H1>Enabled Rules</H1>
+<UL>
+<LI><B><A HREF="AUTOSAR.html">AUTOSAR C++14 Coding Guidelines [AUTOSAR]</A></B>
+<UL>
+<LI><B><A HREF="AUTOSAR-A0_1_1.html">AUTOSAR A0-1-1 A project shall not contain instances of non-volatile variables being given values that are not subsequently used [AUTOSAR-A0_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_1_1-a.html">Avoid unused values [AUTOSAR-A0_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_1_2.html">AUTOSAR A0-1-2 The value returned by a function having a non-void return type that is not an overloaded operator shall be used [AUTOSAR-A0_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_1_2-a.html">The value returned by a function having a non-void return type that is not an overloaded operator shall always be used [AUTOSAR-A0_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_1_3.html">AUTOSAR A0-1-3 Every function defined in an anonymous namespace, or static function with internal linkage, or private member function shall be used [AUTOSAR-A0_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_1_3-a.html">Every defined function with internal linkage shall be used at least once [AUTOSAR-A0_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_1_4.html">AUTOSAR A0-1-4 There shall be no unused named parameters in non-virtual functions [AUTOSAR-A0_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_1_4-a.html">Eliminate unused parameters [AUTOSAR-A0_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_1_5.html">AUTOSAR A0-1-5 There shall be no unused named parameters in the set of parameters for a virtual function and all the functions that override it [AUTOSAR-A0_1_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_1_5-a.html">There shall be no unused named parameters in virtual functions [AUTOSAR-A0_1_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_1_6.html">AUTOSAR A0-1-6 There should be no unused type declarations [AUTOSAR-A0_1_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_1_6-a.html">A project shall not contain unused type declarations [AUTOSAR-A0_1_6-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_4_2.html">AUTOSAR A0-4-2 Type long double shall not be used [AUTOSAR-A0_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_4_2-a.html">Type long double shall not be used [AUTOSAR-A0_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A0_4_4.html">AUTOSAR A0-4-4 Range, domain and pole errors shall be checked when using math functions [AUTOSAR-A0_4_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A0_4_4-a.html">Validate values passed to library functions [AUTOSAR-A0_4_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_1_1.html">AUTOSAR A10-1-1 Class shall not be derived from more than one base class which is not an interface class [AUTOSAR-A10_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_1_1-a.html">Be wary about using multiple inheritance of classes that are not abstract interfaces [AUTOSAR-A10_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_2_1.html">AUTOSAR A10-2-1 Non-virtual member functions shall not be redefined in derived classes [AUTOSAR-A10_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_2_1-a.html">Never redefine an inherited nonvirtual function [AUTOSAR-A10_2_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A10_2_1-b.html">Member functions declared in derived class should not hide functions declared in base classes [AUTOSAR-A10_2_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_3_1.html">AUTOSAR A10-3-1 Virtual function declaration shall contain exactly one of the three specifiers: [AUTOSAR-A10_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_3_1-a.html">Only one of virtual, override or final should be specified in a member function declaration [AUTOSAR-A10_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_3_2.html">AUTOSAR A10-3-2 Each overriding virtual function shall be declared with the override or final specifier [AUTOSAR-A10_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_3_2-a.html">Each overriding virtual function shall be declared with the override or final specifier [AUTOSAR-A10_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_3_3.html">AUTOSAR A10-3-3 Virtual functions shall not be introduced in a final class [AUTOSAR-A10_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_3_3-a.html">Do not introduce virtual functions in a final class [AUTOSAR-A10_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_3_5.html">AUTOSAR A10-3-5 A user-defined assignment operator shall not be virtual [AUTOSAR-A10_3_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_3_5-a.html">A user-defined assignment operator shall not be virtual [AUTOSAR-A10_3_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A10_4_1.html">AUTOSAR A10-4-1 Hierarchies should be based on interface classes [AUTOSAR-A10_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A10_4_1-a.html">Hierarchies should be based on abstract classes [AUTOSAR-A10_4_1-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A11_0_1.html">AUTOSAR A11-0-1 A non-POD type should be defined as class [AUTOSAR-A11_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A11_0_1-a.html">A non-POD type should be defined as class [AUTOSAR-A11_0_1-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A11_0_2.html">AUTOSAR A11-0-2 A type defined as struct shall: (1) provide only public data members, (2) not provide any special member functions or methods, (3) not be a base of another struct or class, (4) not inherit from another struct or class [AUTOSAR-A11_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A11_0_2-a.html">Structs should only contain public data members and should not be a base or inherit [AUTOSAR-A11_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A11_3_1.html">AUTOSAR A11-3-1 Friend declarations shall not be used [AUTOSAR-A11_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A11_3_1-a.html">Friend declarations shall not be used except declarations of comparison operators [AUTOSAR-A11_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_0_1.html">AUTOSAR A12-0-1 If a class declares a copy or move operation, or a destructor, either via "=default", "=delete", or via a user-provided declaration, then all others of these five special member functions shall be declared as well [AUTOSAR-A12_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_0_1-a.html">If a class declares a copy or move operation, or a destructor, either via '=default', '=delete', or via a user-provided declaration, then all others of these five special member functions shall be declared as well [AUTOSAR-A12_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_0_2.html">AUTOSAR A12-0-2 Bitwise operations and operations that assume data representation in memory shall not be performed on objects [AUTOSAR-A12_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_0_2-a.html">Do not compare objects of a class that may contain padding bits with C standard library functions [AUTOSAR-A12_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_1_1.html">AUTOSAR A12-1-1 Constructors shall explicitly initialize all virtual base classes, all direct non-virtual base classes and all non-static data members [AUTOSAR-A12_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_1_1-a.html">All constructors of a class should explicitly call a constructor for all of its immediate base classes and all virtual base classes [AUTOSAR-A12_1_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A12_1_1-b.html">All member variables should be initialized in constructor [AUTOSAR-A12_1_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_1_2.html">AUTOSAR A12-1-2 Both NSDMI and a non-static member initializer in a constructor shall not be used in the same type [AUTOSAR-A12_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_1_2-a.html">Both NSDMI and a non-static member initializer in a constructor shall not be used in the same type [AUTOSAR-A12_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_1_3.html">AUTOSAR A12-1-3 If all user-defined constructors of a class initialize data members with constant values that are the same across all constructors, then data members shall be initialized using NSDMI instead [AUTOSAR-A12_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_1_3-a.html">User-defined constructors that initialize data members with the same constant values across all constructors should initialize using NSDMI instead [AUTOSAR-A12_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_1_4.html">AUTOSAR A12-1-4 All constructors that are callable with a single argument of fundamental type shall be declared explicit [AUTOSAR-A12_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_1_4-a.html">All constructors that are callable with a single argument of fundamental type shall be declared explicit [AUTOSAR-A12_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_1_5.html">AUTOSAR A12-1-5 Common class initialization for non-constant members shall be done by a delegating constructor [AUTOSAR-A12_1_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_1_5-a.html">Use delegating constructors to reduce code duplication [AUTOSAR-A12_1_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_1_6.html">AUTOSAR A12-1-6 Derived classes that do not need further explicit initialization and require all the constructors from the base class shall use inheriting constructors [AUTOSAR-A12_1_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_1_6-a.html">Derived classes that do not need further explicit initialization and require all the constructors from the base class shall use inheriting constructors [AUTOSAR-A12_1_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_4_1.html">AUTOSAR A12-4-1 Destructor of a base class shall be public virtual, public override or protected non-virtual [AUTOSAR-A12_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_4_1-a.html">Make base class destructors public and virtual, or protected and nonvirtual [AUTOSAR-A12_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_4_2.html">AUTOSAR A12-4-2 If a public destructor of a class is non-virtual, then the class should be declared final [AUTOSAR-A12_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_4_2-a.html">If a public destructor of a class is non-virtual, then the class should be declared final [AUTOSAR-A12_4_2-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_6_1.html">AUTOSAR A12-6-1 All class data members that are initialized by the constructor shall be initialized using member initializers [AUTOSAR-A12_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_6_1-a.html">Prefer initialization to assignment in constructors [AUTOSAR-A12_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_7_1.html">AUTOSAR A12-7-1 If the behavior of a user-defined special member function is identical to implicitly defined special member function, then it shall be defined "=default" or be left undefined [AUTOSAR-A12_7_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_7_1-a.html">Define special members as =default when the behavior is equivalent to the compiler's behavior [AUTOSAR-A12_7_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_1.html">AUTOSAR A12-8-1 Move and copy constructors shall move and respectively copy base classes and data members of a class, without any side effects [AUTOSAR-A12_8_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_1-a.html">A copy constructor shall only initialize its base classes and the non-static members of the class of which it is a member [AUTOSAR-A12_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_2.html">AUTOSAR A12-8-2 User-defined copy and move assignment operators should use user-defined no-throw swap function [AUTOSAR-A12_8_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_2-a.html">User-defined copy and move assignment operators should use user-defined no-throw swap function [AUTOSAR-A12_8_2-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_3.html">AUTOSAR A12-8-3 Moved-from object shall not be read-accessed [AUTOSAR-A12_8_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_3-a.html">Do not rely on the value of a moved-from object [AUTOSAR-A12_8_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_4.html">AUTOSAR A12-8-4 Move constructor shall not initialize its class members and base classes using copy semantics [AUTOSAR-A12_8_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_4-a.html">Use std::move() on rvalue references and std::forward() on forwarding references [AUTOSAR-A12_8_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_5.html">AUTOSAR A12-8-5 A copy assignment and a move assignment operators shall handle self-assignment [AUTOSAR-A12_8_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_5-a.html">Check for assignment to self in operator= [AUTOSAR-A12_8_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_6.html">AUTOSAR A12-8-6 Copy and move constructors and copy assignment and move assignment operators shall be declared protected or defined "=delete" in base class [AUTOSAR-A12_8_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_6-a.html">Avoid public copy constructors and assignment operators in base classes [AUTOSAR-A12_8_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A12_8_7.html">AUTOSAR A12-8-7 Assignment operators should be declared with the ref-qualifier & [AUTOSAR-A12_8_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A12_8_7-a.html">Declare assignment operators with the ref-qualifier &amp; [AUTOSAR-A12_8_7-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_1_2.html">AUTOSAR A13-1-2 User defined suffixes of the user defined literal operators shall start with underscore followed by one or more letters [AUTOSAR-A13_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_1_2-a.html">User defined suffixes of the user defined literal operators shall start with underscore followed by one or more letters [AUTOSAR-A13_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_1_3.html">AUTOSAR A13-1-3 User defined literals operators shall only perform conversion of passed parameters [AUTOSAR-A13_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_1_3-a.html">User defined literals operators shall only perform conversion of passed parameters [AUTOSAR-A13_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_2_1.html">AUTOSAR A13-2-1 An assignment operator shall return a reference to "this" [AUTOSAR-A13_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_2_1-a.html">Have assignment operator returns a reference to *this; make assignment operator's return type a non-const reference to it's class' type [AUTOSAR-A13_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_2_2.html">AUTOSAR A13-2-2 A binary arithmetic operator and a bitwise operator shall return a "prvalue" [AUTOSAR-A13_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_2_2-a.html">A binary arithmetic operator and a bitwise operator shall return a 'prvalue' [AUTOSAR-A13_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_2_3.html">AUTOSAR A13-2-3 A relational operator shall return a boolean value [AUTOSAR-A13_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_2_3-a.html">A relational operator shall return a boolean value [AUTOSAR-A13_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_3_1.html">AUTOSAR A13-3-1 A function that contains "forwarding reference" as its argument shall not be overloaded [AUTOSAR-A13_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_3_1-a.html">Avoid Overloading on Forwarding References [AUTOSAR-A13_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_5_1.html">AUTOSAR A13-5-1 If "operator[]" is to be overloaded with a non-const version, const version shall also be implemented [AUTOSAR-A13_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_5_1-a.html">When overloading the subscript operator (operator[]), implement both const and non-const versions [AUTOSAR-A13_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_5_2.html">AUTOSAR A13-5-2 All user-defined conversion operators shall be defined explicit [AUTOSAR-A13_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_5_2-a.html">User-conversion cast operators should be made explicit [AUTOSAR-A13_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_5_3.html">AUTOSAR A13-5-3 User-defined conversion operators should not be used [AUTOSAR-A13_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_5_3-a.html">Do not use user-defined conversion functions [AUTOSAR-A13_5_3-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_5_4.html">AUTOSAR A13-5-4 If two opposite operators are defined, one shall be defined in terms of the other [AUTOSAR-A13_5_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_5_4-b.html">If two opposite equality operators ('==', '!=') are defined in a class, one shall be defined in terms of the other [AUTOSAR-A13_5_4-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_5_5.html">AUTOSAR A13-5-5 Comparison operators shall be non-member functions with identical parameter types and noexcept [AUTOSAR-A13_5_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_5_5-a.html">Comparison operators shall be non-member functions [AUTOSAR-A13_5_5-a-2]</A>
+<LI><A HREF="AUTOSAR-A13_5_5-b.html">Comparison operators shall be non-member functions with identical parameter types and noexcept [AUTOSAR-A13_5_5-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A13_6_1.html">AUTOSAR A13-6-1 Digit sequences separators ' shall only be used as follows: (1) for decimal, every 3 digits, (2) for hexadecimal, every 2 digits, (3) for binary, every 4 digits [AUTOSAR-A13_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A13_6_1-a.html">Digit sequences separators ' shall only be used consistently [AUTOSAR-A13_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A14_5_1.html">AUTOSAR A14-5-1 A template constructor shall not participate in overload resolution for a single argument of the enclosing class type [AUTOSAR-A14_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A14_5_1-a.html">A copy constructor shall be declared when there is a template constructor with a single parameter that is a generic parameter [AUTOSAR-A14_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A14_5_3.html">AUTOSAR A14-5-3 A non-member generic operator shall only be declared in a namespace that does not contain class (struct) type, enum type or union type declarations. [AUTOSAR-A14_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A14_5_3-a.html">A non-member generic operator shall only be declared in a namespace that does not contain class (struct) type, enum type or union type declarations [AUTOSAR-A14_5_3-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A14_7_2.html">AUTOSAR A14-7-2 Template specialization shall be declared in the same file (1) as the primary template (2) as a user-defined type, for which the specialization is declared [AUTOSAR-A14_7_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A14_7_2-a.html">Template specialization shall be declared in the same file as the primary template or a user-defined type, for which the specialization is declared [AUTOSAR-A14_7_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A14_8_2.html">AUTOSAR A14-8-2 Explicit specializations of function templates shall not be used [AUTOSAR-A14_8_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A14_8_2-a.html">Overloaded function templates shall not be explicitly specialized [AUTOSAR-A14_8_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_0_2.html">AUTOSAR A15-0-2 At least the basic guarantee for exception safety shall be provided for all operations. In addition, each function may offer either the strong guarantee or the nothrow guarantee [AUTOSAR-A15_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_0_2-a.html">Ensure resources are freed [AUTOSAR-A15_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_1_1.html">AUTOSAR A15-1-1 Only instances of types derived from std::exception shall be thrown [AUTOSAR-A15_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_1_1-a.html">Only use instances of std::exception for exceptions [AUTOSAR-A15_1_1-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_1_2.html">AUTOSAR A15-1-2 An exception object shall not be a pointer [AUTOSAR-A15_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_1_2-a.html">An exception object should not have pointer type [AUTOSAR-A15_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_1_4.html">AUTOSAR A15-1-4 If a function exits with an exception, then before a throw, the function shall place all objects/resources that the function constructed in valid states or it shall delete them [AUTOSAR-A15_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_1_4-a.html">Ensure resources are freed [AUTOSAR-A15_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_1_5.html">AUTOSAR A15-1-5 Exceptions shall not be thrown across execution boundaries [AUTOSAR-A15_1_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_1_5-a.html">Do not throw an exception across execution boundaries [AUTOSAR-A15_1_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_2_1.html">AUTOSAR A15-2-1 Constructors that are not noexcept shall not be invoked before program startup [AUTOSAR-A15_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_2_1-a.html">Function called in global or namespace scope shall not throw unhandled exceptions [AUTOSAR-A15_2_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A15_2_1-b.html">Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [AUTOSAR-A15_2_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_3_2.html">AUTOSAR A15-3-2 If a function throws an exception, it shall be handled when meaningful actions can be taken, otherwise it shall be propagated [AUTOSAR-A15_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_3_2-a.html">Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [AUTOSAR-A15_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_3_3.html">AUTOSAR A15-3-3 Main function and a task main function shall catch at least: base class exceptions from all third-party libraries used, std::exception and all otherwise unhandled exceptions [AUTOSAR-A15_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_3_3-a.html">There should be at least one exception handler to catch all otherwise unhandled exceptions [AUTOSAR-A15_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_3_4.html">AUTOSAR A15-3-4 Catch-all (ellipsis and std::exception) handlers shall be used only in (a) main, (b) task main functions, (c) in functions that are supposed to isolate independent components and (d) when calling third-party code that uses exceptions not according to AUTOSAR C++14 guidelines [AUTOSAR-A15_3_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_3_4-a.html">Avoid using catch-all exception handlers [AUTOSAR-A15_3_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_3_5.html">AUTOSAR A15-3-5 A class type exception shall be caught by reference or const reference [AUTOSAR-A15_3_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_3_5-a.html">A class type exception shall always be caught by reference [AUTOSAR-A15_3_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_4_1.html">AUTOSAR A15-4-1 Dynamic exception-specification shall not be used [AUTOSAR-A15_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_4_1-a.html">Do not use throw exception specifications [AUTOSAR-A15_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_4_2.html">AUTOSAR A15-4-2 If a function is declared to be noexcept, noexcept(true) or noexcept(<true condition>), then it shall not exit with an exception [AUTOSAR-A15_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_4_2-a.html">Avoid throwing exceptions from functions that are declared not to throw [AUTOSAR-A15_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_4_3.html">AUTOSAR A15-4-3 The noexcept specification of a function shall either be identical across all translation units, or identical or more restrictive between a virtual member function and an overrider [AUTOSAR-A15_4_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_4_3-a.html">If a function is declared with an exception-specification, then all declarations of the same function (in other translation units) shall be declared with the same set of type-ids [AUTOSAR-A15_4_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_4_4.html">AUTOSAR A15-4-4 A declaration of non-throwing function shall contain noexcept specification [AUTOSAR-A15_4_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_4_4-a.html">Declare functions 'noexcept' if they will not emit exceptions [AUTOSAR-A15_4_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_4_5.html">AUTOSAR A15-4-5 Checked exceptions that could be thrown from a function shall be specified together with the function declaration and they shall be identical in all function declarations and for all its overriders [AUTOSAR-A15_4_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_4_5-a.html">Checked exceptions that could be thrown from a function shall be specified in the comment directly before the function declaration [AUTOSAR-A15_4_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_5_1.html">AUTOSAR A15-5-1 All user-provided class destructors, deallocation functions, move constructors, move assignment operators and swap functions shall not exit with an exception. A noexcept exception specification shall be added to these functions as appropriate [AUTOSAR-A15_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_5_1-a.html">Never allow an exception to be thrown from a destructor, deallocation, and swap [AUTOSAR-A15_5_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_1-b.html">All user-provided move constructors and move assignment operators shall not exit with an exception [AUTOSAR-A15_5_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_5_2.html">AUTOSAR A15-5-2 Program shall not be abruptly terminated. In particular, an implicit or explicit invocation of std::abort(), std::quick_exit(), std::_Exit(), std::terminate() shall not be done [AUTOSAR-A15_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_5_2-a.html">The execution of a function registered with 'std::atexit()' or 'std::at_quick_exit()' should not exit via an exception [AUTOSAR-A15_5_2-a-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_2-b.html">The 'abort()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-A15_5_2-b-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_2-c.html">The 'quick_exit()' and '_Exit()' functions from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-A15_5_2-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A15_5_3.html">AUTOSAR A15-5-3 The std::terminate() function shall not be called implicitly [AUTOSAR-A15_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A15_5_3-a.html">The execution of a function registered with 'std::atexit()' or 'std::at_quick_exit()' should not exit via an exception [AUTOSAR-A15_5_3-a-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-b.html">Never allow an exception to be thrown from a destructor, deallocation, and swap [AUTOSAR-A15_5_3-b-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-c.html">Do not throw from within destructor [AUTOSAR-A15_5_3-c-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-d.html">There should be at least one exception handler to catch all otherwise unhandled exceptions [AUTOSAR-A15_5_3-d-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-e.html">An empty throw (throw;) shall only be used in the compound-statement of a catch handler [AUTOSAR-A15_5_3-e-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-f.html">Exceptions shall be raised only after start-up and before termination of the program [AUTOSAR-A15_5_3-f-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-g.html">Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [AUTOSAR-A15_5_3-g-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-h.html">Where a function's declaration includes an exception-specification, the function shall only be capable of throwing exceptions of the indicated type(s) [AUTOSAR-A15_5_3-h-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-i.html">Function called in global or namespace scope shall not throw unhandled exceptions [AUTOSAR-A15_5_3-i-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-j.html">Always catch exceptions [AUTOSAR-A15_5_3-j-2]</A>
+<LI><A HREF="AUTOSAR-A15_5_3-k.html">Properly define exit handlers [AUTOSAR-A15_5_3-k-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A16_0_1.html">AUTOSAR A16-0-1 The pre-processor shall only be used for unconditional and conditional file inclusion and include guards, and using the following directives: (1) #ifndef, (2) #ifdef, (3) #if, (4) #if defined, (5) #elif, (6) #else, (7) #define, (8) #endif, (9) #include [AUTOSAR-A16_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A16_0_1-a.html">The #ifndef, #ifdef, #if, #elif, #else, and #endif pre-processor directives shall only be used for conditional file inclusion and include guards [AUTOSAR-A16_0_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A16_0_1-b.html">#error directive shall not be used [AUTOSAR-A16_0_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A16_0_1-c.html">The #pragma directive shall not be used [AUTOSAR-A16_0_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A16_0_1-d.html">Avoid using macro definitions [AUTOSAR-A16_0_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A16_0_1-e.html">#undef shall not be used [AUTOSAR-A16_0_1-e-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A16_2_1.html">AUTOSAR A16-2-1 The ', ", /*, //, \ characters shall not occur in a header file name or in #include directive [AUTOSAR-A16_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A16_2_1-a.html">The following character sequences shall not appear in header file names: ', \, /*, //, or &quot; [AUTOSAR-A16_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A16_2_2.html">AUTOSAR A16-2-2 There shall be no unused include directives [AUTOSAR-A16_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A16_2_2-a.html">A file should directly include only the headers that contain declarations and definitions required to compile that file [AUTOSAR-A16_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A16_6_1.html">AUTOSAR A16-6-1 #error directive shall not be used [AUTOSAR-A16_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A16_6_1-a.html">#error directive shall not be used [AUTOSAR-A16_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A16_7_1.html">AUTOSAR A16-7-1 The #pragma directive shall not be used [AUTOSAR-A16_7_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A16_7_1-a.html">The #pragma directive shall not be used [AUTOSAR-A16_7_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A17_0_1.html">AUTOSAR A17-0-1 Reserved identifiers, macros and functions in the C++ standard library shall not be defined, redefined or undefined [AUTOSAR-A17_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A17_0_1-a.html">Do not #define nor #undef identifier 'defined' [AUTOSAR-A17_0_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A17_0_1-b.html">Reserved identifiers, macros and functions in the standard library, shall not be defined, redefined or undefined (C99 code) [AUTOSAR-A17_0_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A17_0_1-c.html">Reserved identifiers, macros and functions in the standard library, shall not be defined, redefined or undefined (C90 code) [AUTOSAR-A17_0_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A17_0_1-d.html">Do not redefine reserved words [AUTOSAR-A17_0_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A17_0_1-e.html">Do not #define or #undef identifiers with names which start with underscore [AUTOSAR-A17_0_1-e-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A17_1_1.html">AUTOSAR A17-1-1 Use of the C Standard Library shall be encapsulated and isolated [AUTOSAR-A17_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A17_1_1-a.html">The error indicator 'errno' shall not be used [AUTOSAR-A17_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A17_6_1.html">AUTOSAR A17-6-1 Non-standard entities shall not be added to standard namespaces [AUTOSAR-A17_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A17_6_1-a.html">Do not modify the standard namespaces 'std' and 'posix' [AUTOSAR-A17_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_0_1.html">AUTOSAR A18-0-1 The C library facilities shall only be accessed through C++ library headers [AUTOSAR-A18_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_0_1-a.html">The C library shall not be used [AUTOSAR-A18_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_0_2.html">AUTOSAR A18-0-2 The error state of a conversion from string to a numeric value shall be checked [AUTOSAR-A18_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_0_2-a.html">The library functions atof, atoi and atol from library stdlib.h shall not be used [AUTOSAR-A18_0_2-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_0_2-b.html">The library functions atof, atoi and atol from library stdlib.h shall not be used [AUTOSAR-A18_0_2-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_0_3.html">AUTOSAR A18-0-3 The library <clocale> (locale.h) and the setlocale function shall not be used [AUTOSAR-A18_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_0_3-a.html">Do not include &lt;locale.h&gt; header [AUTOSAR-A18_0_3-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_0_3-b.html">The 'setlocale' function should not be used [AUTOSAR-A18_0_3-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_1_1.html">AUTOSAR A18-1-1 C-style arrays shall not be used [AUTOSAR-A18_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_1_1-a.html">C-style arrays shall not be used [AUTOSAR-A18_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_1_2.html">AUTOSAR A18-1-2 The std::vector<bool> specialization shall not be used [AUTOSAR-A18_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_1_2-a.html">Avoid using vector&lt;bool&gt; [AUTOSAR-A18_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_1_3.html">AUTOSAR A18-1-3 The std::auto_ptr type shall not be used [AUTOSAR-A18_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_1_3-a.html">Prefer to use std::unique_ptr instead of std::auto_ptr [AUTOSAR-A18_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_1_4.html">AUTOSAR A18-1-4 A pointer pointing to an element of an array of objects shall not be passed to a smart pointer of single object type [AUTOSAR-A18_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_1_4-a.html">A pointer pointing to an element of an array of objects shall not be passed to a smart pointer of single object type [AUTOSAR-A18_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_1_6.html">AUTOSAR A18-1-6 All std::hash specializations for user-defined types shall have a noexcept function call operator [AUTOSAR-A18_1_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_1_6-a.html">All std::hash specializations for user-defined types shall have a noexcept function call operator [AUTOSAR-A18_1_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_1.html">AUTOSAR A18-5-1 Functions malloc, calloc, realloc and free shall not be used [AUTOSAR-A18_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_1-a.html">Do not use calloc, malloc, realloc and free functions [AUTOSAR-A18_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_10.html">AUTOSAR A18-5-10 Placement new shall be used only with properly aligned pointers to sufficient storage capacity [AUTOSAR-A18_5_10]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_10-a.html">Do not pass a pointer that has insufficient storage capacity or that is not suitably aligned for the object being constructed to placement 'new' [AUTOSAR-A18_5_10-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_5_10-b.html">An overhead should be used when an array of objects is passed to the placement 'new' allocation function [AUTOSAR-A18_5_10-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_11.html">AUTOSAR A18-5-11 "operator new" and "operator delete" shall be defined together [AUTOSAR-A18_5_11]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_11-a.html">Write operator delete if you write operator new [AUTOSAR-A18_5_11-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_5_11-b.html">Write operator delete[] if you write operator new[] [AUTOSAR-A18_5_11-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_2.html">AUTOSAR A18-5-2 Non-placement new or delete expressions shall not be used [AUTOSAR-A18_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_2-a.html">Dynamic heap memory allocation shall not be used [AUTOSAR-A18_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_3.html">AUTOSAR A18-5-3 The form of the delete expression shall match the form of the new expression used to allocate the memory [AUTOSAR-A18_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_3-a.html">Never provide brackets ([]) for delete when deallocating non-arrays [AUTOSAR-A18_5_3-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_5_3-b.html">Always provide empty brackets ([]) for delete when deallocating arrays [AUTOSAR-A18_5_3-b-2]</A>
+<LI><A HREF="AUTOSAR-A18_5_3-c.html">Properly deallocate dynamically allocated resources [AUTOSAR-A18_5_3-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_4.html">AUTOSAR A18-5-4 If a project has sized or unsized version of operator "delete" globally defined, then both sized and unsized versions shall be defined [AUTOSAR-A18_5_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_4-a.html">Define both sized and unsized versions of operator delete [AUTOSAR-A18_5_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_5.html">AUTOSAR A18-5-5 Memory management functions shall ensure the following: (a) deterministic behavior resulting with the existence of worst-case execution time, (b) avoiding memory fragmentation, (c) avoid running out of memory, (d) avoiding mismatched allocations or deallocations, (e) no dependence on non-deterministic calls to kernel [AUTOSAR-A18_5_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_5-a.html">Use the same form in corresponding calls to new/malloc and delete/free [AUTOSAR-A18_5_5-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_5_5-b.html">Freed memory shouldn't be accessed under any circumstances [AUTOSAR-A18_5_5-b-2]</A>
+<LI><A HREF="AUTOSAR-A18_5_5-c.html">Properly define new handlers [AUTOSAR-A18_5_5-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_8.html">AUTOSAR A18-5-8 Objects that do not outlive a function shall have automatic storage duration [AUTOSAR-A18_5_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_8-a.html">Use allocation by declaration rather than by new or malloc [AUTOSAR-A18_5_8-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_5_9.html">AUTOSAR A18-5-9 Custom implementations of dynamic memory allocation and deallocation functions shall meet the semantic requirements specified in the corresponding "Required behaviour" clause from the C++ Standard [AUTOSAR-A18_5_9]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_5_9-a.html">The user defined 'new' operator should throw the 'std::bad_alloc' exception when the allocation fails [AUTOSAR-A18_5_9-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_9_1.html">AUTOSAR A18-9-1 The std::bind shall not be used [AUTOSAR-A18_9_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_9_1-a.html">Prefer lambdas over std::bind, std::bind1st and std::bind2nd [AUTOSAR-A18_9_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_9_2.html">AUTOSAR A18-9-2 Forwarding values to other functions shall be done via: (1) std::move if the value is an rvalue reference, (2) std::forward if the value is forwarding reference [AUTOSAR-A18_9_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_9_2-a.html">The 'std::forward' function should be used to forward forwarding references [AUTOSAR-A18_9_2-a-2]</A>
+<LI><A HREF="AUTOSAR-A18_9_2-b.html">The 'std::move' function should be used to forward rvalue references [AUTOSAR-A18_9_2-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_9_3.html">AUTOSAR A18-9-3 The std::move shall not be used on objects declared const or const& [AUTOSAR-A18_9_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_9_3-a.html">Do not use std::move on objects declared with the const or const &amp; type [AUTOSAR-A18_9_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A18_9_4.html">AUTOSAR A18-9-4 An argument to std::forward shall not be subsequently used [AUTOSAR-A18_9_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A18_9_4-a.html">Do not subsequently use the argument to std::forward [AUTOSAR-A18_9_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A1_1_1.html">AUTOSAR A1-1-1 All code shall conform to ISO/IEC 14882:2014 - Programming Language C++ and shall not use deprecated features [AUTOSAR-A1_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A1_1_1-a.html">The 'register' storage class specifier shall not be used [AUTOSAR-A1_1_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-b.html">A copy assignment operator should be declared when a copy constructor is declared (and vice versa) [AUTOSAR-A1_1_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-c.html">Both copy constructor and copy assignment operator should be declared for classes with a nontrivial destructor [AUTOSAR-A1_1_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-d.html">The C library shall not be used [AUTOSAR-A1_1_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-e.html">Prefer lambdas over std::bind, std::bind1st and std::bind2nd [AUTOSAR-A1_1_1-e-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-f.html">The 'binder1st' and 'binder2nd' identifiers should not be used [AUTOSAR-A1_1_1-f-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-g.html">Prefer to use std::unique_ptr instead of std::auto_ptr [AUTOSAR-A1_1_1-g-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-h.html">The 'random_shuffle' identifier should not be used [AUTOSAR-A1_1_1-h-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-i.html">Do not use the increment operator (++) on an operand of type 'bool' [AUTOSAR-A1_1_1-i-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-j.html">The 'set_unexpected' identifier should not be used [AUTOSAR-A1_1_1-j-2]</A>
+<LI><A HREF="AUTOSAR-A1_1_1-k.html">Do not use throw exception specifications [AUTOSAR-A1_1_1-k-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_1.html">AUTOSAR A20-8-1 An already-owned pointer value shall not be stored in an unrelated smart pointer [AUTOSAR-A20_8_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_1-a.html">Do not store an already-owned pointer value in an unrelated smart pointer [AUTOSAR-A20_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_2.html">AUTOSAR A20-8-2 A std::unique_ptr shall be used to represent exclusive ownership [AUTOSAR-A20_8_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_2-a.html">Use smart pointers when passing a pointer to an object in a thread [AUTOSAR-A20_8_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_3.html">AUTOSAR A20-8-3 A std::shared_ptr shall be used to represent shared ownership [AUTOSAR-A20_8_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_3-a.html">Use smart pointers when passing a pointer to an object in a thread [AUTOSAR-A20_8_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_4.html">AUTOSAR A20-8-4 A std::unique_ptr shall be used over std::shared_ptr if ownership sharing is not required [AUTOSAR-A20_8_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_4-a.html">Consider using 'std::unique_ptr' instead of 'std::shared_ptr' for local objects [AUTOSAR-A20_8_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_5.html">AUTOSAR A20-8-5 std::make_unique shall be used to construct objects owned by std::unique_ptr [AUTOSAR-A20_8_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_5-a.html">'std::make_unique' shall be used to construct objects owned by 'std::unique_ptr' [AUTOSAR-A20_8_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_6.html">AUTOSAR A20-8-6 std::make_shared shall be used to construct objects owned by std::shared_ptr [AUTOSAR-A20_8_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_6-a.html">Prefer 'std::make_shared' to the direct use of new [AUTOSAR-A20_8_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A20_8_7.html">AUTOSAR A20-8-7 A std::weak_ptr shall be used to represent temporary shared ownership [AUTOSAR-A20_8_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A20_8_7-a.html">Avoid cyclic shared_ptr references [AUTOSAR-A20_8_7-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A21_8_1.html">AUTOSAR A21-8-1 Arguments to character-handling functions shall be representable as an unsigned char [AUTOSAR-A21_8_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A21_8_1-a.html">Do not pass incorrect values to ctype.h library functions [AUTOSAR-A21_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A23_0_1.html">AUTOSAR A23-0-1 An iterator shall not be implicitly converted to const_iterator [AUTOSAR-A23_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A23_0_1-a.html">Use const container calls when the result is immediately converted to a const iterator [AUTOSAR-A23_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A23_0_2.html">AUTOSAR A23-0-2 Elements of a container shall only be accessed via valid references, iterators, and pointers [AUTOSAR-A23_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A23_0_2-a.html">Do not modify container while iterating over it [AUTOSAR-A23_0_2-a-2]</A>
+<LI><A HREF="AUTOSAR-A23_0_2-b.html">Use valid references, pointers, and iterators to reference elements of a basic_string [AUTOSAR-A23_0_2-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A25_1_1.html">AUTOSAR A25-1-1 Non-static data members or captured values of predicate function objects that are state related to this object's identity shall not be copied [AUTOSAR-A25_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A25_1_1-a.html">Make predicates const pure functions [AUTOSAR-A25_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A25_4_1.html">AUTOSAR A25-4-1 Ordering predicates used with associative containers and STL sorting and related algorithms shall adhere to a strict weak ordering relation [AUTOSAR-A25_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A25_4_1-a.html">For associative containers never use comparison function returning true for equal values [AUTOSAR-A25_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A26_5_1.html">AUTOSAR A26-5-1 Pseudorandom numbers shall not be generated using std::rand() [AUTOSAR-A26_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A26_5_1-a.html">Do not use the rand() function for generating pseudorandom numbers [AUTOSAR-A26_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A26_5_2.html">AUTOSAR A26-5-2 Random number engines shall not be default-initialized [AUTOSAR-A26_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A26_5_2-a.html">Properly seed pseudorandom number generators [AUTOSAR-A26_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A27_0_1.html">AUTOSAR A27-0-1 Inputs from independent components shall be validated [AUTOSAR-A27_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A27_0_1-a.html">Avoid calling functions printf/wprintf with only one argument other than string constant [AUTOSAR-A27_0_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-b.html">Avoid tainted data in array indexes [AUTOSAR-A27_0_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-c.html">Prevent buffer overflows from tainted data [AUTOSAR-A27_0_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-d.html">Avoid buffer overflow from tainted data due to defining incorrect format limits [AUTOSAR-A27_0_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-e.html">Avoid buffer read overflow from tainted data [AUTOSAR-A27_0_1-e-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-f.html">Avoid buffer write overflow from tainted data [AUTOSAR-A27_0_1-f-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-g.html">Protect against command injection [AUTOSAR-A27_0_1-g-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_1-h.html">Exclude unsanitized user input from format strings [AUTOSAR-A27_0_1-h-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A27_0_2.html">AUTOSAR A27-0-2 A C-style string shall guarantee sufficient space for data and the null terminator [AUTOSAR-A27_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A27_0_2-a.html">Avoid overflow due to reading a not zero terminated string [AUTOSAR-A27_0_2-a-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_2-b.html">Avoid overflow when writing to a buffer [AUTOSAR-A27_0_2-b-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_2-c.html">Do not use the 'char' buffer to store input from 'std::cin' [AUTOSAR-A27_0_2-c-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_2-e.html">Prevent buffer overflows from tainted data [AUTOSAR-A27_0_2-e-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_2-f.html">Avoid buffer write overflow from tainted data [AUTOSAR-A27_0_2-f-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A27_0_3.html">AUTOSAR A27-0-3 Alternate input and output operations on a file stream shall not be used without an intervening flush or positioning call [AUTOSAR-A27_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A27_0_3-a.html">Do not alternately input and output from a stream without an intervening flush or positioning call [AUTOSAR-A27_0_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A27_0_4.html">AUTOSAR A27-0-4 C-style strings shall not be used [AUTOSAR-A27_0_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A27_0_4-a.html">Don't use unsafe C functions that do write to range-unchecked buffers [AUTOSAR-A27_0_4-a-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_4-b.html">Avoid using unsafe string functions that do not check bounds [AUTOSAR-A27_0_4-b-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_4-c.html">Do not use the 'char' buffer to store input from 'std::cin' [AUTOSAR-A27_0_4-c-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_4-d.html">C-style strings shall not be used [AUTOSAR-A27_0_4-d-2]</A>
+<LI><A HREF="AUTOSAR-A27_0_4-e.html">Do not use the 'c_str()' and 'data()' functions for string objects [AUTOSAR-A27_0_4-e-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_10_1.html">AUTOSAR A2-10-1 An identifier declared in an inner scope shall not hide an identifier declared in an outer scope [AUTOSAR-A2_10_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_10_1-a.html">Identifier declared in a local or function prototype scope shall not hide an identifier declared in a global or namespace scope [AUTOSAR-A2_10_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_1-b.html">Identifiers declared in an inner local scope should not hide identifiers declared in an outer local scope [AUTOSAR-A2_10_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_1-c.html">Identifiers declared in a local scope should not hide identifiers declared in a class scope [AUTOSAR-A2_10_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_1-d.html">Identifiers declared in a class scope should not hide identifiers declared in a global or namespace scope [AUTOSAR-A2_10_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_1-e.html">Identifiers declared in an inner class scope should not hide identifiers declared in outer class scope [AUTOSAR-A2_10_1-e-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_10_4.html">AUTOSAR A2-10-4 The identifier name of a non-member object with static storage duration or static function shall not be reused within a namespace [AUTOSAR-A2_10_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_10_4-a.html">The identifier name of a non-member object with static storage duration shall not be reused within a namespace [AUTOSAR-A2_10_4-a-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_4-b.html">The identifier name of a non-member static function shall not be reused within a namespace [AUTOSAR-A2_10_4-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_10_5.html">AUTOSAR A2-10-5 An identifier name of a function with static storage duration or a non-member object with external or internal linkage should not be reused [AUTOSAR-A2_10_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_10_5-a.html">Identifiers that define objects with external linkage shall be unique [AUTOSAR-A2_10_5-a-4]</A>
+<LI><A HREF="AUTOSAR-A2_10_5-b.html">Identifiers that define functions with external linkage shall be unique [AUTOSAR-A2_10_5-b-4]</A>
+<LI><A HREF="AUTOSAR-A2_10_5-c.html">Identifiers that define objects with internal linkage shall be unique [AUTOSAR-A2_10_5-c-4]</A>
+<LI><A HREF="AUTOSAR-A2_10_5-d.html">Identifiers that define functions with internal linkage shall be unique [AUTOSAR-A2_10_5-d-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_10_6.html">AUTOSAR A2-10-6 A class or enumeration name shall not be hidden by a variable, function or enumerator declaration in the same scope [AUTOSAR-A2_10_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_10_6-a.html">If an identifier refers to a type, it shall not also refer to an object or a function in the same scope [AUTOSAR-A2_10_6-a-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_6-b.html">If an identifier refers to a type, it shall not also refer to an object or a function in the same scope [AUTOSAR-A2_10_6-b-2]</A>
+<LI><A HREF="AUTOSAR-A2_10_6-c.html">If an identifier refers to a type, it shall not also refer to an object or a function in the same scope [AUTOSAR-A2_10_6-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_11_1.html">AUTOSAR A2-11-1 Volatile keyword shall not be used [AUTOSAR-A2_11_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_11_1-a.html">Do not use the volatile keyword [AUTOSAR-A2_11_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_13_1.html">AUTOSAR A2-13-1 Only those escape sequences that are defined in ISO/IEC 14882:2014 shall be used [AUTOSAR-A2_13_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_13_1-a.html">Only those escape sequences that are defined in ISO/IEC 14882:2014 shall be used [AUTOSAR-A2_13_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_13_2.html">AUTOSAR A2-13-2 String literals with different encoding prefixes shall not be concatenated [AUTOSAR-A2_13_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_13_2-a.html">String literals with different encoding prefixes shall not be concatenated [AUTOSAR-A2_13_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_13_3.html">AUTOSAR A2-13-3 Type wchar_t shall not be used [AUTOSAR-A2_13_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_13_3-a.html">Type wchar_t shall not be used [AUTOSAR-A2_13_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_13_4.html">AUTOSAR A2-13-4 String literals shall not be assigned to non-constant pointers [AUTOSAR-A2_13_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_13_4-a.html">A string literal shall not be modified [AUTOSAR-A2_13_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_13_5.html">AUTOSAR A2-13-5 Hexadecimal constants should be upper case [AUTOSAR-A2_13_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_13_5-a.html">Hexadecimal constants will be represented using all uppercase letters [AUTOSAR-A2_13_5-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_13_6.html">AUTOSAR A2-13-6 Universal character names shall be used only inside character or string literals [AUTOSAR-A2_13_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_13_6-a.html">Universal character names shall be used only inside character or string literals [AUTOSAR-A2_13_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_3_1.html">AUTOSAR A2-3-1 Only those characters specified in the C++ Language Standard basic source character set shall be used in the source code [AUTOSAR-A2_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_3_1-a.html">Only use characters defined in the ISO C standard [AUTOSAR-A2_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_5_1.html">AUTOSAR A2-5-1 Trigraphs shall not be used [AUTOSAR-A2_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_5_1-a.html">Trigraphs shall not be used [AUTOSAR-A2_5_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A2_5_1-b.html">Trigraphs shall not be used [AUTOSAR-A2_5_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_5_2.html">AUTOSAR A2-5-2 Digraphs shall not be used [AUTOSAR-A2_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_5_2-a.html">Do not use the following digraphs: &lt;%, %&gt;, &lt;:, :&gt;, %:, %:%: [AUTOSAR-A2_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_7_1.html">AUTOSAR A2-7-1 The character \ shall not occur as a last character of a C++ comment [AUTOSAR-A2_7_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_7_1-a.html">Line-splicing shall not be used in // comments [AUTOSAR-A2_7_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_7_2.html">AUTOSAR A2-7-2 Sections of code shall not be "commented out" [AUTOSAR-A2_7_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_7_2-a.html">Sections of code should not be &quot;commented out&quot; [AUTOSAR-A2_7_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_7_3.html">AUTOSAR A2-7-3 All declarations of "user-defined" types, static and non-static data members, functions and methods shall be preceded by documentation using "///" comments and "@tag" tags [AUTOSAR-A2_7_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_7_3-a.html">All declarations of types, data members, and functions should be preceded by a comment annotated with the '@brief' tag [AUTOSAR-A2_7_3-a-2]</A>
+<LI><A HREF="AUTOSAR-A2_7_3-b.html">Function parameters and return type should be documented in a comment that precedes the function declaration [AUTOSAR-A2_7_3-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A2_8_1.html">AUTOSAR A2-8-1 A header file name shall be identical to a type name declared in it if it declares a type [AUTOSAR-A2_8_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A2_8_1-a.html">An include file for a class should have a file name of the form &lt;class name&gt; + extension [AUTOSAR-A2_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_1_1.html">AUTOSAR A3-1-1 It shall be possible to include any header file in multiple translation units without violating the One Definition Rule [AUTOSAR-A3_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_1_1-a.html">Don't define entities with linkage in a header file [AUTOSAR-A3_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_1_2.html">AUTOSAR A3-1-2 Header files, that are defined locally in the project, shall have a file name extension of one of: ".h", ".hpp" or ".hxx" [AUTOSAR-A3_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_1_2-a.html">Header files should have a file extension of: &quot;.h&quot;, &quot;.hpp&quot; or &quot;.hxx&quot; [AUTOSAR-A3_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_1_3.html">AUTOSAR A3-1-3 Implementation files, that are defined locally in the project, should have a file name extension of ".cpp" [AUTOSAR-A3_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_1_3-a.html">Implementation files in C++ will always have a file name extension of &quot;.cpp&quot; [AUTOSAR-A3_1_3-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_1_4.html">AUTOSAR A3-1-4 When an array with external linkage is declared, its size shall be stated explicitly [AUTOSAR-A3_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_1_4-a.html">When an array is declared with external linkage, its size shall be stated explicitly or defined implicitly by initialisation [AUTOSAR-A3_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_1_5.html">AUTOSAR A3-1-5 A function definition shall only be placed in a class definition if (1) the function is intended to be inlined (2) it is a member function template (3) it is a member function of a class template [AUTOSAR-A3_1_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_1_5-a.html">A function definition should not be placed in a class specification unless the function is intended to be inlined [AUTOSAR-A3_1_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_1_6.html">AUTOSAR A3-1-6 Trivial accessor and mutator functions should be inlined [AUTOSAR-A3_1_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_1_6-a.html">Trivial accessor and mutator functions should be inlined [AUTOSAR-A3_1_6-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_3_1.html">AUTOSAR A3-3-1 Objects or functions with external linkage (including members of named namespaces) shall be declared in a header file [AUTOSAR-A3_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_3_1-a.html">Objects or functions with external linkage shall be declared in a header file [AUTOSAR-A3_3_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A3_3_1-b.html">Don't define entities with linkage in a header file [AUTOSAR-A3_3_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_3_2.html">AUTOSAR A3-3-2 Static and thread-local objects shall be constant-initialized [AUTOSAR-A3_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_3_2-a.html">Static and thread-local objects shall be constant-initialized [AUTOSAR-A3_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_8_1.html">AUTOSAR A3-8-1 An object shall not be accessed outside of its lifetime [AUTOSAR-A3_8_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_8_1-a.html">Do not use resources that have been freed [AUTOSAR-A3_8_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A3_8_1-b.html">The address of an object with automatic storage shall not be returned from a function [AUTOSAR-A3_8_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A3_8_1-c.html">The address of an object with automatic storage shall not be assigned to another object that may persist after the first object has ceased to exist [AUTOSAR-A3_8_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A3_8_1-d.html">Do not point to a wrapped object that has been freed [AUTOSAR-A3_8_1-d-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A3_9_1.html">AUTOSAR A3-9-1 Fixed width integer types from <cstdint>, indicating the size and signedness, shall be used in place of the basic numerical types [AUTOSAR-A3_9_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A3_9_1-b.html">Fixed width integer types from &lt;cstdint&gt;, indicating the size and signedness, shall be used in place of the basic numerical types [AUTOSAR-A3_9_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A3_9_1-c.html">A typedef should be used in place of the plain char type [AUTOSAR-A3_9_1-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A4_10_1.html">AUTOSAR A4-10-1 Only nullptr literal shall be used as the null-pointer-constant [AUTOSAR-A4_10_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A4_10_1-a.html">NULL shall not be used as an integer value [AUTOSAR-A4_10_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A4_10_1-b.html">Prefer 'nullptr' over 'NULL' or '0'(zero) [AUTOSAR-A4_10_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A4_5_1.html">AUTOSAR A4-5-1 Expressions with type enum or enum class shall not be used as operands to built-in and overloaded operators other than the subscript operator [ ], the assignment operator =, the equality operators == and !=, the unary & operator, and the relational operators <, <=, >, >= [AUTOSAR-A4_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A4_5_1-a.html">Expressions with type enum shall not be used as operands to built-in operators other than &nbsp;[ ], &nbsp;=, ==, !=, &lt;, &lt;=, &gt;, &gt;=, and the unary &amp; operator [AUTOSAR-A4_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A4_7_1.html">AUTOSAR A4-7-1 An integer expression shall not lead to data loss [AUTOSAR-A4_7_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A4_7_1-a.html">Avoid implicit conversions from signed to unsigned type [AUTOSAR-A4_7_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-b.html">Implicit conversions from integral constant to floating type which may result in a loss of information shall not be used [AUTOSAR-A4_7_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-c.html">Avoid conversions of constant values to a narrower type [AUTOSAR-A4_7_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-d.html">Implicit conversions from wider to narrower integral type which may result in a loss of information shall not be used [AUTOSAR-A4_7_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-e.html">Avoid implicit conversions from wider to narrower floating type [AUTOSAR-A4_7_1-e-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-f.html">Avoid implicit conversions from floating to integral type [AUTOSAR-A4_7_1-f-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-g.html">Implicit conversions from integral to floating type which may result in a loss of information shall not be used [AUTOSAR-A4_7_1-g-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-h.html">Avoid wraparounds when performing arithmetic integer operations [AUTOSAR-A4_7_1-h-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-i.html">Avoid data loss when converting between integer types [AUTOSAR-A4_7_1-i-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-j.html">Avoid signed integer overflows [AUTOSAR-A4_7_1-j-2]</A>
+<LI><A HREF="AUTOSAR-A4_7_1-k.html">Avoid value change when converting between integer types [AUTOSAR-A4_7_1-k-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_0_1.html">AUTOSAR A5-0-1 The value of an expression shall be the same under any order of evaluation that the standard permits [AUTOSAR-A5_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_0_1-a.html">Don't write code that depends on the order of evaluation of function calls [AUTOSAR-A5_0_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_1-b.html">Do not use more than one volatile between two adjacent sequence points [AUTOSAR-A5_0_1-b-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_1-c.html">Between sequence points an object shall have its stored value modified at most once by the evaluation of an expression [AUTOSAR-A5_0_1-c-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_1-d.html">Don't write code that depends on the order of evaluation of expression that involves a function call [AUTOSAR-A5_0_1-d-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_1-e.html">Don't write code that depends on the order of evaluation of function designator and function arguments [AUTOSAR-A5_0_1-e-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_1-f.html">Don't write code that depends on the order of evaluation of function arguments [AUTOSAR-A5_0_1-f-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_1-g.html">The value of an expression shall be the same under any order of evaluation that the standard permits [AUTOSAR-A5_0_1-g-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_0_2.html">AUTOSAR A5-0-2 The condition of an if-statement and the condition of an iteration statement shall have type bool [AUTOSAR-A5_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_0_2-a.html">The condition of an if-statement and the condition of an iteration-statement shall have type bool [AUTOSAR-A5_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_0_3.html">AUTOSAR A5-0-3 The declaration of objects shall contain no more than two levels of pointer indirection [AUTOSAR-A5_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_0_3-a.html">The declaration of objects should contain no more than 2 levels of pointer indirection [AUTOSAR-A5_0_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_0_4.html">AUTOSAR A5-0-4 Pointer arithmetic shall not be used with pointers to non-final classes [AUTOSAR-A5_0_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_0_4-a.html">Don't treat arrays polymorphically [AUTOSAR-A5_0_4-a-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_4-b.html">A pointer to an array of derived class objects should not be converted to a base class pointer [AUTOSAR-A5_0_4-b-2]</A>
+<LI><A HREF="AUTOSAR-A5_0_4-c.html">Do not treat arrays polymorphically [AUTOSAR-A5_0_4-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_10_1.html">AUTOSAR A5-10-1 A pointer to member virtual function shall only be tested for equality with null-pointer-constant [AUTOSAR-A5_10_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_10_1-a.html">A pointer to member virtual function shall only be tested for equality with null-pointer-constant [AUTOSAR-A5_10_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_16_1.html">AUTOSAR A5-16-1 The ternary conditional operator shall not be used as a sub-expression [AUTOSAR-A5_16_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_16_1-a.html">The conditional operator should not be used as a sub-expression [AUTOSAR-A5_16_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_1.html">AUTOSAR A5-1-1 Literal values shall not be used apart from type initialization, otherwise symbolic names shall be used instead [AUTOSAR-A5_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_1-a.html">Avoid magic numbers [AUTOSAR-A5_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_2.html">AUTOSAR A5-1-2 Variables shall not be implicitly captured in a lambda expression [AUTOSAR-A5_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_2-a.html">Avoid default capture modes [AUTOSAR-A5_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_3.html">AUTOSAR A5-1-3 Parameter list (possibly empty) shall be included in every lambda expression [AUTOSAR-A5_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_3-a.html">Include a parameter list in every lambda expression [AUTOSAR-A5_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_4.html">AUTOSAR A5-1-4 A lambda expression object shall not outlive any of its reference-captured objects [AUTOSAR-A5_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_4-a.html">Never return lambdas that capture local objects by reference [AUTOSAR-A5_1_4-a-2]</A>
+<LI><A HREF="AUTOSAR-A5_1_4-b.html">Never capture local objects from an outer lambda by reference [AUTOSAR-A5_1_4-b-2]</A>
+<LI><A HREF="AUTOSAR-A5_1_4-c.html">The lambda that captures local objects by reference should not be assigned to the variable with a greater lifetime [AUTOSAR-A5_1_4-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_6.html">AUTOSAR A5-1-6 Return type of a non-void return type lambda expression should be explicitly specified [AUTOSAR-A5_1_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_6-a.html">Return type of a non-void return type lambda expression should be explicitly specified [AUTOSAR-A5_1_6-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_7.html">AUTOSAR A5-1-7 A lambda shall not be an operand to decltype or typeid [AUTOSAR-A5_1_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_7-a.html">A lambda shall not be an operand to typeid [AUTOSAR-A5_1_7-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_1_8.html">AUTOSAR A5-1-8 Lambda expressions should not be defined inside another lambda expression [AUTOSAR-A5_1_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_1_8-a.html">Lambda expressions should not be defined inside another lambda expression [AUTOSAR-A5_1_8-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_2_1.html">AUTOSAR A5-2-1 dynamic_cast should not be used [AUTOSAR-A5_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_2_1-a.html">Avoid dynamic_casts [AUTOSAR-A5_2_1-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_2_2.html">AUTOSAR A5-2-2 Traditional C-style casts shall not be used [AUTOSAR-A5_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_2_2-a.html">C-style casts should not be used [AUTOSAR-A5_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_2_3.html">AUTOSAR A5-2-3 A cast shall not remove any const or volatile qualification from the type of a pointer or reference [AUTOSAR-A5_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_2_3-a.html">A cast shall not remove any 'const' or 'volatile' qualification from the type of a pointer or reference [AUTOSAR-A5_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_2_4.html">AUTOSAR A5-2-4 reinterpret_cast shall not be used [AUTOSAR-A5_2_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_2_4-a.html">Avoid using reinterpret_cast [AUTOSAR-A5_2_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_2_5.html">AUTOSAR A5-2-5 An array or container shall not be accessed beyond its range [AUTOSAR-A5_2_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_2_5-a.html">Avoid accessing arrays out of bounds [AUTOSAR-A5_2_5-a-2]</A>
+<LI><A HREF="AUTOSAR-A5_2_5-b.html">Avoid accessing arrays and pointers out of bounds [AUTOSAR-A5_2_5-b-2]</A>
+<LI><A HREF="AUTOSAR-A5_2_5-c.html">A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array [AUTOSAR-A5_2_5-c-2]</A>
+<LI><A HREF="AUTOSAR-A5_2_5-d.html">Avoid tainted data in array indexes [AUTOSAR-A5_2_5-d-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_2_6.html">AUTOSAR A5-2-6 The operands of a logical && or || shall be parenthesized if the operands contain binary operators [AUTOSAR-A5_2_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_2_6-a.html">The operands of a logical &amp;&amp; or || shall be parenthesized if the operands contain binary operators [AUTOSAR-A5_2_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_3_1.html">AUTOSAR A5-3-1 Evaluation of the operand to the typeid operator shall not contain side effects [AUTOSAR-A5_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_3_1-a.html">The operand of the 'typeid' operator shall not contain any expression that has side effects [AUTOSAR-A5_3_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A5_3_1-b.html">The operand of the 'typeid' operator shall not contain a function call that causes side effects [AUTOSAR-A5_3_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_3_2.html">AUTOSAR A5-3-2 Null pointers shall not be dereferenced [AUTOSAR-A5_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_3_2-a.html">Avoid null pointer dereferencing [AUTOSAR-A5_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_3_3.html">AUTOSAR A5-3-3 Pointers to incomplete class types shall not be deleted [AUTOSAR-A5_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_3_3-a.html">Do not delete objects with incomplete class at the point of deletion [AUTOSAR-A5_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_5_1.html">AUTOSAR A5-5-1 A pointer to member shall not access non-existent class members [AUTOSAR-A5_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_5_1-a.html">A cast shall not convert a pointer to a function to any other pointer type, including a pointer to function type [AUTOSAR-A5_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A5_6_1.html">AUTOSAR A5-6-1 The right hand operand of the integer division or remainder operators shall not be equal to zero [AUTOSAR-A5_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A5_6_1-a.html">Avoid division by zero [AUTOSAR-A5_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_2_1.html">AUTOSAR A6-2-1 Move and copy assignment operators shall either move or respectively copy base classes and data members of a class, without any side effects [AUTOSAR-A6_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_2_1-a.html">Copy assignment operators should not have side effects that could affect copying the object [AUTOSAR-A6_2_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A6_2_1-b.html">Move assignment operators should not have side effects that could affect moving the object [AUTOSAR-A6_2_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_2_2.html">AUTOSAR A6-2-2 Expression statements shall not be explicit calls to constructors of temporary objects only [AUTOSAR-A6_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_2_2-a.html">Expression statements shall not be explicit calls to constructors of temporary objects only [AUTOSAR-A6_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_4_1.html">AUTOSAR A6-4-1 A switch statement shall have at least two case-clauses, distinct from the default label [AUTOSAR-A6_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_4_1-a.html">Every switch statement will have at least two cases and a potential default [AUTOSAR-A6_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_5_1.html">AUTOSAR A6-5-1 A for-loop that loops through all elements of the container and does not use its loop-counter shall not be used [AUTOSAR-A6_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_5_1-a.html">A for-loop that loops through all elements of the container and does not use its loop-counter shall not be used [AUTOSAR-A6_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_5_2.html">AUTOSAR A6-5-2 A for loop shall contain a single loop-counter which shall not have floating-point type [AUTOSAR-A6_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_5_2-a.html">A for loop shall contain a single loop-counter which shall not have floating type [AUTOSAR-A6_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_5_3.html">AUTOSAR A6-5-3 Do statements should not be used [AUTOSAR-A6_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_5_3-a.html">'Do' statements should not be used except in a function-like macro [AUTOSAR-A6_5_3-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_5_4.html">AUTOSAR A6-5-4 For-init-statement and expression should not perform actions other than loop-counter initialization and modification [AUTOSAR-A6_5_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_5_4-a.html">The initialization expression in a for loop will perform no actions other than to initialize the value of a single for loop parameter [AUTOSAR-A6_5_4-a-4]</A>
+<LI><A HREF="AUTOSAR-A6_5_4-b.html">The increment expression in a for loop will perform no action other than to change a single loop parameter to the next value for the loop [AUTOSAR-A6_5_4-b-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A6_6_1.html">AUTOSAR A6-6-1 The goto statement shall not be used [AUTOSAR-A6_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A6_6_1-a.html">The goto statement shall not be used [AUTOSAR-A6_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_1.html">AUTOSAR A7-1-1 Constexpr or const specifiers shall be used for immutable data declaration [AUTOSAR-A7_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_1-a.html">Declare local variable as const whenever possible [AUTOSAR-A7_1_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A7_1_1-b.html">Declare parameters as const whenever possible [AUTOSAR-A7_1_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_2.html">AUTOSAR A7-1-2 The constexpr specifier shall be used for values that can be determined at compile time [AUTOSAR-A7_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_2-a.html">Use constexpr to declare const variables whenever possible [AUTOSAR-A7_1_2-a-2]</A>
+<LI><A HREF="AUTOSAR-A7_1_2-b.html">Use constexpr to declare functions whenever possible [AUTOSAR-A7_1_2-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_3.html">AUTOSAR A7-1-3 CV-qualifiers shall be placed on the right hand side of the type that is a typedef or a using name [AUTOSAR-A7_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_3-a.html">CV-qualifiers shall be placed on the right hand side of the type that is a typedef or a using name [AUTOSAR-A7_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_4.html">AUTOSAR A7-1-4 The register keyword shall not be used [AUTOSAR-A7_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_4-a.html">The 'register' storage class specifier shall not be used [AUTOSAR-A7_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_5.html">AUTOSAR A7-1-5 The auto specifier shall not be used apart from following cases: (1) to declare that a variable has the same type as return type of a function call, (2) to declare that a variable has the same type as initializer of non-fundamental type, (3) to declare parameters of a generic lambda expression, (4) to declare a function template using trailing return type syntax [AUTOSAR-A7_1_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_5-a.html">Do not overuse 'auto' specifier [AUTOSAR-A7_1_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_6.html">AUTOSAR A7-1-6 The typedef specifier shall not be used [AUTOSAR-A7_1_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_6-a.html">Prefer alias declarations to typedefs [AUTOSAR-A7_1_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_7.html">AUTOSAR A7-1-7 Each expression statement and identifier declaration shall be placed on a separate line [AUTOSAR-A7_1_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_7-a.html">Only one statement shall be allowed per line [AUTOSAR-A7_1_7-a-2]</A>
+<LI><A HREF="AUTOSAR-A7_1_7-b.html">Multiple variable declarations shall not be allowed on the same line [AUTOSAR-A7_1_7-b-2]</A>
+<LI><A HREF="AUTOSAR-A7_1_7-c.html">Each variable should be declared in a separate declaration statement [AUTOSAR-A7_1_7-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_8.html">AUTOSAR A7-1-8 A non-type specifier shall be placed before a type specifier in a declaration [AUTOSAR-A7_1_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_8-a.html">Do not place type specifiers before non-type specifiers in a declaration [AUTOSAR-A7_1_8-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_1_9.html">AUTOSAR A7-1-9 A class, structure, or enumeration shall not be declared in the definition of its type [AUTOSAR-A7_1_9]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_1_9-a.html">A class, structure, or enumeration will not be declared in the definition of its type [AUTOSAR-A7_1_9-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_2_1.html">AUTOSAR A7-2-1 An expression with enum underlying type shall only have values corresponding to the enumerators of the enumeration [AUTOSAR-A7_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_2_1-a.html">An expression with enum underlying type shall only have values corresponding to the enumerators of the enumeration [AUTOSAR-A7_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_2_2.html">AUTOSAR A7-2-2 Enumeration underlying base type shall be explicitly defined [AUTOSAR-A7_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_2_2-a.html">Use an explicit enumeration base and ensure that it is large enough to store all enumerators [AUTOSAR-A7_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_2_3.html">AUTOSAR A7-2-3 Enumerations shall be declared as scoped enum classes [AUTOSAR-A7_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_2_3-a.html">Prefer Scoped Enums to Unscoped Enums [AUTOSAR-A7_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_2_4.html">AUTOSAR A7-2-4 In an enumeration, either (1) none, (2) the first or (3) all enumerators shall be initialized [AUTOSAR-A7_2_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_2_4-a.html">In an enumerator list, the &quot;=&quot; construct shall not be used to explicitly initialise members other than the first, unless all items are explicitly initialised [AUTOSAR-A7_2_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_2_5.html">AUTOSAR A7-2-5 Enumerations should be used to represent sets of related named constants [AUTOSAR-A7_2_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_2_5-a.html">Enumeration types shall be used instead of integer types (and constants) as case labels [AUTOSAR-A7_2_5-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_3_1.html">AUTOSAR A7-3-1 All overloads of a function shall be visible from where it is called [AUTOSAR-A7_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_3_1-a.html">Member functions declared in derived class should not hide functions declared in base classes [AUTOSAR-A7_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_4_1.html">AUTOSAR A7-4-1 The asm declaration shall not be used [AUTOSAR-A7_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_4_1-a.html">The 'asm' declaration should not be used [AUTOSAR-A7_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_5_1.html">AUTOSAR A7-5-1 A function shall not return a reference or a pointer to a parameter that is passed by reference to const [AUTOSAR-A7_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_5_1-a.html">A function shall not return a pointer or a reference to a parameter that is passed by const reference [AUTOSAR-A7_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_5_2.html">AUTOSAR A7-5-2 Functions shall not call themselves, either directly or indirectly [AUTOSAR-A7_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_5_2-a.html">Functions shall not call themselves, either directly or indirectly [AUTOSAR-A7_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A7_6_1.html">AUTOSAR A7-6-1 Functions declared with the [[noreturn]] attribute shall not return [AUTOSAR-A7_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A7_6_1-a.html">Never return from functions that should not return [AUTOSAR-A7_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_2_1.html">AUTOSAR A8-2-1 When declaring function templates, the trailing return type syntax shall be used if the return type depends on the type of parameters [AUTOSAR-A8_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_2_1-a.html">Use a trailing return type syntax if the return type is preceded by the 'typename' keyword [AUTOSAR-A8_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_1.html">AUTOSAR A8-4-1 Functions shall not be defined using the ellipsis notation [AUTOSAR-A8_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_1-a.html">Do not use functions with variable numbers of arguments [AUTOSAR-A8_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_10.html">AUTOSAR A8-4-10 A parameter shall be passed by reference if it can't be NULL [AUTOSAR-A8_4_10]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_10-a.html">A parameter shall be passed by reference if it can't be NULL [AUTOSAR-A8_4_10-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_11.html">AUTOSAR A8-4-11 A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [AUTOSAR-A8_4_11]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_11-a.html">A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [AUTOSAR-A8_4_11-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_12.html">AUTOSAR A8-4-12 A std::unique_ptr shall be passed to a function as: (1) a copy to express the function assumes ownership (2) an lvalue reference to express that the function replaces the managed object [AUTOSAR-A8_4_12]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_12-a.html">Do not pass std::unique_ptr by const reference [AUTOSAR-A8_4_12-a-2]</A>
+<LI><A HREF="AUTOSAR-A8_4_12-b.html">A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [AUTOSAR-A8_4_12-b-2]</A>
+<LI><A HREF="AUTOSAR-A8_4_12-c.html">A parameter should only be declared as a non-const lvalue reference to 'std::shared_ptr' or 'std::unique_ptr' if the function replaces the managed object [AUTOSAR-A8_4_12-c-2]</A>
+<LI><A HREF="AUTOSAR-A8_4_12-d.html">Do not declare the type of a parameter as an rvalue reference to 'std::shared_ptr' or 'std::unique_ptr' [AUTOSAR-A8_4_12-d-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_13.html">AUTOSAR A8-4-13 A std::shared_ptr shall be passed to a function as: (1) a copy to express the function shares ownership (2) an lvalue reference to express that the function replaces the managed object (3) a const lvalue reference to express that the function retains a reference count [AUTOSAR-A8_4_13]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_13-a.html">A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [AUTOSAR-A8_4_13-a-2]</A>
+<LI><A HREF="AUTOSAR-A8_4_13-b.html">A parameter should only be declared as a non-const lvalue reference to 'std::shared_ptr' or 'std::unique_ptr' if the function replaces the managed object [AUTOSAR-A8_4_13-b-2]</A>
+<LI><A HREF="AUTOSAR-A8_4_13-c.html">Do not declare the type of a parameter as an rvalue reference to 'std::shared_ptr' or 'std::unique_ptr' [AUTOSAR-A8_4_13-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_2.html">AUTOSAR A8-4-2 All exit paths from a function with non-void return type shall have an explicit return statement with an expression [AUTOSAR-A8_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_2-a.html">All exit paths from a function, except main(), with non-void return type shall have an explicit return statement with an expression [AUTOSAR-A8_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_3.html">AUTOSAR A8-4-3 Common ways of passing parameters should be used [AUTOSAR-A8_4_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_3-a.html">A parameter of a type that is not 'cheap to copy' should be passed by reference [AUTOSAR-A8_4_3-a-4]</A>
+<LI><A HREF="AUTOSAR-A8_4_3-b.html">Declare reference parameters as const references whenever possible [AUTOSAR-A8_4_3-b-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_4.html">AUTOSAR A8-4-4 Multiple output values from a function should be returned as a struct or tuple [AUTOSAR-A8_4_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_4-a.html">Multiple output values from a function should be returned as a struct or tuple [AUTOSAR-A8_4_4-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_5.html">AUTOSAR A8-4-5 "consume" parameters declared as X && shall always be moved from [AUTOSAR-A8_4_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_5-a.html">Use std::move() on rvalue references and std::forward() on forwarding references [AUTOSAR-A8_4_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_6.html">AUTOSAR A8-4-6 "forward" parameters declared as T && shall always be forwarded [AUTOSAR-A8_4_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_6-a.html">Use std::move() on rvalue references and std::forward() on forwarding references [AUTOSAR-A8_4_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_7.html">AUTOSAR A8-4-7 "in" parameters for "cheap to copy" types shall be passed by value [AUTOSAR-A8_4_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_7-a.html">A parameter of const reference to a 'cheap to copy' type should be passed by value [AUTOSAR-A8_4_7-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_8.html">AUTOSAR A8-4-8 Output parameters shall not be used [AUTOSAR-A8_4_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_8-a.html">Output parameters shall not be used [AUTOSAR-A8_4_8-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_4_9.html">AUTOSAR A8-4-9 "in-out" parameters declared as T & shall be modified [AUTOSAR-A8_4_9]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_4_9-a.html">Declare reference parameters as const references whenever possible [AUTOSAR-A8_4_9-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_5_0.html">AUTOSAR A8-5-0 All memory shall be initialized before it is read [AUTOSAR-A8_5_0]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_5_0-a.html">Avoid use before initialization [AUTOSAR-A8_5_0-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_5_1.html">AUTOSAR A8-5-1 In an initialization list, the order of initialization shall be following: (1) virtual base classes in depth and left to right order of the inheritance graph, (2) direct base classes in left to right order of inheritance list, (3) non-static data members in the order they were declared in the class definition [AUTOSAR-A8_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_5_1-a.html">List members in an initialization list in the order in which they are declared [AUTOSAR-A8_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_5_2.html">AUTOSAR A8-5-2 Braced-initialization {}, without equals sign, shall be used for variable initialization [AUTOSAR-A8_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_5_2-a.html">Braced-initialization {}, without equals sign, shall be used for variable initialization [AUTOSAR-A8_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_5_3.html">AUTOSAR A8-5-3 A variable of type auto shall not be initialized using {} or ={} braced-initialization [AUTOSAR-A8_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_5_3-a.html">A variable of type auto shall not be initialized using '{}' or '={}' braced-initialization [AUTOSAR-A8_5_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A8_5_4.html">AUTOSAR A8-5-4 If a class has a user-declared constructor that takes a parameter of type std::initializer_list, then it shall be the only constructor apart from special member function constructors [AUTOSAR-A8_5_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A8_5_4-a.html">Avoid overloading constructors with std::initializer_list [AUTOSAR-A8_5_4-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A9_3_1.html">AUTOSAR A9-3-1 Member functions shall not return non-const "raw" pointers or references to private or protected data owned by the class [AUTOSAR-A9_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A9_3_1-a.html">Public member functions shall not return non-const handles to private/protected class-data [AUTOSAR-A9_3_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A9_3_1-b.html">Protected member function shall not return non-const handles to private class-data [AUTOSAR-A9_3_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A9_5_1.html">AUTOSAR A9-5-1 Unions shall not be used [AUTOSAR-A9_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A9_5_1-a.html">Unions shall not be used [AUTOSAR-A9_5_1-a-2]</A>
+<LI><A HREF="AUTOSAR-A9_5_1-b.html">Unions shall not be used [AUTOSAR-A9_5_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A9_6_1.html">AUTOSAR A9-6-1 Data types used for interfacing with hardware or conforming to communication protocols shall be trivial, standard-layout and only contain members of types with defined sizes [AUTOSAR-A9_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A9_6_1-a.html">Types of bit-fields should have defined sizes [AUTOSAR-A9_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-A9_6_2.html">AUTOSAR A9-6-2 Bit-fields shall be used only when interfacing to hardware or conforming to communication protocols [AUTOSAR-A9_6_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-A9_6_2-a.html">Do not declare member variables as bit-fields [AUTOSAR-A9_6_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_1.html">AUTOSAR M0-1-1 A project shall not contain unreachable code [AUTOSAR-M0_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_1-a.html">There shall be no unreachable code in &quot;if/else/while/for&quot; block [AUTOSAR-M0_1_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_1-b.html">There shall be no unreachable code after 'return', 'break', 'continue', 'goto', 'throw' statements, and after calls to functions with the 'noreturn' attribute [AUTOSAR-M0_1_1-b-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_1-c.html">There shall be no unreachable code in &quot;else&quot; block [AUTOSAR-M0_1_1-c-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_1-d.html">There shall be no unreachable code after &quot;if&quot; or &quot;switch&quot; statement inside while/for/do...while loop [AUTOSAR-M0_1_1-d-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_1-e.html">There shall be no unreachable code after 'if' or 'switch' statement [AUTOSAR-M0_1_1-e-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_1-f.html">There shall be no unreachable code in 'for' loop [AUTOSAR-M0_1_1-f-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_1-g.html">There shall be no unreachable code in switch statement [AUTOSAR-M0_1_1-g-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_10.html">AUTOSAR M0-1-10 Every defined function should be called at least once [AUTOSAR-M0_1_10]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_10-a.html">Every defined function with external linkage shall be used at least once [AUTOSAR-M0_1_10-a-4]</A>
+<LI><A HREF="AUTOSAR-M0_1_10-b.html">Every defined function with internal linkage shall be used at least once [AUTOSAR-M0_1_10-b-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_2.html">AUTOSAR M0-1-2 A project shall not contain infeasible paths [AUTOSAR-M0_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_2-a.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-a-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-aa.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-aa-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-ab.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-ab-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-ac.html">Avoid conditions that always evaluate to the same value [AUTOSAR-M0_1_2-ac-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-b.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-b-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-c.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-c-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-d.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-d-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-e.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-e-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-f.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-f-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-g.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-g-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-h.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-h-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-i.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-i-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-j.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-j-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-k.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-k-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-l.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-l-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-m.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-m-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-n.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-n-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-o.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-o-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-p.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-p-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-q.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-q-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-r.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-r-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-s.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-s-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-t.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-t-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-u.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-u-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-v.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-v-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-w.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-w-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-x.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-x-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-y.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-y-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_2-z.html">Boolean operations whose results are invariant shall not be permitted [AUTOSAR-M0_1_2-z-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_3.html">AUTOSAR M0-1-3 A project shall not contain unused variables [AUTOSAR-M0_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_3-a.html">Avoid unused local variables [AUTOSAR-M0_1_3-a-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_3-c.html">Avoid unused private member variables [AUTOSAR-M0_1_3-c-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_3-d.html">A project should not contain unused variables with external linkage [AUTOSAR-M0_1_3-d-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_3-e.html">A project should not contain unused variables with internal linkage [AUTOSAR-M0_1_3-e-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_4.html">AUTOSAR M0-1-4 A project shall not contain non-volatile POD variables having only one use [AUTOSAR-M0_1_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_4-a.html">A project shall not contain non-volatile POD variables having only one use [AUTOSAR-M0_1_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_8.html">AUTOSAR M0-1-8 All functions with void return type shall have external side effect(s) [AUTOSAR-M0_1_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_8-a.html">All non-empty functions with void return type shall have external side effect(s) [AUTOSAR-M0_1_8-a-2]</A>
+<LI><A HREF="AUTOSAR-M0_1_8-b.html">Functions with void return type shall not be empty [AUTOSAR-M0_1_8-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_1_9.html">AUTOSAR M0-1-9 There shall be no dead code [AUTOSAR-M0_1_9]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_1_9-a.html">All non-null statements shall either have at least one side-effect however executed or cause control flow to change [AUTOSAR-M0_1_9-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_2_1.html">AUTOSAR M0-2-1 An object shall not be assigned to an overlapping object [AUTOSAR-M0_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_2_1-a.html">An object shall not be assigned to an overlapping object [AUTOSAR-M0_2_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M0_2_1-b.html">An object shall not be assigned to an overlapping object [AUTOSAR-M0_2_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_3_1.html">AUTOSAR M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults [AUTOSAR-M0_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_3_1-a.html">Do not subtract two pointers that do not address elements of the same array [AUTOSAR-M0_3_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-b.html">Avoid overflow when writing to a buffer [AUTOSAR-M0_3_1-b-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-c.html">Do not compare two unrelated pointers [AUTOSAR-M0_3_1-c-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-d.html">Avoid accessing arrays out of bounds [AUTOSAR-M0_3_1-d-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-e.html">Avoid division by zero [AUTOSAR-M0_3_1-e-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-f.html">Avoid null pointer dereferencing [AUTOSAR-M0_3_1-f-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-g.html">Avoid overflow due to reading a not zero terminated string [AUTOSAR-M0_3_1-g-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-h.html">Avoid buffer overflow due to defining incorrect format limits [AUTOSAR-M0_3_1-h-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-i.html">Avoid overflow when reading from a buffer [AUTOSAR-M0_3_1-i-2]</A>
+<LI><A HREF="AUTOSAR-M0_3_1-j.html">Do not check for null after dereferencing [AUTOSAR-M0_3_1-j-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_3_2.html">AUTOSAR M0-3-2 If a function generates error information, then that error information shall be tested [AUTOSAR-M0_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_3_2-a.html">If a function returns error information, then that error information shall be tested [AUTOSAR-M0_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M0_4_2.html">AUTOSAR M0-4-2 Use of floating-point arithmetic shall be documented [AUTOSAR-M0_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M0_4_2-a.html">Use of floating-point arithmetic shall be documented [AUTOSAR-M0_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M10_1_1.html">AUTOSAR M10-1-1 Classes should not be derived from virtual bases [AUTOSAR-M10_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M10_1_1-a.html">Classes should not be derived from virtual bases [AUTOSAR-M10_1_1-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M10_1_2.html">AUTOSAR M10-1-2 A base class shall only be declared virtual if it is used in a diamond hierarchy [AUTOSAR-M10_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M10_1_2-a.html">A base class shall only be declared virtual if it is used in a diamond hierarchy [AUTOSAR-M10_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M10_1_3.html">AUTOSAR M10-1-3 An accessible base class shall not be both virtual and non-virtual in the same hierarchy [AUTOSAR-M10_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M10_1_3-a.html">A base class shall not be both virtual and non-virtual in the same hierarchy [AUTOSAR-M10_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M10_2_1.html">AUTOSAR M10-2-1 All accessible entity names within a multiple inheritance hierarchy should be unique [AUTOSAR-M10_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M10_2_1-a.html">All accessible entity names within a multiple inheritance hierarchy should be unique [AUTOSAR-M10_2_1-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M10_3_3.html">AUTOSAR M10-3-3 A virtual function shall only be overridden by a pure virtual function if it is itself declared as pure virtual [AUTOSAR-M10_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M10_3_3-a.html">A virtual function shall only be overridden by a pure virtual function if it is itself declared as pure virtual [AUTOSAR-M10_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M11_0_1.html">AUTOSAR M11-0-1 Member data in non-POD class types shall be private [AUTOSAR-M11_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M11_0_1-a.html">Member data in non-POD types shall be private [AUTOSAR-M11_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M12_1_1.html">AUTOSAR M12-1-1 An object's dynamic type shall not be used from the body of its constructor or destructor [AUTOSAR-M12_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M12_1_1-a.html">Do not use dynamic type of an object under construction [AUTOSAR-M12_1_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M12_1_1-b.html">Do not use dynamic type of an object under destruction [AUTOSAR-M12_1_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M14_5_3.html">AUTOSAR M14-5-3 A copy assignment operator shall be declared when there is a template assignment operator with a parameter that is a generic parameter [AUTOSAR-M14_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M14_5_3-a.html">A copy assignment operator shall be declared when there is a template assignment operator with a parameter that is a generic parameter [AUTOSAR-M14_5_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M14_6_1.html">AUTOSAR M14-6-1 In a class template with a dependent base, any name that may be found in that dependent base shall be referred to using a qualified-id or this-> [AUTOSAR-M14_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M14_6_1-a.html">In a class template with a dependent base, any name that may be found in that dependent base shall be referred to using a qualified-id or this-&gt; [AUTOSAR-M14_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_0_3.html">AUTOSAR M15-0-3 Control shall not be transferred into a try or catch block using a goto or a switch statement [AUTOSAR-M15_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_0_3-a.html">Control shall not be transferred into a try or catch block using a goto or a switch statement [AUTOSAR-M15_0_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_1_1.html">AUTOSAR M15-1-1 The assignment-expression of a throw statement shall not itself cause an exception to be thrown [AUTOSAR-M15_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_1_1-a.html">The assignment-expression of a throw statement shall not itself cause an exception to be thrown [AUTOSAR-M15_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_1_2.html">AUTOSAR M15-1-2 NULL shall not be thrown explicitly [AUTOSAR-M15_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_1_2-a.html">NULL shall not be thrown explicitly [AUTOSAR-M15_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_1_3.html">AUTOSAR M15-1-3 An empty throw (throw;) shall only be used in the compound statement of a catch handler [AUTOSAR-M15_1_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_1_3-a.html">An empty throw (throw;) shall only be used in the compound-statement of a catch handler [AUTOSAR-M15_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_3_1.html">AUTOSAR M15-3-1 Exceptions shall be raised only after start-up and before termination [AUTOSAR-M15_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_3_1-a.html">Exceptions shall be raised only after start-up and before termination of the program [AUTOSAR-M15_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_3_3.html">AUTOSAR M15-3-3 Handlers of a function-try-block implementation of a class constructor or destructor shall not reference non-static members from this class or its bases [AUTOSAR-M15_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_3_3-a.html">Handlers of a function-try-block implementation of a class constructor or destructor shall not reference nonstatic members from this class or its bases [AUTOSAR-M15_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_3_4.html">AUTOSAR M15-3-4 Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [AUTOSAR-M15_3_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_3_4-a.html">Function called in global or namespace scope shall not throw unhandled exceptions [AUTOSAR-M15_3_4-a-2]</A>
+<LI><A HREF="AUTOSAR-M15_3_4-b.html">Each exception explicitly thrown in the code shall have a handler of a compatible type in all call paths that could lead to that point [AUTOSAR-M15_3_4-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_3_6.html">AUTOSAR M15-3-6 Where multiple handlers are provided in a single try-catch statement or function-try-block for a derived class and some or all of its bases, the handlers shall be ordered most-derived to base class [AUTOSAR-M15_3_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_3_6-a.html">Where multiple handlers are provided in a single try-catch statement or function-try-block for a derived class and some or all of its bases, the handlers shall be ordered most-derived to base class [AUTOSAR-M15_3_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M15_3_7.html">AUTOSAR M15-3-7 Where multiple handlers are provided in a single try-catch statement or function-try-block, any ellipsis (catch-all) handler shall occur last [AUTOSAR-M15_3_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M15_3_7-a.html">Where multiple handlers are provided in a single 'try-catch' statement or 'function-try-block', any ellipsis (catch-all) handler shall occur last [AUTOSAR-M15_3_7-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_0_1.html">AUTOSAR M16-0-1 #include directives in a file shall only be preceded by other pre-processor directives or comments [AUTOSAR-M16_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_0_1-a.html">#include statements in a file should only be preceded by other preprocessor directives or comments [AUTOSAR-M16_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_0_2.html">AUTOSAR M16-0-2 Macros shall only be #define'd or #undef'd in the global namespace [AUTOSAR-M16_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_0_2-a.html">Macros shall not be #define'd or #undef'd within a block [AUTOSAR-M16_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_0_5.html">AUTOSAR M16-0-5 Arguments to a function-like macro shall not contain tokens that look like pre-processing directives [AUTOSAR-M16_0_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_0_5-a.html">Arguments to a function-like macro shall not contain tokens that look like preprocessing directives [AUTOSAR-M16_0_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_0_6.html">AUTOSAR M16-0-6 In the definition of a function-like macro, each instance of a parameter shall be enclosed in parentheses, unless it is used as the operand of # or ## [AUTOSAR-M16_0_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_0_6-a.html">In the definition of a function-like macro each instance of a parameter shall be enclosed in parentheses unless it is used as the operand of # or ## [AUTOSAR-M16_0_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_0_7.html">AUTOSAR M16-0-7 Undefined macro identifiers shall not be used in #if or #elif pre-processor directives, except as operands to the defined operator [AUTOSAR-M16_0_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_0_7-a.html">Do not use in preprocessor directives #if and #elif macros not defined in translation unit [AUTOSAR-M16_0_7-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_0_8.html">AUTOSAR M16-0-8 If the # token appears as the first token on a line, then it shall be immediately followed by a pre-processing token [AUTOSAR-M16_0_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_0_8-a.html">Preprocessing directives shall be syntactically meaningful even when excluded by the preprocessor [AUTOSAR-M16_0_8-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_1_1.html">AUTOSAR M16-1-1 The defined pre-processor operator shall only be used in one of the two standard forms [AUTOSAR-M16_1_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_1_1-a.html">The defined preprocessor operator shall only be used in one of the two standard forms [AUTOSAR-M16_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_1_2.html">AUTOSAR M16-1-2 All #else, #elif and #endif pre-processor directives shall reside in the same file as the #if or #ifdef directive to which they are related [AUTOSAR-M16_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_1_2-a.html">All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if or #ifdef directive to which they are related [AUTOSAR-M16_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_2_3.html">AUTOSAR M16-2-3 Include guards shall be provided [AUTOSAR-M16_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_2_3-a.html">Use multiple include guards [AUTOSAR-M16_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_3_1.html">AUTOSAR M16-3-1 There shall be at most one occurrence of the # or ## operators in a single macro definition [AUTOSAR-M16_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_3_1-a.html">There shall be at most one occurrence of the # or ## preprocessor operators in a single macro definition [AUTOSAR-M16_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M16_3_2.html">AUTOSAR M16-3-2 The # and ## operators should not be used [AUTOSAR-M16_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M16_3_2-a.html">The # and ## preprocessor operators should not be used [AUTOSAR-M16_3_2-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M17_0_2.html">AUTOSAR M17-0-2 The names of standard library macros and objects shall not be reused [AUTOSAR-M17_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M17_0_2-a.html">The names of standard library macros and objects shall not be reused [AUTOSAR-M17_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M17_0_3.html">AUTOSAR M17-0-3 The names of standard library functions shall not be overridden [AUTOSAR-M17_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M17_0_3-a.html">The names of standard library functions shall not be overridden [AUTOSAR-M17_0_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M17_0_5.html">AUTOSAR M17-0-5 The setjmp macro and the longjmp function shall not be used [AUTOSAR-M17_0_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M17_0_5-a.html">The facilities provided by &lt;setjmp.h&gt; should not be used [AUTOSAR-M17_0_5-a-2]</A>
+<LI><A HREF="AUTOSAR-M17_0_5-b.html">The standard header files &lt;setjmp.h&gt; or &lt;csetjmp&gt; shall not be used [AUTOSAR-M17_0_5-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M18_0_3.html">AUTOSAR M18-0-3 The library functions abort, exit, getenv and system from library <cstdlib> shall not be used [AUTOSAR-M18_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M18_0_3-a.html">The 'abort()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-M18_0_3-a-2]</A>
+<LI><A HREF="AUTOSAR-M18_0_3-b.html">The 'exit()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-M18_0_3-b-2]</A>
+<LI><A HREF="AUTOSAR-M18_0_3-c.html">The 'system()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-M18_0_3-c-2]</A>
+<LI><A HREF="AUTOSAR-M18_0_3-d.html">The 'getenv()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-M18_0_3-d-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M18_0_4.html">AUTOSAR M18-0-4 The time handling functions of library <ctime> shall not be used [AUTOSAR-M18_0_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M18_0_4-a.html">The standard header files &lt;time.h&gt; or &lt;ctime&gt; shall not be used [AUTOSAR-M18_0_4-a-2]</A>
+<LI><A HREF="AUTOSAR-M18_0_4-b.html">The time handling functions and macros of the library &lt;time.h&gt; shall not be used [AUTOSAR-M18_0_4-b-2]</A>
+<LI><A HREF="AUTOSAR-M18_0_4-c.html">The types defined in the library &lt;time.h&gt; shall not be used [AUTOSAR-M18_0_4-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M18_0_5.html">AUTOSAR M18-0-5 The unbounded functions of library <cstring> shall not be used [AUTOSAR-M18_0_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M18_0_5-a.html">The unbounded functions of library &lt;cstring&gt; shall not be used [AUTOSAR-M18_0_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M18_2_1.html">AUTOSAR M18-2-1 The macro offsetof shall not be used [AUTOSAR-M18_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M18_2_1-a.html">The macro offsetof, in library stddef.h, shall not be used [AUTOSAR-M18_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M18_7_1.html">AUTOSAR M18-7-1 The signal handling facilities of <csignal> shall not be used [AUTOSAR-M18_7_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M18_7_1-a.html">The signal handling facilities of &lt;signal.h&gt; shall not be used [AUTOSAR-M18_7_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M18_7_1-b.html">The standard header files &lt;signal.h&gt; or &lt;csignal&gt; shall not be used [AUTOSAR-M18_7_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M19_3_1.html">AUTOSAR M19-3-1 The error indicator errno shall not be used [AUTOSAR-M19_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M19_3_1-a.html">The error indicator 'errno' shall not be used [AUTOSAR-M19_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M27_0_1.html">AUTOSAR M27-0-1 The stream input/output library <cstdio> shall not be used [AUTOSAR-M27_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M27_0_1-a.html">The input/output library stdio.h shall not be used [AUTOSAR-M27_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M2_10_1.html">AUTOSAR M2-10-1 Different identifiers shall be typographically unambiguous [AUTOSAR-M2_10_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M2_10_1-a.html">Different identifiers shall be typographically unambiguous [AUTOSAR-M2_10_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M2_13_2.html">AUTOSAR M2-13-2 Octal constants (other than zero) and octal escape sequences (other than "\0" ) shall not be used [AUTOSAR-M2_13_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M2_13_2-a.html">Octal constants (other than zero) shall not be used [AUTOSAR-M2_13_2-a-2]</A>
+<LI><A HREF="AUTOSAR-M2_13_2-b.html">Octal escape sequences shall not be used [AUTOSAR-M2_13_2-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M2_13_3.html">AUTOSAR M2-13-3 A "U" suffix shall be applied to all octal or hexadecimal integer literals of unsigned type [AUTOSAR-M2_13_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M2_13_3-a.html">A &quot;U&quot; suffix shall be applied to all octal or hexadecimal integer literals of unsigned type [AUTOSAR-M2_13_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M2_13_4.html">AUTOSAR M2-13-4 Literal suffixes shall be upper case [AUTOSAR-M2_13_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M2_13_4-a.html">Literal suffixes shall use uppercase rather than lowercase letters [AUTOSAR-M2_13_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M2_7_1.html">AUTOSAR M2-7-1 The character sequence /* shall not be used within a C-style comment [AUTOSAR-M2_7_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M2_7_1-a.html">The character sequence /* shall not be used within a C-style comment [AUTOSAR-M2_7_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_1_2.html">AUTOSAR M3-1-2 Functions shall not be declared at block scope [AUTOSAR-M3_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_1_2-a.html">Always declare functions at file scope [AUTOSAR-M3_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_2_1.html">AUTOSAR M3-2-1 All declarations of an object or function shall have compatible types [AUTOSAR-M3_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_2_1-a.html">All declarations of an object or function shall have compatible types [AUTOSAR-M3_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_2_2.html">AUTOSAR M3-2-2 The One Definition Rule shall not be violated [AUTOSAR-M3_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_2_2-a.html">The One Definition Rule shall not be violated [AUTOSAR-M3_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_2_3.html">AUTOSAR M3-2-3 A type, object or function that is used in multiple translation units shall be declared in one and only one file [AUTOSAR-M3_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_2_3-a.html">A type, object or function that is used in multiple translation units shall be declared in one and only one file [AUTOSAR-M3_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_2_4.html">AUTOSAR M3-2-4 An identifier with external linkage shall have exactly one definition [AUTOSAR-M3_2_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_2_4-a.html">An identifier with external linkage shall have no more then one external definition [AUTOSAR-M3_2_4-a-2]</A>
+<LI><A HREF="AUTOSAR-M3_2_4-b.html">An identifier with external linkage shall have external definition [AUTOSAR-M3_2_4-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_3_2.html">AUTOSAR M3-3-2 If a function has internal linkage then all re-declarations shall include the static storage class specifier [AUTOSAR-M3_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_3_2-a.html">If a function has internal linkage then all re-declarations shall include the 'static' storage class specifier [AUTOSAR-M3_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_4_1.html">AUTOSAR M3-4-1 An identifier declared to be an object or type shall be defined in a block that minimizes its visibility [AUTOSAR-M3_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_4_1-a.html">Declare variables as locally as possible [AUTOSAR-M3_4_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M3_4_1-b.html">Non-const objects with internal linkage should be defined at function scope if they are only accessed from within a single function [AUTOSAR-M3_4_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_9_1.html">AUTOSAR M3-9-1 The types used for an object, a function return type, or a function parameter shall be token-for-token identical in all declarations and re-declarations [AUTOSAR-M3_9_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_9_1-a.html">The types used for an object, a function return type, or a function parameter shall be token-for-token identical in all declarations and re-declarations [AUTOSAR-M3_9_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M3_9_3.html">AUTOSAR M3-9-3 The underlying bit representations of floating-point values shall not be used [AUTOSAR-M3_9_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M3_9_3-a.html">The underlying bit representations of floating-point values shall not be used [AUTOSAR-M3_9_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M4_10_1.html">AUTOSAR M4-10-1 NULL shall not be used as an integer value [AUTOSAR-M4_10_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M4_10_1-a.html">NULL shall not be used as an integer value [AUTOSAR-M4_10_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M4_10_2.html">AUTOSAR M4-10-2 Literal zero (0) shall not be used as the null-pointer-constant [AUTOSAR-M4_10_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M4_10_2-a.html">Literal zero (0) shall not be used as the null-pointer-constant [AUTOSAR-M4_10_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M4_5_1.html">AUTOSAR M4-5-1 Expressions with type bool shall not be used as operands to built-in operators other than the assignment operator =, the logical operators &&, ||, !, the equality operators == and !=, the unary & operator, and the conditional operator [AUTOSAR-M4_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M4_5_1-a.html">Expressions that are effectively Boolean should not be used as operands to operators other than (&amp;&amp;, ||, !, =, ==, !=, ?:) [AUTOSAR-M4_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M4_5_3.html">AUTOSAR M4-5-3 Expressions with type (plain) char and wchar_t shall not be used as operands to built-in operators other than the assignment operator =, the equality operators == and !=, and the unary & operator [AUTOSAR-M4_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M4_5_3-a.html">Expressions with type (plain) char and wchar_t shall not be used as operands to built-in operators other than &nbsp;=, &nbsp;==, != and the unary &amp; operator [AUTOSAR-M4_5_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_10.html">AUTOSAR M5-0-10 If the bitwise operators ~ and << are applied to an operand with an underlying type of unsigned char or unsigned short, the result shall be immediately cast to the underlying type of the operand [AUTOSAR-M5_0_10]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_10-a.html">If the bitwise operators ~ and &lt;&lt; are applied to an operand of underlying type unsigned char or unsigned short, the result shall be immediately cast to the underlying type of the operand [AUTOSAR-M5_0_10-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_11.html">AUTOSAR M5-0-11 The plain char type shall only be used for the storage and use of character values [AUTOSAR-M5_0_11]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_11-a.html">The plain char type shall be used only for the storage and use of character values [AUTOSAR-M5_0_11-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_12.html">AUTOSAR M5-0-12 Signed char and unsigned char type shall only be used for the storage and use of numeric values [AUTOSAR-M5_0_12]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_12-a.html">signed and unsigned char type shall be used only for the storage and use of numeric values [AUTOSAR-M5_0_12-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_14.html">AUTOSAR M5-0-14 The first operand of a conditional-operator shall have type bool [AUTOSAR-M5_0_14]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_14-a.html">The first operand of a conditional-operator shall have type bool [AUTOSAR-M5_0_14-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_15.html">AUTOSAR M5-0-15 Array indexing shall be the only form of pointer arithmetic [AUTOSAR-M5_0_15]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_15-a.html">Array indexing shall be the only allowed form of pointer arithmetic [AUTOSAR-M5_0_15-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_16.html">AUTOSAR M5-0-16 A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array [AUTOSAR-M5_0_16]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_16-a.html">Avoid accessing arrays out of bounds [AUTOSAR-M5_0_16-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_16-b.html">A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array [AUTOSAR-M5_0_16-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_17.html">AUTOSAR M5-0-17 Subtraction between pointers shall only be applied to pointers that address elements of the same array [AUTOSAR-M5_0_17]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_17-a.html">Do not subtract two pointers that do not address elements of the same array [AUTOSAR-M5_0_17-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_18.html">AUTOSAR M5-0-18 >, >=, <, <= shall not be applied to objects of pointer type, except where they point to the same array [AUTOSAR-M5_0_18]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_18-a.html">Do not compare two unrelated pointers [AUTOSAR-M5_0_18-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_2.html">AUTOSAR M5-0-2 Limited dependence should be placed on C++ operator precedence rules in expressions [AUTOSAR-M5_0_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_2-a.html">Use parenthesis for the right-hand operand of an assignment operator when it contains an assignment expression [AUTOSAR-M5_0_2-a-4]</A>
+<LI><A HREF="AUTOSAR-M5_0_2-b.html">Limited dependence should be placed on C's operator precedence rules in expressions [AUTOSAR-M5_0_2-b-4]</A>
+<LI><A HREF="AUTOSAR-M5_0_2-c.html">No parentheses are required for the operand of a unary operator [AUTOSAR-M5_0_2-c-4]</A>
+<LI><A HREF="AUTOSAR-M5_0_2-d.html">Limited dependence should be placed on C's operator precedence rules in expressions [AUTOSAR-M5_0_2-d-4]</A>
+<LI><A HREF="AUTOSAR-M5_0_2-e.html">Use parentheses unless all operators in the expression are the same [AUTOSAR-M5_0_2-e-4]</A>
+<LI><A HREF="AUTOSAR-M5_0_2-f.html">Limited dependence should be placed on C's operator precedence rules in expressions [AUTOSAR-M5_0_2-f-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_20.html">AUTOSAR M5-0-20 Non-constant operands to a binary bitwise operator shall have the same underlying type [AUTOSAR-M5_0_20]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_20-a.html">Non-constant operands to a binary bitwise operator shall have the same underlying type [AUTOSAR-M5_0_20-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_21.html">AUTOSAR M5-0-21 Bitwise operators shall only be applied to operands of unsigned underlying type [AUTOSAR-M5_0_21]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_21-a.html">Bitwise operators shall only be applied to operands of unsigned underlying type [AUTOSAR-M5_0_21-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_3.html">AUTOSAR M5-0-3 A cvalue expression shall not be implicitly converted to a different underlying type [AUTOSAR-M5_0_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_3-a.html">Avoid implicit conversions of complex expressions [AUTOSAR-M5_0_3-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_3-b.html">Avoid implicit conversions of complex expressions [AUTOSAR-M5_0_3-b-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_3-c.html">Avoid implicit conversions of complex expressions [AUTOSAR-M5_0_3-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_4.html">AUTOSAR M5-0-4 An implicit integral conversion shall not change the signedness of the underlying type [AUTOSAR-M5_0_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_4-a.html">Avoid implicit conversions between signed and unsigned integer types [AUTOSAR-M5_0_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_5.html">AUTOSAR M5-0-5 There shall be no implicit floating-integral conversions [AUTOSAR-M5_0_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_5-a.html">There shall be no implicit conversions from integral to floating type [AUTOSAR-M5_0_5-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_5-b.html">Avoid implicit conversions from floating to integral type [AUTOSAR-M5_0_5-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_6.html">AUTOSAR M5-0-6 An implicit integral or floating-point conversion shall not reduce the size of the underlying type [AUTOSAR-M5_0_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_6-a.html">Avoid implicit integral conversions from a wider to a narrower type [AUTOSAR-M5_0_6-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_6-b.html">Avoid implicit conversions from wider to narrower floating type [AUTOSAR-M5_0_6-b-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_6-c.html">Avoid implicit conversions of floating point numbers from wider to narrower floating type [AUTOSAR-M5_0_6-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_7.html">AUTOSAR M5-0-7 There shall be no explicit floating-integral conversions of a cvalue expression [AUTOSAR-M5_0_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_7-a.html">The value of a complex expression of floating type should not be cast to an integer type [AUTOSAR-M5_0_7-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_7-b.html">The value of a complex expression of integer type shall only be cast to a type &nbsp;of the same signedness that is no wider than the underlying type of the expression [AUTOSAR-M5_0_7-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_8.html">AUTOSAR M5-0-8 An explicit integral or floating-point conversion shall not increase the size of the underlying type of a cvalue expression [AUTOSAR-M5_0_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_8-a.html">The value of a complex expression of integer type shall only be cast to a type &nbsp;of the same signedness that is no wider than the underlying type of the expression [AUTOSAR-M5_0_8-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_0_8-b.html">The value of a complex expression of floating type should not be cast to a wider floating type [AUTOSAR-M5_0_8-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_0_9.html">AUTOSAR M5-0-9 An explicit integral conversion shall not change the signedness of the underlying type of a cvalue expression [AUTOSAR-M5_0_9]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_0_9-a.html">The value of a complex expression of integer type shall only be cast to a type &nbsp;of the same signedness that is no wider than the underlying type of the expression [AUTOSAR-M5_0_9-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_14_1.html">AUTOSAR M5-14-1 The right hand operand of a logical &&, || operators shall not contain side effects [AUTOSAR-M5_14_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_14_1-a.html">The right-hand operand of a logical &amp;&amp; or || operator shall not contain side effects [AUTOSAR-M5_14_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_17_1.html">AUTOSAR M5-17-1 The semantic equivalence between a binary operator and its assignment operator form shall be preserved [AUTOSAR-M5_17_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_17_1-a.html">The overloaded binary operator should be implemented in terms of its corresponding compound assignment operator [AUTOSAR-M5_17_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_18_1.html">AUTOSAR M5-18-1 The comma operator shall not be used [AUTOSAR-M5_18_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_18_1-a.html">The comma operator shall not be used [AUTOSAR-M5_18_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_19_1.html">AUTOSAR M5-19-1 Evaluation of constant unsigned integer expressions shall not lead to wrap-around [AUTOSAR-M5_19_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_19_1-a.html">Integer overflow or underflow in constant expression in '&lt;&lt;' operator [AUTOSAR-M5_19_1-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_19_1-b.html">Integer overflow or underflow in constant expression in '+', '-', '*' operator [AUTOSAR-M5_19_1-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_10.html">AUTOSAR M5-2-10 The increment (++) and decrement (--) operators shall not be mixed with other operators in an expression [AUTOSAR-M5_2_10]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_10-a.html">The increment (++) and decrement (--) operators should not be mixed with arithmetic operators in an expression [AUTOSAR-M5_2_10-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_11.html">AUTOSAR M5-2-11 The comma operator, && operator and the || operator shall not be overloaded [AUTOSAR-M5_2_11]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_11-a.html">Avoid overloading comma operator &quot;,&quot; [AUTOSAR-M5_2_11-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_2_11-b.html">Avoid overloading logical operators AND, OR (&amp;&amp;, ||) [AUTOSAR-M5_2_11-b-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_12.html">AUTOSAR M5-2-12 An identifier with array type passed as a function argument shall not decay to a pointer [AUTOSAR-M5_2_12]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_12-a.html">An identifier with array type passed as a function argument shall not decay to a pointer [AUTOSAR-M5_2_12-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_2.html">AUTOSAR M5-2-2 A pointer to a virtual base class shall only be cast to a pointer to a derived class by means of dynamic_cast [AUTOSAR-M5_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_2-a.html">A pointer to a virtual base class shall only be cast to a pointer to a derived class by means of dynamic_cast [AUTOSAR-M5_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_3.html">AUTOSAR M5-2-3 Casts from a base class to a derived class should not be performed on polymorphic types [AUTOSAR-M5_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_3-a.html">Casts from a base class to a derived class should not be performed on polymorphic types [AUTOSAR-M5_2_3-a-4]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_6.html">AUTOSAR M5-2-6 A cast shall not convert a pointer to a function to any other pointer type, including a pointer to function type [AUTOSAR-M5_2_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_6-a.html">A cast shall not convert a pointer to a function to any other pointer type, including a pointer to function type [AUTOSAR-M5_2_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_8.html">AUTOSAR M5-2-8 An object with integer type or pointer to void type shall not be converted to an object with pointer type [AUTOSAR-M5_2_8]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_8-a.html">An object with integer type or pointer to void type shall not be converted to an object with pointer type [AUTOSAR-M5_2_8-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_2_9.html">AUTOSAR M5-2-9 A cast shall not convert a pointer type to an integral type [AUTOSAR-M5_2_9]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_2_9-a.html">A cast should not convert a pointer type to an integral type [AUTOSAR-M5_2_9-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_3_1.html">AUTOSAR M5-3-1 Each operand of the ! operator, the logical && or the logical || operators shall have type bool [AUTOSAR-M5_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_3_1-a.html">Each operand of the ! operator, the logical &amp;&amp; or the logical || operators shall have type bool [AUTOSAR-M5_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_3_2.html">AUTOSAR M5-3-2 The unary minus operator shall not be applied to an expression whose underlying type is unsigned [AUTOSAR-M5_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_3_2-a.html">The unary minus operator shall not be applied to an expression whose underlying type is unsigned [AUTOSAR-M5_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_3_3.html">AUTOSAR M5-3-3 The unary & operator shall not be overloaded [AUTOSAR-M5_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_3_3-a.html">The unary &amp; operator shall not be overloaded [AUTOSAR-M5_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_3_4.html">AUTOSAR M5-3-4 Evaluation of the operand to the sizeof operator shall not contain side effects [AUTOSAR-M5_3_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_3_4-a.html">The operand of the sizeof operator shall not contain any expression which has side effects [AUTOSAR-M5_3_4-a-2]</A>
+<LI><A HREF="AUTOSAR-M5_3_4-b.html">Object designated by a volatile lvalue should not be accessed in the operand of the sizeof operator [AUTOSAR-M5_3_4-b-2]</A>
+<LI><A HREF="AUTOSAR-M5_3_4-c.html">The function call that causes the side effect shall not be the operand of the sizeof operator [AUTOSAR-M5_3_4-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M5_8_1.html">AUTOSAR M5-8-1 The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand [AUTOSAR-M5_8_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M5_8_1-a.html">The right-hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left-hand operand [AUTOSAR-M5_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_2_1.html">AUTOSAR M6-2-1 Assignment operators shall not be used in sub-expressions [AUTOSAR-M6_2_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_2_1-a.html">Assignment operators shall not be used in expressions that yield a Boolean value [AUTOSAR-M6_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_2_2.html">AUTOSAR M6-2-2 Floating-point expressions shall not be directly or indirectly tested for equality or inequality [AUTOSAR-M6_2_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_2_2-a.html">Floating-point expressions shall not be tested for equality or inequality [AUTOSAR-M6_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_2_3.html">AUTOSAR M6-2-3 Before preprocessing, a null statement shall only occur on a line by itself; it may be followed by a comment, provided that the first character following the null statement is a white-space character [AUTOSAR-M6_2_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_2_3-a.html">A null statement shall occur on a line by itself or be followed by a comment [AUTOSAR-M6_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_3_1.html">AUTOSAR M6-3-1 The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement [AUTOSAR-M6_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_3_1-a.html">The statement forming the body of a 'switch', 'while', 'do...while' or 'for' statement shall be a compound statement [AUTOSAR-M6_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_1.html">AUTOSAR M6-4-1 An if ( condition ) construct shall be followed by a compound statement. The else keyword shall be followed by either a compound statement, or another if statement [AUTOSAR-M6_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_1-a.html">'if' and 'else' should be followed by a compound statement [AUTOSAR-M6_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_2.html">AUTOSAR M6-4-2 All if ... else if constructs shall be terminated with an else clause [AUTOSAR-M6_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_2-a.html">All 'if...else-if' constructs shall be terminated with an 'else' clause [AUTOSAR-M6_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_3.html">AUTOSAR M6-4-3 A switch statement shall be a well-formed switch statement [AUTOSAR-M6_4_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_3-a.html">An unconditional throw or break statement shall terminate every non-empty switch-clause [AUTOSAR-M6_4_3-a-2]</A>
+<LI><A HREF="AUTOSAR-M6_4_3-b.html">The final clause of a switch statement shall be the default-clause unless all enumeration values are tested [AUTOSAR-M6_4_3-b-2]</A>
+<LI><A HREF="AUTOSAR-M6_4_3-c.html">A switch label shall only be used when the most closely-enclosing compound statement is the body of a switch statement [AUTOSAR-M6_4_3-c-2]</A>
+<LI><A HREF="AUTOSAR-M6_4_3-d.html">Every switch statement shall have at least one case clause [AUTOSAR-M6_4_3-d-2]</A>
+<LI><A HREF="AUTOSAR-M6_4_3-e.html">A switch expression shall not represent a value that is effectively Boolean [AUTOSAR-M6_4_3-e-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_4.html">AUTOSAR M6-4-4 A switch-label shall only be used when the most closely-enclosing compound statement is the body of a switch statement [AUTOSAR-M6_4_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_4-a.html">A switch label shall only be used when the most closely-enclosing compound statement is the body of a switch statement [AUTOSAR-M6_4_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_5.html">AUTOSAR M6-4-5 An unconditional throw or break statement shall terminate every non-empty switch-clause [AUTOSAR-M6_4_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_5-a.html">An unconditional throw or break statement shall terminate every non-empty switch-clause [AUTOSAR-M6_4_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_6.html">AUTOSAR M6-4-6 The final clause of a switch statement shall be the default-clause [AUTOSAR-M6_4_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_6-a.html">The final clause of a switch statement shall be the default-clause unless all enumeration values are tested [AUTOSAR-M6_4_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_4_7.html">AUTOSAR M6-4-7 The condition of a switch statement shall not have bool type [AUTOSAR-M6_4_7]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_4_7-a.html">A switch expression shall not represent a value that is effectively Boolean [AUTOSAR-M6_4_7-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_5_2.html">AUTOSAR M6-5-2 If loop-counter is not modified by -- or ++, then, within condition, the loop-counter shall only be used as an operand to <=, <, > or >= [AUTOSAR-M6_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_5_2-a.html">If loop-counter is not modified by -- or ++, then, within condition, the loop-counter shall only be used as an operand to &lt;=, &lt;, &gt; or &gt;= [AUTOSAR-M6_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_5_3.html">AUTOSAR M6-5-3 The loop-counter shall not be modified within condition or statement [AUTOSAR-M6_5_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_5_3-a.html">Do not modify for loop counter within a body of the loop [AUTOSAR-M6_5_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_5_4.html">AUTOSAR M6-5-4 The loop-counter shall be modified by one of: --, ++, -= n, or += n; where n remains constant for the duration of the loop [AUTOSAR-M6_5_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_5_4-a.html">The loop-counter shall be modified by one of: --, ++, -=n, or +=n; where n remains constant for the duration of the loop [AUTOSAR-M6_5_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_5_5.html">AUTOSAR M6-5-5 A loop-control-variable other than the loop-counter shall not be modified within condition or expression [AUTOSAR-M6_5_5]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_5_5-a.html">A loop-control-variable other than the loop-counter shall not be modified within condition or expression [AUTOSAR-M6_5_5-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_5_6.html">AUTOSAR M6-5-6 A loop-control-variable other than the loop-counter which is modified in statement shall have type bool [AUTOSAR-M6_5_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_5_6-a.html">A loop-control-variable other than the loop-counter which is modified in statement shall have type bool [AUTOSAR-M6_5_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_6_1.html">AUTOSAR M6-6-1 Any label referenced by a goto statement shall be declared in the same block, or in a block enclosing the goto statement [AUTOSAR-M6_6_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_6_1-a.html">Any label referenced by a goto statement shall be declared in the same block, or in a block enclosing the goto statement [AUTOSAR-M6_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_6_2.html">AUTOSAR M6-6-2 The goto statement shall jump to a label declared later in the same function body [AUTOSAR-M6_6_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_6_2-a.html">The goto statement shall jump to a label declared later in the same function body [AUTOSAR-M6_6_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M6_6_3.html">AUTOSAR M6-6-3 The continue statement shall only be used within a well-formed for loop [AUTOSAR-M6_6_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M6_6_3-a.html">The continue statement shall only be used within a well formed for loop [AUTOSAR-M6_6_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_1_2.html">AUTOSAR M7-1-2 A pointer or reference parameter in a function shall be declared as pointer to const or reference to const if the corresponding object is not modified [AUTOSAR-M7_1_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_1_2-a.html">Declare a type of parameter as typedef to pointer to const if the pointer is not used to modify the addressed object [AUTOSAR-M7_1_2-a-2]</A>
+<LI><A HREF="AUTOSAR-M7_1_2-b.html">A pointer parameter in a function prototype should be declared as pointer to const if the pointer is not used to modify the addressed object [AUTOSAR-M7_1_2-b-2]</A>
+<LI><A HREF="AUTOSAR-M7_1_2-c.html">Declare reference parameters as const references whenever possible [AUTOSAR-M7_1_2-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_3_1.html">AUTOSAR M7-3-1 The global namespace shall only contain main, namespace declarations and extern "C" declarations [AUTOSAR-M7_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_3_1-a.html">The global namespace shall only contain main() and namespace declarations [AUTOSAR-M7_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_3_2.html">AUTOSAR M7-3-2 The identifier main shall not be used for a function other than the global function main [AUTOSAR-M7_3_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_3_2-a.html">The identifier main shall not be used for a function other than the global function main [AUTOSAR-M7_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_3_3.html">AUTOSAR M7-3-3 There shall be no unnamed namespaces in header files [AUTOSAR-M7_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_3_3-a.html">There shall be no unnamed namespaces in header files [AUTOSAR-M7_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_3_4.html">AUTOSAR M7-3-4 Using-directives shall not be used [AUTOSAR-M7_3_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_3_4-a.html">using-directives shall not be used [AUTOSAR-M7_3_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_3_6.html">AUTOSAR M7-3-6 Using-directives and using-declarations (excluding class scope or function scope using-declarations) shall not be used in header files [AUTOSAR-M7_3_6]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_3_6-a.html">using-directives and using-declarations (excluding class scope or function scope using-declarations) shall not be used in header files [AUTOSAR-M7_3_6-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_4_1.html">AUTOSAR M7-4-1 All usage of assembler shall be documented [AUTOSAR-M7_4_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_4_1-a.html">All usage of assembler shall be documented [AUTOSAR-M7_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_4_2.html">AUTOSAR M7-4-2 Assembler instructions shall only be introduced using the asm declaration [AUTOSAR-M7_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_4_2-a.html">Assembler instructions shall only be introduced using the asm declaration [AUTOSAR-M7_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_4_3.html">AUTOSAR M7-4-3 Assembly language shall be encapsulated and isolated [AUTOSAR-M7_4_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_4_3-a.html">Assembly language shall be encapsulated and isolated in C/C++ functions [AUTOSAR-M7_4_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_5_1.html">AUTOSAR M7-5-1 A function shall not return a reference or a pointer to an automatic variable (including parameters), defined within the function [AUTOSAR-M7_5_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_5_1-a.html">The address of an object with automatic storage shall not be returned from a function [AUTOSAR-M7_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M7_5_2.html">AUTOSAR M7-5-2 The address of an object with automatic storage shall not be assigned to another object that may persist after the first object has ceased to exist [AUTOSAR-M7_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M7_5_2-a.html">The address of an object with automatic storage shall not be assigned to another object that may persist after the first object has ceased to exist [AUTOSAR-M7_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M8_0_1.html">AUTOSAR M8-0-1 An init-declarator-list or a member-declarator-list shall consist of a single init-declarator or member-declarator respectively [AUTOSAR-M8_0_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M8_0_1-a.html">Each variable should be declared in a separate declaration statement [AUTOSAR-M8_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M8_3_1.html">AUTOSAR M8-3-1 Parameters in an overriding virtual function shall either use the same default arguments as the function they override, or else shall not specify any default arguments [AUTOSAR-M8_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M8_3_1-a.html">Do not redefine an inherited virtual function with a different default parameter value [AUTOSAR-M8_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M8_4_2.html">AUTOSAR M8-4-2 The identifiers used for the parameters in a re-declaration of a function shall be identical to those in the declaration [AUTOSAR-M8_4_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M8_4_2-a.html">The identifiers used in the declaration and definition of a function shall be identical [AUTOSAR-M8_4_2-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M8_4_4.html">AUTOSAR M8-4-4 A function identifier shall either be used to call the function or it shall be preceded by & [AUTOSAR-M8_4_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M8_4_4-a.html">A function identifier shall only be used with either a preceding '&amp;', or with a parenthesised parameter list, which may be empty [AUTOSAR-M8_4_4-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M8_5_2.html">AUTOSAR M8-5-2 Braces shall be used to indicate and match the structure in the non-zero initialization of arrays and structures [AUTOSAR-M8_5_2]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M8_5_2-a.html">The initializer for an aggregate or union shall be enclosed in braces [AUTOSAR-M8_5_2-a-2]</A>
+<LI><A HREF="AUTOSAR-M8_5_2-b.html">Arrays shall not be partially initialized [AUTOSAR-M8_5_2-b-2]</A>
+<LI><A HREF="AUTOSAR-M8_5_2-c.html">The non-zero initialization of structures requires an explicit initializer for each element [AUTOSAR-M8_5_2-c-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M9_3_1.html">AUTOSAR M9-3-1 Const member functions shall not return non-const pointers or references to class-data [AUTOSAR-M9_3_1]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M9_3_1-a.html">Const member functions shall not return non-const pointers or references to class-data [AUTOSAR-M9_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M9_3_3.html">AUTOSAR M9-3-3 If a member function can be made static then it shall be made static, otherwise if it can be made const then it shall be made const [AUTOSAR-M9_3_3]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M9_3_3-a.html">If a member function can be made static then it shall be made static, otherwise if it can be made const then it shall be made const [AUTOSAR-M9_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="AUTOSAR-M9_6_4.html">AUTOSAR M9-6-4 Named bit-fields with signed integer type shall have a length of more than one bit [AUTOSAR-M9_6_4]</A></B>
+<UL>
+<LI><A HREF="AUTOSAR-M9_6_4-a.html">Named bit-fields with signed integer type shall have a length of more than one bit [AUTOSAR-M9_6_4-a-2]</A>
+</UL>
+</UL>
+</UL>
+</BODY></HTML>

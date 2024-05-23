@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer lambdas over std::bind, std::bind1st and std::bind2nd [AUTOSAR-A18_9_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer lambdas over std::bind, std::bind1st and std::bind2nd [AUTOSAR-A18_9_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when 'std::bind', 'std::bind1st' or 'std::bind2nd' are used
+in code.
+
+Older versions of the Standard used 'std::bind', 'std::bind1st'
+or 'std::bind2nd'. C++11 allows you to use lambda expressions that are more
+readable, more expressive and make your code easier to optimize.
+In C++11, lambda expressions cannot replace polymorphic function objects
+and they do not offer move capture. However, C++14 introduces polymorphic
+lambda expressions, as well as generalized lambda capture, which enables
+you to replace 'bind' in all cases.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Since C++17, std::bind1st and std::bind2nd are removed from the Standard.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report a violation when a lambda is passed to 'std::bind'
+as an argument. This may happen when move capture is not available(in C++11).
+For example:
+  std::bind([] (int a) {}, 10);
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves readability and efficiency of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+
+int f_a(int a, int b);
+
+template &lt;typename T&gt; void ft(T t)
+{
+    int a;
+    t(a);
+}
+
+void foo( void )
+{
+    auto fn = std::bind(f_a, 10, std::placeholders::_1);    // Violation
+
+    int a = 10;
+    ft(std::bind(f_a, a, std::placeholders::_1));           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+
+int f_a(int a, int b);
+
+template &lt;typename T&gt; void ft(T t)
+{
+    int a;
+    t(a);
+}
+
+void foo( void )
+{
+    auto l_f1 = [](int a){ return f_a(10, a); };    // OK
+
+    int a = 10;
+    ft([a](int b){ return f_a(a, b); });            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-9-1. The std::bind shall not be used
+
+2. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 6: "Lambda Expressions", Item 34: "Prefer lambdas to std::bind"
+
+3. AUTOSAR C++14 Coding Guidelines
+   A1-1-1. All code shall conform to ISO/IEC 14882:2014 - Programming Language
+   C++ and shall not use deprecated features.
+
+4. Programming languages -- C++ ISO/IEC 14882:2011
+   D.9 Binders
+
+5. Programming languages -- C++ ISO/IEC 14882:2014 
+   D.9 Binders
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer alias declarations to typedefs [AUTOSAR-A7_1_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer alias declarations to typedefs [AUTOSAR-A7_1_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Alias declarations are similar to typedefs, but they have the advantage of
+working with templates, and they can improve the clarity of code. For this
+reason, alias declarations should be preferred to typedef.
+
+This rule detects user-defined types declared through typedef declarations.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Alias declarations help you keep your code clear. Their syntax separates
+the type name from the type, which makes complex types (such as a pointer to
+a function) easier to read. In addition, alias declarations can be templatized,
+unlike typedefs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef char CHAR;                                    // Violation
+typedef char* PCHAR;                                  // Violation
+
+template&lt;typename T&gt;
+struct MyAllocList
+{
+    typedef std::list&lt;T, std::allocator&lt;T&gt;&gt; type;     // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+using CHAR = char;                                    // OK
+using PCHAR = char*;                                  // OK
+
+template&lt;typename T&gt;
+struct MyAllocList
+{
+    using type = std::list&lt;T, std::allocator&lt;T&gt;&gt;;     // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-6. The typedef specifier shall not be used
+
+2. Scott Meyers, "Effective Modern C++: 42 Specific ways to improve your use
+   C++11 and C++14", O'Reilly, Copyright 2015, Chapter 3: "Moving to Modern C++",
+   Item 9
+
+</PRE>
+</BODY>
+</HTML>

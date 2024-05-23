@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid cyclic shared_ptr references [AUTOSAR-A20_8_7-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid cyclic shared_ptr references [AUTOSAR-A20_8_7-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"A cyclic structure of std::shared_ptr results in reference counting mechanism never
+dropping to zero, which prevents from pointed object deallocation. Breaking such
+cycles is done using std::weak_ptr which must be converted to std::shared_ptr in order
+to access the referenced object." [AUTOSAR A20-8-7]
+
+This rules detects circular references between two shared pointers.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+When shared pointers form a circular reference, the destructors of underlying shared pointers
+are never called, which may result in memory leaks.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent memory leaks (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation.
+
+#include &lt;memory&gt;
+
+template &lt;template &lt;typename&gt; class T, typename U&gt;
+struct Base
+{
+    T&lt;U&gt; sp;
+};
+
+template &lt;typename T&gt;
+using Shared = Base&lt;std::shared_ptr, T&gt;;
+
+struct SBarSFoo;
+struct SFooSBar : public Shared&lt;SBarSFoo&gt; {};
+struct SBarSFoo : public Shared&lt;SFooSBar&gt; {};
+
+int main()
+{
+    std::shared_ptr&lt;SFooSBar&gt; f = std::make_shared&lt;SFooSBar&gt;();
+    std::shared_ptr&lt;SBarSFoo&gt; b = std::make_shared&lt;SBarSFoo&gt;();
+    f-&gt;sp = b;
+    b-&gt;sp = f;    // VIOLATION
+    return 0;
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In the following code, std::weak_ptr pointer is used instead of std::shared_ptr.
+
+#include &lt;memory&gt;
+
+template &lt;template &lt;typename&gt; class T, typename U&gt;
+struct Base
+{
+    T&lt;U&gt; sp;
+};
+
+template &lt;typename T&gt;
+using Shared = Base&lt;std::shared_ptr, T&gt;;
+
+template &lt;typename T&gt;
+using Weak = Base&lt;std::weak_ptr, T&gt;;
+
+struct WBarSFoo;
+struct SFooWBar : public Shared&lt;WBarSFoo&gt; {};
+struct WBarSFoo : public Weak&lt;SFooWBar&gt; {};
+
+int main()
+{
+    std::shared_ptr&lt;SFooWBar&gt; f2 = std::make_shared&lt;SFooWBar&gt;();
+    std::shared_ptr&lt;WBarSFoo&gt; b2 = std::make_shared&lt;WBarSFoo&gt;();
+    f2-&gt;sp = b2;
+    b2-&gt;sp = f2; // NO VIOLATION
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+AUTOSAR C++14 Coding Guidelines
+Rule A20-8-7 A std::weak_ptr shall be used to represent temporary shared ownership.
+
+</PRE>
+</BODY>
+</HTML>

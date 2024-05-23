@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not modify for loop counter within a body of the loop [AUTOSAR-M6_5_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not modify for loop counter within a body of the loop [AUTOSAR-M6_5_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Numeric variables being used within a 'for' loop for iteration counting
+(loop-counters) shall not be modified in the body of the loop.
+
+A loop-counter is a loop-control-variable that is:
+  - Initialized in, or prior to, for-init-statement; and
+  - an operand to a relational operator in condition; and
+  - modified in expression.
+
+A loop-control-variable is any variable occurring in for-init-statement,
+condition or expression.
+
+A loop-control-variable (other than loop-counter) representing logical value 
+may be modified in the loop, for example a flag to indicate that something 
+has been completed, which is then tested in the for statement."
+
+The rule reports a violation if a loop-counter is modified within a condition
+or within a body of 'for' loop.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that an object is modified if it is passed to the function
+as a reference to a non-const object (except a universal reference) or its
+address is passed to the function as a pointer to a non-const object 
+(except functions which are called via function pointers).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Modification 'for' loop counter within a body of the loop can lead to 
+errors and confusion.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule reports a violation only if a loop-counter is a simple parameter
+or variable. If it is an expression (e.g. a.b, a-&gt;b, a[b], *a), then
+violation is not reported.
+
+struct S { int a; };
+
+void foo(){
+    S s;
+    S* sp;
+  
+    int* ptr;
+    int arr[3];
+  
+    for(s.a = 10; s.a &lt; 100; s.a++){
+        s.a = 10;      // should be Violation - no violations for expressions
+    }
+  
+    for(sp-&gt;a = 10; sp-&gt;a &lt; 100; sp-&gt;a++){
+        sp-&gt;a = 10;    // should be Violation - no violations for expressions
+    }
+  
+    for(*ptr = 10; *ptr &lt; 100; (*ptr)++){
+        *ptr = 10;     // should be Violation - no violations for expressions
+    }
+
+    for(arr[2] = 10; arr[2] &lt; 100; arr[2]++){
+        *arr = 10;     // should be Violation - no violations for expressions
+    }
+}
+ 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f(int* ptr);
+
+void foo( int p ){
+    int i;
+  
+    for(p = 10; p &lt; 100; p++){
+        p = p + 10;                            // Violation
+    }
+  
+    for(p = 10; p &lt; 100, p = p + 10; p++){     // Violation
+        // ...                   
+    }
+  
+    i = 10;
+    for(; i &lt; 100; i++){
+        f(&amp;i);                                 // Violation
+    } 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f(const int* ptr);
+
+void foo( int p ){
+    int i;
+    int flag;
+  
+    for(p = 10; p &lt; 100; p = p + 11){          // OK
+        // ... 
+    }
+  
+    i = 10;
+    for(; i &lt; 100; i++){
+        f(&amp;i);                                 // OK
+    } 
+    
+    for(i = 10; i &lt; 100 &amp;&amp; flag != 0; i++){
+       flag = 0;                               // OK
+    } 
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-5-3. The loop-counter shall not be modified within condition or
+   statement
+
+2. High Integrity C++ Coding Standard
+   6.2.3. Do not alter a control or counter variable more than once in a loop
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 201
+
+4. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 6, Rule 6-5-3
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 13
+
+6. Origin: Misra Guidelines - Rule 67
+
+</PRE>
+</BODY>
+</HTML>

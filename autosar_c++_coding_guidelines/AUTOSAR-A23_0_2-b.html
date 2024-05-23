@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use valid references, pointers, and iterators to reference elements of a basic_string [AUTOSAR-A23_0_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use valid references, pointers, and iterators to reference elements of a basic_string [AUTOSAR-A23_0_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when invalidated references, pointers, and iterators
+that refer to the elements of the basic_string container are used.
+
+"The std::basic_string template class has unusual invalidation semantics.
+The C++ Standard . . . states the following:
+	'References, pointers, and iterators referring to the elements of
+	a basic_string sequence may be invalidated by the following uses of that
+	basic_string object:
+		* As an argument to any standard library function taking a reference to
+		non-const basic_string as an argument.
+		* Calling non-const member functions, except operator[], at, front, back,
+		begin, rbegin, end, and rend.'
+Do not use an invalidated reference, pointer, or iterator because doing so
+results in undefined behavior." [SEI CERT C++ Coding Standard, STR52-CPP.]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;string&gt;
+
+void f(const std::string &amp;input) {
+    std::string email;
+
+    // Copy input into email converting ";" to " "
+    std::string::iterator loc = email.begin();
+    for (auto i = input.begin(), e = input.end(); i != e; ++i, ++loc) {	// VIOLATION
+        email.insert(loc, *i != ';' ? *i : ' ');
+    }
+}
+
+The rule is violated by the 'insert' method called on the 'email' object which
+invalidates the 'loc' iterator.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The 'loc' iterator should be updated so that the invalidated iterator is 
+never accessed.
+
+#include &lt;string&gt;
+
+void f(const std::string &amp;input) {
+    std::string email;
+
+    // Copy input into email converting ";" to " "
+    std::string::iterator loc = email.begin();
+    for (auto i = input.begin(), e = input.end(); i != e; ++i, ++loc) {
+        loc = email.insert(loc, *i != ';' ? *i : ' ');
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+STR52-CPP. Use valid references, pointers, and iterators to reference elements of a basic_string
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR52-CPP.+Use+valid+references%2C+pointers%2C+and+iterators+to+reference+elements+of+a+basic_string">https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR52-CPP.+Use+valid+references%2C+pointers%2C+and+iterators+to+reference+elements+of+a+basic_string</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A23-0-2 Elements of a container shall only be accessed via valid references, iterators, and pointers
+
+</PRE>
+</BODY>
+</HTML>

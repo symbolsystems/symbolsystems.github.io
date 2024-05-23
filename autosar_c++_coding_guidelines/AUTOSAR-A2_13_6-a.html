@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Universal character names shall be used only inside character or string literals [AUTOSAR-A2_13_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Universal character names shall be used only inside character or string literals [AUTOSAR-A2_13_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using universal-character-names to define a language identifier
+can be confusing for a developer and may be troublesome to use
+this identifier in the source code." [AUTOSAR A2-13-6]
+
+This rule detects universal character names, unless they are used inside:
+- comments.
+- character or string literals.
+
+See also: PREPROC-21
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Universal character names have the form of "\uhhhh" or "\Uhhhhhhhh",
+where h stands for a hexadecimal digit.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability and prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void \u1111();        // Violation
+int var\U00011111;    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use universal character names.
+
+// Exceptions:
+void f1() {
+    '\u0001';      // OK
+    "\U00011111";  // OK
+    /* \u1111 */   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-13-6. Universal character names shall be used only inside character or
+   string literals
+
+</PRE>
+</BODY>
+</HTML>

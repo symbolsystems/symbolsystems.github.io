@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A non-member generic operator shall only be declared in a namespace that does not contain class (struct) type, enum type or union type declarations [AUTOSAR-A14_5_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A non-member generic operator shall only be declared in a namespace that does not contain class (struct) type, enum type or union type declarations [AUTOSAR-A14_5_3-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Argument-dependent lookup (ADL) adds additional associated namespaces to the
+set of scopes searched when lookup is performed for the names of called
+functions. A generic operator found in one of these additional namespaces
+would be added to the overload set and choosen by overload resolution. ADL is
+complicated by several possible use forms for operators (via function calls
+and via expression, operators can be declared as members and as non-members)
+and lookup in those cases is different, which is likely to be inconsistent
+with developer expectation.
+
+Generic operator is a non-member operator template that can be called without
+explicit template arguments and has at least one generic parameter. A template
+type parameter T is a generic parameter if, in the function declaration, it
+has the (possibly cv-qualified) form of T, or T &amp; or T &amp;&amp;." [AUTOSAR A14-5-3]
+
+This rule reports a violation when a non-member generic operator template that
+has at least one generic parameter and is in a namespace where either a class,
+union, struct, or enum type is also declared.
+
+See also: TEMPL-13
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code readability and consistency with the C++ standard
+library. This rule also helps prevent unexpected side effects.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+namespace NS1
+{
+    class A {};
+
+    template&lt;typename T&gt;
+        bool operator+( T, std::int32_t ); // Violation: a member of namespace
+                                           // that has a class declaration
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+namespace NS1
+{
+    class A {};
+}
+
+namespace NS2
+{
+    NS1::A a{};
+
+    template&lt;typename T&gt;
+        bool operator+( T, std::int32_t ); // OK: a member of namespace
+                                           // without class declaration
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A14-5-3: non-member generic operator shall only be declared in a namespace
+   that does not contain class (struct) type, enum type or union type
+   declarations.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions shall not call themselves, either directly or indirectly [AUTOSAR-A7_5_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions shall not call themselves, either directly or indirectly [AUTOSAR-A7_5_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Recursion carries with it the danger of exceeding available stack space, which
+can lead to a serious failure. Unless recursion is very tightly controlled, 
+it is not possible to determine before execution what the worst-case stack
+usage could be." [MISRA C:2012 Rule 17.2]
+
+See also: BD-PB-RECFUN
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The rule checks unlimited level of nested function calls,
+   however if the function is defined in different translation unit, 
+   then its body is not checked. It may cause that some recursions
+   won't be reported.
+
+   /* test.h */
+   void foo1(void);
+   void foo2(void);
+
+   /* test_1.c */
+   #include "test.h"
+
+   void foo1(){
+      foo2();     /* No Violation - 'foo2' is defined in test_2.c */
+   } 
+
+   /* test_2.c */
+   #include "test.h"
+
+   void foo2(){
+      foo1();     /* No Violation - 'foo1' is defined in test_1.c */
+   }
+
+2. The rule does not check functions called via function pointer
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Unbounded recursion is likely to lead to a stack over-flow and may impact
+system timings" [MISRA C++:2008 Rule 7-5-4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(){
+    foo1();     /* Violation - direct recursion */
+}
+
+void foo2();
+void foo3();
+
+void foo2(){
+    foo3();     /* Violation - indirect recursion */
+}
+
+void foo3(){
+    foo2();     /* Violation - indirect recursion */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use recursive function calls.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A7-5-2. Functions shall not call themselves, either directly or indirectly
+
+2.  High Integrity C++ Coding Standard
+    5.2.2. Ensure that functions do not call themselves, either directly or
+    indirectly
+
+3.  HIS Source Code Metriken, version 1.3.1
+    Metrik "ap_cg_cycle"
+
+4.  ISO/DIS 26262
+    point 8.4.4
+
+5.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.13 Function, AV Rule 119
+
+6.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 7, Rule 7-5-4
+
+7.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 17.2
+
+8.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 16
+
+9.  Origin: Misra Guidelines - Rule 70
+
+10. The Power of Ten - Rules for Developing Safety Critical Code.
+    Rule 1
+
+</PRE>
+</BODY>
+</HTML>

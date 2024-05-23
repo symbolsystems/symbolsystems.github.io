@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+AUTOSAR A8-4-13 A std::shared_ptr shall be passed to a function as: (1) a copy to express the function shares ownership (2) an lvalue reference to express that the function replaces the managed object (3) a const lvalue reference to express that the function retains a reference count [AUTOSAR-A8_4_13]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+AUTOSAR-A8_4_13
+</STRONG>
+<PRE>
+AUTOSAR A8-4-13 A std::shared_ptr shall be passed to a function as: (1) a copy to express the function shares ownership (2) an lvalue reference to express that the function replaces the managed object (3) a const lvalue reference to express that the function retains a reference count
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="AUTOSAR-A8_4_13-a.html">A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [AUTOSAR-A8_4_13-a-2]</a></code><br>
+<code><a href="AUTOSAR-A8_4_13-b.html">A parameter should only be declared as a non-const lvalue reference to 'std::shared_ptr' or 'std::unique_ptr' if the function replaces the managed object [AUTOSAR-A8_4_13-b-2]</a></code><br>
+<code><a href="AUTOSAR-A8_4_13-c.html">Do not declare the type of a parameter as an rvalue reference to 'std::shared_ptr' or 'std::unique_ptr' [AUTOSAR-A8_4_13-c-2]</a></code><br>
+</BODY>
+</HTML>

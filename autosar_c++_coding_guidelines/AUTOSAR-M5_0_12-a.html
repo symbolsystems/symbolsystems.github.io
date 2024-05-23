@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+signed and unsigned char type shall be used only for the storage and use of numeric values [AUTOSAR-M5_0_12-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+signed and unsigned char type shall be used only for the storage and use of numeric values [AUTOSAR-M5_0_12-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"There are three distinct char types, plain char, signed char and unsigned char.
+Signed char and unsigned char shall be used for numeric data and plain char
+shall be used for character data. The signedness of the plain char type
+is implementation-defined and should not be relied upon."
+
+The rule reports a violation if signed char or unsigned char is used
+for character data.
+
+See also: MISRA2004-6_1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule makes the code more readable and less confusing.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( signed char a ) {
+
+    if (a == 'A' || a == 'B' || a == 'C') /* Violation - signed char is 
+                                             compared with character value */
+    {
+    	a = 'B';                          /* Violation - character value
+    	                                     is assigned to signed char */
+    }
+}
+
+/* Examples of incorrect code */
+
+void fooc(signed char puc);
+char foosc(int pi);
+
+signed char foo1(char p)
+{
+    unsigned char uc = 'x'; /* Violation - unsigned char initialized 
+                                           with character value */
+    int i;
+    i = uc + p;             /* Violation - unsigned char mixed
+                               with plain char in expression */
+
+    fooc('y');              /* Violation - character value used as argument
+                               in a function with signed char parameter type */
+
+    switch(uc){
+    case 1:
+         uc = foosc(1);  /* Violation - plain char assigned to unsigned char */
+         break;
+    case 'x':            /* Violation - character data used in case for switch
+                                        with unsigned char in condition */
+         uc = 'x' + uc;  /* Violation - unsigned char mixed with plain char
+                                        in expression */
+         break;
+    }
+
+    return '\0';  /* Violation - character value returned from function
+                                 with singed char return type */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( signed char a ) {
+
+    if (65 &lt;= a &amp;&amp; a &lt;= 67)  /* OK */
+    {
+    	a = 66;              /* OK */
+    }
+}
+
+/* Examples of correct code */
+
+void fooc(char pc);
+char foosc(int pi);
+
+signed char foo1(char p)
+{
+    unsigned char uc = 0x78; /* OK */
+    int i;
+    i = uc + (int)p;         /* OK */
+
+    fooc('y');               /* OK */
+
+    switch(uc){
+    case 1:
+         uc = (unsigned char)foosc(1);  /* OK */
+         break;
+    case 0x78:               /* OK */
+         uc = 'x' + 10;      /* OK */
+         break;
+    }
+
+    return 0;                /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-12. Signed char and unsigned char type shall only be used for the
+   storage and use of numeric values
+
+2. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-12
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.3 The numerical value of a character shall not be used
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6
+
+5. SEI CERT C Coding Standard
+   INT07-C. Use only explicitly signed or unsigned char type for numeric
+   values
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values">https://wiki.sei.cmu.edu/confluence/display/c/INT07-C.+Use+only+explicitly+signed+or+unsigned+char+type+for+numeric+values</A>
+
+</PRE>
+</BODY>
+</HTML>

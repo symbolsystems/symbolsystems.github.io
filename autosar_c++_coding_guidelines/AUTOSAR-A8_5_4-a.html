@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overloading constructors with std::initializer_list [AUTOSAR-A8_5_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overloading constructors with std::initializer_list [AUTOSAR-A8_5_4-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+According to the C++ standard, std::initializer_list is the preferred method
+for matching arguments, especially when braced-initialization is used. This
+is true even if an implicit conversion is necessary.
+
+This rule reports a violation when it detects an overloading constructor with
+at least one constructor taking an std::initializer_list and at least one
+constructor taking another parameter type. A violation is not reported,
+though, if the non-std::initializer_list constructor is one of the special
+constructors, i.e., default, copy, or move constructors.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves clarity, prevents programmer confusion, and enforces better
+conformance with the C++ standard.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, a programmer may expect a call of A a{5}; to take
+the "A(int)" constructor, but the compiler will choose
+"A(std::initializer_list&lt;int&gt;)".
+
+#include &lt;initializer_list&gt;
+
+class A                           // Violation
+{
+public:
+    A(int);
+    A(std::initializer_list&lt;int&gt;);
+};
+
+void use()
+{
+    A a{5};                       // Calls A(std::initializer_list&lt;int&gt;),
+                                  // not A(int)
+                                  // This is confusing.
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;initializer_list&gt;
+
+class A                           // OK
+{
+public:
+    A(std::initializer_list&lt;int&gt;);
+};
+
+void use()
+{
+    A a{5};                       // Only 1 constructor available
+                                  // No longer confusing.
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   Rule A8-5-4 If a class has a user-declared constructor that takes a
+   parameter of type std::initializer_list, then it shall be the only
+   constructor apart from special member function constructors.
+
+</PRE>
+</BODY>
+</HTML>

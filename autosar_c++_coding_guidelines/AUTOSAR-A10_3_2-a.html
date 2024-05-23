@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Each overriding virtual function shall be declared with the override or final specifier [AUTOSAR-A10_3_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Each overriding virtual function shall be declared with the override or final specifier [AUTOSAR-A10_3_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a member function declaration or definition is followed by the 'override'
+specifier, it means that this function is virtual and overrides a virtual
+function from the base class.
+
+This rule detects when a member virtual function from the derived class that
+overrides a function from the base class does not include an explicit
+'override' or 'final' specifier.
+
+This rule helps you avoid issues that may result form overloading issues
+instead of overriding issues.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid issues that may occur if a function that should
+be overridden is overloaded instead.
+If determines whether or not overriding is desired and allows the compiler
+to emit a clear error message when a mistake has been made.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+  virtual void v();
+};
+
+class D : public B
+{
+public:
+  virtual void v();                    // Violation
+};
+
+class E : public D
+{
+public:
+  void v();                            // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+  virtual void v();
+};
+
+class D : public B
+{
+public:
+  void v() override;                   // OK
+};
+
+class E : public D
+{
+public:
+  void v() final;                      // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-3-2. Each overriding virtual function shall be declared with the
+   override or final specifier
+
+2. High Integrity C++ Coding Standard
+   10.2.1. Use the override special identifier when overriding a virtual
+   function
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 13.3.1 User-declared member functions shall use the virtual, override and final specifiers appropriately
+
+4. Scott Meyers, "Effective Modern C++: 42 Specific ways to improve your use
+   C++11 and C++14", O'Reilly, Copyright 2015, Chapter 3: "Moving to Modern C++",
+   Item 12
+
+</PRE>
+</BODY>
+</HTML>

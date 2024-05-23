@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Lambda expressions should not be defined inside another lambda expression [AUTOSAR-A5_1_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Lambda expressions should not be defined inside another lambda expression [AUTOSAR-A5_1_8-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Lambda expressions should not be defined inside another lambda
+expression." [AUTOSAR A5-1-8]
+
+This rule reports a violation if a lambda expression is nested inside another 
+lambda expressions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code readability and consistency with the C++ standard.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+void example()
+{
+  std::int16_t x = 0;
+  auto f1 = [&amp;x]() {
+
+    auto f2 = []() {};      // Violation
+    f2();
+
+    auto f4 = []() {};      // Violation
+    f4();
+  };
+
+  f1();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+void example()
+{
+  std::int16_t x = 0;
+  auto f1 = [&amp;x]() {};
+
+  auto f2 = []() {};      // OK
+
+  auto f4 = []() {};      // OK
+
+  f1();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-8. Lambda expressions should not be defined inside another lambda
+   expression.
+
+</PRE>
+</BODY>
+</HTML>

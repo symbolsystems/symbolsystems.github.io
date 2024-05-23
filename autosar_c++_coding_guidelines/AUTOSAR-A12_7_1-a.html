@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define special members as =default when the behavior is equivalent to the compiler's behavior [AUTOSAR-A12_7_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define special members as =default when the behavior is equivalent to the compiler's behavior [AUTOSAR-A12_7_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a class contains a user defined version of a member with the same
+definition as would be provided by the compiler, then it will be less
+error prone and more maintainable to replace the definition with =default."
+[HIC++ v4.0, Rule 12.5.2]
+
+This rule checks if default constructor, copy constructor, move constructor
+or destructor can be defaulted.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code maintainability, reduce confusion, remove
+extraneous code, and comply with coding standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A();                    // Violation
+    A(A&amp; rhs);              // Violation
+    ~A(){ }                 // Violation
+
+private:
+    int m;
+};
+
+A::A() { }                  // Violation
+A::A(A&amp; rhs) : m(rhs.m){ }  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A() = default;         // OK
+    A(A&amp; rhs) = default;   // OK
+    ~A() = default;        // OK
+
+private:
+    int m;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-7-1. If the behavior of a user-defined special member function is
+   identical to implicitly defined special member function, then it shall be
+   defined "=default" or be left undefined
+
+2. High Integrity C++ Coding Standard
+   12.5.2. Define special members =default if the behavior is equivalent
+
+</PRE>
+</BODY>
+</HTML>

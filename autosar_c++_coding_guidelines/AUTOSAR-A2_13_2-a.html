@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+String literals with different encoding prefixes shall not be concatenated [AUTOSAR-A2_13_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+String literals with different encoding prefixes shall not be concatenated [AUTOSAR-A2_13_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Concatenation of wide and narrow string literals leads to undefined behavior."
+[AUTOSAR A2-13-2]
+
+"If both string literals have the same encoding-prefix, the resulting
+concatenated string literal has that encoding-prefix. If one string-literal
+has no encoding-prefix, it is treated as a string-literal of the same
+encoding-prefix as the other operand. If a UTF-8 string literal token
+is adjacent to a wide string literal token, the program is ill-formed.
+Any other concatenations are conditionally-supported with
+implementation-defined behavior." [ISO/IEC 14882:2011]
+
+This rule detects when string literals with different encoding prefixes are
+concatenated.
+
+The rule can recognize following encoding prefixes:
+'u8', 'u', 'U', 'L'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+wchar_t array[] = U"Hello"              // Violation
+                  L"World";
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+wchar_t array[] = L"Hello"              // OK
+                  L"World";
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-13-2 String literals with different encoding prefixes shall not be concatenated.
+
+2. High Integrity C++ Coding Standard
+   2.5.1. Do not concatenate strings with different encoding prefixes
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.7 String literals with different encoding prefixes shall not be concatenated
+
+4. Programming languages -- C++ ISO/IEC 14882:2011
+   2.14.5 String literals
+
+</PRE>
+</BODY>
+</HTML>

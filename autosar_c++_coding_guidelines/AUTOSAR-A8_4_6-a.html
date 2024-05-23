@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use std::move() on rvalue references and std::forward() on forwarding references [AUTOSAR-A8_4_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use std::move() on rvalue references and std::forward() on forwarding references [AUTOSAR-A8_4_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If the function parameter is an rvalue, its contents should be moved rather than
+copied. This allows you to avoid unnecessary copies when working with temporary
+objects. Applying std::move() to an rvalue reference or std::forward() to
+a forwarding reference tells the compiler that the object can be moved.
+
+This rule detects when a function has a parameter of rvalue or a forwarding
+reference to the class/structure type that is not used as an argument to
+std::move() or std::forward(). A violation is reported only if the parameter is
+used or the function is a move constructor from a class that is a derived class
+or contains at least one member of the class/struct type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+std::move() should be applied to rvalue references and std::forward() should be
+applied to forwarding references when they are used in a function for the last
+time.
+
+This rule does not report a violation if std::move() or std::forward()
+is applied to at least one member of the referenced type. An example:
+
+#include &lt;utility&gt;
+
+struct B { int mb; };
+struct A {
+    A(A&amp;&amp; a)                    // Violation not reported
+      : b1(a.b1)
+      , b2(std::move(a.b2)) {}
+    B b1;
+    B b2;
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unnecessary copying, which allows you to save memory
+allocation and provides scope for optimization.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+#include &lt;utility&gt;
+
+class A {
+public:
+    A();
+    A(const A&amp; b);
+    A(A&amp;&amp; b);
+};
+
+class B : A {
+public:
+    B();
+    B(B&amp;&amp; other) : objA(other.objA) {}  // Violation
+    template &lt;typename T&gt;
+    void fooT(T&amp;&amp; obj) {                // Violation
+        str = obj;
+    }
+private:
+    A objA;
+    std::string str;
+};
+
+std::string retStr();
+void instance() {
+    B objB;
+    objB.fooT(retStr());
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+#include &lt;utility&gt;
+
+class A {
+public:
+    A();
+    A(const A&amp; b);
+    A(A&amp;&amp; b);
+};
+
+class B : A {
+public:
+    B();
+    B(B&amp;&amp; other) : objA(std::move(other.objA)) {}  // OK
+    template &lt;typename T&gt;
+    void fooT(T&amp;&amp; obj) {                           // OK
+        str = std::forward&lt;T&gt;(obj);
+    }
+private:
+    A objA;
+    std::string str;
+};
+
+std::string retStr();
+void instance() {
+    B objB;
+    objB.fooT(retStr());
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-8-4. Move constructor shall not initialize its class members and base
+   classes using copy semantics
+
+2. AUTOSAR C++14 Coding Guidelines
+   A8-4-5. "consume" parameters declared as X &amp;&amp; shall always be moved from
+
+3. AUTOSAR C++14 Coding Guidelines
+   A8-4-6. "forward" parameters declared as T &amp;&amp; shall always be forwarded
+
+4. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use of
+   C++11 and C++14", Item 25
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A type, object or function that is used in multiple translation units shall be declared in one and only one file [AUTOSAR-M3_2_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A type, object or function that is used in multiple translation units shall be declared in one and only one file [AUTOSAR-M3_2_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when types, objects or functions with external linkage
+have more than one 'declaration' in different translation units.
+
+"A 'declaration' is the first introduction of a name into a translation unit.
+All subsequent 'declarations' (as per ISO/IEC 14882:2003 �3.2(1)) are
+'re-declarations'. A 'definition' is also always either a 'declaration'
+or 're-declaration', but with the characteristics described in
+ISO/IEC 14882:2003 �3.2(2)". [MISRA C++:2008 Appendix C]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+The rule does not detect forward declarations for types. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Having a single declaration of a type, object or function allows the compiler
+to detect incompatible types for the same entity. Normally, this will mean
+declaring an external identifier in a 'header file' that will be included in
+any file where the identifier is defined or used". [MISRA C++:2008 Rule 3-2-3]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+int a = 10;            /* Violation */
+int f1(int i) {        /* Violation */
+    return i * 3;
+}
+
+/* test2.cpp */
+extern int a;          /* Violation */
+extern int f1(int i);  /* Violation */
+
+int use1() {
+    return a + f1(5);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test2.h', 'test1.cpp'
+and 'test2.cpp'.
+
+/* test2.h */
+extern int a;           /* OK */
+extern int f1(int i);   /* OK */
+
+/* test1.cpp */         /* OK */
+#include " test2.h"
+int use1() {
+    return a + f1(5);
+}
+
+/* test2.cpp */         /* OK */
+#include " test2.h"
+int a = 10;             /* OK */
+int f1(int i) {         /* OK */
+    return i * 3;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+   
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Section 6: Rules, Rule 3-2-3
+
+2. AUTOSAR C++14 Coding Guidelines 
+   M3-2-3. A type, object or function that is used in multiple translation units
+   shall be declared in one and only one file
+
+3. High Integrity C++ Coding Standard
+   7.4.3. Ensure that an object or a function used from multiple translation
+   units is declared in a single header file
+
+</PRE>
+</BODY>
+</HTML>

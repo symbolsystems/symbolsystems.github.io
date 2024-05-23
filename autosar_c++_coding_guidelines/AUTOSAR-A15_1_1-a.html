@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only use instances of std::exception for exceptions [AUTOSAR-A15_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only use instances of std::exception for exceptions [AUTOSAR-A15_1_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Exceptions pass information up the call stack to a point where error handling
+can be performed. If an object of class type is thrown, the class type itself
+serves to document the cause of an exception. Only types that inherit from
+std::exception should be thrown." [HIC++ v4.0, Rule 15.1.1]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Use of exceptions that inherit from std::exception provides a standardized
+contract that is easy to follow.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+
+int foo();
+void bar() {
+    try {
+        if (0 == foo()) {
+            throw - 1; // Violation: exception not based on std::exception
+        }
+    } catch (int32_t e) // Violation: exception not based on std::exception
+    {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+
+int foo();
+void bar() {
+    try {
+        if (0 == foo()) {
+            throw std::runtime_error("unexpected condition"); // OK
+        }
+    } catch (const std::exception &amp;e) // OK
+    {
+        std::cerr &lt;&lt; e.what();
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-1-1. Only instances of types derived from std::exception shall be
+   thrown
+
+2. High Integrity C++ Coding Standard
+   15.1.1. Only use instances of std::exception for exceptions
+
+</PRE>
+</BODY>
+</HTML>

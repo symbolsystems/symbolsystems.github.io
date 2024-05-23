@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A parameter should only be declared as a non-const lvalue reference to 'std::shared_ptr' or 'std::unique_ptr' if the function replaces the managed object [AUTOSAR-A8_4_12-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A parameter should only be declared as a non-const lvalue reference to 'std::shared_ptr' or 'std::unique_ptr' if the function replaces the managed object [AUTOSAR-A8_4_12-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Passing an lvalue reference is suggested to be used if a called function
+is supposed to replace the object managed by the passed 'std::unique_ptr',
+e.g. call assignment operator or reset method. Otherwise, it is recommended
+to pass an lvalue reference to the underlying object instead." [AUTOSAR A8-4-12]
+
+"Passing an lvalue reference to 'std::shared_ptr' is suggested to be used if
+a called function replaces the managed object on at least one code path, e.g.
+call assignment operator or 'reset' method. Otherwise, it is recommended
+to pass an lvalue reference to the underlying object instead." [AUTOSAR A8-4-13]
+
+This rule detects when the type of a function parameter is a non-const lvalue
+reference to a smart pointer 'std::unique_ptr' or 'std::shared_ptr'
+and the following conditions are met:
+- no assignment operator, move operator, or 'reset' function is called
+  on the parameter
+- the parameter is not assigned to an object of a non-const reference type
+- the address of the parameter is not assigned to a pointer to a non-const
+  object
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve clarity and readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+class C { int m; };
+
+void use_shared_C(const std::shared_ptr&lt;C&gt;&amp; lval);
+void use_C(C c);
+
+void foo(std::shared_ptr&lt;C&gt;&amp; lval) {               // Violation
+    use_shared_C(lval);
+};
+
+void bar(std::unique_ptr&lt;C&gt;&amp; lval) {               // Violation
+    use_C(*lval);
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by replacing the non-const lvalue reference
+with a const lvalue reference or with a reference to the underlying object.
+
+#include &lt;memory&gt;
+
+class C { int m; };
+
+void use_shared_C(const std::shared_ptr&lt;C&gt;&amp; lval);
+void use_C(C c);
+
+void foo(const std::shared_ptr&lt;C&gt;&amp; lval) {         // OK
+    use_shared_C(lval);
+};
+
+void bar(C&amp; lval) {                                // OK
+    use_C(lval);
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-12 A std::unique_ptr shall be passed to a function as:
+   (1) a copy to express the function assumes ownership
+   (2) an lvalue reference to express that the function replaces the managed object.
+
+2. AUTOSAR C++14 Coding Guidelines
+   A8-4-13 A std::shared_ptr shall be passed to a function as:
+   (1) a copy to express the function shares ownership
+   (2) an lvalue reference to express that the function replaces the managed object
+   (3) a const lvalue reference to express that the function retains a reference count.
+
+</PRE>
+</BODY>
+</HTML>

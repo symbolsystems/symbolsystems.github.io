@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only those escape sequences that are defined in ISO/IEC 14882:2014 shall be used [AUTOSAR-A2_13_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only those escape sequences that are defined in ISO/IEC 14882:2014 shall be used [AUTOSAR-A2_13_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of an undefined escape sequence leads to undefined behavior.
+The defined escape sequences (ISO/IEC 14882:2014) are: \', \", \?, \\, \a, \b,
+\f, \n, \r, \t, \v, \&lt;Octal Number&gt;, \x&lt;Hexadecimal Number&gt;." [AUTOSAR A2-13-1]
+
+The rule detects when a character constant or a string constant contains the
+'\' character that is not used either to define an escape sequence or to create
+a universal character name.
+
+See also: NAMING-48
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Universal-character-names (\u hex-quad and \U hex-quad hex-quad) are also
+allowed in character and string literals" [AUTOSAR A2-13-1]
+
+This rule allows every use of '\' before 'u' or 'U' and does not check
+if the value of the universal character name is correct.
+
+The rule does not detect '\' characters in raw strings. In raw strings any
+escape sequences are not processed.
+
+The rule does not detect '\' characters used in #include directives.
+These characters should not be used in any case in #include directives
+and are disallowed by another rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( char c, const char* s )
+{
+    c = '\k';           // Violation
+    s = "dir1\dir2";    // Violation
+    s = " \ unknown";   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+void f1( char c, const char* s )
+{
+    c = '\t';           // OK
+    s = "name \n";      // OK
+    s = "\u1234";       // OK
+    s = R"(abc \def)";  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-13-1. Only those escape sequences that are defined in ISO/IEC 14882:2014
+   shall be used
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.1 Within character literals and non raw-string literals, \ shall only be used to form a defined escape sequence or universal character name
+
+</PRE>
+</BODY>
+</HTML>

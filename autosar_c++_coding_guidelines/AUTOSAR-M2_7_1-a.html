@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The character sequence /* shall not be used within a C-style comment [AUTOSAR-M2_7_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The character sequence /* shall not be used within a C-style comment [AUTOSAR-M2_7_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation if "/*" is embedded in "/*" comment.
+
+A C-style comment begins with /* and continues until the first */
+is encountered.
+
+C does not support the nesting of comments even though 
+some compilers support this as a language extension.
+
+MISRA C:2012 standard says:
+   If a comment starting sequence /* occurs within a /* comment,
+   is it quite likely to be caused by a missing */ comment ending sequence.
+
+See also: COMMENT-11, COMMENT-12
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+MISRA C:2012 standard suggests using conditional compilation (e.g. #if or
+   #ifdef) instead of comments to "comment out" sections of code.
+
+C99 added "//" comments.
+
+To check other combinations of embedded comments see COMMENT-11 and
+COMMENT-12 rules.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Detects possible accidental ommision of "*/" end-comment marker.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Violation - some comment, end-comment marker accidentally omitted
+
+&lt;new page&gt;
+Perform_Safety_Critical_Code();
+
+/* another comment closes the first comment so there are no parse errors */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* review the code and decide if end-comment marked should be added */
+
+/* alternatively, if the decide the comment/code is correct, you could
+   remove/mangle the embedded comment marker:
+
+&lt;new page&gt;
+Perform_Safety_Critical_Code();
+
+end of comment */
+
+/* the suggested way to "comment out" code is to use conditional compilation: */
+#if 0
+Perform_Safety_Critical_Code();
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M2-7-1. The character sequence /* shall not be used within a C-style
+   comment
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-7-1
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.7.1 The character sequence /* shall not be used within a C-style comment
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 3.1
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 2, Rule 2.3
+
+6. Origin: Misra Guidelines - Rule 9
+
+7. SEI CERT C Coding Standard
+   MSC04-C. Use comments consistently and in a readable fashion
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion">https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion</A>
+
+</PRE>
+</BODY>
+</HTML>

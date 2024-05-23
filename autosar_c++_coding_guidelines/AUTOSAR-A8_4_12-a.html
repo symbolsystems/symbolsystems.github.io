@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass std::unique_ptr by const reference [AUTOSAR-A8_4_12-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass std::unique_ptr by const reference [AUTOSAR-A8_4_12-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Passing a std::unique_ptr by const reference does not make the underlying
+pointer point to const data and is therefore misleading in most cases. Instead,
+you should pass std::unique_ptr object types as non-const references or by
+value.
+
+This rule reports a violation when it detects that std::unique_ptr is being
+passed by const reference.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves code clarity and prevents potential undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Passing a parameter of const std::unique_ptr&amp; disallows modification of the
+std::unique_ptr, itself (i.e., prevents reassignment or reset).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;memory&gt;
+void foo(const std::unique_ptr&lt;int32_t&gt; &amp;p_impl_detail); // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;memory&gt;
+void foo(std::unique_ptr&lt;int32_t&gt; &amp;p_impl_detail); // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-12. A std::unique_ptr shall be passed to a function as: (1) a copy to
+   express the function assumes ownership (2) an lvalue reference to express
+   that the function replaces the managed object
+
+2. High Integrity C++ Coding Standard
+   8.2.4. Do not pass std::unique ptr by const reference
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A copy assignment operator should be declared when a copy constructor is declared (and vice versa) [AUTOSAR-A1_1_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A copy assignment operator should be declared when a copy constructor is declared (and vice versa) [AUTOSAR-A1_1_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If you declare a copy constructor or copy assignment operator, also declare 
+the other one.
+
+The two methods should have similar effects. For example, if one is designed to
+perform a particular task, it is likely that the other should also perform that
+task. Similarly, if you wanted to disallow copying by declaring one of them as
+private, the other should probably be declared as private as well.
+
+
+See also: MRM-40_b, MRM-37, MRM-38, MRM-47, MRM-48, MRM-49, OOP-27
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check if both methods are declared in a similar way. For
+example, it will not report if one is declared private and the other is 
+defined public.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents memory management problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {       // Violation - copy constructor is missing
+public:
+    A&amp; operator=( const A&amp; f ) {
+        return *this;
+    }
+};
+
+struct B {       // Violation - assignment operator is missing
+private:
+    B( B&amp; );
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {       // OK - both are declared
+public:
+    A&amp; operator=( const A&amp; ) {
+        return *this;
+    }
+    A( const A&amp; );
+};
+
+struct B {       // OK - both are declared
+public:
+    B&amp; operator=( const B&amp; );
+private:
+    B( B&amp; );
+};
+
+struct C {       // OK - neither is declared
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 52
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. AUTOSAR C++14 Coding Guidelines
+   A1-1-1. All code shall conform to ISO/IEC 14882:2014 - Programming Language
+   C++ and shall not use deprecated features.
+
+4. Programming languages -- C++ ISO/IEC 14882:2011
+   D.3 Implicit declaration of copy functions
+
+5. Programming languages -- C++ ISO/IEC 14882:2014 
+   D.3 Implicit declaration of copy functions
+
+</PRE>
+</BODY>
+</HTML>

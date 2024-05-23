@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Implicit conversions from integral to floating type which may result in a loss of information shall not be used [AUTOSAR-A4_7_1-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Implicit conversions from integral to floating type which may result in a loss of information shall not be used [AUTOSAR-A4_7_1-g-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C and C++ perform many type conversions implicitly and silently,
+so as to harmonize types within an expression before evaluating it.
+Some of these conversions can result in loss of information. 
+Such implicit conversions shall not be used, but explicit casts
+should be used instead."
+
+The rule reports a violation if an expression of integral type
+is implicitly converted to a floating type and the loss of data
+is possible. The rule checks sizes for types and reports violation
+only if the size of integral type is greater or equal to size of
+floating type.
+
+See also: MISRA2004-10_1_b, MISRA2004-10_1_d, MISRA2004-10_2_a,
+MISRA2004-10_2_b, PORT-27, PORT-28
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The size of type depends from compiler version, so the rule can report
+different violations for different compilers.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report violation if a conversion is used:
+- on a simple integer or enumeration constant
+- on a bit field
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicit casts should normally only be used in the case where a conversion 
+which could result in a loss of information is specifically required by the 
+programmer. If the static checking of implicit conversions is overridden by
+the use of explicit casts in this way, then the programmer should be aware
+of the issues of truncation and lost of precision associated with the operation,
+and should provide appropriate checking of values in the code"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(float fp);
+
+double foo(unsigned int ui, long l)
+{
+    unsigned long long ull;
+    float f = ui;           /* Violation: unsigned int assigned to float */
+    f = l;                  /* Violation: long assigned to float */
+    bar(ui);                /* Violation: unsigned int assigned to float */
+    return ui + ull;        /* Violation: unsigned int assigned to float */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar(float fp);
+
+double foo(unsigned int ui, long l)
+{
+    unsigned long long ull;
+    unsigned char uc;
+    /* Use explicit cast if you are sure no information loss is possible */
+    float f = (float)ui;   /* OK (explicit cast) */
+    
+    /* Assign to wider floating type */
+    double d;
+    d = l;
+    bar((float)ui);              /* OK (explicit cast) */
+    f = uc;                      /* OK - not possible loss of data */
+    return ui + (double)ull;     /* OK (explicit cast) */
+}
+
+/* exceptions */
+
+struct S {unsigned int uib : 3;} s;
+
+void except(){
+    /* Violation is not reported if a simple constant in assigned,
+     * but is reported if a constant expression is assigned */
+    float f1 = 300;       /* OK - simple constant */
+    float f2 = 100 + 200; /* Violation - constant expression */
+    f1 = s.uib;           /* OK - bit field */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-7-1. An integer expression shall not lead to data loss
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 180
+
+3. Origin: Misra Guidelines rule 43
+
+4. SEI CERT C Coding Standard
+   FLP06-C. Convert integers to floating point for floating-point operations
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP06-C.+Convert+integers+to+floating+point+for+floating-point+operations">https://wiki.sei.cmu.edu/confluence/display/c/FLP06-C.+Convert+integers+to+floating+point+for+floating-point+operations</A>
+
+5. SEI CERT C Coding Standard
+   FLP36-C. Preserve precision when converting integral values to floating-
+   point type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP36-C.+Preserve+precision+when+converting+integral+values+to+floating-point+type">https://wiki.sei.cmu.edu/confluence/display/c/FLP36-C.+Preserve+precision+when+converting+integral+values+to+floating-point+type</A>
+
+6. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

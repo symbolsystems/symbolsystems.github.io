@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All std::hash specializations for user-defined types shall have a noexcept function call operator [AUTOSAR-A18_1_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All std::hash specializations for user-defined types shall have a noexcept function call operator [AUTOSAR-A18_1_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Some of the standard library containers use std::hash indirectly.  Function
+call operator should be defined as noexcept to prevent container simple
+access from throwing an exception." [AUTOSAR A18-1-6]
+
+This rule detects any specialization of std::hash function call operator
+which may throw an exception.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This is a standard library requirement.  Helps to prevent unexpected
+exceptions while using std::unordered_map and std::unordered_set, and the
+multimap and multiset variants.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+
+struct A { };
+
+// Note to support proper ADL std::hash specializations should be injected
+// into the std namespace.
+namespace std
+{
+    template&lt;&gt;
+    struct hash&lt;A&gt;
+    {
+        std::size_t operator()(const A&amp;) const;  // Violation
+    };
+} // namespace std
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+
+struct A { };
+
+// Note to support proper ADL std::hash specializations should be injected
+// into the std namespace.
+namespace std
+{
+    template&lt;&gt;
+    struct hash&lt;A&gt;
+    {
+        std::size_t operator()(const A&amp;) const noexcept; // OK
+    };
+} // namespace std
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-1-6. All std::hash specializations for user-defined types shall have a
+   noexcept function call operator
+
+2. C++ Core Guidelines
+   C.89. Make a hash noexcept
+
+</PRE>
+</BODY>
+</HTML>

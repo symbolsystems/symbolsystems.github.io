@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no implicit conversions from integral to floating type [AUTOSAR-M5_0_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no implicit conversions from integral to floating type [AUTOSAR-M5_0_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversions from integral types to floating point types may not result
+in an exact representation, which may not be consistent with developer
+expectations."
+The rule reports a violation if variable/parameter/constant/expression
+of integral type is implicitly converted to floating type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents confusions and possible loss of information.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void get_double(double d);
+
+float Conv1_int(short s) {
+    float f32a = 1;             /* Violation */
+    unsigned int u32a;
+
+    f32a = u32a;                /* Violation */
+    f32a = f32a + u32a;         /* Violation */
+    f32a = u32a + 2.5f;         /* Violation */
+    f32a = f32a - 1;            /* Violation */
+    
+    get_double(s);              /* Violation */
+    
+    return 0;                   /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void get_double(double d);
+
+float Conv1_int(short s) {
+    float f32a = 1.0f;             /* OK */
+    unsigned int u32a;
+
+    f32a = (float)u32a;            /* OK */
+    f32a = f32a + (float)u32a;     /* OK */
+    f32a = (float)u32a + 2.5f;     /* OK */
+    f32a = f32a - 1.0f;            /* OK */
+    
+    get_double((double)s);         /* OK */
+    
+    return 0.0f;                   /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-5. There shall be no implicit floating-integral conversions
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-5
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10
+
+5. SEI CERT C Coding Standard
+   EXP39-C. Do not access a variable through a pointer of an incompatible type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP39-C.+Do+not+access+a+variable+through+a+pointer+of+an+incompatible+type">https://wiki.sei.cmu.edu/confluence/display/c/EXP39-C.+Do+not+access+a+variable+through+a+pointer+of+an+incompatible+type</A>
+
+</PRE>
+</BODY>
+</HTML>

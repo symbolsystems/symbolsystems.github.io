@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not modify the standard namespaces 'std' and 'posix' [AUTOSAR-A17_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not modify the standard namespaces 'std' and 'posix' [AUTOSAR-A17_6_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The behavior of a C++ program is undefined if it adds declarations
+or definitions to namespace 'std' or to a namespace within namespace
+'std' unless otherwise specified." [ISO/IEC 14882:2011]
+
+"The behavior of a C++ program is undefined if it adds declarations
+or definitions to namespace 'posix' or to a namespace within namespace
+'posix' unless otherwise specified." [ISO/IEC 14882:2011]
+
+This rule detects when the 'std' or 'posix' namespace is defined
+or extended by the user.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule detects all cases when the standard 'std' and 'posix' namespaces
+are modified by the user. It does not take into account the following
+exception allowed by C++ standard:
+
+"A program may add a template specialization for any standard
+library template to namespace 'std' only if the declaration depends
+on a user-defined type and the specialization meets the standard
+library requirements for the original template and is not explicitly
+prohibited." [ISO/IEC 14882:2011]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+namespace std {        // Violation
+    int i;
+}
+
+namespace posix {      // Violation
+    void f();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+namespace user_std {   // OK
+    int i;
+}
+
+namespace user_posix { // OK
+    void f();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A17-6-1. Non-standard entities shall not be added to standard namespaces
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   17.6.4.2.1 Namespace std, 17.6.4.2.2 Namespace posix
+
+3. SEI CERT C++ Coding Standard
+   DCL58-CPP. Do not modify the standard namespaces
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL58-CPP.+Do+not+modify+the+standard+namespaces">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL58-CPP.+Do+not+modify+the+standard+namespaces</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass a pointer that has insufficient storage capacity or that is not suitably aligned for the object being constructed to placement 'new' [AUTOSAR-A18_5_10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass a pointer that has insufficient storage capacity or that is not suitably aligned for the object being constructed to placement 'new' [AUTOSAR-A18_5_10-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"[W]hen the allocation function returns a value other than null, it must be
+a pointer to a block of storage in which space for the object has been
+reserved. The block of storage is assumed to be appropriately aligned
+and of the requested size. The address of the created object will not
+necessarily be the same as that of the block if the object is an array."
+[ISO/IEC 14882-2014]
+
+"Do not pass a pointer that is not suitably aligned for the object being
+constructed to placement new. Doing so results in an object being constructed
+at a misaligned location, which results in undefined behavior. Do not pass
+a pointer that has insufficient storage capacity for the object being
+constructed, including the overhead required for arrays. Doing so may result
+in initialization of memory outside of the bounds of the object being
+constructed, which results in undefined behavior." [CERT-CPP-MEM54]
+
+This rule detects when the placement argument that is passed to an allocation
+function (placement 'new') is one of the following:
+- an address to insufficient storage capacity
+- an array of insufficient or not suitably aligned storage capacities
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior, including a buffer overflow
+and an abnormal termination.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+
+short shortVar;
+int *ip = ::new (&amp;shortVar) int;          // Violation if sizeof(short) &lt; sizeof(int)
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+
+int intVar;
+int *ip = ::new (&amp;intVar) int;            // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-10. Placement new shall be used only with properly aligned pointers
+   to sufficient storage capacity
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   5.3.4 New
+
+3. SEI CERT C++ Coding Standard
+   MEM54-CPP. Provide placement new with properly aligned pointers to sufficient storage capacity
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM54-CPP.+Provide+placement+new+with+properly+aligned+pointers+to+sufficient+storage+capacity">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM54-CPP.+Provide+placement+new+with+properly+aligned+pointers+to+sufficient+storage+capacity</A>
+
+</PRE>
+</BODY>
+</HTML>
