@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A thread-specific storage should not be created by a thread [MISRAC2012-RULE_22_20-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A thread-specific storage should not be created by a thread [MISRAC2012-RULE_22_20-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a thread-specific storage pointer is 
+created inside of a thread.
+
+For a list of recognized thread-creating functions, see the rule BD-TRS-THRTHR.
+
+This rule recognizes the following creation functions for 
+thread-specific storage pointers:
+
+&lt;threads.h&gt; (C Standard Library)
+    int tss_create( tss_t* tss_key, tss_dtor_t destructor )
+    
+&lt;pthread.h&gt; (POSIX)
+    int pthread_key_create(pthread_key_t *key, void (*destructor)(void*));
+
+&lt;processthreadsapi.h&gt; (Windows)
+    DWORD TlsAlloc();
+
+If any of these functions is called (directly or indirectly) from a function which itself
+is a thread entry point, the rule will report a violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Creating a thread-specific storage pointer inside of a thread can cause 
+undefined behavior. It can cause a thread-specific storage pointer to be accessed
+before it is created. 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent threads from accessing thread-specific storage pointers 
+with indeterminate state.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+
+static pthread_key_t key;
+
+void *thread(void *ptr)
+{
+    pthread_key_create(&amp;key, NULL); // VIOLATION
+    return 0;
+}
+
+int main(int argc, char **argv)
+{
+    pthread_t thread1;
+    pthread_create(&amp;thread1, NULL, &amp;thread, NULL);              
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, create the thread-specific storage pointer outside of the created thread.
+
+#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+
+static pthread_key_t key;
+
+void *thread(void *ptr)
+{
+    
+    return 0;
+}
+
+int main(int argc, char **argv)
+{
+    pthread_t thread1;
+    pthread_key_create(&amp;key, NULL); // NO VIOLATION
+    pthread_create(&amp;thread1, NULL, &amp;thread, NULL);              
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.20
+
+</PRE>
+</BODY>
+</HTML>

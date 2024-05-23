@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Evaluation of constant unsigned integer expressions in preprocessor directives should not lead to wraparound [MISRA-051_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Evaluation of constant unsigned integer expressions in preprocessor directives should not lead to wraparound [MISRA-051_b-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Because unsigned integer expressions do not strictly overflow, but instead
+wrap around in a modular way, any constant unsigned integer expressions
+which in effect 'overflow' will not be detected by the compiler."
+[MISRA-C:1998]
+
+The rule detects preprocessor directives that contain the subtraction of two
+unsigned integer constants, which results in a wraparound.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps prevent wraparound for unsigned integers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#if (1u - 2u) /* Violation */
+/* ... */
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid wraparound for unsigned integers.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-190: Integer Overflow or Wraparound
+   <A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.25 Expressions, AV Rule 203
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.20.1 An unsigned arithmetic operation with constant operands should not wrap
+
+4. Origin: Misra Guidelines - Rule 51
+
+5. SEI CERT C Coding Standard
+   MSC14-C. Do not introduce unnecessary platform dependencies
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC14-C.+Do+not+introduce+unnecessary+platform+dependencies">https://wiki.sei.cmu.edu/confluence/display/c/MSC14-C.+Do+not+introduce+unnecessary+platform+dependencies</A>
+
+6. SEI CERT C Coding Standard
+   MSC15-C. Do not depend on undefined behavior
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC15-C.+Do+not+depend+on+undefined+behavior">https://wiki.sei.cmu.edu/confluence/display/c/MSC15-C.+Do+not+depend+on+undefined+behavior</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Don't cast the dividend of two integers to a floating-point type [MISRA-048_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Don't cast the dividend of two integers to a floating-point type [MISRA-048_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In an expression, sub-expressions are evaluated at the precision appropriate
+to the types of the operands. This may be less than the precision of the final
+result. It is therefore possible to be misled into creating sub-expressions
+which are evaluated at the wrong precision, which may result in values which
+are not as the programmer intended." [MISRA C:1998]
+
+The operands of division ('/') shall have arithmetic or enumeration type.
+The usual arithmetic conversions are porformed on the operands and determine
+the type of the result. The result of division of two integral values
+is an integral value.
+
+The rule reports a violation if the result of division of two integral values
+is explicitly cast to a floating-point type.
+
+See also: MISRA2004-10_4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents possible loss of data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+   int a = 3;
+   int b = 4;
+   double d = (double)(a/b);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+   int a = 3;
+   int b = 4;
+   double d = (double)a/b;    // OK
+   d = a/(double)b;           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 48
+
+</PRE>
+</BODY>
+</HTML>

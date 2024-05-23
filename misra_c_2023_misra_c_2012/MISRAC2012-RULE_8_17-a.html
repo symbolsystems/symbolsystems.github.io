@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A declaration of an object should contain at most one explicit alignment specifier [MISRAC2012-RULE_8_17-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A declaration of an object should contain at most one explicit alignment specifier [MISRAC2012-RULE_8_17-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When multiple alignment specifiers occur in a declaration, the effective
+alignment requirement is the strictest specified alignment."[ISO/IEC 9899:2011]
+
+"If separate conditions require different minimum permitted alignments
+for an object, they should be combined explicitly by the expression controlling
+the specifier. Otherwise, the conflicting alignment specifiers risk obscuring
+the intent of the declaration from a human reviewer." [MISRA C:2012 Amendment 3]
+
+The rule detects declarations of variables with more than one alignment
+specifier. The rule checks the standard alignment specifiers 'alignas'
+and '_Alignas'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdalign.h&gt;
+
+alignas (16) alignas (8) int g;                              // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the redundant alignment specifier.
+
+#include &lt;stdalign.h&gt;
+
+alignas (8) int g;                                           // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.5 Rule 8.17
+
+2. Programming languages -- C ISO/IEC 9899:2011
+   6.7.5 Alignment specifier
+
+</PRE>
+</BODY>
+</HTML>

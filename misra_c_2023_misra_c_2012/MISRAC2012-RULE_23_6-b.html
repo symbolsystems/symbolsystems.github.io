@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enumerated types should not be mixed with integer types in generic selections [MISRAC2012-RULE_23_6-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enumerated types should not be mixed with integer types in generic selections [MISRAC2012-RULE_23_6-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Because an enumerated type is compatible with its implementation-defined
+underlying type, it is not distinguishable from the underlying type by
+_Generic (although distinguishing different enumerated types is possible
+because this compatibility is not transitive). Attempting to list both would
+be a constraint violation. Therefore, using an enumerated type as the
+controlling expression to a generic selection that lists the underlying type,
+or vice versa, is always a violation." [MISRA C:2012 Amendment 3]
+
+"Each enumerated type shall be compatible with char, a signed integer type,
+or an unsigned integer type. The choice of type is implementation-defined,
+but shall be capable of representing the values of all the members of the
+enumeration." [ISO/IEC 9899:2011]
+
+The rule detects when:
+- the controlling expression of a generic selection has an enumerated type
+  and a char, a signed integer type or an unsigned integer type is used
+  in the association list, or
+- the controlling expression of a generic selection has a char, a signed
+  integer type or an unsigned integer type and an enumerated type is used
+  in the association list
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E {A = 0, B = 1};
+
+#define GENERIC(X) (_Generic ((X) \
+ , int: 1                         \
+ , default: 2))
+
+void f1(int a)
+{
+    int i = _Generic ((a), enum E: 1, default: 2);          // Violation
+    enum E e;
+    i = GENERIC(e);                                         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use enumerated types in controlling expressions
+and the association lists of generic selections.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.6
+
+2. Programming languages -- C ISO/IEC 9899:2011
+   6.7.2.2 Enumeration specifiers
+
+</PRE>
+</BODY>
+</HTML>

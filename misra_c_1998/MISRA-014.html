@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Explicitly declare 'char' type as signed or unsigned [MISRA-014]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Explicitly declare 'char' type as signed or unsigned [MISRA-014-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The type 'char' may be implemented as a signed or an unsigned type depending
+on the compiler. Rather than making any assumptions about the compiler,
+it is preferable (and more portable) to always specify whether the required
+use of 'char' is signed or unsigned."
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a type of variable is a typedef to char, then a violation is reported only
+on a typedef declaration. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Complying with this rule leads to safer and more readable code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef char CHAR; // Violation
+
+char foo(char)     // Violation x 2
+{
+   char var1;      // Violation
+   CHAR var2;      // OK - Violation is reported on a typedef declaration
+}
+
+char (*fptr1)();      // Violation
+void (*fptr2)(char);  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef unsigned char CHAR;      // OK
+
+unsigned char foo(unsigned char) // OK
+{
+    unsigned char var1;          // OK
+    CHAR var2;                   // OK
+}
+
+unsigned char (*fptr1)();        // OK
+void (*fptr2)(unsigned char);    // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 14
+
+2. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 18 Portable Code - 18.2 Sizes of Types - Port. Rec. 4
+
+</PRE>
+</BODY>
+</HTML>

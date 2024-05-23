@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions shall have prototype declarations and the prototype shall be visible at both the function definition and call [MISRA-071_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions shall have prototype declarations and the prototype shall be visible at both the function definition and call [MISRA-071_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Functions shall have prototype declarations and the prototype shall be visible
+at both the function definition and call." [MISRA C:2004 Rule 8.1]
+
+The rule requires that prototype (declaration of function that explicitly
+declares types of all parameters or uses explicit 'void' if the function
+does not have parameters) must be declared before the function is defined
+or called.
+
+This rule is active for C code only.
+
+See also: MISRA-071_b, MISRA2004-8_2_b, MISRA2004-8_3_b, MISRA2004-16_4,
+          MISRA2004-16_5, MISRA2004-16_6,
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The recommended method of implementing function prototypes for external
+functions is to declare the function (i.e. give the function prototype)
+in a header file, and then include the header file in all those code files
+that need the prototype." [MISRA C:2004 Rule 8.1]
+
+For calls to functions defined outside the project, the rule does not check
+whether the prototype has been previously declared. For this reason, the set of 
+violations reported for the same file may vary, depending on the scope of
+analysis.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The use of prototypes enables the compiler to check the integrity of function
+definitions and calls. Without prototypes the compiler is not obliged to pick up
+certain errors in function calls (e.g. different number of arguments from
+the function body, mismatch in types of arguments between call and definition).
+Function interfaces have been shown to be a cause of considerable problems,
+and therefore this rule is considered very important." [MISRA C:2004 Rule 8.1]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* file.c */
+
+void foo2();                      /* not a prototype */
+void foo3(x, y);                  /* not a prototype */
+
+void funCall(void);
+void funCall(void)
+{
+    foo1();    /* Violation - call without prototype */
+    foo2();    /* Violation - call without prototype */
+    foo3(1,2); /* Violation - call without prototype */
+    foo4();    /* Violation - prototype declared after function call */
+}
+
+/* definitions without prototype */
+void foo1(void) {}                /* Violation */
+void foo2() {}                    /* Violation */
+void foo3(x, y) int x; int y; {}  /* Violation */
+
+/* prototype declared after function definition */
+void foo4(void) { }               /* Violation */
+void foo4(void);
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* file.h */
+
+void foo1(void);         /* prototype was added */
+void foo2(void);         /* 'void' was added */
+void foo3(int x, int y); /* explicit types were added */
+void foo4(void);         /* prototype was moved to header */
+
+/* file.c */
+#include "file.h"
+
+void funCall(void);
+void funCall(void)
+{
+    foo1();      /* OK */
+    foo2();      /* OK */
+    foo3(1,2);   /* OK */
+    foo4();      /* OK */
+}
+
+void foo1(void) {}                /* OK */
+void foo2() {}                    /* OK */
+void foo3(x, y) int x; int y; {}  /* OK */
+void foo4(void) { }               /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 71
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8, Rule 8.1
+
+</PRE>
+</BODY>
+</HTML>

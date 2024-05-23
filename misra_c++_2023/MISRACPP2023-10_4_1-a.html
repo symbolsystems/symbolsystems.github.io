@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'asm' declaration should not be used [MISRACPP2023-10_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'asm' declaration should not be used [MISRACPP2023-10_4_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Use of inline assembly should be avoided since it restricts the portability
+of the code." [High Integrity C++]
+
+This rule detects when the 'asm' declaration is used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects only 'asm' declarations according to the C++ standard:
+  asm ( string-literal ) ;
+Any language extensions that use assembly language are not detected.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability and avoid implementation-defined
+behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int f1(int par) {
+    int res;
+    asm("/*add par+res */");         // Violation
+    return res;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1(int par) {
+    int res;
+    res += par;                      // OK
+    return res;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-4-1. The asm declaration shall not be used
+
+2. High Integrity C++ Coding Standard
+   7.5.1. Do not use the asm declaration
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.4.1 The asm declaration shall not be used
+
+</PRE>
+</BODY>
+</HTML>

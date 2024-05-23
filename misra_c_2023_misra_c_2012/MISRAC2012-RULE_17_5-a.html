@@ -1,0 +1,190 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The function argument corresponding to a parameter declared to have an array type shall have an appropriate number of elements [MISRAC2012-RULE_17_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The function argument corresponding to a parameter declared to have an array type shall have an appropriate number of elements [MISRAC2012-RULE_17_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a parameter is declared as an array with a specified size, the corresponding
+argument in each function call should point into an object that has at least as
+many elements as the array.
+
+The use of an array declarator for a function parameter specifies the function
+interface more clearly than using a pointer. The minimum number of elements
+expected by the function is explicitly stated, whereas this is not possible
+with a pointer.
+
+A function parameter array declarator which does not specify a size is assumed
+to indicate that the function can handle an array of any size. In such cases,
+it is expected that the array size will be communicated by some other means,
+for example by being passed as another parameter, or by terminating the array
+with a sentinel value."
+[MISRA C:2012 Rule 17.5]
+
+The rule reports a violation if you call a function declared with an array
+parameter and you pass an array which has smaller rank.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The rank of an single-dimensional array is the bound of the array (number of
+elements). The rank of a multi-dimensional array is the result of multiplication
+of all bounds. For example:
+   int tab1[5];    // rank = 5
+   int tab2[2][3]; // rank = 6  
+
+2. If array declaration does not specify number of elements (neither explicitly
+not through initializer) then no violation is reported. For example:
+  void f01(int tab[][5]); // tab parameter has unspecified number of elements
+  void call() {
+    int tab[2][2];
+    f01(tab); // OK
+  }
+
+3. Element type size is ignored when comparing array ranks. For example:
+  void f01(int tab[10]);
+  void calls (short tab[10]) {
+    f01(tab); // OK
+  }
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. Code flow is not tracked - the rule checks only expressions with array type.
+If a pointer points to an array a violation will not be reported even if the
+array is too small. For example:
+  void foo(int a[10]);
+  void f() {
+    int a1[5];
+    int* ptr = a1;
+    foo(ptr); /* Violation not reported, type of ptr is pointer, not an array */
+  }
+ 
+2. No violation is reported if array has incomplete element type. For example:
+  // C++ code
+  struct S;
+  void foo(S tab[10]); // array with incomplete type
+  void call(S tab[5]) {
+    foo(tab);          // No violation reported
+  }
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The use of an array bound is recommended as it allows out-of-bounds checking
+to be implemented within the function body and extra checks on parameter
+passing. It is legal in C to pass an array of the incorrect size to a parameter
+with a specified size, which can lead to unexpected behaviour."
+[MISRA C:2012 Rule 17.5]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(int a[10]);
+void foo2(int a[3][5]);
+
+void f1(int p1[5])
+{
+    int a1[] = {1,2,3,4};
+    int a2[4][2];
+
+    foo1(p1);                 /* Violation */
+    foo1(a1);                 /* Violation */
+    foo2(a2);                 /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(int a[5]);
+void foo2(int a[3][5]);
+
+void f1(int p1[10])
+{
+    int a1[] = {1,2,3,4,5};
+    int a2[4][4];
+    int a3[20];
+
+    foo1(p1);                 /* OK */
+    foo1(a1);                 /* OK */
+    foo2(a2);                 /* OK */
+    foo2(a3);                 /* OK */
+}
+
+/* These functions handles arrays of any size */
+void foo3(int a[ ]);
+void foo4(int* ptr);
+void foo5(int a[ ][5]);
+void foo6(int (*a)[5]);
+
+void f2()
+{
+    int a1[5];
+    int a2[3][5];
+    
+    foo3(a1);                 /* OK */
+    foo4(a1);                 /* OK */
+    foo5(a2);                 /* OK */
+    foo6(a2);                 /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.5
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions from narrower to wider floating type [MISRA2004-10_2_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions from narrower to wider floating type [MISRA2004-10_2_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The value of an expression of floating type shall not be implicitly
+converted to a different type if:
+- it is not a conversion to a wider floating type, or
+- the expression is complex, or
+- the expression is a function argument, or
+- the expression is a return expression."
+
+The rule reports a violation if a conversion from narrower to wider floating
+type is used and the converted expression is complex, function argument
+or return expression.
+
+Conversions from wider to narrower floating type are detected
+by rule MISRA2004-10_2_b.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The term 'complex expression' is defined to mean any expression that is not:
+- a constant expression
+- an lvalue (i.e. an object)
+- the return value of a function"
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"By observing the principle whereby all operations are performed in 
+a consistent type, it is possible to avoid programmer confusion"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void getDouble(double d);
+
+double foo1( ) {
+    double d1, d2;
+    float f1, f2;
+
+    d1 = f1 + f2 + d2;  // Violation
+    getDouble(f1);      // Violation
+    return 10.0f;       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void getDouble(double d);
+
+double foo1( ) {
+    double d1, d2;
+    float f1, f2;
+
+    d1 = f1 + (f2 + d2);   // OK
+    getDouble((double)f1); // OK
+    return 10.0;           // OK
+}
+
+// Examples of correct code
+float retFloat();
+void foo2(){
+    double d1, d2;
+    float f1, f2;
+    float* pf;
+    
+    d1 = d2 + f1 + f2;   // OK
+    d1 = *pf;            // OK
+    d1 = retFloat();     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+3. SEI CERT C Coding Standard
+   FLP03-C. Detect and handle floating-point errors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors">https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

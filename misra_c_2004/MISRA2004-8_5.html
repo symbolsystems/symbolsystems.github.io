@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no definitions of objects or functions in a header file [MISRA2004-8_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no definitions of objects or functions in a header file [MISRA2004-8_5-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Header files should be used to declare objects, functions, typedefs, 
+and macros. Header files shall not contain or produce definitions of objects
+or functions (or fragment of functions or objects) that occupy storage."
+See also: PFO-01
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule is enabled only for C language.
+"A header file is defined as any file that is included via #include,
+as opposed to any file with the .h suffix."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+By not having definitions in header files it's possible to 
+include headers in multiple translation units.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* file.h */
+int var1;                   /* Violation */
+const int var2;             /* Violation */
+static int var3;            /* Violation */
+static const int var4;      /* Violation */
+extern const int var5 = 5;  /* Violation */
+
+void foo1(){}               /* Violation */
+extern void foo2(){}        /* Violation */
+inline void foo3(){}        /* Violation */
+static void foo4(){}        /* Violation */
+
+/* file.c */
+#include "file.h"
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* file.h */
+extern int var1;            /* OK */
+extern const int var2;      /* OK */
+extern const int var5;      /* OK */
+
+void foo1();                /* OK */
+extern void foo2();         /* OK */
+inline void foo3();         /* OK */
+
+/* file.c */
+#include "file.h"
+
+int var1;
+const int var2;
+static int var3;
+static const int var4;
+const int var5 = 5;
+
+void foo1(){}
+void foo2(){}
+inline void foo3(){}
+static void foo4(){}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8
+
+</PRE>
+</BODY>
+</HTML>

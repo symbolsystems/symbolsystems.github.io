@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid division by zero [MISRA2008-0_3_1_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid division by zero [MISRA2008-0_3_1_c-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects execution paths where zero may potentially be used as a denominator
+in a division operation. Division by zero may lead to divide-by-zero errors and should
+be avoided.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A 
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sensitive mode" parameter allows you to enable reporting violations
+when divisors are possibly equal to zero.
+With this option enabled, Flow Analysis detects not only when the actual division
+by zero occurs, but also when it may (but may not) occur. This results in more
+violations being reported.
+
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Division by zero behavior is specified as undefinded in the language standard. For this
+reason, it may result in divide-by-zero errors and abnormal program termination. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+This rule can detect a variety of situations where division
+by zero may occur. Below are a few examples that will trigger a
+violation.
+
+static int zeroMethod()
+{
+    return 0;
+}
+
+static void assignmentRemainderOfMethodResult()
+{
+    int a = 5;
+    a %= zeroMethod(); // VIOLATION
+}
+
+static void assignRemainderOfVar()
+{
+    int a = 5;
+    int b = 0;
+    a %= b; // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Whenever there is a chance that zero may occur in a denominator,
+it is necessary to use additional methods to ensure that the denominator
+is not zero.
+
+static int zeroMethod()
+{
+    return 0;
+}
+
+static void assignmentRemainderOfMethodResult()
+{
+    int a = 5;
+    int b = zeroMethod();
+    if (b != 0) {
+        a %= b; // NO VIOLATION
+    }
+}
+
+static void assignRemainderOfVar()
+{
+    int a = 5;
+    int b = 0;
+    if (b != 0) {
+        a %= b; // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-369: Divide By Zero
+<A HREF="http://cwe.mitre.org/data/definitions/369.html">http://cwe.mitre.org/data/definitions/369.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 1.3
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 4.1.3 There shall be no occurrence of undefined or critical unspecified behaviour
+
+SEI CERT C Coding Standard
+FLP03-C. Detect and handle floating-point errors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors">https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors</A>
+
+SEI CERT C Coding Standard
+INT33-C. Ensure that division and remainder operations do not result in divide-by-zero errors 
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT33-C.+Ensure+that+division+and+remainder+operations+do+not+result+in+divide-by-zero+errors">https://wiki.sei.cmu.edu/confluence/display/c/INT33-C.+Ensure+that+division+and+remainder+operations+do+not+result+in+divide-by-zero+errors</A>
+
+High Integrity C++ Coding Standard
+5.5.1 Ensure that the right hand operand of the division or remainder operators is demonstrably non-zero
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-6-1 The right hand operand of the integer division or remainder operators shall not be equal to zero
+
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+</PRE>
+</BODY>
+</HTML>

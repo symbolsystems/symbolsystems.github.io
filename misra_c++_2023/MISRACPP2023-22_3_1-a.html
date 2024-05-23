@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'assert' macro shall not be used with a constant expression [MISRACPP2023-22_3_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'assert' macro shall not be used with a constant expression [MISRACPP2023-22_3_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when a constant expression is used as the condition
+of the 'assert' macro.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks the use of some commonly used expansions of the 'assert'
+macro.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report on the following:
+* assert(false)
+* assert(false &amp;&amp; "string literal")
+* assert(!"string_literal")
+
+Additionally, for C code only, the rule does not report on the following:
+* assert(0) 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you identify the use of the 'assert' macro, which could be
+checked during compilation rather than during runtime. For C11 and C++11,
+'static_assert' can be used instead of 'assert' in such cases.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifdef __cplusplus
+const int C = 42;
+#define FALSE false
+#else
+enum E {
+    A = 40, B, C
+};
+#define FALSE 0
+#endif
+
+void test(int x)
+{
+    assert(C == 42);                  // Violation
+	assert(sizeof(x) &lt; sizeof(long)); // Violation
+	assert(FALSE);                    // OK by exception
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#ifdef __cplusplus
+const int C = 42;
+#else
+enum E {
+    A = 40, B, C
+};
+#endif
+
+void test(int x)
+{
+    static_assert(C == 42);           // OK
+	assert(x &gt; 0);                    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 22.3.1 The assert macro shall not be used with a constant-expression
+
+</PRE>
+</BODY>
+</HTML>

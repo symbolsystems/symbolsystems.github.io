@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-provided copy and move member functions of a class should have appropriate signatures [MISRACPP2023-15_0_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-provided copy and move member functions of a class should have appropriate signatures [MISRACPP2023-15_0_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation when a user-provided copy or
+move member function of a class is found with a signature
+that is not considered appropriate.
+
+The following signatures are considered appropriate:
+  X( X const &amp; );                         // Copy constructor
+  X( X &amp;&amp; ) noexcept;                     // Move constructor
+  X &amp; operator=( X const &amp; ) &amp;;           // Copy assignment operator
+  X &amp; operator=( X &amp;&amp; ) &amp; noexcept;       // Move assignment operator
+
+It is permitted to:
+* add 'constexpr' to any of these operations, and
+* add 'explicit' to the constructors, and
+* add 'noexcept' to the copy operations.
+
+Assignment operators are allowed to be declared with the return type void.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+'const X &amp;' is also permitted as an alternative to 'X const &amp;'.
+
+The rule does not check functions that are defaulted ("=default") or
+deleted ("=delete").
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected and undefined behavior.
+For example:
+* modifying a copy constructor or copy assignment operator argument object could
+  be unexpected,
+* default parameters to copy and move constructors make code harder to review
+* assigning to a temporary object carries the risk of exposing a potentially
+  dangling lvalue-reference to that object, and using such reference to
+  access the temporary object results in undefined behavior if the object is
+  destroyed before being accessed,
+* throwing from within a move operation makes it unclear what the expected state
+  of the moved-from object is.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S
+{
+    // Parameter is not a reference to const-qualified type:
+    S( S &amp; );                                       // Violation
+
+    // Lack of noexcept qualification:
+    S( S &amp;&amp; );                                      // Violation
+
+    // Operator is not lvalue ref-qualified:
+    S &amp; operator=( S const &amp; );                     // Violation
+
+    // Operator returns const-qualified type:
+    const S &amp; operator=( S &amp;&amp; ) &amp; noexcept;         // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S
+{
+    S( S const &amp; );                     // OK
+    S( S &amp;&amp; ) noexcept;                 // OK
+    S &amp; operator=( S const &amp; ) &amp;;       // OK
+    S &amp; operator=( S &amp;&amp; ) &amp; noexcept;   // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.0.2 User-provided copy and move member functions of a class should have appropriate signatures
+
+</PRE>
+</BODY>
+</HTML>

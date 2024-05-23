@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An implicit integral or floating-point conversion shall not reduce the size of the underlying type [MISRA2008-5_0_6_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An implicit integral or floating-point conversion shall not reduce the size of the underlying type [MISRA2008-5_0_6_a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when a parameter, variable, or expression of underlying
+integral type is implicitly converted to a narrower integral underlying type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following operations are covered by this rule:
+- Assignment by means of one of the assignment operators.
+- Passing an argument to a function where the argument is copied as 
+  if by assignment to the corresponding parameter.
+- Returning an expression from a function where the result is copied
+  as if by assignment to an object with the function's return type.
+- Using an expression to initialize an object or part of an object, including
+  a compound literal in C99, where the expression is copied as if by 
+  assignment to the destination.
+- Conversion of the constant expression in the case label of a switch statement
+  to the promoted type of the controlling expression.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"An implicit conversion that results in the size of a type being reduced
+may result in a loss of information." [MISRA C++:2008 Rule 5-0-6]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+unsigned short ret_u16a(signed int i);
+
+signed int foo1 ( unsigned int u32a, unsigned long long u64a ) {
+    unsigned char u8a = 255;         /* Violation */
+    unsigned short u16a = u32a + 1;  /* Violation */
+
+    u16a = u32a;                     /* Violation */
+    u8a  = ret_u16a(u16a);           /* Violation */
+    ret_u16a(u64a);                  /* Violation */
+    
+    return u64a;                     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+short ret_u16a(signed int i);
+
+signed int foo1 ( unsigned int u32a, unsigned long u32a_long ) {
+    unsigned char u8a = 255u;                           /* OK */
+    unsigned short u16a = (unsigned short)(u32a + 1u);  /* OK */
+
+    /* The 'underlying type' of the expression 'u8a + u8a' is unsigned char */
+    u16a = u8a + u8a;        /* OK */
+    u16a  = ret_u16a(u32a);  /* OK - this rule does not report violations on
+                                     conversions between signed and unsigned
+                                     types if they have the same size */
+    
+    return u32a_long;        /* OK - if 'int' and 'long' have the same size */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-6. An implicit integral or floating-point conversion shall not reduce
+   the size of the underlying type
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 5, Rule 5-0-6
+   
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 6.5.0, Underlying type
+
+</PRE>
+</BODY>
+</HTML>

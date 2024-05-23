@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not alternately input and output from a stream without an intervening flush or positioning call [MISRACPP2023-30_0_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not alternately input and output from a stream without an intervening flush or positioning call [MISRACPP2023-30_0_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"When a file is opened with update mode [...], both input and output may be performed 
+on the associated stream. However, output shall not be directly followed by input 
+without an intervening call to the fflush function or to a file positioning 
+function (fseek, fsetpos, or rewind), and input shall not be directly followed 
+by output without an intervening call to a file positioning function, unless 
+the input operation encounters end-of-file."
+[ISO/IEC 9899:2017]
+
+This rule detects when a reading function is directly followed by a writing function,
+or a writing function is directly followed by a reading function, without an intervening
+call to a positioning function between these calls. 
+
+A list of the writing functions:
+	int fprintf(FILE* stream, const char* format, ...)
+	int fputs(const char* str, FILE* stream)
+	int fputc(int character, FILE* stream)
+	int putc(int character, FILE* stream)
+	size_t fwrite(const void* ptr, size_t size, size_t count, FILE* stream)
+	ostream&amp; ostream::operator&lt;&lt;()
+
+A list of the reading functions:
+	int fscanf(FILE* stream, const char* format, ...)	
+	char* fgets(char* str, int num, FILE* stream)
+	int fgetc(FILE* stream)
+	int getc(FILE* stream)
+	size_t fread(void* ptr, size_t size, size_t count, FILE* stream)
+	istream&amp; istream::operator&gt;&gt;()
+	std::getline(istream&amp; stream, basic_string&amp; out);
+	std::getline(istream&amp; stream, basic_string&amp; out, CharT delim)
+	
+A list of the positioning functions:
+	int fseek(FILE* stream, long int offset, int origin)
+	int fsetpos(FILE* stream, const fpos_t* pos)
+	void rewind(FILE* stream)
+	pos_type pubseekoff(off_type off, std::ios_base::seekdir dir, std::ios_base::openmode which = ios_base::in | ios_base::out)
+	pos_type pubseekpos(pos_type pos, std::ios_base::openmode which = std::ios_base::in | std::ios_base::out)
+    basic_istream&amp; seekg(pos_type pos)
+    basic_istream&amp; seekg(off_type off, std::ios_base::seekdir dir)
+    pos_type tellg()
+    basic_ostream&amp; seekp(pos_type pos)
+    basic_ostream&amp; seekp(off_type off, std::ios_base::seekdir dir)
+    pos_type tellp()
+	
+A list of the positioning functions proper for the input operation performed second:
+    int fflush(FILE* stream)
+    
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+enum { BUFFERSIZE = 32 };
+
+extern void initialize_data(char *data, size_t size);
+
+void func(const char *file_name) {
+    char data[BUFFERSIZE];
+    char append_data[BUFFERSIZE];
+    FILE *file;
+
+    file = fopen(file_name, "a+");
+    if (file == NULL) {
+        /* Handle error */
+    }
+
+    initialize_data(append_data, BUFFERSIZE);
+
+    if (fwrite(append_data, 1, BUFFERSIZE, file) != BUFFERSIZE) {
+        /* Handle error */
+    }
+    if (fread(data, 1, BUFFERSIZE, file) &lt; BUFFERSIZE) {	// VIOLATION
+        /* Handle there not being data */
+    }
+
+    if (fclose(file) == EOF) {
+        /* Handle error */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Invoke a positioning function between the calls to the writing function and the reading function.
+
+#include &lt;stdio.h&gt;
+
+enum { BUFFERSIZE = 32 };
+extern void initialize_data(char *data, size_t size);
+
+void func(const char *file_name) {
+    char data[BUFFERSIZE];
+    char append_data[BUFFERSIZE];
+    FILE *file;
+
+    file = fopen(file_name, "a+");
+    if (file == NULL) {
+        /* Handle error */
+    }
+
+    initialize_data(append_data, BUFFERSIZE);
+    if (fwrite(append_data, BUFFERSIZE, 1, file) != BUFFERSIZE) {
+        /* Handle error */
+    }
+
+    if (fseek(file, 0L, SEEK_SET) != 0) {
+        /* Handle error */
+    }
+
+    if (fread(data, BUFFERSIZE, 1, file) != 0) {	// NO VIOLATION
+        /* Handle there not being data */
+    }
+
+    if (fclose(file) == EOF) {
+        /* Handle error */
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 30.0.2 Reads and writes on the same file stream shall be separated by a positioning operation
+
+SEI CERT C Coding Standard
+FIO39-C. Do not alternately input and output from a stream without an intervening flush or positioning call
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO39-C.+Do+not+alternately+input+and+output+from+a+stream+without+an+intervening+flush+or+positioning+call">https://wiki.sei.cmu.edu/confluence/display/c/FIO39-C.+Do+not+alternately+input+and+output+from+a+stream+without+an+intervening+flush+or+positioning+call</A>
+
+SEI CERT C++ Coding Standard
+FIO50-CPP. Do not alternately input and output from a file stream without an intervening positioning call
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/FIO50-CPP.+Do+not+alternately+input+and+output+from+a+file+stream+without+an+intervening+positioning+call">https://wiki.sei.cmu.edu/confluence/display/cplusplus/FIO50-CPP.+Do+not+alternately+input+and+output+from+a+file+stream+without+an+intervening+positioning+call</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-3 Alternate input and output operations on a file stream shall not be used without an intervening flush or positioning call
+
+ISO/IEC 9899:2017 Programming languages -- C
+7.21.5.3 The fopen function
+
+</PRE>
+</BODY>
+</HTML>

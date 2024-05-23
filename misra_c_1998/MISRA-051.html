@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Evaluation of constant unsigned integer expressions should not lead to wrap-around [MISRA-051]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Evaluation of constant unsigned integer expressions should not lead to wrap-around [MISRA-051-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if the result of an unsigned arithmetic operation
+with constant operands leads to wrap-around. 
+
+"Unsigned integer expressions do not overflow, but instead wrap around
+in a modular way. Any constant unsigned integer expression that wraps
+will not be diagnosed by the compiler. There may be good reasons to rely
+on the modular arithmetic provided by unsigned integer types,
+but the reasons are less obvious if wrapping occurs when an operator
+has constant operands - this may indicate a programming error."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks the addition (+), subtraction (-), and multiplication (*)
+operations because division (/) and remainder (%) cannot result
+in a wrap-around.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent wrap-around for unsigned integer constants.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples assume 32-bit integer type.
+void foo()
+{
+    // Examples of code which cause wrap-around:
+    0u - 1u;                // Violation
+    0xFFFFFFFFu + 1;        // Violation
+    0xFFFFFFu * 0xFFFFFFu;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples assume 32-bit integer type.
+void foo()
+{
+    // Examples of code which do not cause wrap-around:
+    10u - 1u;           // OK
+    0xFFFFFFu + 1u;     // OK
+    0xFFFFFFu * 2u;     // OK
+
+    // Expressions which are not evaluated are not reported:
+    sizeof(0u - 1u);                // OK - not evaluated
+    (1 == 2) &amp;&amp; (0xFFFFFFFFu + 1);  // OK - not evaluated
+
+    // Operators other than addition, subtraction and multiplication
+    // are not checked by this rule, for example:
+    0x1u &lt;&lt; 64;             // OK - not checked
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 51
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.25 Expressions, AV Rule 203
+
+3. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-190: Integer Overflow or Wraparound
+   <A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+4. SEI CERT C Coding Standard
+   MSC14-C. Do not introduce unnecessary platform dependencies
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC14-C.+Do+not+introduce+unnecessary+platform+dependencies">https://wiki.sei.cmu.edu/confluence/display/c/MSC14-C.+Do+not+introduce+unnecessary+platform+dependencies</A>
+
+5. SEI CERT C Coding Standard
+   MSC15-C. Do not depend on undefined behavior
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC15-C.+Do+not+depend+on+undefined+behavior">https://wiki.sei.cmu.edu/confluence/display/c/MSC15-C.+Do+not+depend+on+undefined+behavior</A>
+
+6. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.20.1 An unsigned arithmetic operation with constant operands should not wrap
+
+</PRE>
+</BODY>
+</HTML>

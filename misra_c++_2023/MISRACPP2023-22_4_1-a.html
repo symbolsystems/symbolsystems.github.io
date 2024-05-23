@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The literal value zero shall be the only value assigned to errno [MISRACPP2023-22_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The literal value zero shall be the only value assigned to errno [MISRACPP2023-22_4_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+'errno' can be set to a non-zero value in the function. This may indicate
+that an error has been detected. 'errno' should not be used as a mechanism for
+reporting errors because C++ provides better mechanisms for error handling.
+
+This rule detects when a value other than a literal zero is assigned to 'errno'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you apply preferable mechanisms for error handling.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cerrno&gt;
+void f1(){
+    errno = EINVAL;    // Violation
+}
+
+static const int VALUE = 0;
+
+void f2(){
+    errno = VALUE;    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of correct code
+
+#include &lt;cerrno&gt;
+void f1(){
+    errno = 0;      // OK
+}
+
+#define VALUE 0
+
+void f2(){
+    errno = VALUE; // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 22.4.1 The literal value zero shall be the only value assigned to errno
+
+</PRE>
+</BODY>
+</HTML>

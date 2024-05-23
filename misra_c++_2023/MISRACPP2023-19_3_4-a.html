@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+In the definition of a function-like macro each instance of a parameter shall be enclosed in parentheses unless it is used as the operand of # or ## [MISRACPP2023-19_3_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+In the definition of a function-like macro each instance of a parameter shall be enclosed in parentheses unless it is used as the operand of # or ## [MISRACPP2023-19_3_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In the definition of a function-like macro each instance of a parameter shall
+be enclosed in parentheses. If this rule is not adhered to then when
+the preprocessor substitutes the macro into the code the operator precedence
+may not give the desired results." [MISRA C:2004 Rule 19.10]
+
+See also: MISRA-096
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+MISRA C:2012 standard requires the result of macro parameter expansion to be
+a parenthesized expression. The standard allows parentheses to be provided at
+the point of macro call. This is not supported by this rule. For example:
+  #define M1(x) x         // Violation
+  M1( (1+2) )
+  // The result of expanding 'x' parameter is "(1+2)" which is a parenthesized
+  // expression, which is compliant with MISRA C:2012 standard, but not
+  // supported by this rule. A violation will be reported on definition of M1
+  // macro.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+If a parameter of macro is used in body after '.', '-&gt;', '::', '#', '##' tokens
+or before '::', '##' tokens, then violation is not reported. In those cases 
+the use of paranthesis makes the code non-compilable. For example:
+
+  #define INIT1(a, member) (a)-&gt;member = 0     // No violation reported
+  struct S {int mem;};
+  void foo1(struct S* s) {
+    // adding parenthesis in macro definition makes this code non-compilable
+    INIT1(s, mem); 
+  }
+
+  #define CALL(ns,fn) (ns)::fn()               // No violation reported
+  namespace N { void fooN(); }
+  void foo2() {
+    // adding parenthesis in macro definition makes this code non-compilable
+    CALL(N, fooN);
+  }
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If parentheses are not used, then operator precedence may not give the desired
+results when macro substitution occurs." [MISRA C:2012 Rule 20.7]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule reports a violation on each instance of parameter in macro definition
+apart from cases mentioned in 'Exceptions' section. However, in cases when
+expansion of the parameter does not produce an expression the use of parenthesis
+may cause a compilation error. For example:
+
+  #define MTYPE(type, a)  (type *)(a)          // Violation
+  void foo1(short* ps) {
+    int* ptr;
+    // adding parenthesis in macro definition makes this code non-compilable
+    ptr = MTYPE(int, ps);
+  }
+
+  #define MT(classtype, type) classtype&lt;type&gt;  // Violation reported
+  class A{};
+  template &lt;class T&gt; class TEMP{};
+  void foo2(){
+    // adding parenthesis in macro definition makes this code non-compilable
+    MT(TEMP, A) obj;
+  }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define abs(x) ((x &gt;= 0) ? x : -x)          // Violation
+
+void foo(int a, int b){
+    int z = abs(a - b);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define abs(x) (((x) &gt;= 0) ? (x) : -(x))   // OK
+
+void foo(int a, int b){
+    int z = abs(a - b);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M16-0-6. In the definition of a function-like macro, each instance of a
+   parameter shall be enclosed in parentheses, unless it is used as the
+   operand of # or ##
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-0-6
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.3.4 Parentheses shall be used to ensure macro arguments are expanded appropriately
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.7
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19, Rule 19.10
+
+6. Origin: Misra Guidelines - Rule 96
+
+7. SEI CERT C Coding Standard
+   PRE01-C. Use parentheses within macros around parameter names
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE01-C.+Use+parentheses+within+macros+around+parameter+names">https://wiki.sei.cmu.edu/confluence/display/c/PRE01-C.+Use+parentheses+within+macros+around+parameter+names</A>
+
+</PRE>
+</BODY>
+</HTML>

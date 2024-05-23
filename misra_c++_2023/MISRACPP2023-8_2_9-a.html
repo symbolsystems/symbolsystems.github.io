@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The operand to typeid shall not be an expression of polymorphic class type [MISRACPP2023-8_2_9-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The operand to typeid shall not be an expression of polymorphic class type [MISRACPP2023-8_2_9-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when the operand to typeid is an expression
+of polymorphic class type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule reports on expressions of polymorphic class type even when
+there is no runtime evaluation. It does not report when the operand
+to typeid is a type rather than an expression.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected side effects or exceptions.
+When the operand to typeid is an expression of polymorphic type, it may
+or may not be evaluated at runtime and its side effects may or may not occur.
+An exception std::bad_typeid may also be thrown in such cases.
+If the operand to typeid is an expression of non-polymorphic type
+or if the operand is a type rather than an expression, typeid
+does not evaluate the expression and unexpected effects do not take place.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;typeinfo&gt;
+ 
+struct P { virtual void foo() {} };
+
+const std::type_info &amp; foo( P p )
+{
+  return typeid( p );               // Violation
+}
+
+const std::type_info &amp; foo( P * p )
+{
+  return typeid( *p );              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;typeinfo&gt;
+ 
+struct P { virtual void foo() {} };
+
+const std::type_info &amp; foo1()
+{
+  return typeid( P );               // OK - compliant by exception
+}
+
+const std::type_info &amp; foo2()
+{
+  return typeid( P* );              // OK - compliant by exception
+}
+
+// An example of correct code:
+
+const std::type_info &amp; bar( P * p )
+{
+  return typeid( p-&gt;foo() );        // OK - the return type is not polymorphic
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.9 The operand to typeid shall not be an expression of polymorphic class type
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An object with enumeration type shall not be converted to an object with pointer type [MISRACPP2023-8_2_6-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An object with enumeration type shall not be converted to an object with pointer type [MISRACPP2023-8_2_6-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Converting from an enumeration type to a pointer to an object leads
+to unspecified behavior.
+
+This rule detects when an expression of enumeration type is explicitly
+cast to a pointer to object or pointer to void type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unspecified behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E { E1, E2 };
+
+struct S{
+    int x;
+};
+
+void f (E e)
+{
+    S * s1 = reinterpret_cast&lt; S * &gt;( e ); // Violation
+    S * s2 = (S*)e;                        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not cast an object with enumeration type to an object with pointer type.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.6 An object with integral, enumerated, or pointer to void type shall not be cast to a pointer type
+
+</PRE>
+</BODY>
+</HTML>

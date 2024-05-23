@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic selection that is not expanded from a macro shall not contain potential side effects in the controlling expression [MISRAC2012-RULE_23_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic selection that is not expanded from a macro shall not contain potential side effects in the controlling expression [MISRAC2012-RULE_23_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The controlling expression of a generic selection is never evaluated. It is
+only used for its type, and usually has to be repeated in order to be combined
+with the result value in some way.
+If an expression is specified which syntactically contains a side effect, that
+effect will not be applied, even if the expression has a type that would cause
+it to be evaluated by 'sizeof', such as a VLA."
+[MISRA C:2012 Amendment 3]
+
+The rule detects potential side effects in controlling expressions of generic
+selections that are not expanded from macros.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Accessing a volatile object, modifying an object, modifying a file, or calling
+a function that does any of those operations are all side effects, which are
+changes in the state of the execution environment." [ISO/IEC 9899:2011]
+
+"A function call is considered to be a side effect for the purposes of this
+rule." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int g;
+int bar();
+
+void foo()
+{
+    int l = _Generic (++g, int: 0, default: 1);            // Violation
+    l = _Generic (bar(), int: 0, default: 1);              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the side effect from the controlling
+expression.
+
+int g;
+
+void foo()
+{
+    int gl = ++g;
+    int l = _Generic (gl, int: 0, default: 1);             // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.2
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   5.1.2.3 Program execution
+
+</PRE>
+</BODY>
+</HTML>

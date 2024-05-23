@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions shall always have visible prototype at the function call [MISRAC2012-RULE_17_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions shall always have visible prototype at the function call [MISRAC2012-RULE_17_3-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Provided that a function call is made in the presence of a prototype,
+a constraint ensures that the number of arguments matches the number
+of parameters and that each argument can be assigned to its corresponding
+parameter." [MISRA C:2012 Rule 17.3]
+
+The rule requires that prototype (declaration or definition of function
+that explicitly declares types of all parameters or uses explicit 'void'
+if the function does not have parameters) must be declared before the
+function is called.
+
+This rule is enabled only for C language.
+
+See also: MISRA-071_a, MISRA2004-8_2_b, MISRA2004-8_3_b, MISRA2004-16_4, 
+          MISRA2004-16_5, MISRA2004-16_6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The recommended method of implementing function prototypes for external
+functions is to declare the function (i.e. give the function prototype)
+in a header file, and then include the header file in all those code files
+that need the prototype." [MISRA C:2004 Rule 8.1]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If a function is declared implicitly, a C90 compiler will assume that
+the function has a return type of int. Since an implicit function declaration
+does not provide a prototype, a compiler will have no information about
+the number of function parameters and their types. Inappropriate type
+conversions may result in passing the arguments and assigning the return
+value, as well as other undefined behaviour." [MISRA C:2012 Rule 17.3]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* file *.c */
+
+void foo1(){}                     /* not a prototype */
+void foo2(x, y);                  /* not a prototype */
+
+void funCall(void){
+  foo1();    /* Violation - call without prototype */
+  foo2(1,2); /* Violation - call without prototype */
+  foo3();    /* Violation - call without prototype */
+  foo4();    /* Violation - prototype declared after function call */
+}
+
+void foo2(x, y) int x; int y; {}
+
+void foo4(void);
+void foo4(void) {}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* file *.h */
+
+void foo2(int x, int y); /* explicit types were added */
+void foo3(void);         /* prototype was added to header */
+void foo4(void);         /* prototype was moved to header */
+
+/* file *.c */
+#include "*.h"
+
+void foo1(void){}        /* 'void' was added */
+
+void funCall(void){
+  foo1();      /* OK */
+  foo2(1,2);   /* OK */
+  foo3();      /* OK */
+  foo4();      /* OK */
+}
+
+void foo2(x, y) int x; int y; {} 
+void foo3(void) {}
+void foo4(void) {}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 71
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8, Rule 8.1
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.3
+
+4. SEI CERT C Coding Standard
+   EXP37-C. Call functions with the correct number and type of arguments
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments">https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments</A>
+
+</PRE>
+</BODY>
+</HTML>

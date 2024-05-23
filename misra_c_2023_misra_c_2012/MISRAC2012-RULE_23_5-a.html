@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic selection should not depend on implicit pointer type conversion [MISRAC2012-RULE_23_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic selection should not depend on implicit pointer type conversion [MISRAC2012-RULE_23_5-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The controlling expression of a generic selection undergoes value conversion
+before having its type compared to any of the entries in the association list,
+but this is the only conversion applied to its type. It can then only match
+an association exactly, or select the default association."
+[MISRA C:2012 Amendment 3]
+
+"This rule applies when a default association is selected for a controlling
+expression whose type could, in other contexts (such as when passed as an
+argument to a function), be implicitly converted to another type explicitly
+listed in the association list." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"This rule only applies to selection based on pointer types. Selection based
+on an arithmetic type is never a violation of this rule."
+[MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void handle_pi (int *);
+void handle_cpi (int const *);
+void handle_any (void *);
+
+#define handle_pointer(X) (_Generic ((X) \
+ , void*: handle_any                     \
+ , int const *: handle_cpi               \
+ , default: handle_any) (X))
+
+void f1()
+{
+    int mi;
+    handle_pointer (&amp;mi);                 // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding correct types to generic associations.
+
+void handle_pi (int *);
+void handle_cpi (int const *);
+void handle_any (void *);
+
+#define handle_pointer(X) (_Generic ((X) \
+ , void*: handle_any                     \
+ , int *: handle_pi                      \
+ , int const *: handle_cpi               \
+ , default: handle_any) (X))
+
+void f1()
+{
+    int mi;
+    handle_pointer (&amp;mi);                 // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.5
+
+</PRE>
+</BODY>
+</HTML>

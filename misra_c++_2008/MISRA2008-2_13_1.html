@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only those escape sequences that are defined in ISO/IEC 14882:2003 shall be used [MISRA2008-2_13_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only those escape sequences that are defined in ISO/IEC 14882:2003 shall be used [MISRA2008-2_13_1-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of an undefined escape sequence leads to undefined behaviour.
+The defined escape sequences (ISO/IEC 14882:2003) are: \n, \t, \v, \b, \r, \f,
+\a, \\, \?, \', \", \&lt;Octal Number&gt;, \x&lt;Hexadecimal Number&gt;" [MISRA C++:2008]
+
+The rule detects when a character constant or a string constant contains the
+'\' character that is not used to define an escape sequence.
+
+See also: NAMING-48
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not detect '\' characters used in #include directives.
+These characters should not be used in any case in #include directives
+and are disallowed by another rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( char c, const char* s )
+{
+    c = '\k';           // Violation
+    s = "dir1\dir2";    // Violation
+    s = "\u1234";       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+void f1( char c, const char* s )
+{
+    c = '\t';           // OK
+    s = "name \n";      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 2, Rule 2-13-1
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare identifiers with names reserved in the standard library [MISRACPP2023-5_10_1-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare identifiers with names reserved in the standard library [MISRACPP2023-5_10_1-g-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For each type T from the C standard library, the types ::T and std::T
+are reserved to the implementation and, when defined, ::T shall be identical
+to std::T. These types are clock_t, div_t, FILE, fpos_t, lconv, ldiv_t,
+mbstate_t, ptrdiff_t, sig_atomic_t, size_t, time_t, tm, va_list, wctrans_t,
+wctype_t, and wint_t." [ISO/IEC 14882:2017]
+
+This rule detects when identifiers with the following names are declared:
+defined, final, override, clock_t, div_t, FILE, fpos_t, lconv, ldiv_t,
+mbstate_t, ptrdiff_t, sig_atomic_t, size_t, time_t, tm, va_list, wctrans_t,
+wctype_t and wint_t.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using reserved identifiers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int final;        // Violation
+int override;     // Violation
+int clock_t;      // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not define identifiers with names that are reserved in the standard
+library.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   20.5.4.3.4 Types
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.10.1 User-defined identifiers shall have an appropriate form
+
+</PRE>
+</BODY>
+</HTML>

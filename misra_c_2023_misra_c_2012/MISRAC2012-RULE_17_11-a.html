@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare non-returning functions with the attribute that specifies that they do not return [MISRAC2012-RULE_17_11-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare non-returning functions with the attribute that specifies that they do not return [MISRAC2012-RULE_17_11-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a non-returning function is declared without
+the specifier that indicates that the function does not return, that is:
+	* _Noreturn specifier in C (since C11)
+	* [[noreturn]] attribute in C++ (since C++11)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2021.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule reports a violation only if the version of the language used to
+build given source file allows for the appropriate specifier to be declared,
+i.e. at least C11 or C++11.
+
+The following functions from the Standard C++ library are declared
+with the [[noreturn] attribute:
+    * std::_Exit,
+    * std::abort,
+    * std::exit, 
+    * std::quick_exit,
+    * std::unexpected, 
+    * std::terminate, 
+    * std::rethrow_exception, 
+    * std::throw_with_nested,
+    * std::nested_exception::rethrow_nested.
+   
+The following functions from the Standard C library are declared with
+the _Noreturn specifier:   
+    * abort,
+    * exit,
+    * _Exit,
+    * quick_exit,
+    * thrd_exit.
+    
+This rule ignores the "main" function.
+
+See also BD-PB-NORETURN
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you ensure that a function that does not return is declared
+with an appropriate specifier. This allows the compiler to optimize code and
+code analyzers to perform a more detailed analysis.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In the following example, the "example" function is non-returning, but it is
+declared without the specifier that indicates that the function doesn't return.
+ 
+#include &lt;stdlib.h&gt;
+
+void example(void) // VIOLATION
+{
+    exit(0);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In this fixed code, the function is declared with the standard "noreturn" 
+convenience macro, which expands to the "_Noreturn" specifier.
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdnoreturn.h&gt;
+
+noreturn void example(void) // NO VIOLATION
+{
+    exit(0);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018 Phase 2 - New C11/C18 Features
+2.3 Section 8 - Rules, 2.3.13 Rule 17.11
+
+C reference
+_Noreturn function specifier 
+<A HREF="https://en.cppreference.com/w/c/language/_Noreturn">https://en.cppreference.com/w/c/language/_Noreturn</A>
+
+C++ reference
+C++ attribute: noreturn 
+<A HREF="https://en.cppreference.com/w/cpp/language/attributes/noreturn">https://en.cppreference.com/w/cpp/language/attributes/noreturn</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The # and ## operators should not be used [MISRA2008-16_3_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The # and ## operators should not be used [MISRA2008-16_3_2-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The order of evaluation associated with multiple #, multiple ## or a mix
+of # and ## preprocessor operators is unspecified. In some cases it is
+therefore not possible to predict the result of macro expansion.
+The use of the ## operator can result in code that is obscure.
+Compilers have been inconsistent in the implementation of these operators.
+
+The rule reports a violation if # or ## preprocessor operators are used.
+
+See also: PREPROC-16
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents unspecified behavior caused by the use of # and ## operators.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define stringer( x ) printf( #x "\n" ) /* Violation */
+#define concat( x, y ) ( x##y = 0)      /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use # and ## preprocessor operators.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M16-3-2. The # and ## operators should not be used
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.8.3.2 The # operator, 6.8.3.3 The ## operator
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.10.3.2 The # operator, 6.10.3.3 The ## operator
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-3-2
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.3.1 The # and ## preprocessor operators should not be used
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.10
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19, Rule 19.13
+
+</PRE>
+</BODY>
+</HTML>

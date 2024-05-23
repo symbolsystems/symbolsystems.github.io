@@ -1,0 +1,307 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid null pointer dereferencing [MISRA2008-0_3_1_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid null pointer dereferencing [MISRA2008-0_3_1_b-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a null pointer may be dereferenced.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Reporting violations where variable is known to be null due to a null check" group of parameters:
+
+Enable or disable this check box to specify which violations are reported:
+   * If disabled, the rule will report violations only on variables that are certain to be assigned with a null value.
+   * If enabled, there rule will report violations not only for null value assignment, 
+     but also when a check for a null value that stipulates null pointer dereferencing at the point of use is detected.
+
+Here is an example of the second type of violations:
+
+    int b = (ptr == 0); /* null check that stipulates null dereferencing at violation point */
+    /* ... */
+    if (b) {
+        /* ... */
+        int i = *ptr; /* violation reported if the check box is ticked */
+    }
+
+The "Exclude cases when a null check is performed inside:" set of parameters helps you reduce the number of
+unwanted violations caused by a null check. For cases when a function or a macro performs a null check,
+these parameters determine whether it should be assumed that the corresponding variable can be null
+in the callers of the function.
+
+The "a macro invocation" parameter determines how the rule handles null checks in macros.
+Consider the following example:
+ 
+    #define FOO(P) if (P == 0) { /* ... */ }
+    
+    void bar(int* p)
+    {
+        FOO(p);
+        *p = 10; /* Violation or not? */
+    }
+    
+If this option is disabled, a violation will be reported for the above example.   
+
+Other parameters in this set are related to the visibility of functions.
+Consider the following example:
+
+    int* foo(int* p)
+    {
+        if (p == 0) {
+            /* ... */
+        }
+        return p; 
+    }
+    
+    void bar(int* p)
+    {
+        foo(p);
+        *p = 10; /* Violation or not? */
+    }
+
+Whether the violation inside bar() will be reported or not depends on the visibility of foo()'s 
+and parameterization of the rule.
+
+"a called function with internal linkage"
+If this option is disabled, a violation will be reported in the above example if the foo() function is 
+a function with internal linkage (a function that is visible only in the compilation unit where it is defined).
+Static global functions and functions from anonymous namespaces are functions with internal linkage. 
+
+"a called global function"
+If this option is disabled, a violation will be reported in the above example if the foo() function is
+a global non-member function. 
+
+"a called member function of the following visibility:"
+This parameter defines the behavior of the rule for cases where foo() is a member function.
+If this option is disabled, a violation will always be reported in the above example if foo() is a member function.
+If this option is enabled, the following radio group of parameters is available:
+
+   * "public" 
+   * "public, protected"
+   * "any visibility"
+
+The table below shows all the possible options of the radio group of parameters. Each row represents one of
+the parameters. The "+" character indicates that a violation will be reported in the above example.
+
+                                  member function visibility (foo)
+Parameterization:                 | public | protected | private |
+"public"                          |    -   |     +     |   +     |
+"public, protected"               |    -   |     -     |   +     |
+"any visibility"                  |    -   |     -     |   -     |
+
+
+
+The "Functions that do not accept NULL as their parameters" table allows you to list functions
+whose parameters are not allowed to accept null.
+
+The "External functions that may return NULL" table allows you to handle external functions
+that can potentially return null.
+To achieve better results, the rule provides a predefined set of such null returners from
+standard libraries. Those predefined functions are used by default. They cannot be edited
+or removed from the list, but they can be enabled/disabled in the "Enabled" column. Select or clear
+the check box next to the function name to enable or disable the function.
+Additionally, you can extend the set of null returners to include additional functions that
+you assume may return null. 
+
+The following columns allow you to define different aspects of functions in the tables: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions
+  for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide
+  the fully qualified name of the type or namespace where the function is declared.
+  Use '*' if you want to describe a function declared in any type or namespace, or
+  a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' column should contain the name of the described function.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current row will apply
+  to functions with the given name defined in subclasses of the given class. Note that this
+  applies to both instance and non-instance functions.
+
+* The 'Non-NULL parameters' column allows you to specify 
+  the list of ordinal numbers of the function parameters that are not allowed to accept null.
+  List the indexes of parameters separated by a comma or use '*' to specify that all parameters are affected.
+
+A step-by-step example of how to create your own null returner is provided in the 'EXAMPLE' 
+section of this help page.
+
+The "Treat "dynamic_cast" conversion as a source of the null value" parameter allows you
+to specify if "dynamic_cast" conversion will be considered to be a source of null. 
+This option is enabled by default.
+
+class A {virtual void f();};  
+class B : public A {void bar();}; 
+
+static void foo(A* p)
+{
+    B* d = dynamic_cast&lt;B*&gt;(p); // the source of null if the option is enabled
+    d-&gt;bar(); // a violation is reported if the option is enabled
+}
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Example#1 - Some code excerpts for which the rule reports a violation:
+
+static void nullPointerDereference()
+{
+    int* pointerToNull = 0;
+    int variable = *pointerToNull; /* VIOLATION */
+}
+
+static void zeroTracking()
+{
+    int* pointerValue = 0;
+    int* pointerToNull = pointerValue;
+    int variable = *pointerToNull; /* VIOLATION */
+}
+
+static void multiPointer()
+{
+    int* zero = 0;
+    int** ppi = &amp;zero;
+    int* pi = *ppi;
+    int k = *pi; /* VIOLATION */
+}
+
+
+Example#2 - custom null returner creation:
+Consider the following code assuming createInstance() to be a potential null returner:
+
+namespace mySpace {
+    class MyClass
+    {
+        public:
+            int getNumber();
+            static MyClass* createInstance();
+    };
+}
+
+static void usingFactory()
+{
+    mySpace::MyClass* instance = mySpace::MyClass::createInstance();
+    int num = instance-&gt;getNumber(); // VIOLATION
+}
+
+In order to detect possible null pointer dereferencing in the code above, 
+the rule should be parameterized as follows:
+
+ - Add a custom null returner:
+       'Fully qualified type name or namespace' field value: "mySpace::MyClass";
+       'Function name' field value: "createInstance";
+       Use '+ definitions in subclasses' if createInstance() defined in subclasses
+       of mySpace::MyClass may return null as well.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Avoid null pointer dereferencing.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-476: NULL Pointer Dereference
+<A HREF="http://cwe.mitre.org/data/definitions/476.html">http://cwe.mitre.org/data/definitions/476.html</A>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+Chapter 6, Section 0, Rule 0-3-1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 4.1.3 There shall be no occurrence of undefined or critical unspecified behaviour
+
+High Integrity C++ Coding Standard
+5.2.1 Ensure that pointer or array access is demonstrably within bounds of a valid object
+
+SEI CERT C Coding Standard
+EXP34-C. Do not dereference null pointers
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP34-C.+Do+not+dereference+null+pointers">https://wiki.sei.cmu.edu/confluence/display/c/EXP34-C.+Do+not+dereference+null+pointers</A>
+
+SEI CERT C Coding Standard
+MSC19-C. For functions that return an array, prefer returning an empty array over a null value
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC19-C.+For+functions+that+return+an+array%2C+prefer+returning+an+empty+array+over+a+null+value">https://wiki.sei.cmu.edu/confluence/display/c/MSC19-C.+For+functions+that+return+an+array%2C+prefer+returning+an+empty+array+over+a+null+value</A>
+
+SEI CERT C++ Coding Standard
+STR51-CPP. Do not attempt to create a std::string from a null pointer
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR51-CPP.+Do+not+attempt+to+create+a+std%3A%3Astring+from+a+null+pointer">https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR51-CPP.+Do+not+attempt+to+create+a+std%3A%3Astring+from+a+null+pointer</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-3-2 Null pointers shall not be dereferenced
+
+AUTOSAR C++14 Coding Guidelines
+Rule M0-3-1 Minimization of run-time failures shall be ensured by the use of at least one of: (a) static analysis tools/techniques; (b) dynamic analysis tools/techniques; (c) explicit coding of checks to handle run-time faults
+
+</PRE>
+</BODY>
+</HTML>

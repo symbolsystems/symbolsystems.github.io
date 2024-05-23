@@ -1,0 +1,295 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An identifier with external linkage shall have no more then one external definition [MISRACPP2023-6_2_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An identifier with external linkage shall have no more then one external definition [MISRACPP2023-6_2_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+An identifier with external linkage shall have no more then one external definition [GLOBAL-ONEEXTERNDEF]
+
+
+DESCRIPTION
+
+
+"The behaviour is undefined if an identifier is used for which multiple
+definitions exist (in different files) or no definition exists at all. Multiple
+definitions in different files are not permitted by this rule even if the
+definitions are the same. It is undefined behaviour if the declarations are
+different, or initialize the identifier to different values."
+[MISRA C:2012 Rule 8.6]
+
+This rule detects when identifiers with external linkage (objects or functions)
+have more than one external definition.
+
+See also: GLOBAL-NOEXTERNDEF
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"With the exception of templates and inline functions, multiple definitions
+in different translation units are not permitted, even if the definitions
+are the same." [MISRA C++:2008 Rule 3-2-4]
+The rule does not check template functions and members of template
+classes.
+This rule allows more than one definition for inline functions.
+The rule does not report violations on objects and functions that are declared
+in unnamed namespaces.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents undefined behaviors.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Code examples for C language
+ * Assumption: the testing scope contains only 'test1.c', 'test2.c' and 'test.h'.
+ */
+
+/* test.h */
+extern int x1;
+extern int x2;
+int x3;                       /* Violation - acts as tentative definition,
+                                 causes 'x3' to have definition in 'test2.c' */
+extern void foo1(void);
+extern void foo2(void);       /* there is no definition of 'foo2()' in testing
+                                 scope - rule does not apply */
+void foo3(void);              /* there is no definition of 'foo2()' in testing
+                                 scope - rule does not apply */
+
+/* test1.c */
+#include "test.h"
+int x1 = 0;                   /* Violation - object 'x1' has other external
+                                 definition in 'test2.c' */
+int x2;                       /* Violation - due to this tentative definition
+                                 'x2' has definition in this translation unit,
+                                 while it's defined also in 'test2.c' */
+int x3 = 0;                   /* Violation - 'x3' has other external definition
+                                 in 'test2.c' */
+void foo1(void) { /*...*/ }   /* Violation - 'foo1()' has other external
+                                 definition in 'test2.c' */
+                              /* This translation unit contains definition of
+                                 'x2' due to it's tentative definition above */                              
+
+/* test2.c */
+#include "test.h"
+int x1 = 1;                   /* Violation - 'x1' has other external definition
+                                 in 'test1.c' */
+int x2 = 0;                   /* Violation - 'x2' has other external definition
+                                 in 'test1.c' */
+void foo1(void) { /*...*/ }   /* Violation - 'foo1()' has other external
+                                 definition in 'test1.c' */
+                              /* This translation unit contains definition of
+                                 'x3' due to it's tentative definition from
+                                 'test.h' */
+
+/* Code examples for C++ language
+ * Assumption: the testing scope contains only 'test1.cpp', 'test2.cpp'
+ * and 'test.h'.
+ */
+
+/* test.h */
+extern int x1;
+extern int x2;                /* there is no definition of 'x2' in testing
+                                 scope - rule does not apply */
+extern void foo1();
+extern void foo2();           /* there is no definition of 'foo2()' in testing
+                                 scope - rule does not apply */
+struct S {
+    void foo1();
+    void foo2();              /* there is no definition of 'S::foo2()' 
+                                 in testing scope - rule does not apply */
+};
+
+/* test1.cpp */
+#include "test.h"
+int x1 = 0;                   /* Violation - object 'x1' has other external
+                                 definition in 'test2.cpp' */
+void foo1() { /*...*/ }       /* Violation - 'foo1()' has other external
+                                 definition in 'test2.c' */
+void S::foo1(){ /*...*/ }     /* Violation - 'S::foo1()' has other external
+                                 definition in 'test2.c' */
+
+/* test2.cpp */
+#include "test.h"
+
+int x1;                       /* Violation - object 'x1' has other external
+                                 definition in 'test2.cpp' */
+void foo1() { /*...*/ }       /* Violation - 'foo1()' has other external
+                                 definition in 'test2.c' */
+void S::foo1(){ /*...*/ }     /* Violation - 'S::foo1()' has other external
+                                 definition in 'test2.c' */
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Code examples for C language
+ * Assumption: the testing scope contains only 'test1.c', 'test2.c' and 'test.h'.
+ */
+
+/* test.h */
+extern int x1;
+extern int x2;
+extern int x3;                /* OK */
+extern void foo1(void);
+extern void foo2(void);       /* OK */
+                              /* OK - unused declaration of 'foo3()' removed */
+
+/* test1.c */
+#include "test.h"
+int x1 = 0;                   /* OK - only one external definition in testing
+                                 scope */
+int x2;                       /* OK - tentative definition */
+int x2 = 0;                   /* OK - only one external definition in testing
+                                 scope */
+int x3 = 0;                   /* OK - only one external definition in testing
+                                 scope */
+void foo1(void) { /*...*/ }   /* OK - only one external definition in testing
+                                 scope */
+
+/* test2.c */
+#include "test.h"
+void foo2(void);              /* OK - declaration (non-defining) */
+void foo2(void) { /*...*/ }   /* OK - only one external definition in testing
+                                 scope */
+
+/* Code examples for C++ language
+ * Assumption: the testing scope contains only 'test1.cpp', 'test2.cpp'
+ * and 'test.h'.
+ */
+
+/* test.h */
+extern int x1;                /* OK */
+extern int x2;                /* OK */
+extern void foo1(int);        /* OK */
+extern void foo1(int*);       /* OK */
+struct S1 {
+    void foo1();              /* OK */
+};
+struct S2 {
+    void foo1();              /* OK */
+};
+
+/* test1.cpp */
+#include "test.h"
+int x1 = 1;                   /* OK - only one external definition in testing
+                                 scope */
+void foo1(int) { /*...*/ }    /* OK - only one external definition in testing
+                                 scope */
+void S1::foo1(){ /*...*/ }    /* OK - only one external definition in testing
+                                 scope */
+static int s1;                /* OK - identifier with internal linkage */
+const int c1 = 1;             /* OK - identifier with internal linkage */
+namespace {
+    int n1;                   /* OK - identifier defined in an unnamed
+                                 namespace */
+}
+inline void inl(){ /*...*/ }  /* OK - it is allowed to have more than one
+                                 definition of inline functions in testing
+                                 scope */
+
+/* test2.cpp */
+#include "test.h"
+int x2;                       /* OK - only one external definition in testing
+                                 scope */
+void foo1(int*) { /*...*/ }   /* OK - only one external definition in testing
+                                 scope */
+void S2::foo1(){ /*...*/ }    /* OK - only one external definition in testing
+                                 scope */
+static int s1;                /* OK - identifier with internal linkage */
+const int c1 = 1;             /* OK - identifier with internal linkage */
+namespace {
+    int n1;                   /* OK - identifier defined in an unnamed
+                                 namespace */
+}
+inline void inl(){ /*...*/ }  /* OK - it is allowed to have more than one
+                                 definition of inline functions in testing
+                                 scope */
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.6
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 3, Rule 3-2-4
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.2.3 The source code used to implement an entity shall appear only once
+
+4. AUTOSAR C++14 Coding Guidelines
+   M3-2-4. An identifier with external linkage shall have exactly one definition
+
+</PRE>
+</BODY>
+</HTML>

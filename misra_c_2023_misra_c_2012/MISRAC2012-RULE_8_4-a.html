@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A declaration shall be visible when an object or function with external linkage is defined [MISRAC2012-RULE_8_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A declaration shall be visible when an object or function with external linkage is defined [MISRAC2012-RULE_8_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a declaration for an object or function is visible when that object
+or function is defined, a compiler must check that the declaration
+and definition are compatible. In the presence of function prototypes
+checking extends to the number and type of function parameters."
+[MISRA C:2012]
+
+This rule reports a violation if an object or a function with external linkage
+does not have a declaration that precedes its definition. The rule does not
+check if a declaration is compatible. Violations on incompatible declarations
+are reported by rule MISRA2004-8_4.
+
+This rule is only enabled for C language and does not report violations
+for the 'main' function.
+
+See also: MISRA-023, MISRA-071_a, MISRA2004-8_4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The recommended method of implementing declarations of objects and functions
+with external linkage is to declare them in a header file, and then include
+the header file in all those code files that need them, including the one
+that defines them." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* file.c */
+int i1;                   /* Violation - no declaration */
+extern int ei1 = 1;       /* Violation - no declaration */
+void foo1(int x){}        /* Violation - no declaration */
+void foo2(int x){}        /* Violation - declaration after definition */
+void foo2(int x);
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* file.h */
+extern int i1;
+extern int ei1;
+extern void foo1(int x);
+extern void foo2(int x);
+
+/* file.c */
+#include "file.h"
+int i1;                   /* OK */
+int ei1 = 1;              /* OK */
+void foo1(int x){}        /* OK */
+void foo2(int x){}        /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.4
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.2.2 Function calls
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.5.2.2 Function calls
+
+</PRE>
+</BODY>
+</HTML>

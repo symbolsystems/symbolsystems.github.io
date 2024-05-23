@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A project shall not contain unreachable code in 'if/else/while/for' block [MISRA2008-0_1_1_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A project shall not contain unreachable code in 'if/else/while/for' block [MISRA2008-0_1_1_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule refers to code which cannot under any circumstances be reached, 
+and which can be identified as such at compile-time. Code that can be reached 
+but may never be executed is excluded from the rule (e.g. defensive programming 
+code). A portion of code is unreachable if there is no control flow path from 
+the relevant entry point to that code."
+Rule detects unreachable code inside if/while/for/else block if in a condition 
+a constant value is used. 
+See also: The groups of rules MISRA2004-14_1 and MISRA2004-13_7
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule helps avoid useless code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int unreachable_code = 1;
+    if(0)                         // Violation
+    { 
+        unreachable_code = 2; 
+    }                 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+There shall be no unreachable code
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    M0-1-1. A project shall not contain unreachable code
+
+2.  High Integrity C++ Coding Standard
+    1.2.1. Ensure that all statements are reachable
+
+3.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.24 Flow Control Structures, AV Rule 186
+
+4.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 0, Rule 0-1-1
+
+5.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 0.0.1 A function shall not contain unreachable statements
+
+6.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 2.1
+
+7.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 14
+
+8.  Origin: Misra Guidelines - Rule 52
+
+9.  SEI CERT C Coding Standard
+    MSC07-C. Detect and remove dead code
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC07-C.+Detect+and+remove+dead+code">https://wiki.sei.cmu.edu/confluence/display/c/MSC07-C.+Detect+and+remove+dead+code</A>
+
+10. SEI CERT C Coding Standard
+    MSC12-C. Detect and remove code that has no effect or is never executed
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed">https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed</A>
+
+</PRE>
+</BODY>
+</HTML>

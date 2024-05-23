@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The same file shall not be opened for read and write access at the same time on different streams [MISRAC2012-RULE_22_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The same file shall not be opened for read and write access at the same time on different streams [MISRAC2012-RULE_22_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when the same file has been opened for read and write access at the same time.
+
+The following file handling APIs are supported by this rule:
+
+1. FILE* streams (stdio.h)
+* Open file functions:
+        
+    FILE *fopen(const char *filename, const char *mode);
+    FILE *freopen(const char *filename, const char *mode, FILE *stream);
+
+* Close file function:
+    int fclose (FILE *stream);
+    
+2. File descriptors (fcntl.h)
+
+* Open file functions:
+    
+    int open(const char *pathname, int flags);
+    int open(const char *pathname, int flags, mode_t mode);
+    int openat(int dirfd, const char *pathname, int flags);
+    int openat(int dirfd, const char *pathname, int flags, mode_t mode);
+
+* Close file function:
+    int close(int handle);
+    
+    
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Writing to a read-only stream has no defined behavior in the language specification.
+For this reason, it is considered unsafe and it may cause segmentation fault errors.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps avoid unexpected failures at runtime. The standard does not define behavior 
+in the case of attempts to write and read the same file file on different streams, which may 
+lead to unexpected behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+
+void example() {
+    FILE *fw = fopen("tmp", "r+");
+    FILE *fr = fopen("tmp", "r"); // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Close the file for write access before opening it again for read access.
+
+#include &lt;stdio.h&gt;
+
+void repair() {
+    FILE *fw = fopen("tmp", "r+");
+    fclose(fw);
+    FILE *fr = fopen("tmp", "r"); // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 22.3
+
+</PRE>
+</BODY>
+</HTML>

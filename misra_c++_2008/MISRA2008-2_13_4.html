@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Literal suffixes shall be upper case [MISRA2008-2_13_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Literal suffixes shall be upper case [MISRA2008-2_13_4-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a literal suffix use lowercase letter.
+Using upper case letters makes the recognition of literal suffixes
+easier, e.g. removes the potential ambiguity between '1' (digit 1) and 'l'
+(letter el) for declaring literals.
+
+See also: CODSTA-50
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(long param = 64l)    // Violation
+{
+    unsigned int ui = 10000u; // Violation
+    float f = 0.1f;           // Violation
+    long hex = 0xfffffl;      // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(long param = 64L)    // OK
+{
+    unsigned int ui = 10000U; // OK
+    float f = 0.1F;           // OK
+    long hex = 0xfffffL;      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M2-13-4. Literal suffixes shall be upper case
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-13-4
+
+</PRE>
+</BODY>
+</HTML>

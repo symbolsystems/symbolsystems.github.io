@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The names of the standard signed integer types and standard unsigned integer types should not be used [MISRACPP2023-6_9_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The names of the standard signed integer types and standard unsigned integer types should not be used [MISRACPP2023-6_9_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The basic numerical types should not be used directly, because their storage
+size is machine-dependent.
+
+This rule detects when the basic numerical types 'char' (explicitly declared
+as 'unsigned' or 'signed'), 'short', 'int', 'long', and 'long long' are used
+in the code.
+
+See also: MISRA2004-6_3, MISRA2004-6_3_b, MISRA-013, CODSTA-155
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not report on the plain 'char' type. It does not have
+the corresponding type in the &lt;cstdint&gt; header. This type is detected
+by a separate rule CODSTA-223_b.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule allows the use of basic integer types as the return type
+of the 'main' function and as the types of its parameters.
+
+This rule allows the use of basic integer types in 'typedef' or
+'using' declarations.
+
+This rule allows the use of type 'int' as a parameter to a postfix
+operator, which must use that type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using integer types whose storage size is unclear.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+short int foo(                      // Violation
+        short* v_short,             // Violation
+        long&amp; r_long)               // Violation
+{
+    unsigned u;                     // Violation
+    const int z = 1;                // Violation
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by replacing the basic numerical types with
+the specific-length types from &lt;cstdint&gt;.
+
+#include &lt;cstdint&gt;
+
+std::int16_t foo(                   // OK
+        std::int16_t* v_short,      // OK
+        std::int64_t&amp; r_long)       // OK
+{
+    std::uint32_t u;                // OK
+    const std::int32_t z = 1;       // OK
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.9.2 The names of the standard signed integer types and standard unsigned integer types should not be used
+
+</PRE>
+</BODY>
+</HTML>

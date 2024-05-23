@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Member functions returning references to their object should be ref-qualified appropriately [MISRACPP2023-6_8_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Member functions returning references to their object should be ref-qualified appropriately [MISRACPP2023-6_8_4-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks ref-qualifiers of non-static member functions which return
+either a reference or a pointer type and, in the definition of the function,
+at least one return expression explicitly designates this, *this or
+a subobject of *this.
+
+The rule reports if such a function:
+* does not have any ref-qualifier, or
+* is rvalue-ref-qualified (&amp;&amp;), or
+* is const-lvalue-ref-qualified (const &amp;), unless another, 
+rvalue-ref-qualified (&amp;&amp;) overload with the same parameter-type-list exists.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior which may occur when an immediately
+dangling reference or a pointer is used when calling such member function on
+a temporary object.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+
+struct X {
+  int i;
+  int j;
+
+  int&amp; getI()        // Violation
+  {
+    return i;
+  }
+
+  int* getJ() &amp;&amp;     // Violation
+  {
+    return &amp;j;
+  }
+
+  X&amp; getMe() const &amp; // Violation
+  {
+    return *this;
+  }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct X
+{
+    int i;
+    int j;
+
+    int&amp; getI() &amp;           // OK
+    {
+        return i;
+    }
+
+    int* getJ() &amp;           // OK
+    {
+        return &amp;j;
+    }
+
+    const X&amp; getMe() const&amp; // OK
+    {
+        return *this;
+    }
+    X getMe() &amp;&amp;            // OK
+    {
+        return *this;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.8.4 Member functions returning references to their object should be ref-qualified appropriately
+
+</PRE>
+</BODY>
+</HTML>

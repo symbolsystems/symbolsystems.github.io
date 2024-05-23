@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Arguments to a function-like macro shall not contain tokens that look like preprocessing directives [MISRACPP2023-19_3_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Arguments to a function-like macro shall not contain tokens that look like preprocessing directives [MISRACPP2023-19_3_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Tokens that look like a preprocessing directive shall not occur within a macro
+argument. An argument containing sequences of tokens that would otherwise act
+as preprocessing directives leads to undefined behaviour." 
+[MISRA C:2012, Rule 20.6]
+
+"A preprocessing directive consists of a sequence of preprocessing tokens that
+begins with a # preprocessing token that is either the first character in the
+source file (optionally after white space containing no new-line characters)
+or that follows white space containing at least one new-line character,
+and is ended by the next new-line character." [ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule reports a violation if an argument of function-like macro contains
+a hash sign (#). The violation is reported even if the hash sign does not
+start a preprocessing directive. For example:
+    #define EMPTY( x )
+    EMPTY( # include &lt;file.h&gt; ) /* Violation */ 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. Some function-like macros are not supported:
+   - predefined macros
+   - macros defined in command line
+   Arguments in such macro calls won't be checked.
+
+2. Rule reports violations for any potentially defined macro, for example:
+    #ifdef XXX
+    #define M(x)
+    #else
+    void M(int);
+    #endif
+    M(#pragma) /* Rule assumes M could be a macro because it found
+                  a "#define M(" somewhere in current translation unit */
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void p(const char *);
+#define M( A ) p( #A )
+
+void foo1(int x) 
+{
+    M (
+#ifdef SW                // Violation
+          x
+#else                    // Violation
+          x+1
+#endif                   // Violation
+      );
+}
+
+#define M1(x) x 
+void foo2(void) {
+    M1 (
+#define X 20             // Violation
+            X
+#                        // Violation
+        );
+}
+
+#define M2(x) 10
+void foo3(void) {
+     M2(#X);             // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void p(const char *);
+#define M( A ) p ( #A )
+
+void foo1(int x)
+{
+#ifdef SW
+    M (x);               // OK
+#else
+    M (x+1);             // OK
+#endif
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M16-0-5. Arguments to a function-like macro shall not contain tokens that
+   look like pre-processing directives
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.8 Preprocessing directives
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.10 Preprocessing directives
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-0-5
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.3.5 Tokens that look like a preprocessing directive shall not occur within a macro argument
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.6
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19, Rule 19.9
+
+8. Origin: Misra Guidelines - Rule 95
+
+9. SEI CERT C Coding Standard
+   PRE32-C. Do not use preprocessor directives in invocations of function-like
+   macros
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE32-C.+Do+not+use+preprocessor+directives+in+invocations+of+function-like+macros">https://wiki.sei.cmu.edu/confluence/display/c/PRE32-C.+Do+not+use+preprocessor+directives+in+invocations+of+function-like+macros</A>
+
+</PRE>
+</BODY>
+</HTML>

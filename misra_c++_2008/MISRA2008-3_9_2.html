@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+typedefs that indicate size and signedness should be used in place of the basic numerical types [MISRA2008-3_9_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+typedefs that indicate size and signedness should be used in place of the basic numerical types [MISRA2008-3_9_2-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The storage length of types can vary from compiler to compiler. It is safer
+if programmers work with types which they know to be of a given length."
+Rule reports a violation message if basic numerical type is used 
+(e.g. signed char) or typedef name does not contain any digits
+indicating the size (e.g. my_int).
+See also: MISRA2004-6_3
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule does not report a violation for:
+- "main" function return type
+- extern variable declaration
+- boolean and enum types
+- bit-field types.
+- typedef name which starts with 'bool' prefix, or is a typedef for plain char
+  (even if it does not contain any digits)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Rule helps to clarify the size of the storage, but does not guarantee 
+portability because of the asymmetric behaviour of integral promotion."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef signed int my_int; /* Violation - no digits */
+static signed char a;      /* Violation - not typedef */
+
+short int foo(             /* Violation (for return type) */
+        char* p_char,      /* Violation */
+        float&amp; r_float)    /* Violation */
+{
+    double h;              /* Violation */
+    const int z = 1;       /* Violation */
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Exceptions: */
+typedef char char_t;            /* OK (plain char) */
+typedef unsigned char BOOL;     /* OK (typedef name starts with 'bool' prefix */
+struct STRUCT {
+        unsigned int i:2;       /* OK (bit-bield type) */
+};
+bool b;                         /* OK (boolean type) */
+enum ENUM { EV };               /* OK (enum type) */
+extern signed char a;           /* OK (extern variable) */
+int main() { return 0; }        /* OK ("main" return type) */
+
+/* Correct use of typedef: */
+typedef signed int my_int32;    /* OK */
+typedef signed char int8_t;     /* OK */
+typedef short int s16_t;        /* OK */
+typedef float&amp; float32ref;      /* OK */
+typedef double float64;         /* OK */
+typedef const int cs32_t;       /* OK */
+s16_t foo(                      /* OK */
+        char_t* p_char,         /* OK */
+        float32ref r_float)     /* OK */
+{
+    float64 h;                  /* OK */
+    cs32_t z = 1;               /* OK */
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Misra Guidelines - Rule 13
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 3, Rule 3-9-2
+
+</PRE>
+</BODY>
+</HTML>

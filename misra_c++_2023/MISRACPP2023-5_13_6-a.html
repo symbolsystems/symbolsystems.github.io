@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An integer-literal of type long long shall not use a single 'L' or 'l' in any suffix [MISRACPP2023-5_13_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An integer-literal of type long long shall not use a single 'L' or 'l' in any suffix [MISRACPP2023-5_13_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The type of an integer-literal is dependent on a complex combination of factors
+including:
+- the magnitude of the integer-literal
+- the implemented sizes of the integer types
+- the presence of any suffixes
+- the number base in which the value is expressed (i.e., decimal, octal or
+  hexadecimal)
+
+The 'L' (or 'l') suffix means the 'long' type, but in some cases, the real type
+of the integer-literal can be the 'long long' type. In this case, the suffix
+should be 'LL' (or 'll') to match the real type of the integer-literal.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not apply to user-defined-literals.
+This rule triggers only if 'long' and 'long long' types have different sizes.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+This example assumes that 'long' is 32-bits and 'long long' is 64-bits.
+
+auto k1 = 12345678998L;  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding the 'LL' suffix.
+
+auto k1 = 12345678998LL; // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.6 An integer-literal of type long long shall not use a single L or l in any suffix
+
+</PRE>
+</BODY>
+</HTML>

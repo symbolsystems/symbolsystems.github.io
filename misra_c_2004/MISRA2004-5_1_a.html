@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-specified C external identifiers should differ in the first 31 characters [MISRA2004-5_1_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-specified C external identifiers should differ in the first 31 characters [MISRA2004-5_1_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The ISO standard requires internal identifiers to be distinct in the first 31
+characters to guarantee code portability. This limitation shall not be exceeded,
+even if the compiler supports it. This rule shall apply across all name spaces.
+The ISO standard requires external identifiers to be distinct in the first 6
+characters, regardless of case, to guarantee optimal portability.
+However this limitation is particularly severe and is considered unnecessary.
+The intent of this rule is to sanction a relaxation of the ISO requirement
+to a degree commensurate with modern environments and it shall be confirmed
+that 31 character/case significance is supported by the implementation."
+[MISRA C:2004 Rule 5.1]
+
+This rule detects when two external identifiers that are declared or defined
+in the same translation unit have the same first 31 characters in their names.
+
+The rule checks the names of the following identifiers:
+- variables and functions with internal or external linkage
+- structures, unions, typedefs, enumerations, and enumeration
+  constants that are defined in a file scope
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule compares identifiers across all name spaces.
+The rule does not report identifiers with identical names.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+extern void NG_4567890123456789012345678901_v1();
+static void NG_4567890123456789012345678901_v2();       // Violation
+
+int NA_4567890123456789012345678901_v1();
+struct NA_4567890123456789012345678901_v1{ int m; };    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by modifying the names of identifiers.
+
+extern void Fa_4567890123456789012345678901_v1();
+static void Fb_4567890123456789012345678901_v2();       // OK
+
+int Va_4567890123456789012345678901_v1();
+struct Sa_4567890123456789012345678901_v1{ int m; };    // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 5, Rule 5.1
+
+2. Origin: Misra Guidelines - Rule 11
+
+</PRE>
+</BODY>
+</HTML>

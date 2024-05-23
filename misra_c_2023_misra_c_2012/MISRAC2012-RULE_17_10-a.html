@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions declared as 'noreturn' shall have the 'void' return type [MISRAC2012-RULE_17_10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions declared as 'noreturn' shall have the 'void' return type [MISRAC2012-RULE_17_10-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"By definition, use of the _Noreturn function specifier indicates
+unambiguously that a function will not return to its caller.
+A function that cannot return cannot provide a return value and shall
+therefore be defined with a void return type." [MISRA C:2012 Amendment 3]
+
+This rule detects functions whose return type is other than 'void' that are
+declared as 'noreturn' with one of the following:
+  * "_Noreturn" function specifier
+  * "noreturn" macro from stdnoreturn.h
+  * __attribute__((noreturn))
+  * [[ noreturn ]] attribute
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected behavior and prevent unexpected failures
+at runtime.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the "foo" function declared with the "_Noreturn"
+specifier returns an int value.
+
+_Noreturn int foo(void);                                    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, change the return type of the "foo" function to "void".
+
+_Noreturn void foo(void);                                   // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.13 Rule 17.10
+
+2. Programming languages -- C ISO/IEC 9899:201x
+   6.7.4 Function specifiers
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A null statement shall only occur on a line by itself [MISRA-054]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A null statement shall only occur on a line by itself [MISRA-054-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Null statements should not normally be deliberately included, but where they
+are used they shall appear on a line by themselves and not with any other
+text (including comments)." [MISRA-C:1998]
+
+This rule detects when a null statement is used on a line that contains other
+non-white-space characters.
+
+See also: MISRA2004-14_3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Following this rule enables a static checking tool to warn of null statements
+appearing on a line with other text, which would  normally indicate
+a programming error." [MISRA-C:1998]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define ADD(i, j) i + j;
+
+void f1(int p1, int p2)
+{
+    if(p1 &gt; 0);        /* Violation */
+    p1 = ADD(p1, p2);  /* Violation */
+    /* Violation */ ;
+    ; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by moving the null statement to a separate line.
+
+#define ADD(i, j) i + j
+
+void f1(int p1, int p2)
+{
+    if(p1 &gt; 0)
+        ;
+        /* OK - null statement in a line above */
+    p1 = ADD(p1, p2);  /* OK */
+    /* OK - null statement in a line below */
+    ;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:1998 Guidelines For The Use Of The C Language In Vehicle Based
+   Software, Rule 54
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,818 @@
+<HTML><HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<TITLE>Enabled Rules</TITLE></HEAD>
+<BODY BGCOLOR=white><FONT FACE="Arial, Helvetica"><H1>Enabled Rules</H1>
+<UL>
+<LI><B><A HREF="MISRACPP2023.html">MISRA C++ 2023 [MISRACPP2023]</A></B>
+<UL>
+<LI><B><A HREF="MISRACPP2023-0_0_1.html">Rule 0.0.1 (Required) A function shall not contain unreachable statements [MISRACPP2023-0_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_0_1-a.html">There shall be no unreachable code in &quot;else&quot; block [MISRACPP2023-0_0_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-b.html">There shall be no unreachable code after 'return', 'break', 'continue', 'goto', 'throw' statements, and after calls to functions with the 'noreturn' attribute [MISRACPP2023-0_0_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-c.html">There shall be no unreachable code in &quot;if/else/while/for&quot; block [MISRACPP2023-0_0_1-c-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-d.html">There shall be no unreachable code in switch statement [MISRACPP2023-0_0_1-d-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-e.html">There shall be no unreachable code in 'for' loop [MISRACPP2023-0_0_1-e-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-f.html">There shall be no unreachable code after 'if' or 'switch' statement [MISRACPP2023-0_0_1-f-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-g.html">There shall be no unreachable code after &quot;if&quot; or &quot;switch&quot; statement inside while/for/do...while loop [MISRACPP2023-0_0_1-g-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-h.html">Where multiple handlers are provided in a single try-catch statement or function-try-block for a derived class and some or all of its bases, the handlers shall be ordered most-derived to base class [MISRACPP2023-0_0_1-h-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-i.html">Where multiple handlers are provided in a single 'try-catch' statement or 'function-try-block', any ellipsis (catch-all) handler shall occur last [MISRACPP2023-0_0_1-i-2]</A>
+<LI><A HREF="MISRACPP2023-0_0_1-j.html">A 'try' statement of a 'try-block' should contain a potentially-throwing statement [MISRACPP2023-0_0_1-j-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_0_2.html">Rule 0.0.2 (Advisory) Controlling expressions should not be invariant [MISRACPP2023-0_0_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_0_2-a.html">Avoid conditions that always evaluate to the same value [MISRACPP2023-0_0_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_1_1.html">Rule 0.1.1 (Advisory) A value should not be unnecessarily written to a local object [MISRACPP2023-0_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_1_1-a.html">Avoid unused values [MISRACPP2023-0_1_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_1_2.html">Rule 0.1.2 (Required) The value returned by a function shall be used [MISRACPP2023-0_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_1_2-a.html">The value returned by a function having a non-void return type that is not an overloaded operator shall always be used [MISRACPP2023-0_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_2_1.html">Rule 0.2.1 (Advisory) Variables with limited visibility should be used at least once [MISRACPP2023-0_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_2_1-a.html">Avoid unused local variables [MISRACPP2023-0_2_1-a-4]</A>
+<LI><A HREF="MISRACPP2023-0_2_1-b.html">A project should not contain unused variables with internal linkage [MISRACPP2023-0_2_1-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_2_2.html">Rule 0.2.2 (Required) A named function parameter shall be used at least once [MISRACPP2023-0_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_2_2-a.html">Eliminate unused parameters [MISRACPP2023-0_2_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-0_2_2-b.html">There shall be no unused named parameters in virtual functions [MISRACPP2023-0_2_2-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_2_3.html">Rule 0.2.3 (Advisory) Types with limited visibility should be used at least once [MISRACPP2023-0_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_2_3-a.html">Types declared in an unnamed namespace scope should be used at least once [MISRACPP2023-0_2_3-a-4]</A>
+<LI><A HREF="MISRACPP2023-0_2_3-b.html">Types declared in a block scope should be used at least once [MISRACPP2023-0_2_3-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_2_4.html">Rule 0.2.4 (Advisory) Functions with limited visibility should be used at least once [MISRACPP2023-0_2_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_2_4-a.html">Avoid unreachable methods [MISRACPP2023-0_2_4-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_3_1.html">Dir 0.3.1 (Advisory) Floating-point arithmetic should be used appropriately [MISRACPP2023-0_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_3_1-a.html">Do not use object representations to compare floating-point values [MISRACPP2023-0_3_1-a-4]</A>
+<LI><A HREF="MISRACPP2023-0_3_1-b.html">Floating-point expressions shall not be explicitly (syntactically) tested for equality (==) or inequality (!=) [MISRACPP2023-0_3_1-b-4]</A>
+<LI><A HREF="MISRACPP2023-0_3_1-c.html">Do not use floating point variables as loop counters [MISRACPP2023-0_3_1-c-4]</A>
+<LI><A HREF="MISRACPP2023-0_3_1-d.html">Do not use floating-point expressions which may result in NaN and infinity values [MISRACPP2023-0_3_1-d-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-0_3_2.html">Dir 0.3.2 (Required) A function call shall not violate the function's preconditions [MISRACPP2023-0_3_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-0_3_2-a.html">Do not pass incorrect values to library functions [MISRACPP2023-0_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_0_1.html">Rule 10.0.1 (Advisory) A declaration should not declare more than one variable or member variable [MISRACPP2023-10_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_0_1-a.html">Each variable should be declared in a separate declaration statement [MISRACPP2023-10_0_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_1_1.html">Rule 10.1.1 (Advisory) The target type of a pointer or lvalue reference parameter should be const-qualified appropriately [MISRACPP2023-10_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_1_1-a.html">A pointer parameter in a function prototype should be declared as pointer to const if the pointer is not used to modify the addressed object [MISRACPP2023-10_1_1-a-4]</A>
+<LI><A HREF="MISRACPP2023-10_1_1-b.html">Declare a type of parameter as typedef to pointer to const if the pointer is not used to modify the addressed object [MISRACPP2023-10_1_1-b-4]</A>
+<LI><A HREF="MISRACPP2023-10_1_1-c.html">Declare reference parameters as const references whenever possible [MISRACPP2023-10_1_1-c-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_1_2.html">Rule 10.1.2 (Required) The volatile qualifier shall be used appropriately [MISRACPP2023-10_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_1_2-a.html">The volatile qualifier shall be used appropriately [MISRACPP2023-10_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_2_1.html">Rule 10.2.1 (Required) An enumeration shall be defined with an explicit underlying type [MISRACPP2023-10_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_2_1-a.html">An enumeration shall be defined with an explicit underlying type [MISRACPP2023-10_2_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-10_2_1-b.html">An explicit or implicit enumerator value shall not be the result of a narrowing conversion [MISRACPP2023-10_2_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_2_2.html">Rule 10.2.2 (Advisory) Unscoped enumerations should not be declared [MISRACPP2023-10_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_2_2-a.html">Prefer Scoped Enums to Unscoped Enums [MISRACPP2023-10_2_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_2_3.html">Rule 10.2.3 (Required) The numeric value of an unscoped enumeration with no fixed underlying type shall not be used [MISRACPP2023-10_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_2_3-a.html">The numeric value of an unscoped enumeration with no fixed underlying type shall not be used [MISRACPP2023-10_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_3_1.html">Rule 10.3.1 (Advisory) There should be no unnamed namespaces in header files [MISRACPP2023-10_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_3_1-a.html">There shall be no unnamed namespaces in header files [MISRACPP2023-10_3_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-10_4_1.html">Rule 10.4.1 (Required) The asm declaration shall not be used [MISRACPP2023-10_4_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-10_4_1-a.html">The 'asm' declaration should not be used [MISRACPP2023-10_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-11_3_1.html">Rule 11.3.1 (Advisory) Variables of array type should not be declared [MISRACPP2023-11_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-11_3_1-a.html">C-style arrays shall not be used [MISRACPP2023-11_3_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-11_3_2.html">Rule 11.3.2 (Advisory) The declaration of an object should contain no more than two levels of pointer indirection [MISRACPP2023-11_3_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-11_3_2-a.html">The declaration of objects should contain no more than 2 levels of pointer indirection [MISRACPP2023-11_3_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-11_6_1.html">Rule 11.6.1 (Advisory) All variables should be initialized [MISRACPP2023-11_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-11_6_1-a.html">All non-class variables with automatic storage duration should be explicitly initialized [MISRACPP2023-11_6_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-11_6_2.html">Rule 11.6.2 (Mandatory) The value of an object must not be read before it has been set [MISRACPP2023-11_6_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-11_6_2-a.html">Avoid use before initialization [MISRACPP2023-11_6_2-a-1]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-11_6_3.html">Rule 11.6.3 (Required) Within an enumerator list, the value of an implicitly-specified enumeration constant shall be unique [MISRACPP2023-11_6_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-11_6_3-a.html">Within an enumerator list, the value of an implicitly-specified enumeration constant shall be unique [MISRACPP2023-11_6_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-12_2_1.html">Rule 12.2.1 (Advisory) Bit-fields should not be declared [MISRACPP2023-12_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-12_2_1-a.html">Do not declare member variables as bit-fields [MISRACPP2023-12_2_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-12_2_2.html">Rule 12.2.2 (Required) A bit-field shall have an appropriate type [MISRACPP2023-12_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-12_2_2-a.html">A bit-field shall have an appropriate type [MISRACPP2023-12_2_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-12_2_2-b.html">All enumeration values should be representable within the width of the bit-field [MISRACPP2023-12_2_2-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-12_2_3.html">Rule 12.2.3 (Required) A named bit-field with signed integer type shall not have a length of one bit [MISRACPP2023-12_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-12_2_3-a.html">Named bit-fields with signed integer type shall have a length of more than one bit [MISRACPP2023-12_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-12_3_1.html">Rule 12.3.1 (Required) The union keyword shall not be used [MISRACPP2023-12_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-12_3_1-a.html">The union keyword should not be used [MISRACPP2023-12_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-13_1_1.html">Rule 13.1.1 (Advisory) Classes should not be inherited virtually [MISRACPP2023-13_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-13_1_1-a.html">Classes should not be derived from virtual bases [MISRACPP2023-13_1_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-13_1_2.html">Rule 13.1.2 (Required) An accessible base class shall not be both virtual and non-virtual in the same hierarchy [MISRACPP2023-13_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-13_1_2-a.html">A base class shall not be both virtual and non-virtual in the same hierarchy [MISRACPP2023-13_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-13_3_1.html">Rule 13.3.1 (Required) User-declared member functions shall use the virtual, override and final specifiers appropriately [MISRACPP2023-13_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-13_3_1-a.html">Each overriding virtual function shall be declared with the override or final specifier [MISRACPP2023-13_3_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-13_3_1-b.html">Only one of virtual, override or final should be specified in a member function declaration [MISRACPP2023-13_3_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-13_3_2.html">Rule 13.3.2 (Required) Parameters in an overriding virtual function shall not specify different default arguments [MISRACPP2023-13_3_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-13_3_2-a.html">Parameters in an overriding virtual function shall not specify different default arguments [MISRACPP2023-13_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-13_3_3.html">Rule 13.3.3 (Required) The parameters in all declarations or overrides of a function shall either be unnamed or have identical names [MISRACPP2023-13_3_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-13_3_3-a.html">The identifiers used in the declaration and definition of a function shall be identical [MISRACPP2023-13_3_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-13_3_3-b.html">The parameters in all overrides of a function should either be unnamed or have identical names [MISRACPP2023-13_3_3-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-13_3_4.html">Rule 13.3.4 (Required) A comparison of a potentially virtual pointer to member function shall only be with nullptr [MISRACPP2023-13_3_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-13_3_4-a.html">A pointer to member virtual function shall only be tested for equality with null-pointer-constant [MISRACPP2023-13_3_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-14_1_1.html">Rule 14.1.1 (Advisory) Non-static data members should be either all private or all public [MISRACPP2023-14_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-14_1_1-a.html">Non-static data members should be either all private or all public [MISRACPP2023-14_1_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_0_1.html">Rule 15.0.1 (Required) Special member functions shall be provided appropriately [MISRACPP2023-15_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_0_1-a.html">Special member functions shall be provided appropriately [MISRACPP2023-15_0_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-15_0_1-b.html">Destructor shall have a non-empty body [MISRACPP2023-15_0_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_0_2.html">Rule 15.0.2 (Advisory) User-provided copy and move member functions of a class should have appropriate signatures [MISRACPP2023-15_0_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_0_2-a.html">User-provided copy and move member functions of a class should have appropriate signatures [MISRACPP2023-15_0_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_1_1.html">Rule 15.1.1 (Required) An object's dynamic type shall not be used from within its constructor or destructor [MISRACPP2023-15_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_1_1-a.html">Do not use dynamic type of an object under construction [MISRACPP2023-15_1_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-15_1_1-b.html">Do not use dynamic type of an object under destruction [MISRACPP2023-15_1_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_1_2.html">Rule 15.1.2 (Advisory) All constructors of a class should explicitly initialize all of its virtual base classes and immediate base classes [MISRACPP2023-15_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_1_2-a.html">All constructors of a class should explicitly call a constructor for all of its immediate base classes and all virtual base classes [MISRACPP2023-15_1_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_1_3.html">Rule 15.1.3 (Required) Conversion operators and constructors that are callable with a single argument shall be explicit [MISRACPP2023-15_1_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_1_3-a.html">Constructors allowing for conversion should be made explicit [MISRACPP2023-15_1_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-15_1_3-b.html">User-conversion cast operators should be made explicit [MISRACPP2023-15_1_3-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_1_4.html">Rule 15.1.4 (Advisory) All direct, non-static data members of a class should be initialized before the class object is accessible [MISRACPP2023-15_1_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_1_4-a.html">All direct, non-static data members of a non-aggregate class should be initialized at the top of a constructor body [MISRACPP2023-15_1_4-a-4]</A>
+<LI><A HREF="MISRACPP2023-15_1_4-b.html">All direct, non-static data members of an aggregate class should be initialized as soon as the object is created [MISRACPP2023-15_1_4-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_1_5.html">Rule 15.1.5 (Required) A class shall only define an initializer-list constructor when it is the only constructor [MISRACPP2023-15_1_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_1_5-a.html">A class shall only define an initializer-list constructor when it is the only constructor [MISRACPP2023-15_1_5-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-15_8_1.html">Dir 15.8.1 (Required) User-provided copy assignment operators and move assignment operators shall handle self-assignment [MISRACPP2023-15_8_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-15_8_1-a.html">Check for assignment to self in operator= [MISRACPP2023-15_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-16_5_1.html">Rule 16.5.1 (Required) The logical AND and logical OR operators shall not be overloaded [MISRACPP2023-16_5_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-16_5_1-a.html">Avoid overloading logical operators AND, OR (&amp;&amp;, ||) [MISRACPP2023-16_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-16_5_2.html">Rule 16.5.2 (Required) The address-of operator shall not be overloaded [MISRACPP2023-16_5_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-16_5_2-a.html">The unary &amp; operator shall not be overloaded [MISRACPP2023-16_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-16_6_1.html">Rule 16.6.1 (Advisory) Symmetrical operators should only be implemented as non-member functions [MISRACPP2023-16_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-16_6_1-a.html">If you'd like to support mixed-mode operations make operators a non-member functions [MISRACPP2023-16_6_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-17_8_1.html">Rule 17.8.1 (Required) Function templates shall not be explicitly specialized [MISRACPP2023-17_8_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-17_8_1-a.html">Function templates shall not be explicitly specialized [MISRACPP2023-17_8_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_1_1.html">Rule 18.1.1 (Required) An exception object shall not have pointer type [MISRACPP2023-18_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_1_1-a.html">An exception object should not have pointer type [MISRACPP2023-18_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_1_2.html">Rule 18.1.2 (Required) An empty throw shall only occur within the compound-statement of a catch handler [MISRACPP2023-18_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_1_2-a.html">An empty throw (throw;) shall only be used in the compound-statement of a catch handler [MISRACPP2023-18_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_2_2.html">Rule 18.2.2 (Required) The string handling functions from <cstring>, <cstdlib>, <cwchar> and <cinttypes> shall not be used [MISRACPP2023-18_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_2_2-a.html">The string handling functions from &lt;cstring&gt;, &lt;cstdlib&gt;, &lt;cwchar&gt; and &lt;cinttypes&gt; shall not be used [MISRACPP2023-18_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_3_1.html">Rule 18.3.1 (Advisory) There should be at least one exception handler to catch all otherwise unhandled exceptions [MISRACPP2023-18_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_3_1-a.html">There should be at least one exception handler to catch all otherwise unhandled exceptions [MISRACPP2023-18_3_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_3_2.html">Rule 18.3.2 (Required) An exception of class type shall be caught by const reference or reference [MISRACPP2023-18_3_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_3_2-a.html">A class type exception shall always be caught by reference [MISRACPP2023-18_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_3_3.html">Rule 18.3.3 (Required) Handlers for a function-try-block of a constructor or destructor shall not refer to non-static members from their class or its bases [MISRACPP2023-18_3_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_3_3-a.html">Handlers of a function-try-block implementation of a class constructor or destructor shall not reference nonstatic members from this class or its bases [MISRACPP2023-18_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_4_1.html">Rule 18.4.1 (Required) Exception-unfriendly functions shall be noexcept [MISRACPP2023-18_4_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_4_1-a.html">Exception-unfriendly functions shall be noexcept [MISRACPP2023-18_4_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-18_4_1-b.html">Functions used as initializers of non-constexpr non-local variables shall be noexcept [MISRACPP2023-18_4_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_5_1.html">Rule 18.5.1 (Advisory) A noexcept function should not attempt to propagate an exception to the calling function [MISRACPP2023-18_5_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_5_1-a.html">Avoid throwing exceptions from functions that are declared not to throw [MISRACPP2023-18_5_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-18_5_2.html">Rule 18.5.2 (Advisory) Program-terminating functions should not be used [MISRACPP2023-18_5_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-18_5_2-a.html">The 'abort()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [MISRACPP2023-18_5_2-a-4]</A>
+<LI><A HREF="MISRACPP2023-18_5_2-b.html">The 'exit()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [MISRACPP2023-18_5_2-b-4]</A>
+<LI><A HREF="MISRACPP2023-18_5_2-c.html">The 'quick_exit()' and '_Exit()' functions from the 'stdlib.h' or 'cstdlib' library shall not be used [MISRACPP2023-18_5_2-c-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_0_1.html">Rule 19.0.1 (Required) A line whose first token is # shall be a valid preprocessing directive [MISRACPP2023-19_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_0_1-a.html">Preprocessing directives shall be syntactically meaningful even when excluded by the preprocessor [MISRACPP2023-19_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_0_2.html">Rule 19.0.2 (Required) Function-like macros shall not be defined [MISRACPP2023-19_0_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_0_2-a.html">Function-like macros shall not be defined [MISRACPP2023-19_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_0_3.html">Rule 19.0.3 (Advisory) #include directives should only be preceded by preprocessor directives or comments [MISRACPP2023-19_0_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_0_3-a.html">#include statements in a file should only be preceded by other preprocessor directives or comments [MISRACPP2023-19_0_3-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_0_4.html">Rule 19.0.4 (Advisory) #undef should only be used for macros defined previously in the same file [MISRACPP2023-19_0_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_0_4-a.html">#undef should only be used for macros defined previously in the same file [MISRACPP2023-19_0_4-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_1_1.html">Rule 19.1.1 (Required) The defined preprocessor operator shall be used appropriately [MISRACPP2023-19_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_1_1-a.html">The defined preprocessor operator shall only be used in one of the two standard forms [MISRACPP2023-19_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_1_2.html">Rule 19.1.2 (Required) All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if, #ifdef or #ifndef directive to which they are related [MISRACPP2023-19_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_1_2-a.html">All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if or #ifdef directive to which they are related [MISRACPP2023-19_1_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_1_3.html">Rule 19.1.3 (Required) All identifiers used in the controlling expression of #if or #elif preprocessing directives shall be defined prior to evaluation [MISRACPP2023-19_1_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_1_3-a.html">Do not use in preprocessor directives #if and #elif macros not defined in translation unit [MISRACPP2023-19_1_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_2_1.html">Rule 19.2.1 (Required) Precautions shall be taken in order to prevent the contents of a header file being included more than once [MISRACPP2023-19_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_2_1-a.html">Use multiple include guards [MISRACPP2023-19_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_2_2.html">Rule 19.2.2 (Required) The #include directive shall be followed by either a <filename> or "filename" sequence [MISRACPP2023-19_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_2_2-a.html">The #include directive shall be followed by either a &lt;filename&gt; or &quot;filename&quot; sequence [MISRACPP2023-19_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_2_3.html">Rule 19.2.3 (Required) The ' or " or \ characters and the /* or // character sequences shall not occur in a header file name [MISRACPP2023-19_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_2_3-a.html">Non-standard characters should not occur in header file names in #include directives [MISRACPP2023-19_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_3_1.html">Rule 19.3.1 (Advisory) The # and ## preprocessor operators should not be used [MISRACPP2023-19_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_3_1-a.html">The # and ## preprocessor operators should not be used [MISRACPP2023-19_3_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_3_2.html">Rule 19.3.2 (Required) A macro parameter immediately following a # operator shall not be immediately followed by a ## operator [MISRACPP2023-19_3_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_3_2-a.html">A macro parameter immediately following a # operator shall not immediately be followed by a ## operator [MISRACPP2023-19_3_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_3_3.html">Rule 19.3.3 (Required) The argument to a mixed-use macro parameter shall not be subject to further expansion [MISRACPP2023-19_3_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_3_3-a.html">A macro parameter used as an operand to the # or ## operators, which is itself subject to further macro replacement, shall only be used as an operand to these operators [MISRACPP2023-19_3_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_3_4.html">Rule 19.3.4 (Required) Parentheses shall be used to ensure macro arguments are expanded appropriately [MISRACPP2023-19_3_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_3_4-a.html">In the definition of a function-like macro each instance of a parameter shall be enclosed in parentheses unless it is used as the operand of # or ## [MISRACPP2023-19_3_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_3_5.html">Rule 19.3.5 (Required) Tokens that look like a preprocessing directive shall not occur within a macro argument [MISRACPP2023-19_3_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_3_5-a.html">Arguments to a function-like macro shall not contain tokens that look like preprocessing directives [MISRACPP2023-19_3_5-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-19_6_1.html">Rule 19.6.1 (Advisory) The #pragma directive and the _Pragma operator should not be used [MISRACPP2023-19_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-19_6_1-a.html">The #pragma directive shall not be used [MISRACPP2023-19_6_1-a-4]</A>
+<LI><A HREF="MISRACPP2023-19_6_1-b.html">The '_Pragma' operator should not be used [MISRACPP2023-19_6_1-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_10_1.html">Rule 21.10.1 (Required) The features of <cstdarg> shall not be used [MISRACPP2023-21_10_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_10_1-a.html">The identifiers va_list, va_arg, va_start, va_end, va_copy should not be used [MISRACPP2023-21_10_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_10_2.html">Rule 21.10.2 (Required) The standard header file <csetjmp> shall not be used [MISRACPP2023-21_10_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_10_2-a.html">The facilities provided by &lt;setjmp.h&gt; should not be used [MISRACPP2023-21_10_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-21_10_2-b.html">The standard header files &lt;setjmp.h&gt; or &lt;csetjmp&gt; shall not be used [MISRACPP2023-21_10_2-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_10_3.html">Rule 21.10.3 (Required) The facilities provided by the standard header file <csignal> shall not be used [MISRACPP2023-21_10_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_10_3-a.html">The signal handling facilities of &lt;signal.h&gt; shall not be used [MISRACPP2023-21_10_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_2_1.html">Rule 21.2.1 (Required) The library functions atof, atoi, atol and atoll from <cstdlib> shall not be used [MISRACPP2023-21_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_2_1-a.html">The library functions atof, atoi and atol from library stdlib.h shall not be used [MISRACPP2023-21_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_2_3.html">Rule 21.2.3 (Required) The library function system from <cstdlib> shall not be used [MISRACPP2023-21_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_2_3-a.html">The 'system()' function from the 'stdlib.h' or 'cstdlib' library shall not be used [MISRACPP2023-21_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_2_4.html">Rule 21.2.4 (Required) The macro offsetof shall not be used [MISRACPP2023-21_2_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_2_4-a.html">The macro offsetof, in library stddef.h, shall not be used [MISRACPP2023-21_2_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_6_1.html">Rule 21.6.1 (Advisory) Dynamic memory should not be used [MISRACPP2023-21_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_6_1-a.html">Dynamic heap memory allocation shall not be used [MISRACPP2023-21_6_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_6_2.html">Rule 21.6.2 (Required) Dynamic memory shall be managed automatically [MISRACPP2023-21_6_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_6_2-a.html">Dynamic heap memory allocation shall not be used [MISRACPP2023-21_6_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-21_6_2-b.html">Any member function named 'allocate' or 'deallocate' enclosed by namespace 'std' should not be used [MISRACPP2023-21_6_2-b-2]</A>
+<LI><A HREF="MISRACPP2023-21_6_2-c.html">The 'std::unique_ptr::release' function should not be used [MISRACPP2023-21_6_2-c-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_6_3.html">Rule 21.6.3 (Required) Advanced memory management shall not be used [MISRACPP2023-21_6_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_6_3-a.html">Destructor should not be called manually [MISRACPP2023-21_6_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-21_6_3-b.html">Do not declare the 'new' and 'delete' operators [MISRACPP2023-21_6_3-b-2]</A>
+<LI><A HREF="MISRACPP2023-21_6_3-c.html">The memory management functions from the &lt;new&gt; and &lt;memory&gt; headers should not be used [MISRACPP2023-21_6_3-c-2]</A>
+<LI><A HREF="MISRACPP2023-21_6_3-d.html">Advanced memory management operators 'new' and 'delete' should not be used [MISRACPP2023-21_6_3-d-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_6_4.html">Rule 21.6.4 (Required) If a project defines either a sized or unsized version of a global operator delete, then both shall be defined [MISRACPP2023-21_6_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_6_4-a.html">Define both sized and unsized versions of operator delete [MISRACPP2023-21_6_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-21_6_5.html">Rule 21.6.5 (Required) A pointer to an incomplete class type shall not be deleted [MISRACPP2023-21_6_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-21_6_5-a.html">Do not delete objects with incomplete class at the point of deletion [MISRACPP2023-21_6_5-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-22_3_1.html">Rule 22.3.1 (Required) The assert macro shall not be used with a constant-expression [MISRACPP2023-22_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-22_3_1-a.html">The 'assert' macro shall not be used with a constant expression [MISRACPP2023-22_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-22_4_1.html">Rule 22.4.1 (Required) The literal value zero shall be the only value assigned to errno [MISRACPP2023-22_4_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-22_4_1-a.html">The literal value zero shall be the only value assigned to errno [MISRACPP2023-22_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-23_11_1.html">Rule 23.11.1 (Advisory) The raw pointer constructors of std::shared_ptr and std::unique_ptr should not be used [MISRACPP2023-23_11_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-23_11_1-a.html">The raw pointer constructors of 'std::shared_ptr' and 'std::unique_ptr' should not be used [MISRACPP2023-23_11_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-24_5_1.html">Rule 24.5.1 (Required) The character handling functions from <cctype> and <cwctype> shall not be used [MISRACPP2023-24_5_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-24_5_1-a.html">The character handling functions from &lt;cctype&gt; and &lt;cwctype&gt; shall not be used [MISRACPP2023-24_5_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-24_5_2.html">Rule 24.5.2 (Required) The C++ Standard Library functions memcpy, memmove and memcmp from <cstring> shall not be used [MISRACPP2023-24_5_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-24_5_2-a.html">The C++ Standard Library functions 'memcpy', 'memmove' and 'memcmp' from &lt;cstring&gt; should not be used [MISRACPP2023-24_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-25_5_1.html">Rule 25.5.1 (Required) The setlocale and std::locale::global functions shall not be called [MISRACPP2023-25_5_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-25_5_1-a.html">The 'setlocale' function should not be used [MISRACPP2023-25_5_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-25_5_1-b.html">The 'std::locale::global' function should not be used [MISRACPP2023-25_5_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-25_5_2.html">Rule 25.5.2 (Mandatory) The pointers returned by the C++ Standard Library functions localeconv, getenv, setlocale or strerror must only be used as if they have pointer to const-qualified type [MISRACPP2023-25_5_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-25_5_2-a.html">The pointers returned by the Standard Library functions 'localeconv', 'getenv', 'setlocale' or, 'strerror' shall only be used as if they have pointer to const-qualified type [MISRACPP2023-25_5_2-a-1]</A>
+<LI><A HREF="MISRACPP2023-25_5_2-b.html">Strings pointed by members of the structure 'lconv' should not be modified [MISRACPP2023-25_5_2-b-1]</A>
+<LI><A HREF="MISRACPP2023-25_5_2-c.html">The address of the 'localeconv', 'getenv', 'setlocale' or, 'strerror' function should not be taken [MISRACPP2023-25_5_2-c-1]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-25_5_3.html">Rule 25.5.3 (Mandatory) The pointer returned by the C++ Standard Library functions asctime, ctime, gmtime, localtime, localeconv, getenv, setlocale or strerror must not be used following a subsequent call to the same function [MISRACPP2023-25_5_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-25_5_3-a.html">Pointers returned by certain Standard Library functions should not be used following a subsequent call to the same or related function [MISRACPP2023-25_5_3-a-1]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-26_3_1.html">Rule 26.3.1 (Advisory) std::vector should not be specialized with bool [MISRACPP2023-26_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-26_3_1-a.html">Avoid using vector&lt;bool&gt; [MISRACPP2023-26_3_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-28_3_1.html">Rule 28.3.1 (Required) Predicates shall not have persistent side effects [MISRACPP2023-28_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-28_3_1-a.html">Predicates shall not have persistent side effects [MISRACPP2023-28_3_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-28_6_1.html">Rule 28.6.1 (Required) The argument to std::move shall be a non-const lvalue [MISRACPP2023-28_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-28_6_1-a.html">Do not use std::move on objects declared with the const or const &amp; type [MISRACPP2023-28_6_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-28_6_2.html">Rule 28.6.2 (Required) Forwarding references and std::forward shall be used together [MISRACPP2023-28_6_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-28_6_2-a.html">The 'std::forward' function should be used to forward forwarding references [MISRACPP2023-28_6_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-28_6_2-b.html">The 'std::forward' function should only be used to forward forwarding references [MISRACPP2023-28_6_2-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-28_6_3.html">Rule 28.6.3 (Required) An object shall not be used while in a potentially moved-from state [MISRACPP2023-28_6_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-28_6_3-a.html">Do not subsequently use the argument to std::forward [MISRACPP2023-28_6_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-28_6_3-b.html">Do not rely on the value of a moved-from object [MISRACPP2023-28_6_3-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-28_6_4.html">Rule 28.6.4 (Required) The result of std::remove, std::remove_if, std::unique and empty shall be used [MISRACPP2023-28_6_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-28_6_4-a.html">The result of std::remove, std::remove_if, std::unique and empty shall be used [MISRACPP2023-28_6_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-30_0_1.html">Rule 30.0.1 (Required) The C Library input/output functions shall not be used [MISRACPP2023-30_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-30_0_1-a.html">The input/output library stdio.h shall not be used [MISRACPP2023-30_0_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-30_0_1-b.html">Prefer iostream.h to stdio.h [MISRACPP2023-30_0_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-30_0_2.html">Rule 30.0.2 (Required) Reads and writes on the same file stream shall be separated by a positioning operation [MISRACPP2023-30_0_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-30_0_2-a.html">Do not alternately input and output from a stream without an intervening flush or positioning call [MISRACPP2023-30_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-4_1_2.html">Rule 4.1.2 (Advisory) Deprecated features should not be used [MISRACPP2023-4_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-4_1_2-a.html">Do not include headers deprecated in the C++17 standard [MISRACPP2023-4_1_2-a-4]</A>
+<LI><A HREF="MISRACPP2023-4_1_2-b.html">The 'uncaught_exception' function deprecated in the C++17 standard should not be used [MISRACPP2023-4_1_2-b-4]</A>
+<LI><A HREF="MISRACPP2023-4_1_2-c.html">Do not use throw exception specifications [MISRACPP2023-4_1_2-c-4]</A>
+<LI><A HREF="MISRACPP2023-4_1_2-d.html">A constexpr static data member should not be declared outside the class definition [MISRACPP2023-4_1_2-d-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-4_1_3.html">Rule 4.1.3 (Required) There shall be no occurrence of undefined or critical unspecified behaviour [MISRACPP2023-4_1_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-4_1_3-a.html">Avoid incorrect shift operations [MISRACPP2023-4_1_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-4_1_3-b.html">Avoid signed integer overflows [MISRACPP2023-4_1_3-b-2]</A>
+<LI><A HREF="MISRACPP2023-4_1_3-c.html">Avoid null pointer dereferencing [MISRACPP2023-4_1_3-c-2]</A>
+<LI><A HREF="MISRACPP2023-4_1_3-d.html">Avoid division by zero [MISRACPP2023-4_1_3-d-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-4_6_1.html">Rule 4.6.1 (Required) Operations on a memory location shall be sequenced appropriately [MISRACPP2023-4_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-4_6_1-a.html">The value of an expression shall be the same under any order of evaluation that the standard permits [MISRACPP2023-4_6_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-4_6_1-b.html">Don't write code that depends on the order of evaluation of function arguments [MISRACPP2023-4_6_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-4_6_1-c.html">Don't write code that depends on the order of evaluation of function designator and function arguments [MISRACPP2023-4_6_1-c-2]</A>
+<LI><A HREF="MISRACPP2023-4_6_1-d.html">Don't write code that depends on the order of evaluation of expression that involves a function call [MISRACPP2023-4_6_1-d-2]</A>
+<LI><A HREF="MISRACPP2023-4_6_1-e.html">Between sequence points an object shall have its stored value modified at most once by the evaluation of an expression [MISRACPP2023-4_6_1-e-2]</A>
+<LI><A HREF="MISRACPP2023-4_6_1-f.html">Do not use more than one volatile between two adjacent sequence points [MISRACPP2023-4_6_1-f-2]</A>
+<LI><A HREF="MISRACPP2023-4_6_1-g.html">Don't write code that depends on the order of evaluation of function calls [MISRACPP2023-4_6_1-g-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_0_1.html">Rule 5.0.1 (Advisory) Trigraph-like sequences should not be used [MISRACPP2023-5_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_0_1-a.html">Trigraphs shall not be used [MISRACPP2023-5_0_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_10_1.html">Rule 5.10.1 (Required) User-defined identifiers shall have an appropriate form [MISRACPP2023-5_10_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_10_1-a.html">Do not declare entities in the standard library namespaces: posix, std and stdN [MISRACPP2023-5_10_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-5_10_1-b.html">Do not use identifiers which begin with one or two underscores (`_' or `__') [MISRACPP2023-5_10_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-5_10_1-c.html">An identifier shall not contain a double underscore '__' [MISRACPP2023-5_10_1-c-2]</A>
+<LI><A HREF="MISRACPP2023-5_10_1-d.html">User defined suffixes of the user defined literal operators shall start with underscore followed by one or more letters [MISRACPP2023-5_10_1-d-2]</A>
+<LI><A HREF="MISRACPP2023-5_10_1-e.html">A user-defined literal suffix should be directly preceded by a literal operator [MISRACPP2023-5_10_1-e-2]</A>
+<LI><A HREF="MISRACPP2023-5_10_1-f.html">A macro identifier should have an appropriate form [MISRACPP2023-5_10_1-f-2]</A>
+<LI><A HREF="MISRACPP2023-5_10_1-g.html">Do not declare identifiers with names reserved in the standard library [MISRACPP2023-5_10_1-g-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_1.html">Rule 5.13.1 (Required) Within character literals and non raw-string literals, \ shall only be used to form a defined escape sequence or universal character name [MISRACPP2023-5_13_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_1-a.html">Only those escape sequences that are defined in ISO/IEC 14882:2014 shall be used [MISRACPP2023-5_13_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_2.html">Rule 5.13.2 (Required) Octal escape sequences, hexadecimal escape sequences and universal character names shall be terminated [MISRACPP2023-5_13_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_2-a.html">Octal and hexadecimal escape sequences shall be terminated [MISRACPP2023-5_13_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_3.html">Rule 5.13.3 (Required) Octal constants shall not be used [MISRACPP2023-5_13_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_3-a.html">Octal constants (other than zero) shall not be used [MISRACPP2023-5_13_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_4.html">Rule 5.13.4 (Required) Unsigned integer literals shall be appropriately suffixed [MISRACPP2023-5_13_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_4-a.html">A 'U' suffix shall be applied to all constants of unsigned type [MISRACPP2023-5_13_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_5.html">Rule 5.13.5 (Required) The lowercase form of "L" shall not be used as the first character in a literal suffix [MISRACPP2023-5_13_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_5-a.html">Use capital 'L' instead of lowercase 'l' to indicate long [MISRACPP2023-5_13_5-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_6.html">Rule 5.13.6 (Required) An integer-literal of type long long shall not use a single L or l in any suffix [MISRACPP2023-5_13_6]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_6-a.html">An integer-literal of type long long shall not use a single 'L' or 'l' in any suffix [MISRACPP2023-5_13_6-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_13_7.html">Rule 5.13.7 (Required) String literals with different encoding prefixes shall not be concatenated [MISRACPP2023-5_13_7]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_13_7-a.html">String literals with different encoding prefixes shall not be concatenated [MISRACPP2023-5_13_7-a-2]</A>
+<LI><A HREF="MISRACPP2023-5_13_7-b.html">String literals with and without encoding prefixes should not be concatenated [MISRACPP2023-5_13_7-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_7_1.html">Rule 5.7.1 (Required) The character sequence /* shall not be used within a C-style comment [MISRACPP2023-5_7_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_7_1-a.html">The character sequence /* shall not be used within a C-style comment [MISRACPP2023-5_7_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_7_2.html">Dir 5.7.2 (Advisory) Sections of code should not be "commented out" [MISRACPP2023-5_7_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_7_2-a.html">Sections of code should not be &quot;commented out&quot; [MISRACPP2023-5_7_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-5_7_3.html">Rule 5.7.3 (Required) Line-splicing shall not be used in // comments [MISRACPP2023-5_7_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-5_7_3-a.html">Line-splicing shall not be used in // comments [MISRACPP2023-5_7_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_0_1.html">Rule 6.0.1 (Required) Block scope declarations shall not be visually ambiguous [MISRACPP2023-6_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_0_1-a.html">Always declare functions at file scope [MISRACPP2023-6_0_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-6_0_1-b.html">Parameter names in function declarations should not be enclosed in parentheses [MISRACPP2023-6_0_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-6_0_1-c.html">Local variable names in variable declarations should not be enclosed in parentheses [MISRACPP2023-6_0_1-c-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_0_2.html">Rule 6.0.2 (Advisory) When an array with external linkage is declared, its size should be explicitly specified [MISRACPP2023-6_0_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_0_2-a.html">When an array is declared with external linkage, its size shall be stated explicitly or defined implicitly by initialisation [MISRACPP2023-6_0_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_0_3.html">Rule 6.0.3 (Advisory) The only declarations in the global namespace should be main, namespace declarations and extern "C" declarations [MISRACPP2023-6_0_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_0_3-a.html">The global namespace shall only contain main() and namespace declarations [MISRACPP2023-6_0_3-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_0_4.html">Rule 6.0.4 (Required) The identifier main shall not be used for a function other than the global function main [MISRACPP2023-6_0_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_0_4-a.html">The identifier main shall not be used for a function other than the global function main [MISRACPP2023-6_0_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_2_1.html">Rule 6.2.1 (Required) The one-definition rule shall not be violated [MISRACPP2023-6_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_2_1-a.html">The One Definition Rule shall not be violated [MISRACPP2023-6_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_2_2.html">Rule 6.2.2 (Required) All declarations of a variable or function shall have the same type [MISRACPP2023-6_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_2_2-a.html">All declarations of an object or function shall have compatible types [MISRACPP2023-6_2_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-6_2_2-b.html">If a function is declared with an exception-specification, then all declarations of the same function (in other translation units) shall be declared with the same set of type-ids [MISRACPP2023-6_2_2-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_2_3.html">Rule 6.2.3 (Required) The source code used to implement an entity shall appear only once [MISRACPP2023-6_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_2_3-a.html">An identifier with external linkage shall have no more then one external definition [MISRACPP2023-6_2_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-6_2_3-b.html">A type that is used in multiple translation units shall be defined in one and only one file [MISRACPP2023-6_2_3-b-2]</A>
+<LI><A HREF="MISRACPP2023-6_2_3-c.html">An inline function that is used in multiple translation units shall be defined in one and only one file [MISRACPP2023-6_2_3-c-2]</A>
+<LI><A HREF="MISRACPP2023-6_2_3-d.html">Template specialization shall be declared in the same file as the primary template or a user-defined type, for which the specialization is declared [MISRACPP2023-6_2_3-d-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_2_4.html">Rule 6.2.4 (Required) A header file shall not contain definitions of functions or objects that are non-inline and have external linkage [MISRACPP2023-6_2_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_2_4-a.html">Don't define entities with linkage in a header file [MISRACPP2023-6_2_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_4_1.html">Rule 6.4.1 (Required) A variable declared in an inner scope shall not hide a variable declared in an outer scope [MISRACPP2023-6_4_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_4_1-a.html">Identifier declared in a local or function prototype scope shall not hide an identifier declared in a global or namespace scope [MISRACPP2023-6_4_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-6_4_1-b.html">Identifiers declared in an inner local scope should not hide identifiers declared in an outer local scope [MISRACPP2023-6_4_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-6_4_1-c.html">Identifiers declared in a local scope should not hide identifiers declared in a class scope [MISRACPP2023-6_4_1-c-2]</A>
+<LI><A HREF="MISRACPP2023-6_4_1-d.html">Identifiers declared in a class scope should not hide identifiers declared in a global or namespace scope [MISRACPP2023-6_4_1-d-2]</A>
+<LI><A HREF="MISRACPP2023-6_4_1-e.html">Identifiers declared in an inner class scope should not hide identifiers declared in outer class scope [MISRACPP2023-6_4_1-e-2]</A>
+<LI><A HREF="MISRACPP2023-6_4_1-f.html">Member variable names in derived classes should not be the same as member variable names in base classes [MISRACPP2023-6_4_1-f-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_4_2.html">Rule 6.4.2 (Required) Derived classes shall not conceal functions that are inherited from their bases [MISRACPP2023-6_4_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_4_2-a.html">Never redefine an inherited nonvirtual function [MISRACPP2023-6_4_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-6_4_2-b.html">Member functions declared in derived class should not hide functions declared in base classes [MISRACPP2023-6_4_2-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_4_3.html">Rule 6.4.3 (Required) A name that is present in a dependent base shall not be resolved by unqualified lookup [MISRACPP2023-6_4_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_4_3-a.html">In a class template with a dependent base, any name that may be found in that dependent base shall be referred to using a qualified-id or this-&gt; [MISRACPP2023-6_4_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_5_1.html">Rule 6.5.1 (Advisory) A function or object with external linkage should be introduced in a header file [MISRACPP2023-6_5_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_5_1-a.html">Objects or functions with external linkage shall be declared in a header file [MISRACPP2023-6_5_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_5_2.html">Rule 6.5.2 (Advisory) Internal linkage should be specified appropriately [MISRACPP2023-6_5_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_5_2-a.html">Do not use static keyword except inside functions and classes [MISRACPP2023-6_5_2-a-4]</A>
+<LI><A HREF="MISRACPP2023-6_5_2-b.html">Identifiers shall not simultaneously have both internal and external linkage in the same translation unit [MISRACPP2023-6_5_2-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_7_1.html">Rule 6.7.1 (Required) Local variables shall not have static storage duration [MISRACPP2023-6_7_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_7_1-a.html">Local variables shall not have static storage duration [MISRACPP2023-6_7_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_7_2.html">Rule 6.7.2 (Required) Global variables shall not be used [MISRACPP2023-6_7_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_7_2-a.html">Avoid unencapsulated global variables (including variables declared in namespaces and public static members) [MISRACPP2023-6_7_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_8_1.html">Rule 6.8.1 (Required) An object shall not be accessed outside of its lifetime [MISRACPP2023-6_8_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_8_1-a.html">Do not point to a wrapped object that has been freed [MISRACPP2023-6_8_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-6_8_1-b.html">Do not read the value of a non-active union field [MISRACPP2023-6_8_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-6_8_1-c.html">Do not use an object after its lifetime has ended [MISRACPP2023-6_8_1-c-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_8_2.html">Rule 6.8.2 (Mandatory) A function must not return a reference or a pointer to a local variable with automatic storage duration [MISRACPP2023-6_8_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_8_2-a.html">The address of an object with automatic storage shall not be returned from a function [MISRACPP2023-6_8_2-a-1]</A>
+<LI><A HREF="MISRACPP2023-6_8_2-b.html">Never return lambdas that capture local objects by reference [MISRACPP2023-6_8_2-b-1]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_8_3.html">Rule 6.8.3 (Required) An assignment operator shall not assign the address of an object with automatic storage duration to an object with a greater lifetime [MISRACPP2023-6_8_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_8_3-a.html">The address of an object with automatic storage duration shall not be assigned to an object with a greater lifetime [MISRACPP2023-6_8_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_8_4.html">Rule 6.8.4 (Advisory) Member functions returning references to their object should be ref-qualified appropriately [MISRACPP2023-6_8_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_8_4-a.html">Member functions returning references to their object should be ref-qualified appropriately [MISRACPP2023-6_8_4-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_9_1.html">Rule 6.9.1 (Required) The same type aliases shall be used in all declarations of the same entity [MISRACPP2023-6_9_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_9_1-a.html">The same type aliases shall be used in all declarations of the same entity [MISRACPP2023-6_9_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-6_9_2.html">Rule 6.9.2 (Advisory) The names of the standard signed integer types and standard unsigned integer types should not be used [MISRACPP2023-6_9_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-6_9_2-a.html">The names of the standard signed integer types and standard unsigned integer types should not be used [MISRACPP2023-6_9_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_0_1.html">Rule 7.0.1 (Required) There shall be no conversion from type bool [MISRACPP2023-7_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_0_1-a.html">There shall be no conversion from type bool [MISRACPP2023-7_0_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_0_2.html">Rule 7.0.2 (Required) There shall be no conversion to type bool [MISRACPP2023-7_0_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_0_2-a.html">There shall be no conversion to type bool [MISRACPP2023-7_0_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_0_3.html">Rule 7.0.3 (Required) The numerical value of a character shall not be used [MISRACPP2023-7_0_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_0_3-a.html">The plain char type shall be used only for the storage and use of character values [MISRACPP2023-7_0_3-a-2]</A>
+<LI><A HREF="MISRACPP2023-7_0_3-b.html">signed and unsigned char type shall be used only for the storage and use of numeric values [MISRACPP2023-7_0_3-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_0_4.html">Rule 7.0.4 (Required) The operands of bitwise operators and shift operators shall be appropriate [MISRACPP2023-7_0_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_0_4-a.html">Operands of bitwise and complement operators shall have an unsigned type [MISRACPP2023-7_0_4-a-2]</A>
+<LI><A HREF="MISRACPP2023-7_0_4-b.html">Operands of shift operators shall have an unsigned type [MISRACPP2023-7_0_4-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_0_5.html">Rule 7.0.5 (Required) Integral promotion and the usual arithmetic conversions shall not change the signedness or the type category of an operand [MISRACPP2023-7_0_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_0_5-a.html">Integral promotion and the usual arithmetic conversions shall not change the signedness or the type category of an operand [MISRACPP2023-7_0_5-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_0_6.html">Rule 7.0.6 (Required) Assignment between numeric types shall be appropriate [MISRACPP2023-7_0_6]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_0_6-a.html">Assignment between numeric types shall be appropriate [MISRACPP2023-7_0_6-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_11_1.html">Rule 7.11.1 (Required) nullptr shall be the only form of the null-pointer-constant [MISRACPP2023-7_11_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_11_1-a.html">Prefer 'nullptr' over 'NULL' or '0'(zero) [MISRACPP2023-7_11_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-7_11_1-b.html">The 'NULL' identifier should not be used [MISRACPP2023-7_11_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_11_2.html">Rule 7.11.2 (Required) An array passed as a function argument shall not decay to a pointer [MISRACPP2023-7_11_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_11_2-a.html">Do not pass an expression with array type to a function with a pointer or array type parameter [MISRACPP2023-7_11_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-7_11_3.html">Rule 7.11.3 (Required) A conversion from function type to pointer-to-function type shall only occur in appropriate contexts [MISRACPP2023-7_11_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-7_11_3-a.html">A conversion from function type to pointer-to-function type shall only occur in appropriate contexts [MISRACPP2023-7_11_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_0_1.html">Rule 8.0.1 (Advisory) Parentheses should be used to make the meaning of an expression appropriately explicit [MISRACPP2023-8_0_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_0_1-a.html">The operand of the 'sizeof' operator should be enclosed in parentheses [MISRACPP2023-8_0_1-a-4]</A>
+<LI><A HREF="MISRACPP2023-8_0_1-b.html">Use parentheses to indicate the precedence of operators in expressions [MISRACPP2023-8_0_1-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_14_1.html">Rule 8.14.1 (Advisory) The right-hand operand of a logical && or || operator should not contain persistent side effects [MISRACPP2023-8_14_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_14_1-a.html">The right-hand operand of a logical &amp;&amp; or || operator shall not contain side effects [MISRACPP2023-8_14_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_18_1.html">Rule 8.18.1 (Mandatory) An object or subobject must not be copied to an overlapping object [MISRACPP2023-8_18_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_18_1-a.html">An object shall not be assigned or copied to an overlapping object [MISRACPP2023-8_18_1-a-1]</A>
+<LI><A HREF="MISRACPP2023-8_18_1-b.html">An object shall not be assigned to an overlapping object [MISRACPP2023-8_18_1-b-1]</A>
+<LI><A HREF="MISRACPP2023-8_18_1-c.html">An object shall not be assigned to an overlapping object [MISRACPP2023-8_18_1-c-1]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_18_2.html">Rule 8.18.2 (Advisory) The result of an assignment operator should not be used [MISRACPP2023-8_18_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_18_2-a.html">The result of a built-in assignment operator should not be used [MISRACPP2023-8_18_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_19_1.html">Rule 8.19.1 (Advisory) The comma operator should not be used [MISRACPP2023-8_19_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_19_1-a.html">The comma operator shall not be used [MISRACPP2023-8_19_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_1_1.html">Rule 8.1.1 (Required) A non-transient lambda shall not implicitly capture this [MISRACPP2023-8_1_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_1_1-a.html">A non-transient lambda shall not implicitly capture this [MISRACPP2023-8_1_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_1_2.html">Rule 8.1.2 (Advisory) Variables should be captured explicitly in a non-transient lambda [MISRACPP2023-8_1_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_1_2-a.html">Variables should be captured explicitly in a non-transient lambda [MISRACPP2023-8_1_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_20_1.html">Rule 8.20.1 (Advisory) An unsigned arithmetic operation with constant operands should not wrap [MISRACPP2023-8_20_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_20_1-a.html">Evaluation of constant unsigned integer expressions should not lead to wrap-around [MISRACPP2023-8_20_1-a-4]</A>
+<LI><A HREF="MISRACPP2023-8_20_1-b.html">Evaluation of constant unsigned integer expressions in preprocessor directives should not lead to wraparound [MISRACPP2023-8_20_1-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_1.html">Rule 8.2.1 (Required) A virtual base class shall only be cast to a derived class by means of dynamic_cast [MISRACPP2023-8_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_1-a.html">A pointer to a virtual base class shall only be cast to a pointer to a derived class by means of dynamic_cast [MISRACPP2023-8_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_10.html">Rule 8.2.10 (Required) Functions shall not call themselves, either directly or indirectly [MISRACPP2023-8_2_10]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_10-a.html">Do not use recursion [MISRACPP2023-8_2_10-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_11.html">Rule 8.2.11 (Required) An argument passed via ellipsis shall have an appropriate type [MISRACPP2023-8_2_11]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_11-a.html">An argument passed via ellipsis shall have an appropriate type [MISRACPP2023-8_2_11-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_2.html">Rule 8.2.2 (Required) C-style casts and functional notation casts shall not be used [MISRACPP2023-8_2_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_2-a.html">C-style casts (other than void casts) and functional notation casts (other than explicit constructor calls) shall not be used [MISRACPP2023-8_2_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_3.html">Rule 8.2.3 (Required) A cast shall not remove any const or volatile qualification from the type accessed via a pointer or by reference [MISRACPP2023-8_2_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_3-a.html">A cast shall not remove any 'const' or 'volatile' qualification from the type of a pointer or reference [MISRACPP2023-8_2_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_4.html">Rule 8.2.4 (Required) Casts shall not be performed between a pointer to function and any other type [MISRACPP2023-8_2_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_4-a.html">Casts shall not be performed between a pointer to a function and any other type [MISRACPP2023-8_2_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_5.html">Rule 8.2.5 (Required) reinterpret_cast shall not be used [MISRACPP2023-8_2_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_5-a.html">Avoid using reinterpret_cast [MISRACPP2023-8_2_5-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_6.html">Rule 8.2.6 (Required) An object with integral, enumerated, or pointer to void type shall not be cast to a pointer type [MISRACPP2023-8_2_6]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_6-a.html">An object with integer type or pointer to void type shall not be converted to an object with pointer type [MISRACPP2023-8_2_6-a-2]</A>
+<LI><A HREF="MISRACPP2023-8_2_6-b.html">An object with enumeration type shall not be converted to an object with pointer type [MISRACPP2023-8_2_6-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_7.html">Rule 8.2.7 (Advisory) A cast should not convert a pointer type to an integral type [MISRACPP2023-8_2_7]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_7-a.html">A cast should not convert a pointer type to an integral type [MISRACPP2023-8_2_7-a-4]</A>
+<LI><A HREF="MISRACPP2023-8_2_7-b.html">A cast should not convert a pointer type to 'intptr_t' and 'uintptr_t' types [MISRACPP2023-8_2_7-b-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_8.html">Rule 8.2.8 (Required) An object pointer type shall not be cast to an integral type other than std::uintptr_t or std::intptr_t [MISRACPP2023-8_2_8]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_8-a.html">A cast should not convert a pointer type to an integral type [MISRACPP2023-8_2_8-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_2_9.html">Rule 8.2.9 (Required) The operand to typeid shall not be an expression of polymorphic class type [MISRACPP2023-8_2_9]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_2_9-a.html">The operand to typeid shall not be an expression of polymorphic class type [MISRACPP2023-8_2_9-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_3_1.html">Rule 8.3.1 (Advisory) The built-in unary - operator should not be applied to an expression of unsigned type [MISRACPP2023-8_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_3_1-a.html">The unary minus operator shall not be applied to an expression whose underlying type is unsigned [MISRACPP2023-8_3_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_3_2.html">Rule 8.3.2 (Advisory) The built-in unary + operator should not be used [MISRACPP2023-8_3_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_3_2-a.html">The built-in unary + operator should not be used [MISRACPP2023-8_3_2-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_7_1.html">Rule 8.7.1 (Required) Pointer arithmetic shall not form an invalid pointer [MISRACPP2023-8_7_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_7_1-a.html">Avoid accessing arrays out of bounds [MISRACPP2023-8_7_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-8_7_1-b.html">A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array [MISRACPP2023-8_7_1-b-2]</A>
+<LI><A HREF="MISRACPP2023-8_7_1-c.html">Avoid overflow when reading from a buffer [MISRACPP2023-8_7_1-c-2]</A>
+<LI><A HREF="MISRACPP2023-8_7_1-d.html">Avoid overflow when writing to a buffer [MISRACPP2023-8_7_1-d-2]</A>
+<LI><A HREF="MISRACPP2023-8_7_1-e.html">Avoid overflow due to reading a not zero terminated string [MISRACPP2023-8_7_1-e-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_7_2.html">Rule 8.7.2 (Required) Subtraction between pointers shall only be applied to pointers that address elements of the same array [MISRACPP2023-8_7_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_7_2-a.html">Do not subtract two pointers that do not address elements of the same array [MISRACPP2023-8_7_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-8_9_1.html">Rule 8.9.1 (Required) The built-in relational operators >, >=, < and <= shall not be applied to objects of pointer type, except where they point to elements of the same array [MISRACPP2023-8_9_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-8_9_1-a.html">Do not compare two unrelated pointers [MISRACPP2023-8_9_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_2_1.html">Rule 9.2.1 (Required) An explicit type conversion shall not be an expression statement [MISRACPP2023-9_2_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_2_1-a.html">Expression statements shall not be explicit calls to constructors of temporary objects only [MISRACPP2023-9_2_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_3_1.html">Rule 9.3.1 (Required) The body of an iteration-statement or a selection-statement shall be a compound-statement [MISRACPP2023-9_3_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_3_1-a.html">The statement forming the body of a 'switch', 'while', 'do...while' or 'for' statement shall be a compound statement [MISRACPP2023-9_3_1-a-2]</A>
+<LI><A HREF="MISRACPP2023-9_3_1-b.html">'if' and 'else' should be followed by a compound statement [MISRACPP2023-9_3_1-b-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_4_1.html">Rule 9.4.1 (Required) All if ... else if constructs shall be terminated with an else statement [MISRACPP2023-9_4_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_4_1-a.html">All 'if...else-if' constructs shall be terminated with an 'else' clause [MISRACPP2023-9_4_1-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_4_2.html">Rule 9.4.2 (Required) The structure of a switch statement shall be appropriate [MISRACPP2023-9_4_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_4_2-a.html">The first or the last label of a switch statement should be the 'default' label unless all enumeration values are tested [MISRACPP2023-9_4_2-a-2]</A>
+<LI><A HREF="MISRACPP2023-9_4_2-b.html">Every switch branch should be unconditionally terminated [MISRACPP2023-9_4_2-b-2]</A>
+<LI><A HREF="MISRACPP2023-9_4_2-c.html">A switch label shall only be used when the most closely-enclosing compound statement is the body of a switch statement [MISRACPP2023-9_4_2-c-2]</A>
+<LI><A HREF="MISRACPP2023-9_4_2-d.html">A switch statement shall only contain switch labels and switch clauses, and no other code [MISRACPP2023-9_4_2-d-2]</A>
+<LI><A HREF="MISRACPP2023-9_4_2-e.html">Every switch statement shall have at least two switch-clauses [MISRACPP2023-9_4_2-e-2]</A>
+<LI><A HREF="MISRACPP2023-9_4_2-f.html">The 'switch' statement should not contain labels other than 'case' and 'default' [MISRACPP2023-9_4_2-f-2]</A>
+<LI><A HREF="MISRACPP2023-9_4_2-g.html">The condition of a 'switch' statement should only be preceded by an optional simple-declaration [MISRACPP2023-9_4_2-g-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_5_1.html">Rule 9.5.1 (Advisory) Legacy for statements should be simple [MISRACPP2023-9_5_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_5_1-a.html">Legacy 'for' statements should be simple [MISRACPP2023-9_5_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_5_2.html">Rule 9.5.2 (Required) A for-range-initializer shall contain at most one function call [MISRACPP2023-9_5_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_5_2-a.html">A for-range-initializer shall contain at most one function call [MISRACPP2023-9_5_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_6_1.html">Rule 9.6.1 (Advisory) The goto statement should not be used [MISRACPP2023-9_6_1]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_6_1-a.html">The goto statement shall not be used [MISRACPP2023-9_6_1-a-4]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_6_2.html">Rule 9.6.2 (Required) A goto statement shall reference a label in a surrounding block [MISRACPP2023-9_6_2]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_6_2-a.html">Any label referenced by a goto statement shall be declared in the same block, or in a block enclosing the goto statement [MISRACPP2023-9_6_2-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_6_3.html">Rule 9.6.3 (Required) The goto statement shall jump to a label declared later in the function body [MISRACPP2023-9_6_3]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_6_3-a.html">The goto statement shall jump to a label declared later in the same function body [MISRACPP2023-9_6_3-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_6_4.html">Rule 9.6.4 (Required) A function declared with the [[noreturn]] attribute shall not return [MISRACPP2023-9_6_4]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_6_4-a.html">Never return from functions that should not return [MISRACPP2023-9_6_4-a-2]</A>
+</UL>
+<LI><B><A HREF="MISRACPP2023-9_6_5.html">Rule 9.6.5 (Required) A function with non-void return type shall return a value on all paths [MISRACPP2023-9_6_5]</A></B>
+<UL>
+<LI><A HREF="MISRACPP2023-9_6_5-a.html">All exit paths from a function, except main(), with non-void return type shall have an explicit return statement with an expression [MISRACPP2023-9_6_5-a-2]</A>
+</UL>
+</UL>
+</UL>
+</BODY></HTML>

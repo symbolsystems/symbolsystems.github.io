@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The defined preprocessor operator shall only be used in one of the two standard forms [MISRACPP2023-19_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The defined preprocessor operator shall only be used in one of the two standard forms [MISRACPP2023-19_1_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The only two permissible forms for the 'defined' preprocessor operator are:
+  - defined ( identifier )
+  - defined identifier
+Any other form is a constraint violation, but this is not reported by all
+compliers." [MISRA C++:2008]
+
+"Generation of the token defined during expansion of a #if or #elif
+preprocessing directive also leads to undefined behaviour and shall
+be avoided" [MISRA C++:2008]
+
+This rule detects when:
+- the 'defined' preprocessor operator used in #if or #elif directive is not
+  followed by a single identifier or opening parenthesis, or
+- a macro containing the 'defined' preprocessor operator is expanded
+  in #if or #elif directive (only if the macro was previously defined
+  in the same file using the #define directive).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#if defined X &gt; Y             // Violation
+#endif
+
+#define DEFINED defined
+#if DEFINED(X)                // Violation
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#if defined X                 // OK
+#endif
+#if defined (X)               // OK
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M16-1-1. The defined pre-processor operator shall only be used in one of
+   the two standard forms
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-1-1
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.1.1 The defined preprocessor operator shall be used appropriately
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19
+
+</PRE>
+</BODY>
+</HTML>

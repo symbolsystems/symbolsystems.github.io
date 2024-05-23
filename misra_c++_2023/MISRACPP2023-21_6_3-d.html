@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Advanced memory management operators 'new' and 'delete' should not be used [MISRACPP2023-21_6_3-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Advanced memory management operators 'new' and 'delete' should not be used [MISRACPP2023-21_6_3-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Using the advanced memory management operators 'new' and 'delete' causes
+a number of complex issues, such as alignment or object lifetimes, which
+may result in undefined behavior.
+
+This rule detects when the advanced memory management operator 'new'
+or 'delete' is used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The advanced memory management operators are all overloads of operator
+'new' and operator 'delete' that are not listed below:
+
+void * operator new  ( std::size_t count );
+void * operator new[]( std::size_t count );
+void * operator new  ( std::size_t count, const std::nothrow_t &amp; tag );
+void * operator new[]( std::size_t count, const std::nothrow_t &amp; tag );
+void operator delete  ( void * ptr ) noexcept;
+void operator delete[]( void * ptr ) noexcept;
+void operator delete  ( void * ptr, std::size_t sz ) noexcept;
+void operator delete[]( void * ptr, std::size_t sz ) noexcept;
+void operator delete  ( void * ptr, const std::nothrow_t &amp; tag ) noexcept;
+void operator delete[]( void * ptr, const std::nothrow_t &amp; tag ) noexcept;
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+ 
+int foo()
+{
+  void* pVoid1;
+  void* pVoid2;
+  int *pInt;
+  char buf[sizeof(int)*3] ;
+  
+  pInt = new (buf) int(3);                                     // Violation
+  pV2 = ::operator new(sizeof(pV1), pV1);                      // Violation
+  operator delete(pV2, pV1);                                   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use only the allowed versions of 'new' and 'delete'.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.3 Advanced memory management shall not be used
+
+</PRE>
+</BODY>
+</HTML>

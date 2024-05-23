@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid throwing exceptions from functions that are declared not to throw [MISRA2008-15_5_2_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid throwing exceptions from functions that are declared not to throw [MISRA2008-15_5_2_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"If a function declared to be noexcept, noexcept(true) or noexcept (true
+condition) throws an exception, then std::terminate() is called immediately.
+It is implementation-defined whether the call stack is unwound before
+std::terminate() is called." [AUTOSAR C++14, A15-4-2]
+
+This rule detects when an exception is thrown from a function that is declared
+not to throw exceptions.
+
+It also covers functions implicitly declared not to throw exceptions, like destructors.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"If a function declared with an exception-specification throws an exception
+of a type not included in the specification, the function unexpected() is
+called." [MISRA C++:2008, Rule 15-5-2]
+
+Throwing an exception from a function declared not to throw any exceptions
+may result in undefined behavior.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+ 
+#include &lt;stdexcept&gt;
+
+void foo() noexcept
+{
+    throw std::runtime_error("Error"); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In the following code, the function declaration allows the function to throw
+exceptions.
+
+#include &lt;stdexcept&gt;
+
+void foo() noexcept(false)
+{
+    throw std::runtime_error("Error"); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+AUTOSAR C++14 Coding Guidelines
+Rule A15-4-2 If a function is declared to be noexcept, noexcept(true) or noexcept(&lt;true condition&gt;), then it shall not exit with an exception
+
+SEI CERT C++ Coding Standard
+ERR50-CPP. Do not abruptly terminate the program
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+High Integrity C++ Coding Standard
+15.3.2 Ensure that a program does not result in a call to std::terminate
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 15, Rule 15-5-2
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 15, Rule 15-5-3
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 18.5.1 A noexcept function should not attempt to propagate an exception to the calling function
+
+</PRE>
+</BODY>
+</HTML>

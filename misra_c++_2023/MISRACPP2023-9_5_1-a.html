@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Legacy 'for' statements should be simple [MISRACPP2023-9_5_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Legacy 'for' statements should be simple [MISRACPP2023-9_5_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when a legacy 'for' statement is not simple.
+
+"A legacy for statement is simple when:
+1. The init-statement only declares and initializes a loop-counter of integer
+   type; and
+2. The condition only compares the loop-counter to a loop-bound using
+   a relational operator; and
+3. The loop-counter is modified, but only by incrementing or decrementing
+   by a loop-step within the expression of the for statement; and
+4. The loop-bound and loop-counter have the same type, or the loop-bound
+   is a constant expression and the type of the loop-counter has a range
+   large enough to represent the value of the loop-bound; and
+5. The loop-bound and loop-step are constant-expressions or are variables
+   that are not modified within the for statement; and
+6. The loop-counter, loop-bound and loop-step are not bound to non-const
+   references and do not have any of their addresses assigned to pointers
+   to non-const." [MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The legacy 'for' statement is a 'for' statement that is not range-based.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The number of iterations of a legacy for statement is determined
+by a user-provided loop condition and code review, which may be non-trivial,
+is required to ensure that the loop behaves as expected. This review is not
+required for iterator-based algorithms or range-for statements, as the number
+of iterations is not determined by a user-provided loop condition.
+It is therefore recommended that legacy for statements should not be used,
+unless they are simple." [MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1()
+{
+    // loop-counter has non-integer type
+    for (float f = 0.0f; f &lt;= 1.0f; f += 0.1f)             // Violation
+    {
+    }
+    // loop-counter is modified in the loop body
+    for (int i = 0; i &lt;= 10; i += 2)                       // Violation 
+    {
+        i++;
+    }
+}
+
+void fmod(int* ptr);
+void f2()
+{
+    int loop_bound = 10;
+    int loop_step = 2;
+    // loop-counter and loop-bound have different types
+    for (signed char i = 0; i &lt;= loop_bound; i += 2)       // Violation
+    {
+    }
+    // the address of the loop-step is assigned to a non-const pointer
+    for (int i = 0; i &lt;= 10; i += loop_step)               // Violation
+    {
+        fmod(&amp;loop_step);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by using only simple legacy 'for' statements.
+
+void use(int p);
+void f1()
+{
+    // loop-counter of integer type is not modified in the loop body
+    for (int i = 0; i &lt;= 10; i += 2)                                // OK 
+    {
+        use(i);
+    }
+}
+
+void fmod(const int* ptr);
+void f2()
+{
+    int loop_step = 2;
+    // loop-counter and loop-bound have different types, but the loop-bound
+    // is a constant expression and the type of the loop-counter has a range
+    // large enough to represent the value of the loop-bound
+    for (signed char i = 0; i &lt;= 10; i += 2)                        // OK
+    {
+    }
+    // the address of the loop-step is only assigned to a const pointer
+    for (int i = 0; i &lt;= 10; i += loop_step)                        // OK
+    {
+        fmod(&amp;loop_step);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.5.1 Legacy for statements should be simple
+
+</PRE>
+</BODY>
+</HTML>

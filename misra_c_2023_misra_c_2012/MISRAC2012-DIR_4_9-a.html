@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A function should be used in preference to a function-like macro [MISRAC2012-DIR_4_9-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A function should be used in preference to a function-like macro [MISRAC2012-DIR_4_9-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A function should be used in preference to a function-like macro
+if it is permitted by the syntax and constraints of the language standard.
+In most circumstances, functions should be used instead of macros. Functions
+perform argument type-checking and evaluate their arguments once, thus avoiding
+problems with potential multiple side-effects. In many debugging systems,
+it is easier to step through execution of a function than a macro.
+Nonetheless, macros may be useful in some circumstances.
+
+This rule detects definitions of function-like macros.
+
+See also: CODSTA-03, CODSTA-37, CODSTA-38
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Some of the factors that should be considered when deciding whether
+to use a function or a macro are:
+- The benefits of function argument and result type-checking;
+- The availability of inline functions in C99, although note that the extent
+  to which inline is acted upon is implementation-defined;
+- The trade-off between code size and execution speed;
+- Whether the possibility for compile-time evaluation is important: 
+  macros with constant arguments are more likely to be evaluated at
+  compile-time than corresponding function calls;
+- Whether the arguments would be valid for a function: macro arguments
+  are textual whereas function arguments are expressions;
+- Ease of understanding and maintainability."
+[MISRA C:2012 Dir 4.9]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"While macros can provide a speed advantage over functions, functions provide
+a safer and more robust mechanism. This is particularly true with respect
+to the type checking of parameters, and the problem of function-like macros
+potentially evaluating parameters multiple times."
+[MISRA C++:2008 Rule 16-0-4]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule reports a violation for every function-like macro definition, 
+even if replacing that macro with a function would not be possible or useful.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define SUM(A,B) ((A)+(B))  /* Violation */
+
+void foo( int x, int y ) {
+    /* ... */
+    SUM( x, y );
+    /* ... */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int sum( int a, int b ) {    /* OK */
+    return (a + b);
+}
+
+void foo( int x, int y ) {
+    /* ... */
+    sum( x, y );
+    /* ... */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 9 Functions - 9.5 Inline Functions - Rule 35
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.6 Pre-Processing Directives, AV Rule 29
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-0-4
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.9
+
+5. Misra Guidelines - Rule 93
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19, Rule 19.7
+
+7. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 2
+
+8. SEI CERT C Coding Standard
+   PRE00-C. Prefer inline or static functions to function-like macros
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE00-C.+Prefer+inline+or+static+functions+to+function-like+macros">https://wiki.sei.cmu.edu/confluence/display/c/PRE00-C.+Prefer+inline+or+static+functions+to+function-like+macros</A>
+
+</PRE>
+</BODY>
+</HTML>

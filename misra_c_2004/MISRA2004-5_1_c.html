@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-specified C internal identifiers declared in the same scope should differ in the first 31 characters [MISRA2004-5_1_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-specified C internal identifiers declared in the same scope should differ in the first 31 characters [MISRA2004-5_1_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The ISO standard requires internal identifiers to be distinct in the first 31
+characters to guarantee code portability. This limitation shall not be exceeded,
+even if the compiler supports it. This rule shall apply across all name spaces.
+The ISO standard requires external identifiers to be distinct in the first 6
+characters, regardless of case, to guarantee optimal portability.
+However this limitation is particularly severe and is considered unnecessary.
+The intent of this rule is to sanction a relaxation of the ISO requirement
+to a degree commensurate with modern environments and it shall be confirmed
+that 31 character/case significance is supported by the implementation."
+[MISRA C:2004 Rule 5.1]
+
+This rule detects when two internal identifiers have the same first 64
+characters in their names and are declared or defined in the same scope
+(struct, union, or function).
+
+The rule checks the following internal identifiers:
+- variables and functions with no linkage
+- function parameters
+- labels
+- structures, unions, typedefs, enums, and enumeration constants
+  that are defined in a block scope
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule compares identifiers across all name spaces.
+The rule does not report identifiers with identical names.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1() {
+    int NE_4567890123456789012345678901_v1;
+    int NE_4567890123456789012345678901_v2;       // Violation
+}
+
+struct S1 {
+    int NS_4567890123456789012345678901_v1;
+    int NS_4567890123456789012345678901_v2;       // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by modifying the names of identifiers.
+
+void f1() {
+    int V1_4567890123456789012345678901_v1;
+    int V2_4567890123456789012345678901_v2;       // OK
+}
+
+struct S1 {
+    int M1_4567890123456789012345678901_v1;
+    int M2_4567890123456789012345678901_v2;       // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 5, Rule 5.1
+
+2. Origin: Misra Guidelines - Rule 11
+
+</PRE>
+</BODY>
+</HTML>

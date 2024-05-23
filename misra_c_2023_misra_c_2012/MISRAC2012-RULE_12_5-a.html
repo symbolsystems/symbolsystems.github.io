@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'sizeof' operator shall not have an operand which is a function parameter declared as "array of type" [MISRAC2012-RULE_12_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'sizeof' operator shall not have an operand which is a function parameter declared as "array of type" [MISRAC2012-RULE_12_5-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The sizeof operator can be used to determine the number of elements 
+in an array A:
+
+size_t arraySize = sizeof(A)/sizeof(A[0]);
+
+This works as expected when A is an identifier that designates an array,
+as it has type 'array of type'. It does not 'degenerate' to a pointer and 
+sizeof(A) returns the size of the array.
+
+However, this is not the case when A is a function parameter. The Standard 
+states that a function parameter never has type 'array of type' and a function 
+parameter declared as an array will 'degenerate' to 'pointer to type'. 
+This means that sizeof(A) is equivalent to sizeof(int32_t*), which does not 
+return the size of an array." [MISRA C:2012 Rule 12.5]
+
+This rule detects cases when the operand of a 'sizeof' operator is a function 
+parameter declared as 'array of type'
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The function parameter A in void f(int32_t A[4]) is declared
+ as 'array of type'." [MISRA C:2012 Rule 12.5]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents errors involving incorrect calculation of the size
+of the type and improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( int aint[10] )
+{
+/* The following expression always gives the same result, irrespective of the
+ * number of members that appear to be in the array (10 in this case), because
+ * 'aint' has type 'int*' and not 'int[10]'.  */
+
+    int numElements = sizeof(aint) / sizeof(aint[0]);     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+int gint[] = {0, 1, 2, 3, 4};
+
+void f1()
+{
+    int numElements = sizeof(gint) / sizeof(gint[0]);     /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 1. Additional security guidelines for MISRA C:2012
+   Section 2: New rules, Rule 12.5
+
+</PRE>
+</BODY>
+</HTML>

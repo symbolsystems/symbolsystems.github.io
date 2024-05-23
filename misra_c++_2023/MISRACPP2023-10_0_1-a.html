@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Each variable should be declared in a separate declaration statement [MISRACPP2023-10_0_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Each variable should be declared in a separate declaration statement [MISRACPP2023-10_0_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each variable is to be declared in a separate declaration statement."
+Determining the types of variables becomes confusing when pointers and access
+specifiers are used for multiple declarations in the same statement.
+See also: FORMAT-29
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents confusion and makes source code more readable.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( )
+{
+    int* a, b;   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( ) 
+{
+    int* a;      // OK
+    int b;      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 11 Variables - Rule 39, 6 Style - 6.5 Pointers and References - Rec. 26
+
+2. AUTOSAR C++14 Coding Guidelines
+   A7-1-7. Each expression statement and identifier declaration shall be
+   placed on a separate line
+
+3. AUTOSAR C++14 Coding Guidelines
+   M8-0-1. An init-declarator-list or a member-declarator-list shall consist
+   of a single init-declarator or member-declarator respectively
+
+4. High Integrity C++ Coding Standard
+   7.1.1. Declare each identifier on a separate line in a separate declaration
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 8, Rule 8-0-1
+
+6. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.0.1 A declaration should not declare more than one variable or member variable
+
+7. SEI CERT C Coding Standard
+   DCL04-C. Do not declare more than one variable per declaration
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL04-C.+Do+not+declare+more+than+one+variable+per+declaration">https://wiki.sei.cmu.edu/confluence/display/c/DCL04-C.+Do+not+declare+more+than+one+variable+per+declaration</A>
+
+</PRE>
+</BODY>
+</HTML>

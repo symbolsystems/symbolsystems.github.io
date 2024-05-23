@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Octal escape sequences (other than "\0") shall not be used [MISRA2008-2_13_2_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Octal escape sequences (other than "\0") shall not be used [MISRA2008-2_13_2_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Octal escape sequences can be problematic because the inadvertent
+introduction of a decimal digit ends the octal escape and introduces
+another character.
+The '\0' is the only permitted octal escape sequence."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule ignores any #pragma parasoft / codewizard directives.
+Rule ignores any values inside asm blocks.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule increases readability and maintainability. 
+Rule prevents using implementation-defined values.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo() 
+{
+    char code1 = '\100'; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo() 
+{
+    char code1 = '@';     /* OK */
+    code1 = '\0';     /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M2-13-2. Octal constants (other than zero) and octal escape sequences
+   (other than "\0" ) shall not be used
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-13-2
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 7, Rule 7.1
+
+4. Origin: Misra Guidelines - Rule 19
+
+</PRE>
+</BODY>
+</HTML>

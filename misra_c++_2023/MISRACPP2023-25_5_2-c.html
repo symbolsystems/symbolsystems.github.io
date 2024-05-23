@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The address of the 'localeconv', 'getenv', 'setlocale' or, 'strerror' function should not be taken [MISRACPP2023-25_5_2-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The address of the 'localeconv', 'getenv', 'setlocale' or, 'strerror' function should not be taken [MISRACPP2023-25_5_2-c-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If the structure pointed to by the value returned by the 'localeconv' function
+or the string returned by the 'getenv', 'setlocale' or 'strerror' function
+is modified, it results in undefined behavior.
+
+This rule detects when the address of the 'localeconv', 'getenv', 'setlocale'
+or 'strerror' function is taken.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;locale.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+char* (*fpsetlocale)( int category, const char* locale );
+char* (*fpstrerror)( int errnum );
+char* (*fpgetenv)( const char* env_var );
+struct lconv;
+struct lconv* (*fplocaleconv)();
+
+void f1( )
+{
+  fpsetlocale = setlocale;    // Violation
+  fpstrerror = strerror;      // Violation
+  fpgetenv = getenv;          // Violation
+  fplocaleconv = localeconv;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not take the address of the 'localeconv', 'getenv', 'setlocale'
+or 'strerror' function.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 25.5.2 The pointers returned by the C++ Standard Library functions localeconv, getenv, setlocale or strerror must only be used as if they have pointer to const-qualified type
+
+</PRE>
+</BODY>
+</HTML>

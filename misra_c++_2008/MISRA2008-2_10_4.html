@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A class, union or enum name (including qualification, if any) shall be a unique identifier [MISRA2008-2_10_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A class, union or enum name (including qualification, if any) shall be a unique identifier [MISRA2008-2_10_4-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Reusing a class, union or enum name, either as another type name or for any
+other purpose, may lead to developer confusion.
+The class, union or enum name shall not be duplicated anywhere in the project,
+even if the declarations are identical.
+This rule is not violated when the definition is made in a header file,
+and that header file is included in multiple source files."
+[MISRA C++:2008 Rule 2-10-4]
+
+This rule detects classes, structures, unions and enumerations whose names 
+are duplicated or reused as other identifiers. The rule compares fully 
+qualified names (the qualification includes named namespaces, classes, 
+structures and unions).
+If an identifier is declared in the scope of the function, then
+the qualification of this function is considered to be the qualification
+of the identifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents developer confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check following identifiers:
+- macros
+- functions declared in nested blocks
+- enumeration constants from enums declared in template classes
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+class C {};                 /* Violation */
+union U {};                 /* Violation */
+
+void foo1() {
+    enum E { E1 };          /* Violation */
+}
+
+/* test2.cpp */
+class C {};                 /* Violation */
+
+void foo2() {
+    typedef int U;          /* Violation */
+    float E;                /* Violation */
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+namespace N1 {
+    class C {};             /* OK - qualifier 'N1' */
+    union U {};             /* OK - qualifier 'N1' */
+
+    void foo1() {
+        enum E { E1 };      /* OK - qualifier 'N1' */
+    }
+}
+
+struct S1 {
+    struct S {};            /* OK - qualifier 'S1' */
+    void fs1() {
+        float F;            /* OK - qualifier 'S1' */
+    }
+};
+
+/* test2.cpp */
+class C {};                 /* OK */
+union U {};                 /* OK */
+
+void foo2() {
+    float E;                /* OK */
+}
+
+struct S2 {
+    typedef int S;          /* OK - qualifier 'S2' */
+    union F {};             /* OK - qualifier 'S2' */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 2, Rule 2-10-4
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Trigraphs shall not be used [MISRA2004-4_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Trigraphs shall not be used [MISRA2004-4_2-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports a violation message if trigraphs are used.
+All occurrences in a source file of the following sequences of three 
+characters (called trigraph sequences) are replaced with the corresponding 
+single character.
+??= #
+??( [
+??/ \
+??) ]
+??' ^
+??&lt; {
+??! |
+??&gt; }
+??- ~
+
+If the compiler has a switch to ignore trigraphs then this
+option should be used, or alternatively ensure that two
+adjacent question marks are never used in the code.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Trigraphs can cause accidental confusion with other uses of two question
+marks and lead to unexpected behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+??=define TEST 1                                            /* Violation */
+void foo() {
+   const char* s = "(Date should be in the form ??-??-??)"; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define TEST 1                                                          /* OK */
+void foo() {
+   const char* s = "(Date should be in the form " "??" "-??" "-??" ")"; /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-5-1. Trigraphs shall not be used
+
+2. High Integrity C++ Coding Standard
+   2.2.1. Do not use digraphs or trigraphs
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.4 Environment, AV Rule 11
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-3-1
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.0.1 Trigraph-like sequences should not be used
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 4.2
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 4, Rule 4.2
+
+8. Origin: Misra Guidelines - Rule 7
+
+9. SEI CERT C Coding Standard
+   PRE07-C. Avoid using repeated question marks
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE07-C.+Avoid+using+repeated+question+marks">https://wiki.sei.cmu.edu/confluence/display/c/PRE07-C.+Avoid+using+repeated+question+marks</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assembly language shall be encapsulated and isolated [MISRAC2012-DIR_4_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assembly language shall be encapsulated and isolated [MISRAC2012-DIR_4_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where assembly language instructions are required it is recommended 
+that they be encapsulated and isolated in either
+- Assembly language functions;
+- C functions (inline functions preferred for C99);
+- C macros.
+For reasons of efficiency it is sometimes necessary to embed simple assembly
+language instructions in-line, for example to enable and disable interrupts.
+If this is necessary, then it is recommended that it be achieved by using
+macros, or for C99, inline functions."
+
+The rule reports a violation if in one function is used assembly language 
+instruction and C/C++ code.
+
+See also: CODSTA-114
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Encapsulating assembly language is beneficial because:
+- It improves readability;
+- The name, and documentation, of the encapsulating macro or function makes
+  the intent of the assembly language clear;
+- All uses of assembly language for a given purpose can share the same
+  encapsulation which improves maintainability;
+- The assembly language can easily be substituted for a different target
+  or for purposes of static analysis."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void fn1 (int i)             /* Violation */
+{
+    if(i &gt; 0)
+    {
+        asm ( "NOP" );      
+    }
+    else
+    {
+        asm ( "mov eax, 01h" );
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define ASM_NOP asm ( "NOP" )
+#define ASM_MOV asm ( "mov eax, 01h" )
+
+void fn1 (int i)            /* OK */
+{
+    if(i &gt; 0)
+    {
+        ASM_NOP;            /* assembler code in macro */
+    }
+    else
+    {
+        ASM_MOV;            /* assembler code in macro */
+    }
+}
+
+inline void asm_nop()       /* OK - no other code than assembler in function */
+{
+    asm ( "NOP" );
+}
+
+void asm_mov()              /* OK - no other code than assembler in function */
+{
+    asm ( "mov eax, 01h" );
+}
+
+void fn2 (int i)            /* OK */
+{
+    if(i &gt; 0)
+    {
+        asm_nop();          /* assembler code in inline function - recommended */
+    }
+    else
+    {
+        asm_mov();          /* assembler code in function */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 2, Rule 2.1
+
+2. Misra Guidelines - Rule 3
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.3
+
+</PRE>
+</BODY>
+</HTML>

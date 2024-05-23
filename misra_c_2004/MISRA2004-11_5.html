@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A cast shall not remove any 'const' or 'volatile' qualification from the type of a pointer or reference [MISRA2004-11_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A cast shall not remove any 'const' or 'volatile' qualification from the type of a pointer or reference [MISRA2004-11_5-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Any attempt to remove the qualification associated with the addressed type
+by using casting is a violation of the principle of type qualification."
+[MISRA-C:2004]
+
+This rule detects when a const or volatile qualification is explicitly
+cast away on an object of pointer or reference type.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Notice that the qualification referred to here is not the same as any
+qualification that may be applied to the pointer itself." [MISRA-C:2004]
+
+"Note that either const_cast and traditional C-style casts that remove
+const or volatile qualification shall not be used." [AUTOSAR]
+
+The rule checks only three levels of pointer nesting.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Removal of the const or volatile qualification may not meet developer
+expectations as it may lead to undefined behaviour." [MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( const int* cp, volatile short* vp )
+{
+    const int** cpp = 0;
+    volatile short** vpp = 0;
+
+    int* ip1 = (int*)cp;                 /* Violation */
+    short* ip2 = (short*)vp;             /* Violation */
+    int** ip3 = (int**)cpp;              /* Violation */
+    short** ip4 = (short**)vpp;          /* Violation */
+}
+
+// C++ code
+void f2( const int cp, volatile short&amp; vp )
+{
+    int ip1 = const_cast&lt;int&amp;&gt;(cp);      // Violation
+    short ip2 = const_cast&lt;short&amp;&gt;(vp);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f1( int* cp, short* vp )
+{
+    int* ip1 = cp;               /* OK */
+    short* ip2 = vp;             /* OK */
+}
+
+// C++ code
+void f2( int cp, short&amp; vp )
+{
+    int ip1 = cp;               // OK
+    short ip2 = vp;             // OK
+}
+
+/* Removing const or volatile qualifiers from the pointer is allowed */
+void f3( int* const cp, short* volatile vp )
+{
+    int* ip1 = (int*)cp;       /* OK - const removed from the pointer,
+                                       not the pointed type */
+    short* ip2 = (short*)vp;   /* OK - volatile removed from the pointer,
+                                       not the pointed type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A5-2-3. A cast shall not remove any const or volatile qualification from
+    the type of a pointer or reference
+
+2.  High Integrity C++ Coding Standard
+    5.4.1. Only use casting forms: static cast (excl. void*), dynamic cast or
+    explicit constructor call
+
+3.  ISO/IEC 9899:1990 Programming languages -- C
+    6.5.3 Type qualifiers
+
+4.  ISO/IEC 9899:1999 Programming languages -- C
+    6.7.3 Type qualifiers
+
+5.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 5, Rule 5-2-5
+
+6.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 8.2.3 A cast shall not remove any const or volatile qualification from the type accessed via a pointer or by reference
+
+7.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 11, Rule 11.5
+
+8.  SEI CERT C Coding Standard
+    EXP05-C. Do not cast away a const qualification
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP05-C.+Do+not+cast+away+a+const+qualification">https://wiki.sei.cmu.edu/confluence/display/c/EXP05-C.+Do+not+cast+away+a+const+qualification</A>
+
+9.  SEI CERT C Coding Standard
+    EXP32-C. Do not access a volatile object through a nonvolatile reference
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP32-C.+Do+not+access+a+volatile+object+through+a+nonvolatile+reference">https://wiki.sei.cmu.edu/confluence/display/c/EXP32-C.+Do+not+access+a+volatile+object+through+a+nonvolatile+reference</A>
+
+10. SEI CERT C Coding Standard
+    EXP40-C. Do not modify constant objects
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP40-C.+Do+not+modify+constant+objects">https://wiki.sei.cmu.edu/confluence/display/c/EXP40-C.+Do+not+modify+constant+objects</A>
+
+11. SEI CERT C++ Coding Standard
+    EXP55-CPP. Do not access a cv-qualified object through a cv-unqualified
+    type
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP55-CPP.+Do+not+access+a+cv-qualified+object+through+a+cv-unqualified+type">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP55-CPP.+Do+not+access+a+cv-qualified+object+through+a+cv-unqualified+type</A>
+
+</PRE>
+</BODY>
+</HTML>

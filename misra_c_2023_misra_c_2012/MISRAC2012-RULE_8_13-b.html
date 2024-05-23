@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare a type of parameter as typedef to pointer to const if the pointer is not used to modify the addressed object [MISRAC2012-RULE_8_13-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare a type of parameter as typedef to pointer to const if the pointer is not used to modify the addressed object [MISRAC2012-RULE_8_13-b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a parameter in a function prototype is declared
+as typedef to pointer to non-const object and the pointer is not used to modify
+the addressed object. Then the type of parameter could be changed to typedef
+to pointer to const object.
+See also: CODSTA-14, CODSTA-CPP-43, CODSTA-CPP-53, MISRA-104
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is not sufficient to add 'const' identifier before typedef's
+name in a function declaration, because it is applied to pointer
+not to pointed object.
+There can already be overloaded function with parameter declared as typedef
+to pointer to const. Then changing the type of parameter to typedef to pointer
+to const will make the code non-compilable.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents unintentional change of data and improves precision in the
+definition of the function interface.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int* PINT;
+typedef const int* CINT;
+
+int function1(PINT ptr)        // Violation
+{
+    return (*ptr) + 1;
+}
+
+int function2(const PINT ptr)  // Violation
+{
+    return (*ptr) + 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef int* PINT;
+typedef const int* CINT;
+
+int function1(CINT ptr)        // OK
+{
+    return (*ptr) + 1;
+}
+
+int function2(const CINT ptr)  // OK
+{
+    return (*ptr) + 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M7-1-2. A pointer or reference parameter in a function shall be declared as
+   pointer to const or reference to const if the corresponding object is not
+   modified
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.13 Function, AV Rule 118
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 7, Rule 7-1-2
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.1.1 The target type of a pointer or lvalue reference parameter should be const-qualified appropriately
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.13
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 16
+
+7. Origin: Misra Guidelines - Rule 81
+
+8. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 3
+
+9. SEI CERT C Coding Standard
+   DCL05-C. Use typedefs of non-pointer types only
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL05-C.+Use+typedefs+of+non-pointer+types+only">https://wiki.sei.cmu.edu/confluence/display/c/DCL05-C.+Use+typedefs+of+non-pointer+types+only</A>
+
+</PRE>
+</BODY>
+</HTML>

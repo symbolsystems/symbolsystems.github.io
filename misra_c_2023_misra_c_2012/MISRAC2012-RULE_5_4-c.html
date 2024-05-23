@@ -1,0 +1,178 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The name of a macro should be distinct from the names of other macros that are currently defined(c90) [MISRAC2012-RULE_5_4-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The name of a macro should be distinct from the names of other macros that are currently defined(c90) [MISRAC2012-RULE_5_4-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule requires that, when a macro is being defined, its name be distinct 
+from:
+- the names of the other macros that are currently defined; and
+- the names of their parameters.
+
+It also requires that the names of the parameters of a given macro be distinct
+from each other but does not require that macro parameters names be distinct
+across two different macros.
+
+The definition of distinct depends on the implementation and the version
+of the C language that is being used:
+- In C90 the minimum requirement is that the first 31 characters
+  are significant" [MISRA C:2012 Rule 5.4]
+
+This rule detects cases when:
+- the name of a macro and the name of another currently-defined macro
+  or of its parameter are the same or the first 31 characters of their names
+  are identical.
+- the name of a parameter of a macro and the name of another currently-
+  defined macro are the same or the first 31 characters of their names
+  are identical.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Long macro identifiers may impair the readability of code. While many automatic
+code generation systems produce long macro identifiers, there is a good argument
+for keeping macro identifier lengths well below this limit."
+[MISRA C:2012 Rule 5.4]
+
+The rule assumes that a macro identifier is defined only in two cases:
+
+1. It has been defined with the #define directive. The definition must be
+   unconditional. For example:
+   #ifdef UNIX
+   #  define MACRO1 1
+   #  define MACRO2 2
+   #else
+   #  define MACRO1 -1
+   #endif
+   /* MACRO1 is defined, MACRO2 is assumed not to be defined */
+
+2. It is used in the context of preprocessor directives #ifdef, #ifndef, #if, 
+   or #elif, which check if the macro identifier has been defined.
+   For example:
+   #ifdef MACRO
+      /* MACRO is defined */
+   #endif
+
+In both cases the #define or #ifdef (or similar) checks must be in the same
+file as the macro that is used. For example:
+   /* --- file.h --- */
+   #define MACRO
+   /* --- file.c --- */
+   #include "file.h"
+   /* MACRO is assumed not to be defined */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Macros and identifiers whose names are the same may confuse the developer and
+lead to undefined behavior of the program. This rule helps keep macro names and
+identifiers distinct.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. Logical expressions are not suppoted in a macro condition. For example:
+   #define MACRO1
+   #define MACRO2
+   #if defined(MACRO1) &amp;&amp; defined(MACRO2)
+      #define MACRO3
+   #endif
+   /* MACRO3 is assumed not to be defined */
+
+2. Predefined and command line macros are not supported. In case you
+   use such macros, ensure that they have been defined.
+
+   
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define macro1        10
+#define macro1(X) X + 10                       /* Violation */
+
+#define macro2(param1_01) param1_01
+#define param1_01 10                           /* Violation */
+
+#define param2_02 10
+#define macro3(param2_02) param2_02            /* Violation */
+
+/*      1234567890123456789012345678901********* Characters */
+#define macro4_01____________________01X XX
+#define macro4_01____________________01Y YY    /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define macro1        10
+#undef macro1
+#define macro1(X) X + 10                       /* OK */
+
+#define macro2(param2_01) param2_01
+#define param1_01 10                           /* OK */
+
+#define param2_02 10
+#define macro3(param3_01) param3_01            /* OK */
+
+/*      1234567890123456789012345678901********* Characters */
+#define macro4_01____________________01X XX
+#define macro4_01____________________02Y YY    /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.4
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers declared in an inner local scope should not hide identifiers declared in an outer local scope [MISRA2004-5_2_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers declared in an inner local scope should not hide identifiers declared in an outer local scope [MISRA2004-5_2_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an identifier is declared in an inner scope but is not distinct
+from an identifier that already exists in an outer scope, then the inner-most
+declaration will 'hide' the outer one. This may lead to developer confusion."
+
+The rule checks if an identifier declared in an inner local scope has the same
+name as an identifier declared in an outer local scope. 
+
+See also: CODSTA-CPP-83, CODSTA-CPP-84, CODSTA-CPP-85, MISRA2004-5_1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hiding names of identifiers can lead to errors and confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1.
+The C standard defines four name spaces. Identifiers with the same name but from
+different name spaces do not hide each other. This is not fully supported by
+this rule which can result in false positives.
+
+The 4 namespaces defined in C are:
+- "labels":
+  label names (disambiguated by the syntax of the label declaration and use)
+- "tags":
+  the tags of structures, unions, and enumerations (disambiguated by following
+  any of the keywords: struct, union, or enum)
+- "members":
+  the members of structures or unions; each structure or union has a separate
+  name space for its members (disambiguated by the type of the expression used
+  to access the member via the . or -&gt; operator)
+- "all other":
+  all other identifiers, called ordinary identifiers (declared in ordinary
+  declarators or as enumeration constants)
+
+A false positive can be reported for identifiers from following namespaces:
+- "tags" and "all other", for example:
+    void foo(int x) {
+        struct S {
+            int i;
+        };
+        if (x) {
+            int S;              /* False Positive reported */
+        }
+    }
+- "tags" and "labels", for example:
+    void foo(int x) {
+        struct S {
+            int i;
+        };
+        if (x) {
+            S:                    /* False Positive reported */
+            return;
+        }
+    }
+- "labels" and "all other", for example:
+    void foo() {
+        int my_label;
+        if (my_label) {
+            my_label:       /* False Positive reported */
+            return;
+        }
+    }
+
+Note that MISRA C:2012 Rule 5.7 "A tag name shall be a unique identifier"
+disallows first two of the above cases: "tag shall be unique across all name
+spaces".
+
+
+2.
+Rule compares all characters in identifiers. This can cause false negatives
+for very long identifiers.
+
+According to C standard, only certain number of initial characters in
+identifiers are guaranteed to be significant. For example in C90 standard, only
+31 initial characters in an internal identifier are guaranteed to be
+significant. This means that compiler can ignore non-significant characters.
+
+For such compiler following global and local variable identifiers might be
+identical and the local variable declaration will hide global variable
+declaration:
+    void foo(int x) {
+        // significant characters same
+        int var4567890123456789012345678901_abc;
+
+        if (x) {
+            // significant characters same
+            int var4567890123456789012345678901_xyz; // No violation reported 
+
+            // This in fact might modify local variable declared in this scope:
+            var4567890123456789012345678901_abc = 0;
+        }
+    }
+
+No violation will be reported in this case (false negative).
+
+You can use MISRA2004-5_1 to detect identifiers longer than 31 characters.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int param) {
+    int x;
+    int var; 
+    typedef enum {value1, value2} E;
+    
+    if (x &gt; 0){
+    	int param;     // Violation
+    	int var = 10;  // Violation
+    	int value1;    // Violation
+    	enum E{value}; // Violation
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int param) {
+    int x;
+    int var; 
+    typedef enum {value1, value2} E;
+    
+    if (x &gt; 0){
+    	int param_n;     // OK - the name was changed
+    	var = 10;        // OK - new variable is not needed
+    	int value_n;     // OK - the name was changed
+    	E e = value1;    // OK - existing typedef is used
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-10-1. An identifier declared in an inner scope shall not hide an
+   identifier declared in an outer scope
+
+2. High Integrity C++ Coding Standard
+   3.1.1. Do not hide declarations
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 135
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-10-2
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.4.1 A variable declared in an inner scope shall not hide a variable declared in an outer scope
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.3
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 5, Rule 5.2
+
+8. Origin: Misra Guidelines - Rule 21
+
+9. SEI CERT C Coding Standard
+   DCL01-C. Do not reuse variable names in subscopes
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL01-C.+Do+not+reuse+variable+names+in+subscopes">https://wiki.sei.cmu.edu/confluence/display/c/DCL01-C.+Do+not+reuse+variable+names+in+subscopes</A>
+
+</PRE>
+</BODY>
+</HTML>

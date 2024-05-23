@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer Scoped Enums to Unscoped Enums [MISRACPP2023-10_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer Scoped Enums to Unscoped Enums [MISRACPP2023-10_2_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+As a general rule, if you declare a symbol inside a block (inside curly braces),
+the scope of that symbol is limited to the scope of the curly braces.
+However, the C++98 enums are exceptions to this rule. The names of such
+enumerators leak to the scope that contains their enum definitions. As a result,
+the C++98 enums are, in fact, unscoped, and they pollute their enclosing scope.
+The new C++11 scoped enums do not leak their names and remain confined to
+the scope of the curly braces.
+
+This rule detects when unscoped enums are used instead of scoped enums.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Scoped enums reduce namespace pollution and their enumerators are much more
+strongly typed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Width { narrow, wide };   // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum class Width { narrow, wide  }; // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-2-3. Enumerations shall be declared as scoped enum classes
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.2.2 Unscoped enumerations should not be declared
+
+3. Scott Meyers, "Effective Modern C++: 42 Specific ways to improve your use
+   C++11 and C++14", O'Reilly, Copyright 2015, Chapter 3: "Moving to Modern C++",
+   Item 10
+
+</PRE>
+</BODY>
+</HTML>

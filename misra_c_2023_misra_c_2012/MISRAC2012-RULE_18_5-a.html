@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The declaration of objects should contain no more than 2 levels of pointer indirection [MISRAC2012-RULE_18_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The declaration of objects should contain no more than 2 levels of pointer indirection [MISRAC2012-RULE_18_5-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"No more than two pointer declarators should be applied consecutively to a type.
+Any typedef-name appearing in a declaration is treated as if it were replaced
+by the type that it denotes.
+The use of more than two levels of pointer nesting can seriously impair
+the ability to understand the behaviour of the code, and should therefore
+be avoided." [MISRA C:2012 Rule 18.5]
+
+The rule reports a violation if more than 2 levels of pointer indirection
+is used in declaration of object or function.
+
+Typedefs appearing in declarations are treated as if it were replaced by the type
+that it denotes.
+
+The array type of function parameter is recognized as pointer, because arrays
+are converted to a pointer to the initial element of the array.
+
+See also: CODSTA-05, CODSTA-89, CODSTA-94, CODSTA-95
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of non-compliant code: */
+
+typedef int*** PPINT;
+
+void foo1(){
+    int*** a;  /* Violation */
+    PPINT b;   /* Violation */
+}
+
+int*** foo2(); /* Violation */
+
+void foo3(
+    const char*** p1,     /* Violation */
+    const char** p2[],    /* Violation */
+    const char* p3[2][2]  /* Violation */
+    );
+
+const char*** v1;     /* Violation */
+char*** v2[10];       /* Violation */
+
+void (***fp)(); /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of compliant code: */
+
+typedef int** PPINT;  /* OK */
+
+void foo1() {
+    int** a;   /* OK */
+    PPINT b;   /* OK */
+}
+
+int** foo2();  /* OK */
+
+void foo3(
+    const char** p1,     /* OK */
+    const char* p2[],    /* OK */
+    const char p3[2][2]  /* OK */
+    );
+
+const char** v1;     /* OK */
+char** v2[10];       /* OK */
+int v3[2][2][2];     /* OK */
+
+void (**fp)(); /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-0-3. The declaration of objects shall contain no more than two levels of
+   pointer indirection
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-19
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 11.3.2 The declaration of an object should contain no more than two levels of pointer indirection
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 18.5
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 17
+
+</PRE>
+</BODY>
+</HTML>

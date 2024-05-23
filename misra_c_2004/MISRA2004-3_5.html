@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not mix bit-fields and other data within the same structure [MISRA2004-3_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not mix bit-fields and other data within the same structure [MISRA2004-3_5-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is recommended that structures should be declared specifically 
+to hold the sets of bit fields, and do not include any other data
+within the same structure."
+
+The rule reports a violation if inside the same structure is declared
+bit field and non-static member variable.
+
+See also: MISRA-113
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct message {              /* Violation */
+    unsigned int bf1 : 4;
+    unsigned int bf2 : 1;
+    int size;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct message1 {              /* OK */
+    unsigned int bf1 : 4;
+    unsigned int bf2 : 1;
+};
+
+struct message2 {              /* OK */
+    int size;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 3
+
+2. Origin: Misra Guidelines - Rule 113
+
+</PRE>
+</BODY>
+</HTML>

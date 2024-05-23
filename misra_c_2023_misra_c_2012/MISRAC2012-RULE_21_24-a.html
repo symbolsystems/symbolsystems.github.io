@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The random number generator functions 'rand()' and 'srand()' should not be used [MISRAC2012-RULE_21_24-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The random number generator functions 'rand()' and 'srand()' should not be used [MISRAC2012-RULE_21_24-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C Standard Library function 'rand()' makes no guarantees as to the quality
+of the random sequence produced. The C Standard warns that the numbers generated
+by some implementations of the 'rand()' function have a short cycle and the
+results can be predictable. Applications with particular requirements should use
+a generator that is known to be sufficient for their needs."
+[MISRA C:2012 Amendment 3]
+
+This rule detects when calls to the 'rand()' and 'srand()' functions are used.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using functions, which produce predictable numbers
+and have limited randomness.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+void foo( void )
+{
+    srand((unsigned)time( NULL ));  // Violation
+    int rand_var = rand();          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'rand()' and 'srand()' functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.20 Rule 21.24
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+4. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002290: The application must use the Federal Information Processing
+   Standard (FIPS) 140-2-validated cryptographic modules and random number
+   generator if the application implements encryption, key exchange,
+   digital signature, and hash functionality
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Initializer lists shall not contain persistent side effects [MISRAC2012-RULE_13_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Initializer lists shall not contain persistent side effects [MISRAC2012-RULE_13_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C99 permits automatic aggregate initializers to contain expressions that are
+evaluated at run-time. It also permits compound literals which behave as
+anonymous initialized objects. The order in which side effects occur during
+evaluation of the expressions in an initializer list is unspecified and the
+behaviour of the initialization is therefore unpredictable if those side
+effects are persistent."  [MISRA C:2012 Rule 13.1]
+
+The rule reports a violation if initializer list contains:
+- assignment operator (simple or compound)
+- increment or decrement operator
+- use of a volatile object
+- allocation or deallocation of memory ('new' statement or 'malloc'-family
+  calls or 'free' call)
+- call of one of standard library functions which operate on files (for example
+  'fopen', 'put', 'flush'), handle signals ('raise', 'signal'), set terminate
+  or unexpected handlers ('set_terminate', 'set_unexpected') or handle program
+  termination (for example 'abort', 'atexit') or execute commands ('system')
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+ISO/IEC 9899:1999 standard defines side effects as:
+
+   The operations that cause side effects are accessing a volatile object,
+   modifying an object, modifying a file, or calling a function that does
+   any of those operations, which cause changes in the state of the execution
+   environment of the calling function
+
+This rule does not check function calls (only expressions directly on the
+aggregate initializer list are checked), except for the list of functions
+mentioned in the Description section.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents writing expressions that can produce different values 
+depending on order of evaluation that the standard permits.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct S {
+    int ms1;
+    int ms2;
+} TS;
+
+void foo1( ) {
+    int i;
+    int j;
+    volatile int v;
+    int a1[4] = {i, j, i, j++};   // Violation
+    TS ts1 = {v, 0};              // Violation
+    (int [3]){i = 1, 0, 0};       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef struct S {
+    int ms1;
+    int ms2;
+} TS;
+
+void foo1( ) {
+    int i;
+    int j;
+    int a[2] = {i + j, i - j};                 // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 13.1, Appendix J
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.5.2.5 Compound literals
+   6.7.8 Initialization
+   5.1.2.3 Program execution
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The raw pointer constructors of 'std::shared_ptr' and 'std::unique_ptr' should not be used [MISRACPP2023-23_11_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The raw pointer constructors of 'std::shared_ptr' and 'std::unique_ptr' should not be used [MISRACPP2023-23_11_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When std::shared_ptr or std::unique_ptr that take ownership of the
+raw pointer passed as an argument are used, then a memory leak can occur
+if std::make_unique throws an exception.
+
+This rule detects calls to the constructors of std::shared_ptr
+and std::unique_ptr that take the raw pointer as the first argument.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+struct A
+{
+    int8_t i;
+};
+
+void f1() {
+    A *p1 = new A;
+    auto v1 = std::shared_ptr&lt;A&gt;(p1);    // Violation
+    auto v2 = std::unique_ptr&lt;A&gt;(new A); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+struct A
+{
+    int8_t i;
+};
+
+void f1() {
+    auto v1 = std::make_shared&lt;A&gt;();  // OK
+    auto v2 = std::make_unique&lt;A&gt;();  // OK
+}
+
+void f2() {
+    auto p = std::make_shared&lt;A&gt;();   // OK
+    int8_t* pi = &amp;(p-&gt;i);
+    std::shared_ptr&lt;int8_t&gt; q(p, pi); // OK - not taking ownership
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 23.11.1 The raw pointer constructors of std::shared_ptr and std::unique_ptr should not be used
+
+</PRE>
+</BODY>
+</HTML>

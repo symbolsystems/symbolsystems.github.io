@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All direct, non-static data members of a non-aggregate class should be initialized at the top of a constructor body [MISRACPP2023-15_1_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All direct, non-static data members of a non-aggregate class should be initialized at the top of a constructor body [MISRACPP2023-15_1_4-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+An object should be completely initialized in a constructor. It is recommended
+to use a default member initializer or a constructor initialization list.
+
+This rule detects when a non-aggregate class contains non-static data members
+which are not initialized at the top of a constructor body.
+
+A data member is initialized at the top of a constructor in one
+of the following ways:
+ - the data member has a default member initializer
+ - the data member is initialized in the constructor initialization list
+ - the data member's type contains an explicit declaration of a constructor.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not apply to delegating constructors.
+
+An aggregate is a class or struct with
+  - no user-provided, explicit, or inherited constructors, and
+  - no private or protected non-static data members, and
+  - no virtual functions, and
+  - no virtual, private, or protected base classes
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you reduce the risk of an invalid state existing after
+successful construction.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C1
+{
+public:
+    C1();
+    C1(int i);
+private:
+    int m1;
+    int m2;
+};
+
+C1::C1() : m1(0) {}    // Violation
+C1::C1(int i) {}       // Violation
+
+class C2               // Violation
+{
+public:
+    void f();
+private:
+    int m1;
+    int m2;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C1
+{
+public:
+    C1();
+    C1(int i);
+private:
+    int m1;
+    int m2;
+};
+
+C1::C1() : m1(0), m2(0) {}    // OK
+C1::C1(int i) : C1() {}       // OK
+
+class C2                      // OK
+{
+public:
+    void f();
+private:
+    int m1 = 0;
+    int m2 = 0;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   11.6.1 Aggregates
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.1.4 All direct, non-static data members of a class should be initialized before the class object is accessible
+
+</PRE>
+</BODY>
+</HTML>

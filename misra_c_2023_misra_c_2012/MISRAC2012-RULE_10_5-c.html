@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use casts between essentially character types and essentially floating types [MISRAC2012-RULE_10_5-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use casts between essentially character types and essentially floating types [MISRAC2012-RULE_10_5-c-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An explicit cast may be introduced for legitimate functional reasons.
+However, some explicit casts are considered inappropriate:
+- Converting between floating and character types is not meaningful
+  as there is no precise mapping between the two representations."
+  [MISRA C:2012 Rule 10.5]
+
+This rule detect cases when: 
+- an expression of an essentially floating type is explicitly cast
+  to an essentially character type
+- an expression of an essentially character type is explicitly cast
+  to an essentially floating type
+
+The term "essential type" is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents confusion and helps avoid inappropriate explicit casts.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    char ch;
+    float f;
+    double complex dc;
+
+    (float)ch;                         /* Violation */
+    (double)'A';                       /* Violation */
+    (float complex)'B';                /* Violation */
+    (char)1.2;                         /* Violation */
+    (char)f;                           /* Violation */
+    (char)dc;                          /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use casts between essentially character types and essentially floating types.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.5
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.10 Rule 10.5
+
+</PRE>
+</BODY>
+</HTML>

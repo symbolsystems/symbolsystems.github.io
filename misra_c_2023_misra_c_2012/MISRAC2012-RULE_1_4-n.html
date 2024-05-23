@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the functions defined in Annex K of ISO/IEC 9899:2011 standard [MISRAC2012-RULE_1_4-n]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the functions defined in Annex K of ISO/IEC 9899:2011 standard [MISRAC2012-RULE_1_4-n-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. The following
+shall not be used:
+- Other than defining __STDC_WANT_LIB_EXT1__ to '0', the facilities of Annex K
+(Boundschecking interfaces) shall not be used." [MISRA C:2012 Amendment 2]
+
+This rule detects when the functions listed in Annex K of ISO/IEC 9899:2011
+standard are used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define __STDC_WANT_LIB_EXT1__ 1
+
+#include &lt;stdio.h&gt;
+
+void foo(void)
+{
+    FILE* tmpf;
+    tmpfile_s(tmpf);                                        // Violation
+}
+
+#include &lt;stdlib.h&gt;
+
+void bar(char *p)
+{
+    char *env_p;
+    env_p = getenv_s(10, p, 10, "PATH");                    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use the 'tmpfile_s()' and 'getenv_s()' functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   Annex K, K.3.5 Input/output &lt;stdio.h&gt;, K.3.6 General utilities &lt;stdlib.h&gt;,
+   K.3.7 String handling &lt;string.h&gt;, K.3.8 Date and time &lt;time.h&gt;,
+   K.3.9 Extended multibyte and wide character utilities &lt;wchar.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

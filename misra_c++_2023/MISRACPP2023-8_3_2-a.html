@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The built-in unary + operator should not be used [MISRACPP2023-8_3_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The built-in unary + operator should not be used [MISRACPP2023-8_3_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The operand of the unary + operator shall have arithmetic, unscoped
+enumeration, or pointer type and the result is the value of the argument.
+Integral promotion is performed on integral or enumeration operands.
+The type of the result is the type of the promoted operand."
+[ISO/IEC 14882:2011]
+
+This rule detects the built-in unary + operator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability and prevents bug-prone code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+  short i = 0;
+  auto sum = +i;                                // Violation
+  for (i = 0; i &lt; 10; i++)
+  {
+    sum =+ i;                                   // Violation
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+  short i = 0;
+  auto sum = i;                                 // OK
+  for (i = 0; i &lt; 10; i++)
+  {
+    sum += i;                                   // OK
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.3.2 The built-in unary + operator should not be used
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   5.3.1 Unary operators
+
+</PRE>
+</BODY>
+</HTML>

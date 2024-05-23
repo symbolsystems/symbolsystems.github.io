@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A 'U' suffix shall be applied to all constants of unsigned type [MISRACPP2023-5_13_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A 'U' suffix shall be applied to all constants of unsigned type [MISRACPP2023-5_13_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The type of an integer constant is a potential source of confusion,
+because it is dependent on a complex combination of factors including:
+- The magnitude of the constant
+- The implemented sizes of the integer types
+- The presence of any suffixes
+- The number base in which the value is expressed (i.e. decimal, octal or
+  hexadecimal)
+
+Signedness of constants should be explicit. Consistent signedness is an
+important principle in constructing well formed expressions. If a constant
+is of an unsigned type, it is helpful to avoid ambiguity by applying a “U”
+suffix. When applied to larger values, the suffix may be redundant (in the
+sense that it does not influence the type of the constant); however its
+presence is a valuable contribution towards clarity."
+
+The rule checks if integer constant of unsigned type has 'U' or 'u' suffix.
+
+See also: MISRA-018_a, MISRA-018_b, MISRA-018_c, MISRA-018_d, MISRA2004-10_1_a
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* the type depends from the implemented size of the various integer types */
+long lVar = 2147483648;     /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+long lVar = 2147483648U;    /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.4 Unsigned integer literals shall be appropriately suffixed
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 7.2
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10
+
+4. Origin: Misra Guidelines - Rule 18
+
+</PRE>
+</BODY>
+</HTML>

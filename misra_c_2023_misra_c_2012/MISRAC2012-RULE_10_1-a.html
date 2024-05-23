@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An expression of essentially Boolean type should always be used where an operand is interpreted as a Boolean value [MISRAC2012-RULE_10_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An expression of essentially Boolean type should always be used where an operand is interpreted as a Boolean value [MISRAC2012-RULE_10_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when the following operands are expressed as integers,
+pointers or floating types different than "essentially Boolean" type:
+  - the operand of the logical operator '!'
+  - the right hand or the left hand operand of logical operators '&amp;&amp;' and '||'
+  - the first operand of the conditional operator '?:'
+
+The term "essential type" is defined by the MISRA C:2012 standard, 
+but tools may also provide additional ways of identifying "essentially 
+Boolean" type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+Integer constants with values '0' and '1' are considered to be constants of
+"essentially Boolean" type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents confusion and helps distinguish between integers
+and logical values.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule can report a false violation if a nested conditional operator
+(more than one level of nesting)is used as the operand. For example:
+
+void foo(int a, int b) {
+    !((a &gt; b) ? a &gt; b : (a &gt; b ? 0 : (a &gt; b ? 0 : 1))); /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef enum {false, true} bool; /* essentially Boolean type */
+
+void foo( void )
+{
+    bool b;
+    int  i;
+    char ch;
+
+    if(!i);                  /* Violation */
+    !( b ? 1 : 2);           /* Violation */
+
+    if(i &amp;&amp; ch);             /* Violation */
+    b = (i != b) || (i);     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define FALSE 0
+#define TRUE  1
+typedef enum {false, true} bool; /* essentially Boolean type */
+
+void foo( void )
+{
+    bool b;
+    int  i;
+    char ch;
+
+    if(i == 0);                   /* OK */
+    !( b ? TRUE : FALSE);         /* OK */
+
+    if((i &gt; 0) &amp;&amp; (ch == 'a'));   /* OK */
+    b = (i != b) || (i &gt; 0);      /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.1
+
+2. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

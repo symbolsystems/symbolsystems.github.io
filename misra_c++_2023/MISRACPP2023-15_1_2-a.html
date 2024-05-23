@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All constructors of a class should explicitly call a constructor for all of its immediate base classes and all virtual base classes [MISRACPP2023-15_1_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All constructors of a class should explicitly call a constructor for all of its immediate base classes and all virtual base classes [MISRACPP2023-15_1_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a constructor in a derived class does not call
+explicitly constructors for all of its immediate base classes and all virtual
+base classes.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule reports a violation only if a base class (immediate or virtual)
+has explicitly defined constructor.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not check delegating constructors. It assumes that the target
+constructor called in the constructor initializer list performs a proper base
+class initialization.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"This rule reduces confusion over which constructor will be used,
+and with what parameters."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+    public:
+        A ( )
+        {
+        }
+};
+
+
+class B : public A
+{
+    public:
+        B ( ) // Violation
+        {
+        }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+    public:
+        A ( )
+        {
+        }
+};
+
+
+class B : public A
+{
+    public:
+        B ( ): A() // OK
+        {
+        }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-1-1. Constructors shall explicitly initialize all virtual base classes,
+   all direct non-virtual base classes and all non-static data members
+
+2. MISRA C++:2008 - Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 12, Rule 12-1-2
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.1.2 All constructors of a class should explicitly initialize all of its virtual base classes and immediate base classes
+
+</PRE>
+</BODY>
+</HTML>

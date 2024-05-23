@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Variables should be captured explicitly in a non-transient lambda [MISRACPP2023-8_1_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Variables should be captured explicitly in a non-transient lambda [MISRACPP2023-8_1_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when a non-transient lambda uses implicitly captured
+variables.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"A lambda is transient when:
+* It is immediately invoked; or
+* It is passed to a function that does not store it.
+
+A function does not store a lambda when:
+* The function is defined in the same translation unit as the lambda; and
+* The lambda is only copied or moved when it is passed as an argument; and
+* The function only calls the lambda and/or passes the lambda to another
+  function that does not store it."
+[MISRA C++:2023]
+
+"This rule applies to capture by value and capture by reference."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+* This rule does not report default captures; it only reports when a captured
+  variable is actually used.
+* This rule does not apply to lambdas in uninstantiated templates.
+* This rule does not apply to the implicit capture of the 'this' pointer. This
+  case is checked by the CODSTA-MCPP-104 rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid dangling pointers and references to captured variables
+when a lambda is called.
+
+"Naming the variables captured by a lambda expression clarifies its
+dependencies. This allows variables captured by reference and pointers captured
+by value to be more easily identified, helping to ensure that they are
+not dangling when the lambda is called.
+
+This issue cannot occur for a transient lambda, so there is no need to
+explicitly capture its variables."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f()
+{
+    int var = 0;
+    auto l = [&amp;]() { return var; }; // Violation - 'var' is implicitly captured
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f()
+{
+    int var = 0;
+    auto l = [&amp;var]() { return var; }; // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.1.2 Variables should be captured explicitly in a non-transient lambda
+
+</PRE>
+</BODY>
+</HTML>

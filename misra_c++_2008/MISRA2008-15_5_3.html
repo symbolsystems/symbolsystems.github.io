@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The execution of a function registered with 'std::atexit()' or 'std::at_quick_exit()' should not exit via an exception [MISRA2008-15_5_3]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The execution of a function registered with 'std::atexit()' or 'std::at_quick_exit()' should not exit via an exception [MISRA2008-15_5_3-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In some situations exception handling must be abandoned for less
+subtle error handling techniques. These situations are:
+. . .
+ - when execution of a function registered with 'std::atexit'
+   or 'std::at_quick_exit' exits via an exception
+. . .
+In such cases, 'std::terminate()' is called." [ISO/IEC 14882:2011]
+
+"It is implementation-defined whether the call stack is unwound
+before 'terminate()' is called, so the destructors of any automatic
+objects may or may not be executed." [MISRA C++:2008]
+
+This rule detects when a function that was registered as an exit
+handler with 'atexit()' or 'at_quick_exit()' contains one of the following:
+- a 'throw' statement that is not in the context of the 'try' block
+- a call to a function that can throw an exception that is not in the context
+of the 'try' block.
+
+See also: EXCEPT-01, EXCEPT-07, EXCEPT-08, EXCEPT-13, EXCEPT-14
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents abnormal process termination.
+"Allowing the application to abnormally terminate can lead to
+resources not being freed, closed, and so on. It is frequently
+a vector for denial-of-service attacks." [CERT-ERR50-CPP]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+class Exception{ };
+// The 'fnExit1' function can throw an exception
+void fnExit1 ()
+{
+    throw Exception();
+}
+
+void f1 ()
+{
+    atexit (fnExit1);  // Violation
+}
+
+void canThrowException();
+// The 'fnExit2' function can throw an exception
+void fnExit2 ()
+{
+	canThrowException();
+}
+
+void f2 ()
+{
+    atexit (fnExit2);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+class Exception{ };
+// The 'fnExit1' function can not throw an exception
+void fnExit1 ()
+{
+    try {
+        throw Exception();
+    } catch (Exception e) {
+
+    }
+}
+
+void f1 ()
+{
+    atexit (fnExit1);  // OK
+}
+
+void canNotThrowException() throw();
+// The 'fnExit2' function can not throw an exception
+void fnExit2 ()
+{
+    canNotThrowException();
+}
+
+void f2 ()
+{
+    atexit (fnExit2);  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-2. Program shall not be abruptly terminated. In particular, an
+   implicit or explicit invocation of std::abort(), std::quick_exit(),
+   std::_Exit(), std::terminate() shall not be done
+
+2. AUTOSAR C++14 Coding Guidelines
+   A15-5-3. The std::terminate() function shall not be called implicitly
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-5-3
+
+4. Programming languages -- C++ ISO/IEC 14882:2011
+   15.5.1 The std::terminate() function
+
+5. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+6. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002400: The application must restrict the ability to launch Denial of Service (DoS) attacks against itself or other information systems
+
+</PRE>
+</BODY>
+</HTML>

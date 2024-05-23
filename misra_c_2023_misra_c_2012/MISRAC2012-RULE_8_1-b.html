@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Whenever an object is declared or defined, its type shall be explicitly stated [MISRAC2012-RULE_8_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Whenever an object is declared or defined, its type shall be explicitly stated [MISRAC2012-RULE_8_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports violations on declarations of parameters and variables where 
+the type is not explicitly stated.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+extern x;     /* Violation  */
+const y;      /* Violation  */
+z;            /* Violation  */
+
+void foo(const i);  /* Violation  */
+void foo(const i){} /* Violation  */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+extern int x;     /* OK  */
+const int y;      /* OK  */
+int z;            /* OK  */
+
+void foo(const int i);  /* OK  */
+void foo(const int i){} /* OK  */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.1
+
+</PRE>
+</BODY>
+</HTML>

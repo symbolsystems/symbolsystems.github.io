@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Variable-length arrays should not be used [MISRAC2012-RULE_18_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Variable-length arrays should not be used [MISRAC2012-RULE_18_8-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Variable-length arrays are specified when the size of an array declared
+in a block or a function prototype is not an integer constant expression.
+They are typically implemented as a variable size object stored on the stack.
+Their use can therefore make it impossible to determine statically the amount
+of memory that must be reserved for a stack."
+[MISRA C:2012 Rule 18.8 with Amendment 4]
+
+This rule detects when a local variable is declared as a variable
+length array.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"If the size is an integer constant expression and the element type has a known
+constant size, the array type is not a variable length array type; otherwise,
+the array type is a variable length array type." [ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+"If the size of a variable-length array is negative or zero, the behaviour
+is undefined. If a variable-length array is used in a context in which its type
+is required to be compatible with the type of another array, then the size of
+the array types shall be identical.
+Further, all sizes shall evaluate to positive integers. If these requirements
+are not met, the behaviour is undefined. If a variable-length array is used in
+the operand of a sizeof operator, under some circumstances it is unspecified
+whether the array size expression is evaluated or not."
+[MISRA C:2012 Rule 18.8 with Amendment 4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int n;
+
+void foo(void)
+{
+    int v1[n];          /* Violation */
+    int v2[10][n];      /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define SIZE 10
+
+void foo(void)
+{
+    int v1[SIZE];       /* OK */
+    int v2[10][10];     /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 18.8
+
+2. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.11 Rule 18.8
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.5.2 Array declarators
+
+</PRE>
+</BODY>
+</HTML>

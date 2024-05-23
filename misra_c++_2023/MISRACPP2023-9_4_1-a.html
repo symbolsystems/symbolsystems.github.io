@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All 'if...else-if' constructs shall be terminated with an 'else' clause [MISRACPP2023-9_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All 'if...else-if' constructs shall be terminated with an 'else' clause [MISRACPP2023-9_4_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when an 'if' statement followed by one or more 'else-if'
+statements is not terminated with a final 'else' clause.
+There are no requirements for the contents of the final 'else' clause; it may
+contain only an empty statement or an empty compound block.
+
+See also: CODSTA-23, MISRA2004-14_10
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Providing, even an empty, explicit 'else' clause constitutes defensive
+programming, showing that all cases have been considered.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int a)
+{
+    if(a &gt; 0)
+    {
+    }
+    else if (a &gt; 10)   // Violation
+    {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int a)
+{
+    if(a &gt; 0)
+    {
+    }
+    else if (a &gt; 10)   // OK
+    {
+    }
+    else
+    {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.1 All if ... else if constructs shall be terminated with an else statement
+
+</PRE>
+</BODY>
+</HTML>

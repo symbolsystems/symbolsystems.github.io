@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The first clause of a 'for' loop shall be well-formed [MISRAC2012-RULE_14_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The first clause of a 'for' loop shall be well-formed [MISRAC2012-RULE_14_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A for loop shall be well-formed" [MISRA C:2012 Rule 14.2]
+
+"The three clauses of a 'for' statement are the:
+- First clause which
+  - Shall be empty, or
+  - Shall assign a value to the loop counter, or
+  - Shall define and initialize the loop counter (C99).
+(...)" [MISRA C:2012 Rule 14.2]
+
+This rule ensures that the first clause in a 'for' statement is empty
+or assigns a value to the loop counter. Additionally, this rule detects 
+cases when the first clause contains an expression that has a persistent
+side effect other than modification of a loop counter or contains
+assignments to more than one loop counter.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a loop counter is an object, an array element
+or a member of a structure or union that is used in a condition
+and modified inside the third clause of a 'for' statement.
+
+The rule assumes that an object is modified if:
+- it is used as the left hand operand of the assignment operators
+- it is used as the operand of the increment or decrement operators
+- it is passed to the function as a reference to a non-const object
+- its address is passed to the function as a pointer to a non-const object
+(except functions which are called via function pointers)
+
+This rule detects the following persistent side effects:
+- modifying an object
+- accessing a volatile object
+- calling a function that contains a persistent side effect
+
+For function calls, this rule checks only if a directly called function
+contains a persistent side effect.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The 'for' statement provides a general-purpose looping facility. Using
+a restricted form of loop makes code easier to review and to analyse." 
+[MISRA C:2012 Rule 14.2]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule may not report violations if the array elements or members that are
+used in clauses of a 'for' statement differ only in one of the following:
+- arithmetic or assignment operators,
+- boolean, floating or string constants,
+- function calls,
+- sizeof or conditional operators
+- casts.
+In such cases, the rule may incorrectly consider such objects to be loop
+counters.
+
+/* In the examples below the rule finds assignments to loop counters */
+int f1();
+int f2();
+
+void foo() {
+    int arr[3];
+    int i;
+
+    for(arr[1 - 1] = 0; arr[1 + 1]; arr[1 + 1]++); /* should be Violation */
+    for(arr[f1()] = 0; arr[f1()]; arr[f2()]++);    /* should be Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int i;
+    int j;
+    int a[3];
+
+    for(i == 0; i &lt; 10; ++i) {        /* Violation */
+    /* Improper expression is used in the first clause of a 'for' statement */
+    }
+
+    for(int k; a[k] &lt; 10; k += 1) {   /* Violation */
+    /* The loop counter 'k' is defined but not initialized in the
+     * first clause of a 'for' statement (C99 and C++ code) */
+    }
+
+    for(i = j++; i &lt; 10; ++i) {       /* Violation */
+    /* The first clause of a 'for' statement contains a persistent side effect
+     * other than a modification of a loop counter */
+    }
+
+    for(i = 0, j = 1; i &lt; 10 &amp;&amp; j &lt; 20; ++i, ++j) {       /* Violation */
+    /* The first clause of a 'for' statement contains assignment to more
+     * than one object */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int i;
+    int j;
+    int a[3];
+
+    for(i = 0; i &lt; 10; ++i) {           /* OK */
+    }
+
+    for(int k = 0; a[k] &lt; 10; k += 1) { /* OK */
+    }
+
+    i = 0;
+    for(; i &lt; 10; ++i) {                /* OK - first clause could be empty */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 14.2
+   Section 8: Rules, 8.14: Control statement expressions
+
+</PRE>
+</BODY>
+</HTML>

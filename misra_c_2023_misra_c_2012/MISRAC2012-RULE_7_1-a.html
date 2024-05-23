@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Octal constants (other than zero) shall not be used [MISRAC2012-RULE_7_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Octal constants (other than zero) shall not be used [MISRAC2012-RULE_7_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Any integer constant beginning with a '0' (zero) is treated as octal.
+Because of this, it is possible for a zero-prefixed constant that is intended
+to be a decimal number to be incorrectly entered as an octal number, contrary
+to developer expectations.
+
+The integer constant zero (written as a single numeric digit) is, strictly
+speaking, an octal constant, but is a permitted exception to this rule."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule ignores any #pragma parasoft / codewizard directives.
+Rule ignores any values inside asm blocks.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule increases readability and maintainability. 
+Rule prevents using implementation-defined values.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo() 
+{
+    int code1;
+    int code2;
+
+    code1 = 052;    /* Violation */
+    code2 = 071;    /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo() 
+{
+    int code1;
+    int code2;
+
+    code1 = 42;  /* OK */
+    code2 = 57;  /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M2-13-2. Octal constants (other than zero) and octal escape sequences
+   (other than "\0" ) shall not be used
+
+2. High Integrity C++ Coding Standard
+   2.5.2. Do not use octal constants (other than zero)
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.18 Constants, AV Rule 149
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-13-2
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.3 Octal constants shall not be used
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 7.1
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 7, Rule 7.1
+
+8. Origin: Misra Guidelines - Rule 19
+
+9. SEI CERT C Coding Standard
+   DCL18-C. Do not begin integer constants with 0 when specifying a decimal
+   value
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL18-C.+Do+not+begin+integer+constants+with+0+when+specifying+a+decimal+value">https://wiki.sei.cmu.edu/confluence/display/c/DCL18-C.+Do+not+begin+integer+constants+with+0+when+specifying+a+decimal+value</A>
+
+</PRE>
+</BODY>
+</HTML>

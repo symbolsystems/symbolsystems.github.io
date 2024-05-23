@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The facilities provided by &lt;setjmp.h&gt; should not be used [MISRAC2012-RULE_21_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The facilities provided by &lt;setjmp.h&gt; should not be used [MISRAC2012-RULE_21_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;setjmp.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;setjmp.h&gt; shall be used."
+[MISRA C:2012 Rule 21.4 with Amendment 3]
+
+"'setjmp' and 'longjmp' allow the normal function call mechanisms to be
+bypassed. Their use may lead to undefined and unspecified behaviour."
+[MISRA C:2012]
+
+The rule detects the use of the following facilities:
+- the 'longjmp' function
+- the 'jmp_buf' type
+- the 'setjmp' macro
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects all identifiers that have the same names as the facilities
+from the &lt;setjmp.h&gt; header file.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent implementation-defined and undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;setjmp.h&gt;
+jmp_buf mark;                       // Violation
+
+void f1( void ) {
+    int jmpret;
+    jmpret = setjmp( mark );        // Violation
+
+    longjmp( mark, -1 );            // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the facilities from the &lt;setjmp.h&gt; header.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    M17-0-5. The setjmp macro and the longjmp function shall not be used
+
+2.  ISO/IEC 9899:1990 Programming languages -- C
+    7.6 Nonlocal jumps &lt;setjmp.h&gt;
+
+3.  ISO/IEC 9899:1999 Programming languages -- C
+    7.13 Nonlocal jumps &lt;setjmp.h&gt;
+
+4.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.5 Libraries, AV Rule 20
+
+5.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 17, Rule 17-0-5
+
+6.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 21.10.2 The standard header file &lt;csetjmp&gt; shall not be used
+
+7.  MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+    3 Consequential Amendments
+    3.1.2 Consistency of terminology regarding header file inclusion
+
+8.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 21.4
+
+9.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 20, Rule 20.7
+
+10. Origin: Misra Guidelines - Rule 122
+
+11. SEI CERT C Coding Standard
+    MSC22-C. Use the setjmp(), longjmp() facility securely
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC22-C.+Use+the+setjmp%28%29%2C+longjmp%28%29+facility+securely">https://wiki.sei.cmu.edu/confluence/display/c/MSC22-C.+Use+the+setjmp%28%29%2C+longjmp%28%29+facility+securely</A>
+
+12. SEI CERT C++ Coding Standard
+    ERR52-CPP. Do not use setjmp() or longjmp()
+    <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88046492">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88046492</A>
+
+13. The Power of Ten - Rules for Developing Safety Critical Code.
+    Rule 1
+
+</PRE>
+</BODY>
+</HTML>

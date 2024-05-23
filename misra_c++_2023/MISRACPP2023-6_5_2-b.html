@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers shall not simultaneously have both internal and external linkage in the same translation unit [MISRACPP2023-6_5_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers shall not simultaneously have both internal and external linkage in the same translation unit [MISRACPP2023-6_5_2-b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For an identifier declared with the storage-class specifier 'extern'
+in a scope in which a prior declaration of that identifier is visible,
+if the prior declaration specifies internal or external linkage, the
+linkage of the identifier at the later declaration is the same as the
+linkage specified at the prior declaration. If no prior declaration
+is visible, or if the prior declaration specifies no linkage, then
+the identifier has external linkage." [ISO/IEC 9899:1999]
+
+"If, within a translation unit, the same identifier appears with both
+internal and external linkage, the behavior is undefined." [ISO/IEC 9899:1999]
+
+This rule detects when:
+- a function or an object is declared with the explicit 'extern' specifier,
+  while it has another declaration with internal linkage in the same
+  translation unit
+- a function or an object is declared with the explicit 'extern' specifier
+  in the unnamed namespace
+- an object is declared with the explicit 'static' specifier, while it
+  has another declaration with external linkage in the same translation unit
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Having names with both internal and external linkage can be confusing
+since the objects to which they actually refer may not be obvious." [JSF]
+
+This rule helps you improve readability of code and prevent confusion
+or undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static int x1;
+static int x2;
+static void f1();
+static void f2(){}
+
+extern int x1;         // Violation
+extern void f1(){}     // Violation
+
+void foo( ) {
+    extern int x2;     // Violation
+    extern void f2();  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static int x1;
+extern int x2;
+static void f1();
+
+extern int x3;         // OK
+static void f1(){}     // OK
+
+void foo( ) {
+    extern int x2;     // OK
+    extern void f2();  // OK
+}
+
+void f2(){}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1999 Programming languages -- C
+   6.2.2 Linkages of identifiers
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 138
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.5.2 Internal linkage should be specified appropriately
+
+4. Origin:  Misra Guidelines - Rule 24
+
+5. SEI CERT C Coding Standard
+   DCL36-C. Do not declare an identifier with conflicting linkage
+   classifications
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL36-C.+Do+not+declare+an+identifier+with+conflicting+linkage+classifications">https://wiki.sei.cmu.edu/confluence/display/c/DCL36-C.+Do+not+declare+an+identifier+with+conflicting+linkage+classifications</A>
+
+</PRE>
+</BODY>
+</HTML>

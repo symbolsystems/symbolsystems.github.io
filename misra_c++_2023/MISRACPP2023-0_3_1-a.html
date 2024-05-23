@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use object representations to compare floating-point values [MISRACPP2023-0_3_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use object representations to compare floating-point values [MISRACPP2023-0_3_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not compare floating-point object representations directly, such as by
+calling memcmp() or its moral equivalents. Instead, the equality operators
+(== and !=) should be used to determine if two floating-point values are
+equivalent." [CERT-FLP37-C]
+
+"All floating-point object representations use specific bit patterns to encode
+the value of the floating-point number being represented. However, equivalence
+of floating-point values is not encoded solely by the bit pattern used to
+represent the value." [CERT-FLP37-C]
+
+This rule detects when the memcmp() or bcmp() functions compare objects that
+are of the floating-point type or contain members that are of the floating-point
+type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For objects of the class/struct/union type, a floating-point value can be
+a member of the nested structure. This rule checks only three levels of nested
+structures.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using object representations of floating-point values in comparison
+may result incorrect equality results. This rule helps you ensure
+that object represenations are not used to compare floating-point values.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+int equalDouble(double *a, double *b)
+{
+    return memcmp(a, b, sizeof(double));           /* Violation */
+}
+
+struct S {
+  int i;
+  float f;
+};
+
+int equalStructure(struct S s1, struct S s2)
+{
+  return memcmp(&amp;s1, &amp;s2, sizeof(struct S));       /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+int equalDouble(double *a, double *b)
+{
+    return ((*a == *b) ? 1 : 0);                    /* OK */
+}
+
+struct S {
+  int i;
+  float f;
+};
+
+int equalStructure(struct S s1, struct S s2)
+{
+    if ( s1.i == s2.i &amp;&amp; s1.f == s2.f )            /* OK */
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Dir 0.3.1 Floating-point arithmetic should be used appropriately
+
+2. SEI CERT C Coding Standard
+   FLP37-C. Do not use object representations to compare floating-point values
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP37-C.+Do+not+use+object+representations+to+compare+floating-point+values">https://wiki.sei.cmu.edu/confluence/display/c/FLP37-C.+Do+not+use+object+representations+to+compare+floating-point+values</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The right-hand operand of a constant expression shift operator shall lie between zero and one less than the width in bits of the essential type of the left-hand operand [MISRAC2012-RULE_12_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The right-hand operand of a constant expression shift operator shall lie between zero and one less than the width in bits of the essential type of the left-hand operand [MISRAC2012-RULE_12_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the right-hand operand is negative, or greater than or equal to the width
+of the left-hand operand, then the behaviour is undefined.
+If, for example, the left-hand operand of a left-shift or right-shift
+is a 16-bit integer, then it is important to ensure that this is shifted
+only by a number in the range 0 to 15."
+[MISRA C:2012]
+
+This rule detects when both operands of a shift operator are constant
+expressions and the right-hand operand has:
+- a negative value, or
+- a value larger or equal to the width (in bits) of the left-hand operand's
+  essential type
+
+The term 'essential type' is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* This example assumes that 'char' is 8-bit type, 'short' is 16-bit type,
+   'int' is 32-bit type */ 
+void foo() 
+{
+   1u &lt;&lt; 8;    /* Violation - essential type of '1u' is unsigned char,
+                  which is 8-bit type */
+
+   300 &gt;&gt; 16;  /* Violation - essential type of '300' is signed short,
+                  which is a 16-bit type */
+
+   10 &lt;&lt; -1;   /* Violation - shift by negative value */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* This example assumes that 'char' is 8-bit type, 'short' is 16-bit type,
+   'int' is 32-bit type */ 
+void foo() 
+{
+   1u &lt;&lt; 7;         /* OK - essential type of '1u' is unsigned char,
+                       which is 8-bit type */
+
+   300 &gt;&gt; 15;       /* OK - essential type of '300' is signed short,
+                       which is a 16-bit type */
+
+   (int)300 &gt;&gt; 16;  /* OK - essential type of '(int)300' is
+                       signed int, which is a 32-bit type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.7 Bitwise shift operators
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.5.7 Bitwise shift operators
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 12.2
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A typedef name (including qualification, if any) shall be a unique identifier [MISRA2008-2_10_3]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A typedef name (including qualification, if any) shall be a unique identifier [MISRA2008-2_10_3-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Reusing a typedef name either as another typedef name or for any other
+purpose may lead to developer confusion. The same typedef shall not be
+duplicated anywhere in the project, even if the declarations are identical.
+Note that where the type definition is made in a header file, and that header
+file is included in multiple source files, this rule is not violated."
+[MISRA C++:2008 Rule 2-10-3]
+
+This rule detects typedefs whose names are duplicated or reused as other
+identifiers (including other typedefs). The rule compares fully qualified
+names (the qualification includes named namespaces, classes, structures
+and unions).
+If an identifier is declared in the scope of the function, then
+the qualification of this function is considered to be the qualification
+of the identifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents developer confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check following identifiers:
+- macros
+- functions declared in nested blocks
+- enumeration constants from enums declared in template classes
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+typedef int INT1;           /* Violation */
+typedef short INT2;         /* Violation */
+
+void foo1() {
+    typedef int TYPE;       /* Violation */
+}
+
+/* test2.cpp */
+typedef int INT1;           /* Violation */
+
+void foo2() {
+    typedef int INT2;       /* Violation */
+    float TYPE;             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+namespace N1 {
+    typedef int INT1;       /* OK - qualifier 'N1' */
+    typedef short INT2;     /* OK - qualifier 'N1' */
+
+    void foo1() {
+        typedef int TYPE;   /* OK - qualifier 'N1' */
+    }
+}
+
+struct S1 {
+    typedef int INT1_S;     /* OK - qualifier 'S1' */
+    void fs1() {
+        float INT2_S;       /* OK - qualifier 'S1' */
+    }
+};
+
+/* test2.cpp */
+typedef int INT1;           /* OK */
+typedef int INT2;           /* OK */
+
+void foo2() {
+    float TYPE;             /* OK */
+}
+
+struct S2 {
+    typedef int INT1_S;     /* OK - qualifier 'S2' */
+    typedef int INT2_S;     /* OK - qualifier 'S2' */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 2, Rule 2-10-3
+
+</PRE>
+</BODY>
+</HTML>

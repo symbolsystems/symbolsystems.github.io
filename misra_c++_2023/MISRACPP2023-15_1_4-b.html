@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All direct, non-static data members of an aggregate class should be initialized as soon as the object is created [MISRACPP2023-15_1_4-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All direct, non-static data members of an aggregate class should be initialized as soon as the object is created [MISRACPP2023-15_1_4-b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Non-static data members declared in an aggregate class can be initialized
+using either default member initialization or aggregate initialization
+when declaring an object.
+
+This rule detects when not all non-static data members are initialized
+when declaring an object of aggregate type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An aggregate is a class or struct with
+  - no user-provided, explicit, or inherited constructors, and
+  - no private or protected non-static data members, and
+  - no virtual functions, and
+  - no virtual, private, or protected base classes
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not apply to data members whose type has a constructor.
+This rule does not apply to objects of the 'va_list' type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you reduce the risk of an invalid state existing after
+successful construction.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S1
+{
+    int m1;
+    int m2;
+    int m3 = 0;
+};
+
+void f1()
+{
+    S1 s;              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S1
+{
+    int m1 = 0;
+    int m2 = 0;
+    int m3 = 0;
+};
+
+void f1()
+{
+    S1 s;              // OK
+}
+
+struct S2
+{
+    int m1;
+    int m2;
+    int m3 = 0;
+};
+
+void f2()
+{
+    S2 s{};            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   11.6.1 Aggregates
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.1.4 All direct, non-static data members of a class should be initialized before the class object is accessible
+
+</PRE>
+</BODY>
+</HTML>

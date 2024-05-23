@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Dynamic heap memory allocation shall not be used [MISRACPP2023-21_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Dynamic heap memory allocation shall not be used [MISRACPP2023-21_6_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of dynamic memory can lead to out-of-storage run-time failures,
+which are undesirable. The built-in 'new' and 'delete' operators, other than
+the placement versions, use dynamic heap memory. The functions 'calloc',
+'malloc', 'realloc' and 'free' also use dynamic heap memory." [MISRA C++:2008]
+
+"The identifiers 'calloc', 'malloc', 'realloc', 'aligned_alloc' and 'free'
+shall not be used and no macro with one of these names shall be expanded."
+[MISRA C:2012 Amendment 2]
+
+The rule detects calls to the 'calloc()', 'malloc()', 'realloc()', 
+'aligned_alloc()', and 'free()' functions, as well as the use of 'new' and
+'delete' operators.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can customize the rule to extend or modify the list of functions the rule
+assumes to use dynamic memory allocation. For example, if you specify a list
+of known functions from third-party libraries, the rule will trigger if one of
+these functions is called.
+To configure a custom list of functions, add or remove a function name in
+the 'Name' block in RuleWizard. The 'Name' block already includes the names
+of the functions reported by the rule by default.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not trigger when a placement new is used.
+
+void f()
+{
+    unsigned char buf[sizeof(int)] ;
+    int* p = new (buf) int(3);                  // OK - placement new
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"There is a range of unspecified, undefined and implementation-defined
+behaviour associated with dynamic memory allocation, as well as a number of
+other potential pitfalls. Dynamic heap memory allocation may lead to memory
+leaks, data inconsistency, memory exhaustion, non-deterministic behaviour."
+[MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void foo1(){
+    int* p1 = (int*)malloc(10);  /* Violation */
+    free(p1);                    /* Violation */
+}
+
+#ifdef __cplusplus
+
+void foo()
+{
+    int * p = new int[10];       /* Violation */
+    /* ... */
+    delete[] p;                  /* Violation */
+}
+
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Modify your code to avoid using the 'new' and 'delete' operators
+and the 'calloc()', 'malloc()', 'realloc()', 'aligned_alloc()',
+and 'free()' functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A18-5-2. Non-placement new or delete expressions shall not be used
+
+2.  ISO/IEC 9899:1990 Programming languages -- C
+    7.10.3 Memory management functions
+
+3.  ISO/IEC 9899:1999 Programming languages -- C
+    7.20.3 Memory management functions
+
+4.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.26 Memory Allocation, AV Rule 206
+
+5.  MISRA C++:2008 - Guidelines for the use of the C++ language in critical systems
+    Chapter 6, Section 18, Rule 18-4-1
+
+6.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 21.6.2 Dynamic memory shall be managed automatically
+
+7.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 21.6.1 Dynamic memory should not be used
+
+8.  MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+    2.10 Section 8 - Rules, 2.10.41 Rule 21.8
+
+9.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 7: Directives, Dir 4.12, Section 8: Rules, Rule 21.3
+
+10. Misra Guidelines - Rule 118
+
+11. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 20, Rule 20.4
+
+12. The Power of Ten - Rules for Developing Safety Critical Code.
+    Rule 3
+
+</PRE>
+</BODY>
+</HTML>

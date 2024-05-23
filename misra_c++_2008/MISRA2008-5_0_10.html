@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If the bitwise operators ~ and &lt;&lt; are applied to an operand with an underlying type of unsigned char or unsigned short, the result shall be immediately cast to the underlying type of the operand [MISRA2008-5_0_10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If the bitwise operators ~ and &lt;&lt; are applied to an operand with an underlying type of unsigned char or unsigned short, the result shall be immediately cast to the underlying type of the operand [MISRA2008-5_0_10-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When the operators '~' and '&lt;&lt;' are applied to small integer types (unsigned
+char or unsigned short), the operations are preceded by integral promotion,
+and the result may unexpectedly contain highorder bits." [MISRA C++:2008]
+
+This rule detects the bitwise operator (~ and &lt;&lt;) that applies to the operand
+of the unsigned char or unsigned short underlying type and its result is not
+explicitly cast to the underlying type of the operand.
+
+"The term 'underlying type' is defined as describing the type that would
+be obtained from evaluating an expression if it were not for the effects
+of integral promotion." [MISRA C:2004]
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not apply when an operand is an integer constant expression
+of the unsigned char or unsigned short underlying type.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The immediate assignment of the result obtained by the use of '~' or '&lt;&lt;'
+on an operand of type unsigned char or unsigned short to an object of the same
+underlying type complies with this rule (including use as a function argument
+or function return value), even though the conversion is implicit."
+[MISRA C++:2008]
+
+#include &lt;stdint.h&gt;
+
+void f(uint8_t p);
+uint8_t f1()
+{
+    uint8_t port = 0x5aU;
+    uint8_t result_8 = ~port;  // OK - Exception
+    f(~port);                  // OK - Exception
+    return (port &lt;&lt; 4);        // OK - Exception
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected behavior caused by integral promotions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1()
+{
+    uint8_t port = 0x5aU;
+    uint8_t result_8;
+    uint16_t result_16;
+    uint16_t mode;
+
+    result_8 = (~port) &gt;&gt; 4;                 // Violation
+    result_16 = ((port &lt;&lt; 4) &amp; mode) &gt;&gt; 6;   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1()
+{
+    uint8_t port = 0x5aU;
+    uint8_t result_8;
+    uint16_t result_16;
+    uint16_t mode;
+
+    result_8 = ((uint8_t)(~port)) &gt;&gt; 4;                         // OK
+    result_16 = ((uint16_t)((uint16_t)port &lt;&lt; 4) &amp; mode) &gt;&gt; 6;  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-10. If the bitwise operators ~ and &lt;&lt; are applied to an operand with
+   an underlying type of unsigned char or unsigned short, the result shall be
+   immediately cast to the underlying type of the operand
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-10
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10, Rule 10.5
+
+</PRE>
+</BODY>
+</HTML>

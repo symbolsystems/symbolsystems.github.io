@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A macro shall not be defined with the same name as a keyword in C90 [MISRAC2012-RULE_20_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A macro shall not be defined with the same name as a keyword in C90 [MISRAC2012-RULE_20_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using macros to change the meaning of keywords can be confusing. The behaviour
+is undefined if a standard header is included while a macro is defined with the
+same name as a keyword." [MISRA C:2012 Rule 20.4]
+
+"The program shall not have any macros with names lexically identical
+to keywords currently defined prior to the inclusion." [ISO/IEC 9899:1990]
+
+The rule reports a violation if the name of defined macro is the same
+as the keyword defined in C90 standard.
+
+Following keywords are recognized:
+  auto  double  int  struct  break  else  long  switch  case  enum  register
+  typedef  char  extern  return  union  const  float  short  unsigned  continue
+  for  signed  void  default  goto  sizeof  volatile  do  if  static  while
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is possible to extend the rule and add new keywords by editing the rule in
+RuleWizard tool. This can be used to check additional keywords which are
+language extensions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviour
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. Macros defined in command line are not supported - no violation will be
+reported if they define macro with the same name as a keyword.
+
+2. MISRA C:2012 standard also disallows macro definitions with the same name as
+keyword that implement language extensions:
+  "This rule applies to all keywords, including those that implement language
+  extensions." [MISRA C:2012 Rule 20.4]
+This is not supported - violations will not be reported on such macros.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* The following example is non-compliant because it alters the behaviour
+ * of the 'int' keyword. Including a standard header in the presence of this
+ * macro results in undefined behaviour. */
+
+#define int some_other_type          /* Violation */
+#include &lt;stdlib.h&gt;
+
+/* The following example shows that it is non-compliant to redefine the keyword
+ * 'while' but it is compliant to define a macro that expands to statements. */
+
+#define while( E ) for ( ; ( E ) ; ) /* Violation */
+#define unless( E ) if ( ! ( E ) )   /* OK */
+#define seq( S1, S2 ) do { \
+    S1; S2; } while ( false )        /* OK */
+#define compound( S ) { S; }         /* OK */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not define a macro with the same name as a keyword. 
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.4
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.1.1 Keywords, 7.1.2 Standard headers
+
+</PRE>
+</BODY>
+</HTML>

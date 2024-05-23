@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A for-range-initializer shall contain at most one function call [MISRACPP2023-9_5_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A for-range-initializer shall contain at most one function call [MISRACPP2023-9_5_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when the initializer expression of a range-based
+'for' statement contains more than one function call.
+
+The following expressions are considered as function calls:
+- explicit function calls
+- implicit function calls (for example constructors and operators)
+- any expression creating an object of class type,
+  even if no constructor is actually called
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior related to object lifetime
+violations when the for-range-initializer of a range-based 'for' statement
+creates a temporary object.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    const char* begin() const;
+    const char* end() const;
+    const S&amp; operator[](int) const;
+    operator int() const;
+    const S&amp; baz() const;
+};
+int bar();
+S make(int);
+void foo(S s)
+{
+    for (auto i: make(bar()));      // Violation: make(), bar()
+    for (auto i: make(0)[1]);       // Violation: make(), operator[]
+    for (auto i: (new S)-&gt;baz());   // Violation: class creation, baz()
+    for (auto i: make(s));          // Violation: operator int(), make()
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Use at most one function call in the for-range-initializer.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.5.2 A for-range-initializer shall contain at most one function call
+
+</PRE>
+</BODY>
+</HTML>

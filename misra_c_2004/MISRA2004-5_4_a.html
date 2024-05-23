@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A tag name shall not be reused for other purpose within the program [MISRA2004-5_4_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A tag name shall not be reused for other purpose within the program [MISRA2004-5_4_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"No tag name shall be reused for any other purpose within the program.
+ISO 9899:1990 does not define the behaviour when an aggregate declaration
+uses a tag in different forms of type specifier." [MISRA C:2004]
+
+A "tag" is a name of a class, struct, union or enum type.
+
+This rule reports violation if there is a class, struct, union or enum type
+declaration, and the name of the type is also used to declare a function,
+parameter, variable or label.
+
+See also: MISRA2004-5_4_b
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. This rule does not check reuse of tag to declared a different tag:
+    struct stag1 {
+        int a;
+    };
+    void foo() {
+        struct stag1 {  // OK - not checked by this rule
+            float a;
+        };
+    }
+This is checked by MISRA2004-5_4_b rule.
+
+2. typedef names are not recognized as "tags" - a violation will be reported if
+   a typedef name is the same as name of a tag:
+    struct stag1 {
+        int a;
+    };
+    typedef struct {
+        int b;
+    } stag1;            // Violation   
+See also Exceptions section.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The tag name may be the same as the typedef name with which it is
+associated." [MISRA C:2012]. Example:
+    typedef struct stag1 {
+        int a;
+    } stag1;            // OK - Exception (same name of typedef and struct)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Reuse of tag names can lead to errors and confusion.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. Rule checks only one translation unit at time. This means that if tag is
+reused in a different translation unit then no violation will be reported.
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+    // file1.c:
+    struct stag { int a; };      
+    // file2.c
+    void stag(void); // Violation not reported - struct stag declaration not
+                     // visible in this translation unit
+
+
+Example:
+
+struct stag { int a; };      
+
+void stag(void){}     // Violation - name of struct reused as name of a function
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct stag { int a; }; 
+
+void foo(void){}      // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 5, Rule 5.4
+
+</PRE>
+</BODY>
+</HTML>

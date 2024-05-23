@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Bit fields shall only be defined to be of type unsigned int or signed int [MISRAC2012-RULE_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Bit fields shall only be defined to be of type unsigned int or signed int [MISRAC2012-RULE_6_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Bit fields shall only be defined to be of type unsigned int or signed int.
+Using int is implementation-defined because bit fields of type int can be 
+either signed or unsigned. The use of enum, short or char types for bit fields 
+is not allowed because the behaviour is undefined." [MISRA C:2004]
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+In C99, the implementation may define other integer types that are permitted
+in bit-field declarations. This rule is compliant with c90, so violations are
+reported only if a bit-field type is different than signed int or unsigned int.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents implementation-defined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Enum { E1, E2};
+struct Struct 
+{
+    unsigned char  f1:2;  /* Violation */
+    unsigned short f2:2;  /* Violation */
+    unsigned long  f3:2;  /* Violation */
+    enum Enum      f4:2;  /* Violation */
+    int            f5:2;  /* Violation */
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct Struct
+{
+    unsigned int f1:2;  /* OK */
+    unsigned int f2:2;  /* OK */
+    unsigned int f3:2;  /* OK */
+    signed int   f4:2;  /* OK */
+    signed int   f5:2;  /* OK */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 6.1
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6, Rule 6.4
+
+3. Origin: Misra Guidelines - Rule 111
+
+4. SEI CERT C Coding Standard
+   INT12-C. Do not make assumptions about the type of a plain int bit-field
+   when used in an expression
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT12-C.+Do+not+make+assumptions+about+the+type+of+a+plain+int+bit-field+when+used+in+an+expression">https://wiki.sei.cmu.edu/confluence/display/c/INT12-C.+Do+not+make+assumptions+about+the+type+of+a+plain+int+bit-field+when+used+in+an+expression</A>
+
+</PRE>
+</BODY>
+</HTML>

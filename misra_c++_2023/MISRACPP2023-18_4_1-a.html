@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Exception-unfriendly functions shall be noexcept [MISRACPP2023-18_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Exception-unfriendly functions shall be noexcept [MISRACPP2023-18_4_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when a:
+* destructor,
+* copy-constructor of an object which is thrown as exception,
+* move constructor,
+* move assignment operator, or
+* a function named "swap"
+is not implicitly nor explicitly noexcept.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Most destructors are noexcept by default, so an explicit noexcept-specifier
+is not necessary in their case.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not apply to member functions that are compiler-generated
+(including defaulted functions) or deleted.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid implementation-defined or unintended behavior
+resulting from objects being left in unexpected state due to thrown exceptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+  ~C1() noexcept( false ) {} // Violation - destructor
+};
+
+class C2{
+public:
+  C2(C2&amp;&amp; other) {} // Violation - move constructor
+  C2 &amp; operator=(C2&amp;&amp; other) { return *this; } // Violation - move assignment
+}; 
+
+void swap( C2 &amp;, C2 &amp; ){} // Violation - function named swap
+
+class Exception1
+{
+public:
+  Exception1() = default;
+  Exception1(const Exception1&amp;) {} // Violation - copy constructor
+};
+
+void foo1()
+{
+  throw Exception1{}; // Throwing this object results in a violation
+                      // for its copy constructor
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+  ~C1() {} // OK - destructor is noexcept by default
+};
+
+class C2{
+public:
+  C2(C2&amp;&amp; other) noexcept {} // OK
+  C2 &amp; operator=(C2&amp;&amp; other) noexcept { return *this; } // OK
+}; 
+
+void swap( C2 &amp;, C2 &amp; ) noexcept {} // OK
+
+class Exception1
+{
+public:
+  Exception1() = default;
+  Exception1(const Exception1&amp;) noexcept = default; // OK
+};
+
+void foo1()
+{
+  throw Exception1{}; // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 18.4.1 Exception-unfriendly functions shall be noexcept
+
+</PRE>
+</BODY>
+</HTML>

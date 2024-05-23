@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic association shall list an appropriate type [MISRAC2012-RULE_23_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic association shall list an appropriate type [MISRAC2012-RULE_23_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Since the Standard does not impose a constraint limiting the types in the
+association list to the possible types of values after conversion, it is
+possible to list associations for types that would never be eligible for
+selection.
+Value conversion removes top-level qualification and 'decays' array and function
+values into pointers. Therefore, such types can never match the type of the
+converted value of the controlling expression. Listing them is not a constraint
+violation, but serves no useful purpose, and is almost certainly an error.
+This only affects object types, not qualification on pointed-to types.
+Listing an unnamed structure or union in the association list is a violation
+of this rule because every occurrence of a struct-declaration-list creates
+a distinct type, therefore it can only be matched by a default association."
+[MISRA C:2012 Amendment 3]
+
+This rule detects generic associations with the following types:
+- a const qualified object type
+- a volatile qualified object type
+- an atomic object type
+- an array type
+- a function type
+- an unnamed structure or union definition
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid errors and developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M1(X) _Generic((X) \
+  , const int : 1 \
+  , default: 0 )
+
+void foo()
+{
+  const int ci = 0;
+  M1(ci);                                         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the incorrect type from generic associations.
+
+#define M1(X) _Generic((X) \
+  , int : 1 \
+  , default: 0 )
+
+void foo()
+{
+  const int ci = 0;
+  M1(ci);                                         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.4
+
+</PRE>
+</BODY>
+</HTML>

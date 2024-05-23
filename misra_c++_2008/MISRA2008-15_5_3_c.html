@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not throw from within destructor [MISRA2008-15_5_3_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not throw from within destructor [MISRA2008-15_5_3_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks if you throw from within a destructor. 
+This rule is for C++ programming language only.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents throwing from within a destructor. It may lead to memory leaks
+and improper object destruction. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Foo {
+public:
+    Foo( ) { }
+    ~Foo( ) {
+        throw;  // Violation
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Exception {};
+
+class Foo {
+public:
+    Foo( ) { }
+    ~Foo( ) {
+        try {       // OK 
+        } catch (Exception&amp; e) {
+            // caught all exceptions
+        }
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-3. The std::terminate() function shall not be called implicitly
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. High Integrity C++ Coding Standard
+   15.2.1. Do not throw an exception from a destructor
+
+4. <A HREF="http://www.cs.helsinki.fi/u/vihavain/s03/cpp/items/CppStyleRules2.html">http://www.cs.helsinki.fi/u/vihavain/s03/cpp/items/CppStyleRules2.html</A>
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 15, Rule 15-5-1, Rule 15-5-3
+
+6. Programming languages -- C++ ISO/IEC 14882:2011 
+   15.5.1 The std::terminate() function
+
+7. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 8
+
+8. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+</PRE>
+</BODY>
+</HTML>

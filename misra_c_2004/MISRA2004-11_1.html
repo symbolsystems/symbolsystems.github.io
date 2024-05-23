@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Conversions shall not be performed between a pointer to a function and any type other than an integral type [MISRA2004-11_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Conversions shall not be performed between a pointer to a function and any type other than an integral type [MISRA2004-11_1-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversion of a function pointer to a different type of pointer results 
+in undefined behaviour. This means that a function pointer can be converted
+to or from and integral type. No other conversion involving function pointers
+are permitted."
+This rule allows conversions between two pointers to function if these pointers
+have exactly the same type.
+As integral types the rule detects the following types: bool, char, short,
+int, long, long long, wchar_t, enumeration and typedefs to mentioned types. 
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+It is allowed to assign a null pointer constant (void*) to pointer to function.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents undefined behaviour and loss of data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrect code */
+typedef void (*PF1)(int);
+typedef int  (*PF2)(void);
+typedef void (*PF3)(int, int);
+int (*pfg)(float);
+int retINT();
+
+PF1 foo()
+{
+    PF1 pf1;
+    PF2 pf2;
+    PF3 pf3;
+    int* ptr_int;
+
+    pf1 = pf2;          /* Violation */
+    pf1 = pf3;          /* Violation */
+    pf1 = pfg;          /* Violation */
+    pf1 = retINT;       /* Violation */
+    ptr_int = pf1;      /* Violation */
+    pf1 = (void*)pf2;   /* Violation */
+    pf1 = (PF1)ptr_int; /* Violation */
+    return pf2;         /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+#define NULL (void*)0
+
+typedef int INT;
+typedef void (*PF1)(int);
+typedef void (*PF2)(INT);
+typedef void (*PF3)(const int);
+void (*pfg)(int);
+void retVOID(int);
+
+PF1 foo(int i)
+{
+    PF1 pf1;
+    PF2 pf2;
+    PF3 pf3 = NULL;     /* OK */
+    int* ptr_int;
+
+    pf1 = pf2;          /* OK */
+    pf1 = pf3;          /* OK */
+    pf1 = pfg;          /* OK */
+    pf1 = retVOID;      /* OK */
+    pf1 = i;            /* OK */
+    i = pf2;            /* OK */
+    pf1 = (PF1)pf2;     /* OK */
+    return pf2;         /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 11
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid data loss when converting between integer types [MISRAC2012-DIR_4_1-m]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid data loss when converting between integer types [MISRAC2012-DIR_4_1-m-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when casting an integer value to a narrower type results in
+a data loss.
+A violation is reported when:
+* The given value cannot be represented in the result type, and
+* The width of the result type is smaller than the width of the source type
+
+See also BD-PB-INTVC
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Typically, converting an integer to a smaller type results in the truncation of
+the high-order bits. If the high-order bits store some data, that data may be
+lost. Therefore, the result of integer casting may be incorrect and data loss
+makes it impossible to retrieve the correct result. This becomes
+security-critical when the result is used to control looping, make a security
+decision, or determine the offset or size in behaviors such as memory
+allocation, copying, concatenation, etc.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+"Aggressive mode" - when enabled, violations will also be reported when the
+value being cast is -1.
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+By default, violations are not reported when the value being cast is -1.
+See also the "Aggressive mode" parameter.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent data loss.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+short test_cast_(int x)
+{
+    return x; // VIOLATION (123000 bigger than SHRT_MAX(32767))
+}
+
+void test_cast()
+{
+    test_cast_(123000);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Validate ranges before integer type conversion:
+
+short repair_cast_(int x)
+{
+    if ( x &gt;= -32768 &amp;&amp; x &lt;= 32767){
+        return x; // NO VIOLATION
+    }
+    return 0;
+}
+
+void repair_cast()
+{
+    repair_cast_(123000);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-197: Numeric Truncation Error
+<A HREF="https://cwe.mitre.org/data/definitions/197.html">https://cwe.mitre.org/data/definitions/197.html</A>
+
+CWE-681: Incorrect Conversion between Numeric Types
+<A HREF="https://cwe.mitre.org/data/definitions/681.html">https://cwe.mitre.org/data/definitions/681.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+
+SEI CERT C Coding Standard
+INT08-C. Verify that all integer values are in range
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT08-C.+Verify+that+all+integer+values+are+in+range">https://wiki.sei.cmu.edu/confluence/display/c/INT08-C.+Verify+that+all+integer+values+are+in+range</A>
+
+SEI CERT C Coding Standard
+INT31-C. Ensure that integer conversions do not result in lost or misinterpreted data
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+High Integrity C++ Coding Standard
+4.2.2 Ensure that data loss does not demonstrably occur in an integral expression
+
+AUTOSAR C++14 Coding Guidelines
+Rule A4-7-1 An integer expression shall not lead to data loss
+
+</PRE>
+</BODY>
+</HTML>

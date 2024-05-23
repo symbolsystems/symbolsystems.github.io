@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always catch exceptions [MISRA2008-15_5_3_j]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always catch exceptions [MISRA2008-15_5_3_j-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects situations when an exception is thrown but not caught. By default, it checks if
+the developer failed to catch the exception in the 'main' method or destructor.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Functions which cannot throw exceptions" parameter allows you to specify additional functions 
+that are not allowed to throw exceptions. 
+
+The following columns allow you to define different aspects of functions in the functions table: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide the 
+  fully qualified name of the type or namespace where the function is declared. Use '*' if you want to 
+  describe a function declared in any type or namespace, or a global function declared outside of any 
+  type or namespace.
+
+* The 'Function name (wildcard)' should contain the name of the described function.
+
+* The '+ definitions in subclasses' is used to indicate whether the current entry will apply
+  to functions with the given name defined in subclasses of the given class.
+  Note that this applies to both instance and non-instance functions.
+
+The "Aggressive mode" encourages Flow Analysis to report a violation any time that Flow Analysis
+suspects a problem - even if there is high probability that such a case may be a false positive.
+Applying this configuration will result in more bugs being reported, but it can also increase the
+number of false alarms. In "Aggressive mode", the rule will report a violation any time it finds
+a path with an uncaught exception, even if the path does not begin with a main method or with 
+a method defined in the "Methods which cannot throw exceptions" parameter or does not contain 
+a destructor.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Throwing an exception which is not caught can indicate a possible bug in the code.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+void foo(int n) {
+    if (n &gt; 2) {
+        throw 3;
+    } else {
+        throw 3.0; // VIOLATION
+    }
+}
+
+int main(int argc, char *argv[]) {
+    try {
+        foo(argc);
+    } catch (int&amp; a) {
+    }
+}
+
+In the example above, if the argc is at most 2, the exception of type double will not be caught.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int n) {
+    if (n &gt; 2) {
+        throw 3;
+    } else {
+        throw 3.0;
+    }
+}
+
+int main(int argc, char *argv[]) {
+    try {
+        foo(argc);
+    } catch (int&amp; a) {
+    } catch (double&amp; b) {
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2008 Guidelines for the use of the C+ language in critical systems
+Chapter 6, Section 15, Rule 15-5-3
+
+AUTOSAR C++14 Coding Guidelines
+Rule A15-5-3 The std::terminate() function shall not be called implicitly
+
+SEI CERT C++ Coding Standard
+DCL57-CPP. Do not let exceptions escape from destructors or deallocation functions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL57-CPP.+Do+not+let+exceptions+escape+from+destructors+or+deallocation+functions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL57-CPP.+Do+not+let+exceptions+escape+from+destructors+or+deallocation+functions</A>
+
+SEI CERT C++ Coding Standard
+ERR50-CPP. Do not abruptly terminate the program
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+SEI CERT C++ Coding Standard
+ERR51-CPP. Handle all exceptions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR51-CPP.+Handle+all+exceptions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR51-CPP.+Handle+all+exceptions</A>
+
+SEI CERT C++ Coding Standard
+ERR56-CPP. Guarantee exception safety
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR56-CPP.+Guarantee+exception+safety">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR56-CPP.+Guarantee+exception+safety</A>
+
+High Integrity C++ Coding Standard
+15.3.2 Ensure that a program does not result in a call to std::terminate
+
+</PRE>
+</BODY>
+</HTML>

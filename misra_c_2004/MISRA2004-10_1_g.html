@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions of function arguments [MISRA2004-10_1_g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions of function arguments [MISRA2004-10_1_g-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The value of an expression of integer type shall not be implicitly
+converted to a different underlying type if:
+(...)
+(c) the expression is not constant and is a function argument."
+[MISRA-C:2004]
+
+"The term 'underlying type' is defined as describing the type that would
+be obtained from evaluating an expression if it were not for the effects
+of integral promotion." [MISRA-C:2004]
+
+"Integral promotion describes a process whereby arithmetic operations are
+always conducted on integer operands of type int or long (signed or unsigned).
+Operands of any other integer type, (char, short, bit-field and enum) are
+always converted to type int or unsigned int before an arithmetic operation."
+[MISRA-C:2004]
+
+"The type char, the signed and unsigned integer types, and the enumerated
+types are collectively called integral types." [ISO/IEC 9899:1990]
+
+This rule detects when a function argument of integral type is implicitly
+converted to another underlying type. This rule does not check constants
+and complex expressions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"By observing the principle whereby all operations are performed in
+a consistent (underlying) type, it is possible to avoid programmer confusion
+and some of the dangers associated with integral promotion." [MISRA-C:2004]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void takes_unsigned_int(unsigned int ui);
+void takes_signed_int(signed int);
+void takes_double(double d){}
+
+void f1(unsigned int ui) {
+    unsigned char uc;
+    signed int* si_ptr;
+
+    takes_unsigned_int(uc);                 /* Violation */
+    takes_signed_int(ui);                   /* Violation */
+    takes_double(*si_ptr);                  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void takes_unsigned_int(unsigned int ui);
+void takes_signed_int(signed int);
+void takes_double(double d){}
+
+void f1(signed int si) {
+    unsigned char uc;
+    signed int* si_ptr;
+
+    takes_unsigned_int((unsigned int)uc);   /* OK */
+    takes_signed_int(si);                   /* OK */
+    takes_double((double)*si_ptr);          /* OK */
+    takes_double(100);                      /* OK - constant argument */
+    takes_double(si + *si_ptr);             /* OK - complex expression */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10, Rule 10.1,
+   6.10.2 Types of implicit conversion,
+   6.10.4 Underlying type, 6.10.5 Complex expressions
+
+2. ISO/IEC 9899:1990
+   6.1.2.5 Types
+
+3. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

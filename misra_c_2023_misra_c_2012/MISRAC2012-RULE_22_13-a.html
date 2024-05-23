@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Thread objects, thread synchronization objects and thread-specific storage pointers shall not have automatic storage duration [MISRAC2012-RULE_22_13-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Thread objects, thread synchronization objects and thread-specific storage pointers shall not have automatic storage duration [MISRAC2012-RULE_22_13-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When an object of automatic storage duration is shared between threads or used
+to control concurrent execution, then it can be accessed outside of its
+lifetime, which can result in undefined behavior.
+
+This rule detects when objects of type 'thrd_t', 'mtx_t', 'cnd_t', and 'tss_t'
+are declared with automatic storage duration.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior when objects with automatic
+storage duration are accessed outside of their lifetime.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+int32_t t1( void *ptr ) {         // Thread entry
+    // ...
+}
+
+void f(void) {
+    thrd_t th;                    // Violation
+    mtx_t mt;                     // Violation
+
+    thrd_create( &amp;th, t1, &amp;mt );
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+int32_t t1( void *ptr ) {         // Thread entry
+   // ...
+}
+
+thrd_t th;                        // OK
+mtx_t mt;                         // OK
+
+void f(void) {
+    thrd_create( &amp;th, t1, &amp;mt );
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.14 Rule 22.13
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.2.4 Storage durations of objects
+
+</PRE>
+</BODY>
+</HTML>

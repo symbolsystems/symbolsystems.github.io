@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The controlling expression of a #if or #elif preprocessing directive shall evaluate to 0 or 1 [MISRAC2012-RULE_20_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The controlling expression of a #if or #elif preprocessing directive shall evaluate to 0 or 1 [MISRAC2012-RULE_20_8-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The controlling expression of a #if or #elif preprocessing directive shall 
+evaluate to 0 or 1" [MISRA C:2012 Rule 20.8]
+
+This rule detects only cases when the controlling expression of #if or #elif
+a) does not evaluate to 0 or 1, and b)contains one from the following: 
+- a single positive or negative integer constant,
+- a single macro identifier that expands to a single positive or negative
+  integer constant,
+- a simple arithmetic expression that contains exactly one operator (+,-,/,
+  or *) and has two operands (a single integer constant or a macro that expands
+  to a single integer constant)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that a macro identifier expands to a single positive or
+negative integer constant (if such a macro definition exists in the translation
+unit). 
+If the translation unit has more than one definition of the same macro, 
+the rule considers only the first definition that expands to an integer
+constant.
+
+For example:
+  #ifdef MM
+    #define MACRO_1 10
+  #else
+    #define MACRO_1 15
+    #define MACRO_2 20
+  #endif
+
+  #define MACRO_3 30
+  #undef MACRO_3
+
+  #if   MACRO_1      /* the rule assumes that MACRO_1 expands to '10' */
+  #elif MACRO_2      /* the rule assumes that MACRO_1 expands to '20' */
+  #elif MACRO_3      /* the rule assumes that MACRO_1 expands to '30' */
+  #endif
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Strong typing requires the controlling expression of conditional inclusion
+preprocessing directives to have a Boolean value." [MISRA C:2012 Rule 20.8]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule reports a violation even if controlling expressions in preprocessing
+directives are not evaluated. 
+
+For example:
+  #if 0
+    #if 10      /* Violation */
+    #endif
+  #endif 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#if    2                         /* Violation */
+#elif -1                         /* Violation */
+#endif
+
+#define MACRO_10 10
+#if MACRO_10                     /* Violation */
+#endif
+
+#if    1 + 2                     /* Violation */
+#elif  5 - 3                     /* Violation */
+#endif
+
+#define MACRO_1 1
+#define MACRO_2 2
+
+#if    1 + MACRO_1               /* Violation */
+#elif  MACRO_1 * MACRO_2         /* Violation */
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Example of compliant code */
+
+#if    0                         /* OK */
+#elif  1                         /* OK */
+#endif
+
+#define MACRO_1 1
+#if MACRO_1                      /* OK */
+#endif
+
+#if    2 - 1                     /* OK */
+#elif  0 + 1                     /* OK */
+#endif
+
+#define MACRO_1 1
+#define MACRO_2 2
+
+#if    MACRO_2 - 1               /* OK */
+#elif  MACRO_1 &lt; MACRO_2         /* OK */
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.8
+
+</PRE>
+</BODY>
+</HTML>

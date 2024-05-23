@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The types defined in the library &lt;time.h&gt; shall not be used [MISRAC2012-RULE_21_10-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The types defined in the library &lt;time.h&gt; shall not be used [MISRAC2012-RULE_21_10-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;time.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;time.h&gt; shall be used."
+[MISRA C:2012 Rule 21.10 with Amendment 3]
+
+This rule detects the following identifiers with the names of types
+defined in the &lt;time.h&gt; (or &lt;ctime&gt;) library:
+clock_t, time_t, timespec, tm
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule also detects identifiers that are not defined in &lt;time.h&gt;,
+but have the same names as types from this header.
+
+typedef int clock_t;  // Violation
+void tm();            // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent unspecified, undefined and implementation-defined
+behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;time.h&gt;
+
+void fn1 ( void )
+{
+    time_t rawtime;             // Violation
+    struct tm * timeinfo;       // Violation
+    struct timespec * tms;      // Violation
+    clock_t t = clock ( )       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use identifiers with the names of types defined in &lt;time.h&gt;.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M18-0-4. The time handling functions of library &lt;ctime&gt; shall not be used
+
+2. Origin: Misra Guidelines - Rule 127
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 20
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 18, Section 7, Rule 18-0-4
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.10
+
+6. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   3 Consequential Amendments
+   3.1.2 Consistency of terminology regarding header file inclusion
+
+7. ISO/IEC 9899:2011 Programming languages -- C
+   7.27 Date and time &lt;time.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

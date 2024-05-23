@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The +, -, += and -= operators should not be applied to an expression of pointer type [MISRAC2012-RULE_18_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The +, -, += and -= operators should not be applied to an expression of pointer type [MISRAC2012-RULE_18_4-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Array indexing using the array subscript syntax, ptr[expr], is the preferred 
+form of pointer arithmetic because it is often clearer and hence less error 
+prone than pointer manipulation. Any explicitly calculated pointer value has 
+the potential to access unintended or invalid memory addresses. Such behaviour 
+is also possible with array indexing, but the subscript syntax may ease the 
+task of manual review.
+Pointer arithmetic in C can be confusing to the novice. The expression ptr+1
+may be mistakenly interpreted as the addition of 1 to the address held in ptr.
+In fact the new memory address depends on the size in bytes of the pointer's
+target. This misunderstanding can lead to unexpected behaviour if sizeof is
+applied incorrectly." [MISRA C:2012 Rule 18.4]
+
+This rule detects cases when the operands of the following operators have
+a pointer type:
+ +, -, +=, -=
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"Subject to Rule 18.2, pointer subtraction between two pointers is allowed."
+[MISRA C:2012 Rule 18.4]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid accessing unintended or invalid memory addresses,
+improves readability of code and prevents confusions. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int* ptr)
+{
+    int a[10];
+    int index = 1;
+
+    ptr = a;
+    ptr += 10;             /* Violation */
+    ptr = ptr + index;     /* Violation */
+    *( ptr + index ) = 0;  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int* ptr)
+{
+    int a[10];
+    int index = 1;
+
+    ptr = a;
+    ptr[10] = 0;             /* OK */
+    ptr[index] = 1;          /* OK */
+
+    /* Examples not reported by this rule */
+    ptr++;                   /* OK */
+    ptr - a;                 /* OK - Exception */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 18.4
+
+</PRE>
+</BODY>
+</HTML>

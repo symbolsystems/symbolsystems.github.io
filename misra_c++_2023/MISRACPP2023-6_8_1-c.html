@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use an object after its lifetime has ended [MISRACPP2023-6_8_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use an object after its lifetime has ended [MISRACPP2023-6_8_1-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule reports a violation when an object is used after its lifetime has ended.
+
+Accessing such an object is undefined behavior, even if the memory occupied by 
+the object has not been released.
+
+This rule checks:
+- objects deallocated by calling a destructor
+- objects deallocated by calling a delete operator
+- pointers which refer to variables going out of scope
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v2023.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+  int *ptr;
+  {
+    int i = 10;
+    ptr = &amp;i;
+  }
+  *ptr = 1; // VIOLATION
+}
+
+void bar()
+{
+  int *ptr = new int;
+  delete ptr;
+  *ptr = 1; // VIOLATION
+}
+
+struct X
+{
+  ~X();
+  void doSomething();
+};
+
+void goo( X *px )
+{
+  px-&gt;~X();
+  px-&gt;doSomething(); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+  int *ptr;
+  int i = 10;
+  ptr = &amp;i;
+  *ptr = 1; // NO VIOLATION
+}
+
+void bar()
+{
+  int *ptr = new int;
+  delete ptr;
+  ptr = new int;
+  *ptr = 1; // NO VIOLATION
+  delete ptr;
+}
+
+struct X
+{
+  ~X();
+  void doSomething();
+};
+
+void goo( X *px )
+{
+  px-&gt;doSomething(); // NO VIOLATION
+  px-&gt;~X();
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 6.8.1 An object shall not be accessed outside of its lifetime
+
+</PRE>
+</BODY>
+</HTML>

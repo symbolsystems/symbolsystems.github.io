@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall only be one loop counter in a 'for' loop, which shall not be modified in the 'for' loop body [MISRAC2012-RULE_14_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall only be one loop counter in a 'for' loop, which shall not be modified in the 'for' loop body [MISRAC2012-RULE_14_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A for loop shall be well-formed" [MISRA C:2012 Rule 14.2]
+
+"A loop counter is defined as an object, array element or member of a structure
+or union which satisfies the following:
+
+1. It has a scalar type;
+
+2. Its value varies monotonically on each iteration of a given instance of 
+   a loop; and
+
+3. It is involved in a decision to exit the loop." [MISRA C:2012 Section 8.14]
+
+This rule ensures that there is only one loop counter in a 'for' loop, and that
+this loop counter is not modified in the 'for' loop body.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a loop counter is an object, an array element or a member
+of a structure or union that is used in a condition and modified inside
+the third clause of a 'for' statement.
+
+The rule assumes that an object is modified if:
+- it is used as the left hand operand of the assignment operators
+- it is used as the operand of the increment or decrement operators
+- it is passed to the function as a reference to a non-const object
+  (except a universal reference)
+- its address is passed to the function as a pointer to a non-const object
+  (except functions which are called via function pointers)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The 'for' statement provides a general-purpose looping facility. Using
+a restricted form of loop makes code easier to review and to analyse." 
+[MISRA C:2012 Rule 14.2]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule may report false positives if the array elements or members that are
+used in a condition of a 'for' statement differ from the objects modified in
+the third clause only in one of the following:
+- arithmetic or assignment operators,
+- boolean, floating or string constants,
+- function calls,
+- sizeof or conditional operators,
+- casts.
+In such cases, the rule may incorrectly consider such objects to be loop
+counters.
+
+/* In the examples below the rule finds two loop counters */
+int fooint1();
+int fooint2();
+
+void foo() {
+    int arr[3];
+    int i;
+
+    for(; arr[1 + 1] + i; arr[1 - 1]++, i += 2);         /* Violation */
+    for(; arr[fooint1()] + i; arr[fooint2()]++, i += 2); /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int incr(int* ptr){
+  ++(*ptr);
+  return *ptr;
+}
+
+void foo()
+{
+    int i, j;
+    int a[3];
+
+    for(i = 0; i &lt; 10; ++i)     /* Violation  */
+        i -= 1;                 /* a loop counter 'i' is modified in body */
+
+    for(; a[i] &lt; 10; incr(&amp;i))  /* Violation */
+        ++i;                    /* a loop counter 'i' is modified in body */
+    for(; i &lt; j; ++i, --j){}    /* Violation - 'i' and 'j' are loop counters */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int incr(int* ptr){
+  ++(*ptr);
+  return *ptr;
+}
+
+void foo()
+{
+    int i, j;
+    int a[3];
+
+    for(i = 0; i &lt; 10; ++i)      /* OK  */
+        j -= i;
+
+    for(; a[i] &lt; 10; incr(&amp;i)){  /* OK */
+        j = i;
+        j++;
+    }
+    for(; i &lt; 10; ++i){          /* OK */
+      for(; j &lt; 10; --j){}       /* OK */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   6.2.2. Ensure that a loop has a single loop counter, an optional control
+   variable, and is not degenerate
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, 8.14: Control statement expressions
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 14.2
+
+</PRE>
+</BODY>
+</HTML>
