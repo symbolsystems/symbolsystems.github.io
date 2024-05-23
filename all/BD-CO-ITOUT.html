@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not access iterator out of range [BD-CO-ITOUT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not access iterator out of range [BD-CO-ITOUT-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when an iterator is accessed out of range. A violation 
+is reported when a begin iterator moves backward or when an end iterator 
+is accessed or moves forward.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;list&gt;
+
+using namespace std;
+
+int* itout_bad(list&lt;int&gt; &amp;list_to_reverse)
+{
+    int* tab = new int [list_to_reverse.size()];
+    unsigned int i = 0;
+
+    list&lt;int&gt;::iterator iter = list_to_reverse.end();
+    while (i &lt; list_to_reverse.size()) {
+        tab[i] = *iter; // VIOLATION
+        iter--;
+        i++;
+    }
+    return tab;
+}
+
+
+The iterator "iter" is set to the end of "list_to_reverse" then accessed. 
+But the end element is only a marker for the end list and doesn't 
+represent any real value.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+You should move the iterator backward before accessing it or change the 
+code so that it uses reverse_iterator.
+
+#include &lt;list&gt;
+
+using namespace std;
+
+int* itout_fixed(list&lt;int&gt; &amp;list_to_reverse)
+{
+    int* tab = new int [list_to_reverse.size()];
+    unsigned int i = 0;
+
+    list&lt;int&gt;::reverse_iterator iter = list_to_reverse.rbegin();
+    while (i &lt; list_to_reverse.size()) {
+        tab[i] = *iter; // FIXED
+        ++iter;
+        ++i;
+    }
+    return tab;
+}
+
+</PRE>
+</BODY>
+</HTML>

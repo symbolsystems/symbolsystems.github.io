@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not compare objects of nonstandard-layout class type with C standard library functions [CERT_CPP-OOP57-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not compare objects of nonstandard-layout class type with C standard library functions [CERT_CPP-OOP57-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not use std::memcmp() (or related bytewise comparison functions)
+to compare objects of nonstandard-layout class type, as it may not
+properly compare the value representations of the objects."
+[CERT-OOP57-CPP]
+
+This rule detects when a pointer to a nonstandard-layout class is passed
+as an argument to the 'memcmp' and 'strcmp' standard library functions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule refers to the standard-layout class as defined by the C++14 Standard.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined or abnormal program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstring&gt;
+
+class C {
+private:
+    int m;
+public:
+    int n;
+};
+
+int f1(C &amp;c1, C &amp;c2) {
+    return std::memcmp(&amp;c1, &amp;c2, sizeof(C));        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C {
+private:
+    int m;
+public:
+    int n;
+    bool operator!=(const C &amp;rhs) const {
+        return rhs.m != m || rhs.n != n;
+    }
+};
+
+int f1(C &amp;c1, C &amp;c2) {
+    return c1 != c2;                                 // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   OOP57-CPP. Prefer special member functions and overloaded operators to C
+   Standard Library functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP57-CPP.+Prefer+special+member+functions+and+overloaded+operators+to+C+Standard+Library+functions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP57-CPP.+Prefer+special+member+functions+and+overloaded+operators+to+C+Standard+Library+functions</A>
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   9 Classes
+
+</PRE>
+</BODY>
+</HTML>

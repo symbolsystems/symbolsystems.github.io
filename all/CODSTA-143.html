@@ -1,0 +1,222 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Suspicious use of 'strcpy' without checking size of source buffer [CODSTA-143]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Suspicious use of 'strcpy' without checking size of source buffer [CODSTA-143-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A buffer overflow condition exists when a program attempts to put more data
+in a buffer than it can hold, or when a program attempts to put data in a memory
+area outside of the boundaries of a buffer. The simplest type of error,
+and the most common cause of buffer overflows, is the "classic" case in which
+the program copies the buffer without restricting how much is copied." [CWE-120]
+
+If the programmer does not ensure that the size of the data pointed to by 
+second argument of the potentially dangerous 'strcpy' function will fit
+in the target buffer and blindly copies the data, then it may result in a buffer
+overflow condition if an attacker can influence the contents of the second 
+parameter.
+
+One way of making sure the source string fits in the destination buffer is to
+create the destination buffer based on size of the source buffer. Another way
+is to compute size of both source and destination buffers and compare them. Both
+ways require computation of the source buffer size. If the size computation step
+is missing, it is possible the buffer sizes are incorrect. The rule reports 
+violation on such suspicious code pattern.
+
+The rule finds code patterns in which a 'strcpy(dst, src)' call is not preceded
+by a call to 'strlen(src)' or 'sizeof(src)'. If the 'src' argument matches
+'expr.c_str()' pattern, then the rule also recognizes 'expr.length()' and
+'expr.size()' calls as ways of checking 'src' size.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The rule checks only if size is computed, there are no checks if the
+   computed size is used correctly:
+
+  void foo1 ( char* src )
+  {
+    char dst[ 10 ];
+    if ( strlen ( src ) &gt; 100 )  {
+      strcpy ( dst, src );    // OK (even though this is guaranteed to fail)
+    }
+  }
+
+2. Flow is ignored, the rule only check presence of required size computation
+   in previous lines:
+
+  void foo2 ( char* src )
+  {
+    char dst[ 10 ];
+    if ( 0 ) {
+      if ( strlen ( src ) &gt; 100 ); // strlen found
+    }
+    if ( strlen ( src ) &lt; 5 ) {    // strlen found
+      // ...
+    } else {
+      strcpy ( dst, src );         // OK
+    }
+  }
+
+3. The rule does not check if there are some modifications of copied buffer
+   between size computation and 'strcpy' call:
+
+  void foo3 ( char* src1, char *src2 )
+  {
+    char dst[ 10 ];
+
+    if ( strlen ( src1 ) &lt; 10 ) {  // strlen found
+      src1 = src2;                 // modifications, other uses are ignored
+      strcpy ( dst, src1 );        // OK
+    }
+  }
+
+4. For explicit string the rule still requires size computation, even if size
+   of both source and destination are known:
+
+  void foo4 ()
+  {
+    char dst[ 10 ];
+
+    strcpy ( dst, "hello" );     // Violation
+
+    if ( sizeof ( "hello" ) &lt;= sizeof ( dst ) ) {
+      strcpy ( dst, "hello" );    // OK
+    }
+  }
+
+5. In case of expressions, the rule supports identical form of expressions.
+   If the expressions are different, the rule won't match them, even if
+   semantic is the same:
+
+  void foo5 ( char* src )
+  {
+    char dst[ 10 ];
+
+    if ( strlen ( src + 2 + 3 ) &lt; 5 ) {
+      // "src + 2 + 3" looks differently than "src + 5"
+      strcpy ( dst, src + 5 );    // Violation
+    }
+  }
+
+6. Column numbers are ignored - if size computation is in the same line as
+   strcpy, the rule does not report violation:
+
+  void foo6 ( char* src )
+  {
+    char dst[ 10 ];
+    strcpy ( dst, src ); strlen ( src );    // OK
+  }
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents potential buffer overflow.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+#include &lt;malloc.h&gt;
+void foo ( char* src1, char* src2 )
+{
+  char dst1[ 10 ];
+  char * dst2 = ( char* ) malloc ( 10 );
+
+  strcpy ( dst1, src1 );      // Violation
+  strcpy ( dst2, src2 );      // Violation
+}
+
+// C++ code:
+#include &lt;string&gt;
+#include &lt;cstring&gt;
+void bar ( char *dst, std::string &amp; src )
+{
+  strcpy ( dst, src.c_str ( ) );    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+#include &lt;malloc.h&gt;
+void foo ( char* src1, char* src2 )
+{
+  char dst1[ 10 ];
+  char * dst2 = ( char* ) malloc ( strlen ( src2 ) + 1 ); // strlen is used
+
+  if ( strlen ( src1 ) &gt; 5 ) {  // strlen is used
+    return;
+  }
+
+  strcpy ( dst1, src1 );      // OK - strlen was called before
+  strcpy ( dst2, src2 );      // OK - strlen was called before
+}
+
+// C++ code:
+#include &lt;string&gt;
+#include &lt;cstring&gt;
+void bar ( char *dst, std::string &amp; src )
+{
+  size_t s = src.length ( );
+  strcpy ( dst, src.c_str ( ) );    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+   <A HREF="https://cwe.mitre.org/data/definitions/119.html">https://cwe.mitre.org/data/definitions/119.html</A>
+
+</PRE>
+</BODY>
+</HTML>

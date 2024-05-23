@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Both copy constructor and copy assignment operator should be declared for classes with a nontrivial destructor [MRM-40_d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Both copy constructor and copy assignment operator should be declared for classes with a nontrivial destructor [MRM-40_d-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If you defined a non-trivial destructor, you should probably have a copy
+constructor and copy assignment operator as well. 
+
+"If you have to write a nontrivial destructor, it's often because you need to
+manually release a resource that the object held. If so, it's likely that those
+resources require careful duplication, and then you need to pay attention to the
+way objects are copied and assigned, or disable copying completely" [1]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks if the destructor is non-empty. It does not check if you
+actually deallocate some resources there.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents memory management problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A /* Violation - missing copy constructor and copy assignment operator */
+{
+    int *p;
+    ~A() {
+        delete p;
+    }
+};
+
+class B /* Violation - missing copy assignment operator */
+{
+    void doSth();
+    ~B() {
+        doSth();
+    }
+    B(const B&amp;) {}
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct A /* OK - copy constructor and copy assignment operator are declared */
+{
+    int *p;
+    ~A() {
+        delete p;
+    }
+    A(const A&amp;) {}
+    A&amp; operator=(const A&amp;);
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 52
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. SEI CERT C++ Coding Standard
+   MEM51-CPP. Properly deallocate dynamically allocated resources
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM51-CPP.+Properly+deallocate+dynamically+allocated+resources">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM51-CPP.+Properly+deallocate+dynamically+allocated+resources</A>
+
+4. AUTOSAR C++14 Coding Guidelines
+   A1-1-1. All code shall conform to ISO/IEC 14882:2014 - Programming Language
+   C++ and shall not use deprecated features.
+
+5. Programming languages -- C++ ISO/IEC 14882:2011
+   D.3 Implicit declaration of copy functions
+
+6. Programming languages -- C++ ISO/IEC 14882:2014 
+   D.3 Implicit declaration of copy functions
+
+</PRE>
+</BODY>
+</HTML>

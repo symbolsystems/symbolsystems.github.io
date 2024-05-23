@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The '_Atomic' type specifier and the '_Atomic' type qualifier should not be used [CODSTA-214]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The '_Atomic' type specifier and the '_Atomic' type qualifier should not be used [CODSTA-214-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. The following
+shall not be used:
+- The _Atomic type specifier, the _Atomic type qualifier and the facilities 
+  that are specified as being provided by &lt;stdatomic.h&gt;;" 
+[MISRA C:2012 Amendment 2]
+
+This rule detects declarations and uses of atomic types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+
+_Atomic const int * p1;                         // Violation
+
+const atomic_int * p2;                          // Violation
+
+_Atomic(int) * p3;                              // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use neither the '_Atomic' type specifier nor
+the '_Atomic' type qualifier.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.1 Storage-class specifiers
+
+</PRE>
+</BODY>
+</HTML>

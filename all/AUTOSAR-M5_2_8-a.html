@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An object with integer type or pointer to void type shall not be converted to an object with pointer type [AUTOSAR-M5_2_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An object with integer type or pointer to void type shall not be converted to an object with pointer type [AUTOSAR-M5_2_8-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Converting from an integral type or a pointer to void type to a pointer
+to an object leads to unspecified behaviour" [MISRA C++:2008]
+
+This rule detects when an expression of integer or bool type is explicitly
+cast to a pointer to object or pointer to void type or an expression
+of the pointer to void type is explicitly cast to a pointer to object type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unspecified behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S
+{
+    int i;
+    int j;
+};
+
+void f ( void * v, int i )
+{
+    S * s1 = reinterpret_cast&lt; S * &gt;( v ); // Violation
+    S * s2 = reinterpret_cast&lt; S * &gt;( i ); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not cast an object with integer type or pointer to void type
+to an object with pointer type.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-2-8. An object with integer type or pointer to void type shall not be
+   converted to an object with pointer type
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 5, Rule 5-2-8
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.6 An object with integral, enumerated, or pointer to void type shall not be cast to a pointer type
+
+</PRE>
+</BODY>
+</HTML>

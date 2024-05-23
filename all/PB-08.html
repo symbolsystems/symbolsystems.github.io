@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assign signed constants to unsigned integer variables [PB-08]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assign signed constants to unsigned integer variables [PB-08-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if:
+- signed constant is assigned to unsigned variable/parameter
+- signed constant is passed as argument to function on position where is 
+  declared a parameter of unsigned type
+- signed constant is returned from function that has unsigned return type
+Rule triggers only when a value of constant is smaller than zero. 
+See also: INIT-02, MISRA2004-10_1_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule does not report violations on initializations. In this case violations 
+are reported by rule INIT-02.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents undesirable implicit casts.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(unsigned int ui){
+    unsigned char uc;
+    ui = -10;             // Violation
+    uc = -20;             // Violation
+}
+
+unsigned int foo2(){
+    foo1(-10);            // Violation
+    return -20;           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(signed int ui){
+    signed char uc;
+    ui = -10;             // OK
+    uc = -20;             // OK
+}
+
+signed int foo2(){
+    foo1(-10);            // OK
+    return -20;           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

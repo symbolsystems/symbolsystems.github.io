@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Strings pointed by members of the structure 'lconv' should not be modified [CODSTA-185_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Strings pointed by members of the structure 'lconv' should not be modified [CODSTA-185_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'localeconv' function returns a pointer of type 'struct lconv*'. This
+pointer shall be regarded as if it had type 'const struct lconv*'."
+[MISRA C:2012 Amendment 1 Rule 21.19]
+
+"Whilst the use of a const-qualified pointer gives compile time protection
+of the value returned by 'localeconv', the same is not true for the strings
+it references. Modification of these strings can be detected by an analysis
+tool" [MISRA C:2012 Amendment 1 Rule 21.19]
+
+This rule detects when a pointer to the const-qualified 'lconv' structure
+is used to access the member of the 'lconv' structure and a string that
+the member points to is modified.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks the following members that are accessed using pointers
+to const-qualified 'lconv' structure:
+  char *decimal_point;
+  char *thousands_sep;
+  char *grouping;
+  char *mon_decimal_point;
+  char *mon_thousands_sep;
+  char *mon_grouping;
+  char *positive_sign;
+  char *negative_sign;
+  char *currency_symbol;
+  char *int_curr_symbol;
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The Standard does not specify the behaviour that results if the strings
+referenced by the structure pointed to by the value returned by 'localeconv'
+are modified. This rule prohibits any changes to these strings as they are 
+considered to be undesirable." [MISRA C:2012 Amendment 1 Rule 21.19]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;locale.h&gt;
+
+void f1( void )
+{
+    const struct lconv *conv = localeconv();
+  
+    conv-&gt;decimal_point[0] = '1';              /* Violation */
+    *(conv-&gt;decimal_point) = '2';              /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not modify strings that are pointed by members of the structure 'lconv'.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 25.5.2 The pointers returned by the C++ Standard Library functions localeconv, getenv, setlocale or strerror must only be used as if they have pointer to const-qualified type
+
+2. MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+   Section 2: New rules, Rule 21.19
+
+</PRE>
+</BODY>
+</HTML>

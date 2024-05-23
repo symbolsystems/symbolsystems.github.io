@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic selection that is expanded from a macro shall evaluate its argument only once [CODSTA-MC-15]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic selection that is expanded from a macro shall evaluate its argument only once [CODSTA-MC-15-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the controlling expression of a generic selection is expanded from a macro
+argument, it should also be expanded elsewhere in the macro body so that it is
+evaluated exactly once in the entire expanded macro body. The number of times
+that the expression is evaluated should not depend on which association is
+selected, and should be consistent for all associations in the generic
+selection." [MISRA C:2012 Amendment 3]
+
+This rule detects when the macro parameter that is used in the controlling
+expression of a generic selection occurs exactly once in each generic
+association, or occurs exactly once outside of the generic selection
+in the macro body.
+
+This rule additionally reports when more than one macro parameter is used
+in the controlling expression of a generic selection.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"This rule is not violated if all result expressions for the generic selection
+are constant expressions, and the macro never expands the argument outside
+of the controlling expression." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The controlling expression of a generic selection is never evaluated.
+It is only used for its type, and usually has to be repeated in order
+to be combined with the result value in some way.
+If an expression is specified which syntactically contains a side effect,
+that effect will not be applied. If the generic selection is (as is usually
+the case) the result of a macro expansion which uses one of the macro's
+arguments to select the type, this non-evaluation is concealed from the
+invoking code." [MISRA C:2012 Amendment 3]
+
+This rule helps you improve the readability of the code and prevents
+unexpected behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule can report false positive violations if a nested generic selection
+is used in the macro definition, for example:
+
+#define M4(X, Y) (_Generic((Y)       /* Violation reported */ \
+  , float: Y                                                  \
+  , double: (_Generic((X), int: Y, default: Y) (X) ) /* OK */ \
+  , default: Y) (4))
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Violation
+#define M1(X) _Generic((X)    \
+    , float: id1(X)           \
+    , double: id2(X)          \
+    , default: id3(0))
+
+// Violation
+#define M2(X) _Generic((X)    \
+    , float: id1(X)           \
+    , double: id2(X)          \
+    , default: id3(X)) + X
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// OK
+#define M1(X) _Generic((X)    \
+    , float: id1(X)           \
+    , double: id2(X)          \
+    , default: id3(X))
+
+// OK
+#define M2(X) _Generic((X)    \
+    , float: id1              \
+    , double: id2             \
+    , default: id3)(X)
+
+// OK - exception
+#define M3(X) _Generic((X)    \
+    , float: 0                \
+    , double: 1               \
+    , default: 2)
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.7
+
+</PRE>
+</BODY>
+</HTML>

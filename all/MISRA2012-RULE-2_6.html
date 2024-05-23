@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A function should not contain unused label declarations [MISRA2012-RULE-2_6]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A function should not contain unused label declarations [MISRA2012-RULE-2_6-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a label is declared but not used, then it is unclear to a reviewer
+if the label is redundant or it has been left unused by mistake."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves legibility of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo1(){
+    int i;
+    label1:             /* Violation */
+        i++;
+    label2:             /* Violation */
+        return 10;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo1(){
+    int i;
+    label1:             /* OK - function contains goto label1 */
+        i++;
+    if(i &lt; 10)
+        goto label1;
+                        /* label2 was redundant, so it was removed */
+    return 10;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 2.6
+
+</PRE>
+</BODY>
+</HTML>

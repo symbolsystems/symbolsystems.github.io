@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Include a parameter list in every lambda expression [CODSTA-MCPP-46]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Include a parameter list in every lambda expression [CODSTA-MCPP-46-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The lambda-declarator is optional in a lambda expression and results in
+a closure that can be called without any parameters. To avoid any visual
+ambiguity with other C++ constructs, it is recommended to explicitly
+include (), even though it is not strictly required." [AUTOSAR A5-1-3]
+
+This rule detects when a lambda expression fails to include a (possibly empty)
+parameter list.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid visual ambiguity by differentiating lambda
+expressions from other C++ constructs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+void Fn()
+{
+    std::int32_t i = 0;
+    std::int32_t j = 0;
+    auto lambda1 = [&amp;i, &amp;j] {  // Violation
+        ++i;
+        ++j;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by including a parameter list () in the lambda expression.
+
+#include &lt;cstdint&gt;
+void Fn()
+{
+    std::int32_t i = 0;
+    std::int32_t j = 0;
+    auto lambda1 = [&amp;i, &amp;j]() {  // OK
+        ++i;
+        ++j;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-3. Parameter list (possibly empty) shall be included in every lambda
+   expression
+
+2. High Integrity C++ Coding Standard
+   5.1.5. Include a (possibly empty) parameter list in every lambda expression
+
+</PRE>
+</BODY>
+</HTML>

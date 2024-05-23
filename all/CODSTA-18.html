@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer 'while' statements over 'do' statements [CODSTA-18]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer 'while' statements over 'do' statements [CODSTA-18-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects 'do-while' statements.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability and prevents bug-prone code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define DO_WHILE(arg)       \
+  do /* OK */               \
+  {                         \
+     /*...*/                \
+  } while (arg == 0)
+
+void fun1()
+{
+    int i = 0;
+    do {                // Violation
+        // do something
+        i++;
+    } while (i &lt; 20);
+    DO_WHILE(i);        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void fun1()
+{
+    int i = 1;
+    // do something
+    while(i &lt; 20) {     // OK
+        // do something
+        i++;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

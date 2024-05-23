@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Integer overflow or underflow in constant expression in '&lt;&lt;' operator [MISRA2012-RULE-12_4_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Integer overflow or underflow in constant expression in '&lt;&lt;' operator [MISRA2012-RULE-12_4_b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+An integer overflow or wraparound occurs when an integer value is incremented to
+a value that is too large to store in the associated representation. When this
+occurs, the value may wrap to become a very small or negative number.
+For example: INT_MAX &lt;&lt; 1
+
+While this may be intended behavior in circumstances that rely on wrapping, it
+can have serious consequences if the wrap is unexpected.
+
+See also: PB-66_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks following operator:
+    &lt;&lt;  (left-shift)
+
+This rule checks only cases when both operands of the mentioned operator
+are any of following:
+    * integer literal
+    * enum constant
+    * const integer variable or const enum variable initialized with
+      integer literal or enum constant
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Unexpected integer overflow can sometimes trigger buffer overflows that can
+be used to execute arbitrary code, as well as lead to memory corruption. This
+is usually outside the scope of a program's implicit security policy.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Unexpected integer overflow generally leads to undefined behavior that may
+result in crashes. In the case of overflows involving loop index variables,
+the likelihood of infinite loops is also high.
+
+Unexpected integer overflow can be very dangerous, as the computed (incorrect)
+value can be used in multiple sensitive areas, such as:
+- Integer operands of any pointer arithmetic, including array indexing
+- The assignment expression for the declaration of a variable length array
+- The postfix expression preceding square brackets [] or the expression in
+  square brackets [] of a subscripted designation of an element of an array
+  object
+- Function arguments of type size_t or rsize_t (for example, an argument to a
+  memory allocation function)
+- In security-critical code
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    // This example assumes that int has 32 bits
+
+    // The type of the operation is signed int; range [-2147483648, 2147483647]
+    // The result of the operation will be interpreted as -2
+    2147483647 &lt;&lt; 1;                    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+    // This example assumes that int has 32 bits
+
+    // Example without overflow:
+
+    // The type of the operation is unsigned int; range [0, 4294967295]
+    // The result of the shift will be 4294967294
+    2147483647U &lt;&lt; 1;                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-19-1. Evaluation of constant unsigned integer expressions shall not lead
+   to wrap-around
+
+2. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-190: Integer Overflow or Wraparound
+   <A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+3. CWE-191: Integer Underflow (Wrap or Wraparound)
+   <A HREF="https://cwe.mitre.org/data/definitions/191.html">https://cwe.mitre.org/data/definitions/191.html</A>
+
+4. High Integrity C++ Coding Standard
+   4.2.2. Ensure that data loss does not demonstrably occur in an integral
+   expression
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-19-1
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 12.4
+
+7. SEI CERT C Coding Standard
+   INT30-C. Ensure that unsigned integer operations do not wrap
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT30-C.+Ensure+that+unsigned+integer+operations+do+not+wrap">https://wiki.sei.cmu.edu/confluence/display/c/INT30-C.+Ensure+that+unsigned+integer+operations+do+not+wrap</A>
+
+8. SEI CERT C Coding Standard
+   INT32-C. Ensure that operations on signed integers do not result in
+   overflow
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT32-C.+Ensure+that+operations+on+signed+integers+do+not+result+in+overflow">https://wiki.sei.cmu.edu/confluence/display/c/INT32-C.+Ensure+that+operations+on+signed+integers+do+not+result+in+overflow</A>
+
+</PRE>
+</BODY>
+</HTML>

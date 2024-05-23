@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A parameter of a type that is not 'cheap to copy' should be passed by reference [CODSTA-CPP-109]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A parameter of a type that is not 'cheap to copy' should be passed by reference [CODSTA-CPP-109-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Passing large objects by reference instead of by value avoids copying
+and unnecessary creation of temporary objects.
+
+This rule detects when a parameter of type that is not 'cheap to copy'
+is declared.
+
+See also: CODSTA-CPP-108, OPT-14
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"For the purpose of this rule, 'cheap to copy' is defined as a trivially
+copyable type that is no longer than two words (i.e. pointers)."
+[AUTOSAR A8-4-7]
+
+This rule assumes that the size of a word is 32 bits.
+
+The 'trivially copyable' type is detected according to the definition
+of the 'trivially copyable' type in the C++17 standard.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Due to C++'s type system and the fact that QString, RWCString and CString
+are implicitly shared, they may be treated like ints or other basic types.
+
+The rule does not report violations on smart pointers: scoped_ptr, scoped_array,
+unique_ptr, shared_ptr, shared_array, auto_ptr, intrusive_ptr and weak_ptr.
+If the function does some operation that works specifically on smart pointers,
+then they should be passed by value.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to improve the efficiency of your code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S        // Type not 'cheap to copy'
+{
+    int arr[4];
+};
+
+int func(const S s);          // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S       // Type not 'cheap to copy'
+{
+    int arr[4];
+};
+
+int func(const S&amp; s);         // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-3. Common ways of passing parameters should be used
+
+</PRE>
+</BODY>
+</HTML>

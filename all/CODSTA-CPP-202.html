@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An enumeration shall be defined with an explicit underlying type [CODSTA-CPP-202]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An enumeration shall be defined with an explicit underlying type [CODSTA-CPP-202-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when an enum is defined without an explicit underlying type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report when:
+* an enum is declared in an extern "C" block, or
+* all of the enumerators use their default values.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected or implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum class Enum             // Violation
+{
+  E0 = 0,
+  E1,
+  E2
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum class Enum : uint8_t  // OK
+{
+  E0 = 0,
+  E1,
+  E2
+};
+
+// Examples of code compliant by exception:
+
+enum class Enum2             // OK
+{
+  E0,
+  E1,
+  E2
+};
+
+extern "C"
+{
+  enum class Enum3            // OK
+  {
+    E0 = 0,
+    E1,
+    E2
+  };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.2.1 An enumeration shall be defined with an explicit underlying type
+
+</PRE>
+</BODY>
+</HTML>

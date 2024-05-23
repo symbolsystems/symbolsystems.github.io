@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Predicates shall not have persistent side effects [GLOBAL-PREDICATENOSE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Predicates shall not have persistent side effects [GLOBAL-PREDICATENOSE-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Most algorithms do not specify in which order the predicates will be invoked,
+or on which objects, so if a predicate contains a persistent side effect,
+then it might cause unexpected behavior. The state of a predicate may be
+different when a copy is made, because it is implementation-defined whether
+the predicate used by an algorithm will be copied.
+
+A predicate is every callable (a function type, a function pointer, or an object
+of a class type that defines the conversion operator()) passed to the function
+call as an argument of the type named Compare, Predicate, or BinaryPredicate in
+the C++17 standard.
+
+This rule detects when a predicate is a callable to a function that has
+a persistent side effect or an object of callable type containing a non-const
+conversion operator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Reading an object designated by a volatile glvalue (6.10), modifying an object,
+calling a library I/O function, or calling a function that does any of those
+operations are all side effects, which are changes in the state of the execution
+environment." [ISO/IEC 14882:2017]
+
+Objects modified by the called function whose lifetimes have ended by the time
+it returns do not affect the caller's execution state. Therefore, this
+type of modification does not cause persistent side effects.
+
+The rule only checks three nested levels of function calls while looking for
+persistent side effects.
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;algorithm&gt;
+#include &lt;set&gt;
+#include &lt;vector&gt;
+
+int g;
+
+bool bar( int i )
+{
+    g++;                            // persistent side effect
+    return true;
+}
+
+class C
+{
+public:
+    bool operator()( int i )        // non-const conversion operator
+    {
+        return true;
+    }
+};
+
+void foo()
+{
+    C c_;
+    std::vector&lt;int&gt; v { 1, 2, 3, 4, 5 };
+    std::set&lt;int, C&gt; s_;                                      // Violation
+    std::find_if(v.begin(), v.end(), bar);                    // Violation
+    std::count_if(v.begin(), v.end(), c_);                    // Violation
+    std::any_of(v.begin(), v.end(),                           // Violation
+                []( int i ) {
+                 g++;               // persistent side effect
+                 return true;
+              });
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;algorithm&gt;
+#include &lt;set&gt;
+#include &lt;vector&gt;
+
+int g;
+
+bool bar( int i )
+{
+    return true;
+}
+
+class C
+{
+public:
+    bool operator()( int i ) const
+    {
+        return true;
+    }
+};
+
+void foo()
+{
+    C c_;
+    std::vector&lt;int&gt; v { 1, 2, 3, 4, 5 };
+    std::set&lt;int, C&gt; s_;                                      // OK
+    std::find_if(v.begin(), v.end(), bar);                    // OK
+    std::count_if(v.begin(), v.end(), c_);                    // OK
+    std::any_of(v.begin(), v.end(),                           // OK
+                []( int i ) {
+                 return true;
+              });
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 28.3.1 Predicates shall not have persistent side effects
+
+2. ISO/IEC 14882:2017 Programming languages - C++
+   11.6.1 Aggregates
+
+</PRE>
+</BODY>
+</HTML>

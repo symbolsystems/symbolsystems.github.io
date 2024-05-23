@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Static and thread-local objects shall be constant-initialized [CODSTA-MCPP-32]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Static and thread-local objects shall be constant-initialized [CODSTA-MCPP-32-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In general, using non-const global and static variables obscures the true
+dependencies of an API, since they can be accessed from any place of the
+source code. It therefore makes the code more difficult to maintain, less
+readable, and significantly less testable.
+
+A particular problem is that the order in which constructors and initializers
+for static variables are called is only partially specified by the C++
+Language Standard and can even change from build to build. This can cause
+issues that are difficult to find or debug.
+
+Constant initialization is guaranteed to occur before any other initialization
+of static or thread-local objects and may happen at compile time. Thus it is
+guaranteed that problematic dependencies between the initializers of constant-
+initialized static or thread-local objects cannot occur.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you maintain compliance with some coding standards. It also
+helps to improve code stability and testability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int x1 = 1;
+int x2 = x1;                    // Violation
+
+int f();
+class C1
+{
+    static int m1;
+
+    void fm()
+    {
+        static int m2 = f();    // Violation
+    }
+};
+
+int C1::m1 = x1;                // Violation
+
+static int s1;
+static int s2 = s1;             // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const int x1 = 1;
+int x2 = x1;                      // OK
+
+constexpr int f(){ return 0; }
+class C1
+{
+    static int m1;
+
+    void fm()
+    {
+        static int m2 = f();      // OK
+    }
+};
+
+int C1::m1 = x1;                  // OK
+
+const static int s1 = 0;          // OK
+static int s2 = s1;               // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A3-3-2. Static and thread-local objects shall be constant-initialized.
+
+</PRE>
+</BODY>
+</HTML>

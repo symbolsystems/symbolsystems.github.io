@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A loop-control-variable other than the loop-counter shall not be modified within condition or expression [MISRA2008-6_5_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A loop-control-variable other than the loop-counter shall not be modified within condition or expression [MISRA2008-6_5_5-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A loop-control-variable other than the loop-counter shall
+not be modified within condition or expression.
+A loop-control-variable is any variable occurring in for-init-statement,
+condition or expression.
+A loop-counter is a loop-control-variable that is:
+  - Initialized in, or prior to, for-init-statement; and
+  - an operand to a relational operator in condition; and
+  - modified in expression.
+loop-control-variables are either the loop-counter, or flags used for early
+loop termination. The code is easier to understand if these are not modified
+within condition or expression."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that an object is modified if it is passed to the function
+as a reference to a non-const object (except a universal reference) or its
+address is passed to the function as a pointer to a non-const object 
+(except functions which are called via function pointers).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+bool test(int x);
+void foo(int x, bool flag)
+{
+    for ( x = 0; x &lt; 10; flag = test(++x) ) {}  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+bool test(int x);
+void foo(int x, bool flag)
+{
+    for ( x = 0; x &lt; 10; ++x ) // OK
+    {
+        flag = test(x);   
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-5-5. A loop-control-variable other than the loop-counter shall not be
+   modified within condition or expression
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 6, Rule 6-5-5
+
+</PRE>
+</BODY>
+</HTML>

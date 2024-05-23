@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer to a structure should not be passed to a function that writes data to a file [PORT-29]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer to a structure should not be passed to a function that writes data to a file [PORT-29-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Structures that are written to a file can be read back incorrectly on other
+platforms due to differences in the sizes and representations of the
+fundamental types, as well as other implementation-specific differences,
+such as data structure padding and alignment.
+
+This rule detects when a pointer to a structure is passed as an argument
+to one of the following library functions, which write data to a file:
+fwrite(), write(), WriteFile(), WriteFileEx()
+
+See also: SECURITY-46
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent data leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct S {
+    int   a;
+    char  b;
+};
+
+void f1() {
+    FILE *f = fopen("file.txt", "w");
+    struct S s = {0};
+
+    fwrite(&amp;s, 1, 1, f);                /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct S {
+    int   a;
+    char  b;
+};
+
+void f1() {
+    FILE *f = fopen("file.txt", "w");
+    struct S s = {0};
+
+    fwrite(&amp;s.a, 1, 1, f);             /* OK */
+    fwrite(&amp;s.b, 1, 1, f);             /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every switch branch should be unconditionally terminated [MISRACPP2023-9_4_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every switch branch should be unconditionally terminated [MISRACPP2023-9_4_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a switch branch is not correctly terminated, then control flows into
+the next switch branch or into the statement following the switch statement.
+Sometimes it is intentional, but often it is a mistake. To avoid errors
+the switch branch should be correctly terminated or contain the 'fallthrough'
+attribute.
+
+This rule detects when a switch branch is not unconditionally terminated
+by one of the following:
+  - a break statement
+  - a continue statement
+  - a return statement
+  - a goto statement
+  - a throw expression
+  - a call to a 'noreturn' function
+  - a 'fallthrough' attribute applied to a null statement.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid mistakes and improve the maintainability
+of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int f1(int x)
+{
+    int i = 0;
+    switch (x) {
+        case 0:             // Violation
+            i++;
+        case 1:             // Violation
+        if(x &lt; 0) {
+            i++;
+            break;
+        }
+        case 2:             // Violation
+            i--;
+            // fall-through
+        default:            // Violation
+            return 0;
+            i = 0;
+    }
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1(int x)
+{
+    int i = 0;
+    switch (x) {
+        case 0:             // OK
+            i++;
+            break;
+        case 1:             // OK
+        if(x &lt; 0) {
+            i++;
+        }
+        break;
+        case 2:             // OK
+            i--;
+            [[fallthrough]];
+        default:            // OK
+            i = 0;
+            return 0;
+    }
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   6.1.3. Ensure that a non-empty case statement block does not fall through
+   to the next label
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+</PRE>
+</BODY>
+</HTML>

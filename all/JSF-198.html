@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The initialization expression in a for loop will perform no actions other than to initialize the value of a single for loop parameter [JSF-198]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The initialization expression in a for loop will perform no actions other than to initialize the value of a single for loop parameter [JSF-198-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The initialization expression in a 'for' loop will perform no actions
+other than to initialize the value of a single 'for' loop parameter."
+
+The rule reports a violation if in initialization expression in a 'for' loop:
+- is declared more than one variable
+- is used more than one assignment
+- is an expression that is not used to initialize 'for' loop parameter
+
+See also: CODSTA-49, CODSTA-53, MISRA2004-13_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1()
+{
+    int var1 = 0;
+    int var2 = 0;
+    
+    for(var1 = 2, var2 = 3; var1 &gt; 0; var1--){}        // Violation
+    
+    for(int i = 0, j = 2; i &lt; 10, j &lt; 20; i++, j++){}  // Violation
+    
+    for(var2 = var1++; var2 &gt; 0; var2--){}             // Violation
+	
+    for(var1 == 0; var1 &lt; 10; var1++){}                // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1()
+{
+    int var1 = 0;
+    int var2 = 0;
+    
+    for(var1 = 2; var1 &gt; 0; var1--){}               // OK
+    
+    for(int i = 0; i &lt; 10; i++){                    // OK
+        for(int j = 2; j &lt; 20; j++){                // OK
+        	
+        }
+    }
+    
+    var1 = var2;
+    for( ; var1 &gt; 0; var1--){}                      // OK
+    
+    for(var1 = (var2 + 10) * 5; var1 &gt; 0; var1--){} // OK   
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-5-4. For-init-statement and expression should not perform actions other
+   than loop-counter initialization and modification
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 198
+
+</PRE>
+</BODY>
+</HTML>

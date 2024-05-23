@@ -1,0 +1,202 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The global namespace shall only contain main() and namespace declarations [MISRACPP2023-6_0_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The global namespace shall only contain main() and namespace declarations [MISRACPP2023-6_0_3-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Declaring names into appropriate namespaces reduces the names
+found during lookup, helping to ensure that the names found meet
+developer expectations."
+
+This rule detects declarations of global variables, types and global
+functions outside of namespaces.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report violations on declarations of functions and objects
+that have external "C" linkage. 
+According to C++ standard, two declarations for a function with C language
+linkage with the same function name that appear in different namespace scopes
+refer to the same function and two declarations for an object with C language
+linkage with the same name that appear in different namespace scopes refer
+to the same object.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoid name clashes in large programs with many parts.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Rule does not detect class forward declarations:
+  struct S; // no violation reported
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo();             // Violation
+int x = 0;              // Violation
+typedef int int32_t;    // Violation
+
+struct S {              // Violation
+    // violations are reported on outer element
+    // so no violation on declarations below:
+    typedef int INT;
+    void bar();
+};
+
+// violations are reported on the outer element:
+struct {
+    int x;
+} *p;                   // Violation
+typedef enum {
+    E1
+} EE;                   // Violation
+
+void foo() {            // Violation
+    // No violation is reported on elements declared in function:
+    typedef short int16_t;
+    struct LS {
+        int xx;
+    };
+}
+
+// friend declaration has global namespace scope
+struct SF {                     // Violation
+    friend void fr_function();  // Violation
+};
+
+// Global function with "main" name can be in global namespace:
+int main() {
+    return 0;
+}
+
+// The rule does not disallow declaring functions with name "main"
+// in a namespace:
+namespace X {
+    bool main();
+}
+
+// Exception for functions and objects that have external "C" linkage
+extern "C" {
+    void foo1C();   // OK
+    int iC;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+namespace N {
+    void foo();
+    int x = 0;
+    typedef int int32_t;
+    struct SF {
+        friend void fr_function();
+    };
+}
+
+// Anonymous namespace is ok too:
+namespace {
+    struct S {
+        typedef int INT;
+        void bar();
+    };
+}
+
+// Multiple namespaces are ok too:
+namespace K {
+namespace L {
+    struct {
+        int x;
+    } *p;
+    typedef enum {
+        E1
+    } EE;
+}
+}
+
+void N::foo() {
+    typedef short int16_t;
+    struct LS {
+        int xx;
+    };
+}
+
+int main() {
+    return 0;
+}
+
+namespace X {
+    bool main();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M7-3-1. The global namespace shall only contain main, namespace
+   declarations and extern "C" declarations
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. ISO/DIS 26262
+   point 8.4.4
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.11 Namespaces, AV Rule 98
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 7, Rule 7-3-1
+
+6. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.0.3 The only declarations in the global namespace should be main, namespace declarations and extern "C" declarations
+
+</PRE>
+</BODY>
+</HTML>

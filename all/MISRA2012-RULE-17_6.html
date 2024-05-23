@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The declaration of an array parameter shall not contain the 'static' keyword between the [ ] [MISRA2012-RULE-17_6]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The declaration of an array parameter shall not contain the 'static' keyword between the [ ] [MISRA2012-RULE-17_6-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the keyword static also appears within the [ and ] of the array type
+derivation, then for each call to the function, the value of the corresponding
+actual argument shall provide access to the first element of an array with at
+least as many elements as specified by the size expression."[ISO/IEC 9899:1999]
+
+"Some compilers are able to take advantage of this information to
+generate more efficient code for some types of processor. If the guarantee
+made by the programmer is not honoured, and the number of elements is less
+than the minimum specified, the behaviour is undefined."[MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef void foot(int a[static 10]);        /* Violation */
+
+void foo1(void (*fp1)(int a[static 10])) {  /* Violation */
+  void (*fp2)(int a[static 10]);            /* Violation */
+  fp1 = (void (*)(int a[static 10]))fp2;    /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+There is no use of this C99 language feature that is compliant with this rule.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.6
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.7.5.3 Function declarators (including prototypes)
+
+</PRE>
+</BODY>
+</HTML>

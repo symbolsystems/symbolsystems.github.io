@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The #include directive shall be followed by either a &lt;filename&gt; or "filename" sequence [MISRA-089]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The #include directive shall be followed by either a &lt;filename&gt; or "filename" sequence [MISRA-089-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The #include directive shall be followed by either a &lt;filename&gt;
+or "filename" sequence."
+
+See also: PREPROC-09
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Standards MISRA-C:2004, MISRA C++:2008 and MISRA C:2012 permit to use a macro
+after #include directive. However, it is not allowed by the rule, so it reports
+the violation on the following code:
+
+#define MY_HEADER "header.h"
+#include MY_HEADER                   /* Violation */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule allows to use only permitted forms for the #include directive.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Following statement is not compliant and may not compile */
+
+#include foo.h    /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;foo1.h&gt; /* OK */
+#include "foo2.h" /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.2 Source file inclusion
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.10.2 Source file inclusion
+
+3. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-2-6
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.2.2 The #include directive shall be followed by either a &lt;filename&gt; or "filename" sequence
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.3
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19, Rule 19.3
+
+7. Origin: Misra Guidelines - Rule 89
+
+</PRE>
+</BODY>
+</HTML>

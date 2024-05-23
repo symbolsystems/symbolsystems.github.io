@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Remove unnecessary '== true' [OPT-09]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Remove unnecessary '== true' [OPT-09-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation if boolean constant 'true' is used as operand 
+of equality operator '=='. 
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Violation is not reported if equality operator '==' is used inside
+'if' statement condition.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule increases legibility and efficiency of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+bool isPositive(int a);
+
+bool foo() 
+{
+    return isPositive(5) == true;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+bool isPositive(int a);
+
+bool foo1() 
+{
+    return isPositive(5);        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

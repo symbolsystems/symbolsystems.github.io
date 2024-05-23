@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A copy constructor and a copy assignment operator shall be declared for classes that contain pointers to data items or nontrivial destructors [MRM-49]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A copy constructor and a copy assignment operator shall be declared for classes that contain pointers to data items or nontrivial destructors [MRM-49-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an object contains a pointer to a data element, what should happen when
+that object is copied? Should the pointer itself be copied and thus two
+different objects reference the same data item, or should the data pointed
+to be copied? The default behavior is to copy the pointer. This behavior,
+however, is often not the desired behavior."
+
+"A nontrivial destructor typically implies some form of resource cleanup.
+Hence, that cleanup will most likely need to be performed during an
+assignment operation."
+
+"The solution is to declare both the copy constructor and copy assignment
+operator for such cases."
+
+See also: MRM-04, MRM-05, MRM-37, MRM-38, MRM-40, MRM-47, MRM-48
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"If clients should never be able to make copies of an object, then the copy
+constructor and the copy assignment operator can be declared private (with
+no definition). This will prevent clients from calling these functions as
+well as compilers from generating them."
+ 
+The rule assumes that destructor is nontrivial if it is explicitly defined
+with non empty body.
+
+A union type which have a pointer to data member is treated in the same way
+as a pointer to data type.
+
+If after reviewing the code the default copy constructor and copy assignment
+operators are found to offer reasonable semantics and are preferred over
+creating identical, but hand written methods, you can alway suppress this
+concrete violation.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Ensure resources are appropriately managed during copy and assignment
+operations."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A                     // Violation
+{
+public:
+    A();
+private:
+    int* ptr;               // pointer to data
+};
+
+class B                     // Violation
+{
+public:
+    ~B() { release(); }     // nontrivial destructor
+private:
+    void release();
+};
+
+union U {
+    // Contains pointer to data (or member with union type which has such member etc)
+    int *p1;
+    long *p2;
+};
+struct C {                  // Violation
+    U u;                    // treated in the same was as pointer to data
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A                  // OK
+{
+public:
+    A();
+private:
+    A(const A&amp; o) { copyPtr(o.ptr); }
+    A&amp; operator=(const A&amp; o) { copyPtr(o.ptr); }
+    void copyPtr(int* p);
+    int* ptr;
+};
+
+class B                // OK
+{
+public:
+    ~B() { release(); }
+private:
+    void release();
+    // Copy constructor and copy assignment operator declared private
+    B(const B&amp;);
+    B&amp; operator=(const B&amp;);
+};
+
+union U {
+    // Contains pointer to data
+    // (or member with union type which has such member etc)
+    int *p1;
+    long *p2;
+};
+struct C {                  // OK
+    U u;
+    C(const C&amp;);
+    C&amp; operator=(const C&amp;);
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 76
+
+</PRE>
+</BODY>
+</HTML>

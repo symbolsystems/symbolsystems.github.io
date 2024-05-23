@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not include headers deprecated in the C++17 standard [CODSTA-MCPP-58]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not include headers deprecated in the C++17 standard [CODSTA-MCPP-58-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For compatibility with prior C++ International Standards, the C++ standard
+library provides headers &lt;ccomplex&gt;, &lt;cstdalign&gt;, &lt;cstdbool&gt;, and &lt;ctgmath&gt;.
+The use of these headers is deprecated." [ISO/IEC 14882:2017]
+
+"The header &lt;strstream&gt; defines three types that associate stream buffers
+with character array objects and assist reading and writing such objects."
+ [ISO/IEC 14882:2017]
+
+"The header &lt;codecvt&gt; provides code conversion facets for various character
+encodings."  [ISO/IEC 14882:2017]
+
+This rule detects when one of the standard library headers &lt;ccomplex&gt;,
+&lt;cstdalign&gt;, &lt;cstdbool&gt;, &lt;ctgmath&gt;, &lt;strstream&gt;, &lt;codecvt&gt; is included.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you eliminate deprecated features.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;ccomplex&gt;  // Violation
+#include &lt;cstdalign&gt; // Violation
+#include &lt;cstdbool&gt;  // Violation
+#include &lt;ctgmath&gt;   // Violation
+#include &lt;strstream&gt; // Violation
+#include &lt;ccomplex&gt;  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use deprecated headers.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   Annex D Compatibility features
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 4.1.2 Deprecated features should not be used
+
+</PRE>
+</BODY>
+</HTML>

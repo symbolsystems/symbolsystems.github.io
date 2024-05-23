@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only functions with 1 or 2 statements should be considered candidates for inline functions [OPT-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only functions with 1 or 2 statements should be considered candidates for inline functions [OPT-25-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The front-end inliner will inline only those functions which can be converted
+to expressions. Therefore, functions which simply return an expression, straight
+code functions (which can be converted to comma expressions), or functions with
+if statements that can be converted to '?:' expressions will be considered
+candidates for inlining. The front-end inliner is not capable of inlining more
+complex statements (e.g. functions containing loops)." [JOINT STRIKE FIGHTER]
+
+This rule detects definitions of inline functions that contain more than two
+statements (instructions ended with a semicolon) or a 'while', 'do-while' or
+'for' loops, or 'goto' statement.
+
+See also: CODSTA-CPP-32, OPT-23
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check template member functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Inlining complex functions may lead to significant code bloat as well as to
+complicate debugging efforts." [JOINT STRIKE FIGHTER]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'f1' and 'f2' inline functions contain more than
+two statements.
+
+inline int f1 (int p) {   // Violation
+    int i1;
+    i1++;
+    p = p + 1;
+    return p + i1;
+}
+
+class A {
+public:
+    int f2 (int p) {      // Violation
+        int i1;
+        i1++;
+        p = p + 1;
+        return p + i1;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not declare the 'f1' function 'inline' and define the 'f2'
+function outside the class specification.
+
+int f1 (int p) {           // OK
+    int i1;
+    i1++;
+    p = p + 1;
+    return p + i1;
+}
+
+class A {
+public:
+    int f2 (int p);       // OK
+};
+
+int A::f2 (int p) {       // OK
+    int i1;
+    i1++;
+    p = p + 1;
+    return p + i1;
+}
+
+// Examples of correct code
+
+class A1 {
+public:
+// The 'f3' function has only 2 statements, so it is intended to be inline.
+    int f3 (int p) {      // OK
+        int i1;
+        p = p + 1;        // statement
+        return p + i1;    // statement
+    }
+// The 'f4' function has only 2 statements, so it is intended to be inline.
+    int f4 (int p) {      // OK
+        if(p &gt; 0){
+            return 1;
+        } else {
+            return p;
+        }
+    }
+};
+
+template &lt;typename T&gt;
+class AT {
+public:
+    int f1 (int p) {      // OK - a template function can be inline
+        int i1;
+        i1++;
+        p = p + 1;
+        return p + i1;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.13 Functions, AV Rule 121
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

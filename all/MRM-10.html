@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always assign a new value to global or member variable that points to deallocated memory [MRM-10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always assign a new value to global or member variable that points to deallocated memory [MRM-10-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+All pointers should be set to either 0 or to a valid address immediately
+after delete statement. 
+The rule reports a violation if directly after delete used on a global
+or member variable there is no assignment to this variable. 
+See also: MRM-09, MRM-11, MRM-31
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violation is not reported if delete is used on a non-static member
+variable in destructor.
+Some violations can be not reported on MSVC compiler
+if an assignment is used before delete statement inside macro.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents accessing a pointer or a reference to a deleted object.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int* p;
+int* q;
+void foo(){
+    p = new int;
+    q = new int(5);
+    //....
+    delete p;	// Violation - set deleted pointer in next expression
+    delete q;	// Violation - set deleted pointer in next expression
+    p = 0;
+    q = new int(10);
+    //...
+    delete q;    // Violation - set deleted pointer to 0
+}
+
+class A {
+public:
+    A();
+    ~A();
+    void clear();
+    int* ptr;
+};
+
+A::A(){
+    ptr = new int(10);
+}
+
+void A::clear(){
+    delete ptr;    // Violation - set deleted pointer to 0
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int* p;
+int* q;
+void foo(){
+    p = new int;
+    q = new int(5);
+    //....
+    delete p;	// OK
+    p = 0;
+    delete q;	// OK
+    q = new int(10);
+    //...
+    delete q;	// OK
+    q = 0;
+}
+
+class A {
+public:
+    A();
+    ~A();
+    void clear();
+    int* ptr;
+};
+
+A::A(){
+    ptr = new int(10);
+}
+
+A::~A(){
+    delete ptr;    // OK - exception
+}
+
+void A::clear(){
+    delete ptr;    // OK
+    ptr = 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 16 Memory Allocation - Rec. 59
+
+2. SEI CERT C Coding Standard
+   MEM01-C. Store a new value in pointers immediately after free()
+   <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152148">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152148</A>
+
+</PRE>
+</BODY>
+</HTML>

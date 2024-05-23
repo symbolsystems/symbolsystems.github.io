@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The operand of the 'sizeof' operator should be enclosed in parentheses [FORMAT-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The operand of the 'sizeof' operator should be enclosed in parentheses [FORMAT-25-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the operand of the 'sizeof' operator is not enclosed
+in parentheses.
+
+See also: FORMAT-23, FORMAT-24
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability of the code and avoid mistakes.
+
+"The C language has a relatively large number of operators and their relative
+precedences are not intuitive. This can lead less experienced programmers
+to make mistakes. Using parentheses to make operator precedence explicit
+removes the possibility that the programmer's expectations are incorrect.
+It also makes the original programmer's intention clear to reviewers
+or maintainers of the code." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1(int x)
+{
+   unsigned int y = sizeof x + 1u;      // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f1(int x)
+{
+   unsigned int y = sizeof(x) + 1u;     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.0.1 Parentheses should be used to make the meaning of an expression appropriately explicit
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 12.1
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare functions 'noexcept' if they will not emit exceptions [CODSTA-MCPP-09]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare functions 'noexcept' if they will not emit exceptions [CODSTA-MCPP-09-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Exception specifications have been considerably improved in C++11, which enables
+you to use unconditional 'noexcept' for functions that guarantee they will not
+emit exceptions.
+
+Functions can be much better optimized if they are declared noexcept.
+The move-if-noexcept semantics of many STL container functions allows moving
+instead of copying, which results in considerable performance benefits.
+
+This rule reports a violation if the constructs that may be source of thrown
+exceptions are not included in the function body or are all placed inside
+the 'try' block with the catch-all 'catch(...)' handlers (other catch handlers
+are not taken into consideration). This rule considers the following constructs
+to be sources of thrown exceptions: 'throw', 'new', 'typeid', 'dynamic_cast',
+function calls (excluding functions declared noexcept).
+
+This rule does not apply to:
+- destructors,
+- virtual functions,
+- partially specialized templates,
+- friend functions in templates,
+- functions with asm blocks,
+- global 'main', 'wmain', 'WinMain' functions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule allows the compiler to perform better optimizations.
+'noexcept' is part of a function's interface and, for this reason,
+should be used as a long-term committment.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure better optimization.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not evaluate:
+ - default member functions ('void f() = default;'),
+ - function calls via function pointers,
+ - functors,
+ - lambdas.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int a)              // Violation
+{
+    return a * a;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int a) noexcept     // OK
+{
+    return a * a;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-4-4. A declaration of non-throwing function shall contain noexcept
+   specification
+
+2. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use of
+   C++11 and C++14", Item 14
+
+</PRE>
+</BODY>
+</HTML>

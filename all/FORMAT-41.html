@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no space between '[' opening square bracket and preceding token [FORMAT-41]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no space between '[' opening square bracket and preceding token [FORMAT-41-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if:
+- there is a space, tab or comment preceding opening square bracket ('[')
+- an opening square bracket ('[') is first token in line.
+The intention of this rule is to have the bracket "glued" together
+with preceding token.
+
+See also: FORMAT-17, FORMAT-18, FORMAT-40
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+No violation is reported for following code:
+   const char special[256] = {
+      [0] = 1, ['?'] = 1,
+      ['x'] = 1 };
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int tab [10];                /* Violation */
+void foo(int param []) {     /* Violation */
+  char* arr = new char [10]; /* Violation */
+  tab/*comment*/[0] = 0;     /* Violation */
+  tab
+[0] = 0;                     /* Violation */
+  delete [] arr;             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int tab[10];                 /* OK */
+void foo(int param[]) {      /* OK */
+  char* arr = new char[10];  /* OK */
+  tab[0] = 0;                /* OK */
+  delete[] arr;              /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

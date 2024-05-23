@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If a public destructor of a class is non-virtual, then the class should be declared final [CODSTA-MCPP-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If a public destructor of a class is non-virtual, then the class should be declared final [CODSTA-MCPP-23-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A destructor is virtual if it is declared with the 'virtual', 'override', or
+'final' keyword. Classes with non-virtual public destructors, however, should
+not be used as a base class in the inheritance hierarchy because doing so may
+result in memory leaks.
+
+If a class/struct has a non-virtual public destructor, then it should be marked
+final to avoid memory leaks. Mark the class/struct as final by deleting base
+pointers that point to objects derived from the class/struct.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents memory leaks resulting from delete calls on base pointers
+that point to a derived object. It helps you achieve compliance with some coding
+guidelines.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A // Violation
+{
+public:
+  ~A() = default;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B final // OK
+{
+public:
+  ~B() = default;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-4-2. If a public destructor of a class is non-virtual, then the class
+   should be declared final
+
+</PRE>
+</BODY>
+</HTML>

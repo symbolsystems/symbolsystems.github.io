@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Cast characters to unsigned char before converting to larger integer sizes [CERT_C-STR34-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Cast characters to unsigned char before converting to larger integer sizes [CERT_C-STR34-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+For implementations in which the char type is defined to have the same
+range, representation and behavior as signed char, the character value
+is sign-extended when assigned to the singed integer variable. For character
+code 255 decimal, this sign extension results in the value -1 being assigned
+to the integer that is indistinguishable from EOF.
+
+It is a compliant solution to cast signed character data to unsigned char
+before it is assigned or converted to a larger signed integer type.
+
+This rule detects when an expression of the plain char type
+that is defined to have the same range, representation and behavior
+as signed char is used as the operand of the following operators:
+- unary '+', '-'
+- binary '+', '-', '*', '/', '%', '&lt;&lt;', '&gt;&gt;'
+- compound '+=', '-=', '*=', '/=', '%=', '&lt;&lt;=', '&gt;&gt;=' (only right hand
+  operand)
+and implicitly promoted to a larger signed type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"This rule is applicable only in cases where the character data may contain
+values that can be interpreted as negative numbers. For example, if the char
+type is represented by a two's complement 8-bit value, any character value
+greater than +127 is interpreted as a negative value." [CERT-STR34-C]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents conversions that may cause wrong computation result.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(char ch)
+{
+    int i = -ch;                            /* Violation */
+
+    if (ch + '0' &gt;= 9)                      /* Violation */
+    {
+        i = ch &lt;&lt; 1;                        /* Violation */
+    }
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(char ch)
+{
+    int i = -(unsigned char)ch;             /* OK */
+
+    if ((unsigned char)ch + '0' &gt;= 9)       /* OK */
+    {
+        i = (unsigned char)ch &lt;&lt; 1;         /* OK */
+    }
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   STR34-C. Cast characters to unsigned char before converting to larger
+   integer sizes
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR34-C.+Cast+characters+to+unsigned+char+before+converting+to+larger+integer+sizes">https://wiki.sei.cmu.edu/confluence/display/c/STR34-C.+Cast+characters+to+unsigned+char+before+converting+to+larger+integer+sizes</A>
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.1.8 Usual arithmetic conversions
+
+</PRE>
+</BODY>
+</HTML>

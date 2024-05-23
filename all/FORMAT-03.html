@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place a closing brace '}' on its own line [FORMAT-03]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place a closing brace '}' on its own line [FORMAT-03-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a closing brace '}' is not placed
+on separate line. 
+See also: FORMAT-02, FORMAT-34, FORMAT-42, FORMAT-43, FORMAT-44
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule does not adhere to enums, initializations and empty blocks.
+It is allowed to place tokens after '}' in the same line if:
+- '}' ends 'do-while' construct
+- '}' ends declaration of class/structure/union/enum
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int goo(int i)
+{
+    if (i == 0) { return i; }   // Violation
+    do { i++; } while (i &lt; 10); // Violation
+}
+
+struct S{ int i; float f; }ss;  // Violation      
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int goo(int i)
+{
+    if (i == 0)
+    {
+    	return i;
+    }   // OK
+    do
+    {
+    	i++;
+    } while (i &lt; 10); // OK - Exception
+}
+
+struct S
+{
+    int i;
+    float f;
+}ss;                   // OK - Exception
+
+enum E {EN1 = 2, EN2 = 1};  // OK - Exception
+int array[] = {1,2,3,4,5};  // OK - Exception
+class FooBar{};             // OK - Exception
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 6 Style Classes - 6.3 Compound Statements- Rec. 24
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A thread synchronization object should not be initialized by a thread [BD-TRS-THRINIT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A thread synchronization object should not be initialized by a thread [BD-TRS-THRINIT-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a thread synchronization object is initialized inside of a thread.
+
+For a list of recognized thread-creating functions, see the rule BD-TRS-THRTHR.
+
+This rule recognizes the following initialization functions:
+
+&lt;threads.h&gt; (C Standard Library)
+    int mtx_init( mtx_t* mutex, int type );
+    int cnd_init( cnd_t* cond );
+
+&lt;thread&gt; (C++ Standard Library)
+    std::mutex::mutex();
+    std::timed_mutex::timed_mutex();
+    std::recursive_mutex::recursive_mutex();
+    std::recursive_timed_mutex::recursive_timed_mutex();
+    
+&lt;pthread.h&gt; (POSIX)
+    int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+    int pthread_cond_init(pthread_cond_t *restrict cond, const pthread_condattr_t *restrict attr);
+    
+&lt;synhapi.h&gt; (Windows)
+  HANDLE CreateMutex (LPSECURITY_ATTRIBUTES lpMutexAttributes, BOOL bInitialOwner, LPCTSTR lpName);
+  HANDLE CreateMutexA (LPSECURITY_ATTRIBUTES lpMutexAttributes, WINBOOL bInitialOwner, LPCSTR lpName);
+  HANDLE CreateMutexW (LPSECURITY_ATTRIBUTES lpMutexAttributes, WINBOOL bInitialOwner, LPCWSTR lpName);
+  HANDLE CreateMutexExA (LPSECURITY_ATTRIBUTES lpMutexAttributes, LPCSTR lpName, DWORD dwFlags, DWORD dwDesiredAccess);
+  HANDLE CreateMutexExW (LPSECURITY_ATTRIBUTES lpMutexAttributes, LPCWSTR lpName, DWORD dwFlags, DWORD dwDesiredAccess);    
+  
+  HANDLE CreateSemaphore(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes, LONG  lInitialCount, LONG lMaximumCount, LPCTSTR lpName);
+  HANDLE CreateSemaphoreA(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes, LONG  lInitialCount, LONG lMaximumCount, LPCSTR lpName);
+  HANDLE CreateSemaphoreExW (LPSECURITY_ATTRIBUTES lpSemaphoreAttributes, LONG lInitialCount, LONG lMaximumCount, LPCWSTR lpName, DWORD dwFlags, DWORD dwDesiredAccess);
+
+  VOID InitializeConditionVariable (PCONDITION_VARIABLE ConditionVariable);
+
+  VOID InitializeCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+  WINBOOL InitializeCriticalSectionAndSpinCount (LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount);
+  WINBOOL InitializeCriticalSectionEx (LPCRITICAL_SECTION lpCriticalSection, DWORD dwSpinCount, DWORD Flags);
+
+  WINBOOL InitializeSynchronizationBarrier (LPSYNCHRONIZATION_BARRIER lpBarrier, LONG lTotalThreads, LONG lSpinCount);
+    
+If any of these functions is called (directly or indirectly) from a function which itself
+is a thread entry point, the rule will report a violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Initializing a thread synchronization object inside of a thread can cause 
+undefined behavior. It can cause a thread synchronization object to be accessed 
+before it is initialized. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent threads from accessing thread synchronization objects
+with indeterminate state.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include&lt;pthread.h&gt;
+
+pthread_t thread;
+pthread_mutex_t mutex;           
+
+void *foo( void* ignore )
+{
+    pthread_mutex_init(&amp;mutex, NULL); // VIOLATION
+    return 0;
+}
+
+int main(void)
+{
+    pthread_create(&amp;thread, NULL, &amp;foo, NULL);
+    return 0;
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, initialize the thread synchronization object outside of the created thread.
+
+#include&lt;pthread.h&gt;
+
+pthread_t thread;
+pthread_mutex_t mutex;           
+
+void *foo( void* ignore )
+{             
+    return 0;
+}
+
+int main(void)
+{
+    pthread_mutex_init(&amp;mutex, NULL); // NO VIOLATION
+    pthread_create(&amp;thread, NULL, &amp;foo, NULL);             
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.14
+
+</PRE>
+</BODY>
+</HTML>

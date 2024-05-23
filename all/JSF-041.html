@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Source lines will be kept to a length of 120 characters or less [JSF-041]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Source lines will be kept to a length of 120 characters or less [JSF-041-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Very long source lines can be difficult to read and understand." [JSF]
+
+The rule detects when a physical line contains more than 120 characters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that tabs are one character wide.
+
+The rule includes white space in the character count, including white spaces
+at the end of a line.
+The rule does not include end-line comments in the character count if they
+begin with one of the following Parasoft suppressions:
+- ' parasoft-suppress '
+- ' parasoft-begin-suppress '
+- ' parasoft-end-suppress '
+
+You can customize the default limit of 120 characters by modifying the value
+assigned to the 'lineLengthLimit' variable at the beginning of the Python
+method 'checkAndReport()'. For example, 'lineLengthLimit = 100' specifies that
+the number of characters in a physical line should not exceed 100.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Violation in line below */
+int     /* ....................................50...............................................100.................120*/  i1 ; 
+/* Violation in line below */
+int     /* ..........white spaces at the end of line............................................100*/  i2;                   
+/* multiline comment ..........................50...............................................100......Violation..120........
+ * ............................................50...............................................100......Violation..120......*/
+/* Violation in line below */
+#define MACCCCC(xxxxxxxxxxxxxxxxxxxxxxxxxxxx) xxxxxxxxxxxxxxxxxxxxxxxxxxxx + xxxxxxxxxxxxxxxxxxxxxxxxxxxx + xxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int     /* ..........no spaces at the end of line...............................................100*/  i1; /* OK */
+/* multiline comment ..........................50...............................................100...........OK...
+ * ............................................50...............................................100...........OK */
+#define MACCCCC(xxxxxxxxxxxxxxxxxxxxxxxxxxxx) xxxxxxxxxxxxxxxxxxxxxxxxxxxx + xxxxxxxxxxxxxxxxxxxxxxxxxxxx + \
+	            xxxxxxxxxxxxxxxxxxxxxxxxxxxx                                                           /* OK */
+int     /* ....................................50...............................................100...*/  i2;  /* parasoft-suppress ITEM ... OK  150 */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+Chapter 4.9 Style, AV Rule 41
+
+</PRE>
+</BODY>
+</HTML>

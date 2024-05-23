@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A member of a union shall not be declared as a bit-field [CODSTA-02_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A member of a union shall not be declared as a bit-field [CODSTA-02_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The exact bitwise position of a bit field within a storage unit
+is implementation defined. Therefore, if two bit fields are declared
+such that they fit within the same storage unit of a union, the compiler
+is not required to overlay them over one another beginning from the starting
+bit of the storage unit.
+If the union is used for type-punning, it is therefore unclear which bits
+of the previously-stored value will be accessed by the bit field.
+If the union is not intended to be used for type-punning, there is no point
+in declaring the members as bit fields, because no space will be saved
+(a complete storage unit will need to be allocated within the union anyway)."
+[MISRA C:2012 Amendment 3]
+
+This rule detects member variables in unions declared as bit-fields.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"This rule does not apply to sub-objects within union members that do not
+themselves have a union type." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+union U
+{
+    int var1 : 2;             // Violation
+    int : 2;                  // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not declare member variables in unions as bit-fields.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.3 Rule 6.3
+
+</PRE>
+</BODY>
+</HTML>

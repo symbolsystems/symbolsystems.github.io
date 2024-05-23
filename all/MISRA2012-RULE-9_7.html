@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Atomic objects shall be properly initialized before being accessed [MISRA2012-RULE-9_7]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Atomic objects shall be properly initialized before being accessed [MISRA2012-RULE-9_7-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when atomic objects are used before being properly initialized.
+
+Proper initialization of atomic objects can be done by:
+ - initializing objects on declaration
+ - using the Standard Library function atomic_init()
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Atomic objects may have an additional state that needs to be initialized. This can be 
+done only by initializing objects in declaration or by using the atomic_init() function. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you to properly initialize atomic objects with any additional state.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;stdatomic.h&gt;
+
+/* Thread entry point */
+int t1(void *aiParam) 
+{
+    return 0;
+}
+
+void test01() {
+    thrd_t id1;
+    _Atomic int32_t ai1;
+    ai1 = 777; // VIOLATION
+    
+    thrd_create( &amp;id1, t1, &amp;ai1 ); // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, initialize the atomic object on declaration.
+
+#include &lt;threads.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;stdatomic.h&gt;
+
+/* Thread entry point */
+int t1(void *aiParam) 
+{
+    return 0;
+}
+
+void test01() {
+    thrd_t id1;
+    _Atomic int32_t ai1 = 777; // NO VIOLATION
+    
+    thrd_create( &amp;id1, t1, &amp;ai1 ); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 9.7
+
+</PRE>
+</BODY>
+</HTML>

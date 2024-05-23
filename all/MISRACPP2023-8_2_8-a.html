@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A cast should not convert a pointer type to an integral type [MISRACPP2023-8_2_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A cast should not convert a pointer type to an integral type [MISRACPP2023-8_2_8-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The size of integer that is required when a pointer is converted to an integer
+is implementation-defined. Casting between a pointer and an integer type should
+be avoided where possible, but may be unavoidable when addressing memory mapped
+registers or other hardware specific features." [MISRA C++:2008]
+
+This rule detects when an expression of a pointer type is explicitly cast to
+an integral type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule assumes that UINT_PTR, INT_PTR, uintptr_t, or intptr_t are integral
+types capable of holding a pointer and allows casting pointers to them.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1(int *pint) {
+    int32_t si = (int32_t)pint;       // Violation
+    uint32_t ui = (uint32_t)pint;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1(int *pint) {
+    intptr_t si = (intptr_t)pint;     // OK
+    uintptr_t ui = (uintptr_t)pint;   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 18 Portable Code - 18.3 Type Conversions - Port. Rec. 7
+
+2. AUTOSAR C++14 Coding Guidelines
+   M5-2-9. A cast shall not convert a pointer type to an integral type
+
+3. <A HREF="http://www.codeproject.com/system/64BitOSAndPortingIssues.asp">http://www.codeproject.com/system/64BitOSAndPortingIssues.asp</A>
+
+4. ISO/DIS 26262
+   point 8.4.4
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-2-9
+
+6. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.8 An object pointer type shall not be cast to an integral type other than std::uintptr_t or std::intptr_t
+
+7. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.7 A cast should not convert a pointer type to an integral type
+
+8. Misra Guidelines rule 45
+
+9. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 11, Rule 11.3
+
+</PRE>
+</BODY>
+</HTML>

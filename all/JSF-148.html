@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Enumeration types shall be used instead of integer types (and constants) to select from a limited series of choices [JSF-148]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Enumeration types shall be used instead of integer types (and constants) to select from a limited series of choices [JSF-148-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Enumeration types shall be used instead of integer types (and constants) to
+select from a limited series of choices." [JSF]
+
+This rule detects when integer types or constants are used as case labels.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. "This rule is not intended to include character constants (e.g. 'A', 'B'
+   etc.) from use as case labels." [JSF]
+
+2. This rule reports only on 'switch' statements containing at least one case
+   label with an enum type used as index; for example, it does not detect such
+   cases:
+
+enum E{Ok, Repeat, Error};
+enum E convert(int n){
+  enum E e = Ok;
+  switch(n){
+    case 0:                   // OK
+      e = Ok;
+      break;
+    case 1:                   // OK
+      e = Repeat;
+      break;
+    default:
+      e = Error;
+      break;
+  }
+  return e;
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you enhance debugging and improve readability
+and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Colors
+{
+    RED = 1,
+    BLUE = 2,
+    GREEN = 3
+};
+static const int BLACK = 4;
+void foo(Colors col)
+{
+  switch(col)
+  {
+   case RED:                  // OK
+       break;
+   case BLUE:                 // OK
+       break ;
+   case GREEN:                // OK
+       break;
+   case BLACK:                // Violation
+       break;
+   default:
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Colors
+{
+    RED = 1,
+    BLUE = 2,
+    GREEN = 3,
+    BLACK = 4
+};
+void foo(Colors col)
+{
+  switch(col)
+  {
+   case RED:                  // OK
+       break;
+   case BLUE:                 // OK
+       break ;
+   case GREEN:                // OK
+       break;
+   case BLACK:                // OK
+       break;
+   default:
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-2-5. Enumerations should be used to represent sets of related named
+   constants
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.18 Constants, AV Rule 148
+
+</PRE>
+</BODY>
+</HTML>

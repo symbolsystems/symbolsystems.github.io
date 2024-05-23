@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'rsize_t' type should not be used [CODSTA-212]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'rsize_t' type should not be used [CODSTA-212-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. The following
+shall not be used:
+- Other than defining __STDC_WANT_LIB_EXT1__ to '0', the facilities of Annex K
+(Boundschecking interfaces) shall not be used." [MISRA C:2012 Amendment 2]
+
+"1 The header &lt;stddef.h&gt; defines a type.
+ 2 The type is rsize_t which is the type size_t."
+[ISO/IEC 9899:2011, Annex K]
+
+This rule detects when the 'rsize_t' type is used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stddef.h&gt;
+
+rsize_t i;                                      // Violation
+
+rsize_t * p;                                    // Violation
+
+rsize_t foo()                                   // Violation
+{
+    return sizeof(rsize_t);                     // Violation
+}
+
+void bar(rsize_t arg);                          // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use the 'rsize_t' type.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   Annex K, K.3.3 Common definitions &lt;stddef.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

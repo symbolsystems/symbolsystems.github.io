@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not initialize unsigned integer variables with signed constants [INIT-02]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not initialize unsigned integer variables with signed constants [INIT-02-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if unsigned integer variable is initialized
+by numeric constant with a negative value.
+See also: PB-08, MISRA2004-10_1_a
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undesirable implicit conversions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    unsigned int m_i;
+};
+
+void foo()
+{
+   unsigned int y = -21;    // Violation
+   S s = {-10};             // Violation
+}
+
+class A {
+public:
+    A();
+private:
+    unsigned int ai;
+};
+
+A::A() : ai(-10){           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+    unsigned int m_i;
+    signed int n_i;
+};
+
+void foo()
+{
+   unsigned int y = 21;    // OK
+   signed int x = -21;     // OK
+   S s = { 10, -10};       // OK
+}
+
+class A {
+public:
+    A();
+private:
+    unsigned int ai;
+    signed int si;
+};
+
+A::A() : ai(10), si(-10){  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

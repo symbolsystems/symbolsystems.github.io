@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The definition of a constructor shall not contain default arguments that produce a signature identical to that of the implicitly-declared copy constructor [JSF-077.1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The definition of a constructor shall not contain default arguments that produce a signature identical to that of the implicitly-declared copy constructor [JSF-077.1-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The definition of a member function shall not contain default arguments
+that produce a signature identical to that of the implicitly-declared copy
+constructor for the corresponding class/structure." [JOINT STRIKE FIGHTER]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If the class definition does not explicitly declare a copy constructor,
+one is declared implicitly. Thus, for the class definition
+class X 
+{
+   X(const X&amp;, int);
+};
+
+a copy constructor is implicitly-declared. If the user-declared constructor
+is later defined as
+
+X::X(const X&amp; x, int i = 0) 
+{ 
+   /* ... */ 
+}
+
+then any use of X's copy constructor is ill-formed because of the ambiguity;
+no diagnostic is required." [ISO/IEC 14882:1998]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+    A(const A&amp;, int);
+};
+
+A::A(const A&amp; x, int i = 0)       // Violation
+{
+    /* ... */ 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A1
+{
+    A1(const A1&amp;, int i = 0);
+};
+
+A1::A1(const A1&amp; x, int i)        // OK 
+{
+    /* ... */ 
+}
+
+class A2
+{
+    A2(const A2&amp;); // Explicit copy constructor prevents
+    A2(const A2&amp;, int i);
+};
+
+A2::A2(const A2&amp; x, int i = 0)    // OK
+{
+    /* ... */ 
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 77.1
+
+2. ISO/IEC 14882:1998 Programming languages — C++
+   12.8 Copying class objects
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

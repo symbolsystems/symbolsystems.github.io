@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Casts shall not be performed between a pointer to a function and any other type [MISRACPP2023-8_2_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Casts shall not be performed between a pointer to a function and any other type [MISRACPP2023-8_2_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Conversions between pointers to functions and other types or calling a function
+using a pointer whose type is not compatible with the called function may result
+in undefined behavior.
+
+This rule detects explicit casts from or to a pointer to a function type
+(including casts between pointers to function types).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule allows the following casts:
+- from a function type to a compatible pointer to function type
+- from a pointer to noexcept function to a compatible pointer to function type
+- from nullptr to a pointer to function
+- when a user-defined conversion is used
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef void (*FP1)(int n);
+typedef void (*FP2)(short n);
+
+void foo (void* vptr)
+{
+    FP1 fp1 = (FP1) vptr; // Violation
+    FP2 fp2 = (FP2)fp1;   // Violation
+    (void*) fp1;          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Examples of code not detected by this rule.
+
+typedef void (*FP1)(int n);
+typedef void (*FP2)(int n) noexcept;
+
+void f(int n);
+
+struct S
+{
+    S(){}
+    S(FP1){}
+};
+
+void foo (FP2 fp2)
+{
+    FP1 fp1 = (FP1) f;   // OK - Exception
+    fp1 = (FP1) fp2;     // OK - Exception
+    fp1 = nullptr;       // OK - Exception
+    S s = (S)fp1;        // OK - Exception
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.4 Casts shall not be performed between a pointer to function and any other type
+
+</PRE>
+</BODY>
+</HTML>

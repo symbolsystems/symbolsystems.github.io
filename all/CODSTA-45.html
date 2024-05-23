@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parameters should not use the same names as member variables [CODSTA-45]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parameters should not use the same names as member variables [CODSTA-45-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a parameter uses the same name as member variable, then it hides
+this variable, what may lead to developer confusion.
+
+The rule reports a violation if a parameter declared in a definition
+of member function uses the same name as member variable of current class
+or as public/protected member variable of base class.
+
+See also: CODSTA-44, CODSTA-CPP-83
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hiding names of identifiers can lead to errors and confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    int basem;
+};
+
+class Derived : public Base {
+public:
+    void foo1(int basem){}     // Violation
+    void foo2(int member);     // OK - reported on definition
+private:
+    int member;
+};
+
+void Derived::foo2(int member){ // Violation
+    member = 10;                // possible mistake
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    int basem;
+};
+
+class Derived : public Base {
+public:
+    void foo1(int pbasem){}    // OK - the name of parameter was changed
+    void foo2(int member);     // OK
+private:
+    int member_D;
+};
+
+void Derived::foo2(int member){ // OK - the name of member variable was changed
+    member = 10;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

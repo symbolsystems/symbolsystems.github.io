@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An object shall not be assigned or copied to an overlapping object [MISRA2012-RULE-19_1_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An object shall not be assigned or copied to an overlapping object [MISRA2012-RULE-19_1_c-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when two objects that overlap in memory are copied
+one to the other with one of the following methods:
+    * memcpy(void *, void *, size_t);
+    * strncpy(char *, char *, size_t);
+    * strncat(char *, char *, size_t);
+    * strcpy(char *, char *);
+    * strcat(char *, char *);
+    * strlcpy(char *, char *, size_t);
+    * strlcat(char *, char *, size_t);
+    * wcsncpy(wchar_t *, wchar_t *src, size_t);
+    * wmemcpy(wchar_t *, wchar_t *src, size_t);
+    * wcpncpy(wchar_t *, wchar_t *src, size_t);
+
+You can parameterize the rule to limit the list of copying functions only
+to the memcpy function(see PARAMETERS).
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"The behaviour is undefined when two objects are created which have some
+overlap in memory and one is assigned or copied to the other."
+[MISRA C:2012 19.1]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report on memcpy function calls only" parameter allows you to limit
+the list of copying functions on which the rule will report, only to the
+memcpy function.
+If enabled, the rule only triggers on calls to the memcpy function.
+It is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behaviour.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In the following example, the '&amp;a[4]' object is copied to the overlapping
+object '&amp;a[5]' with the "memcpy" method.
+
+#include &lt;string.h&gt;
+
+int a[20];
+
+void example()
+{
+    memcpy( &amp;a[5], &amp;a[4], 2u * sizeof (a[0]));    // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, use the "memmove" method instead of the "memcpy" method
+to copy the object.
+
+#include &lt;string.h&gt;
+
+int a[20];
+
+void example()
+{
+    memmove( &amp;a[5], &amp;a[4], 2u * sizeof (a[0]));
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 19.1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 8.18.1 An object or subobject must not be copied to an overlapping object
+
+</PRE>
+</BODY>
+</HTML>

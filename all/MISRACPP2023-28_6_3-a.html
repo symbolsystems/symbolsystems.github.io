@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not subsequently use the argument to std::forward [MISRACPP2023-28_6_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not subsequently use the argument to std::forward [MISRACPP2023-28_6_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects uses of arguments that were earlier used as parameters
+in calls to the std::forward function.
+"When the value category of the parameter is an lvalue, then modifications
+to the parameter will affect the argument of the caller. In the case of an 
+rvalue, the value should be considered as being indeterminate after the 
+call to std::forward" 
+[High Integrity C++ Coding Standard; 17.3.3 Do not subsequently use
+the argument to std::forward]
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A  
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report when the function argument passed by reference is in the moved-from state" parameter
+allows you to enable reporting violations when a function argument passed by lvalue reference
+is used as a parameter in the call to the 'std::forward' function and it remains in the 
+moved-from state on the method exit. This helps you prevent using the variable after 
+the method exits, which is potentially dangerous behavior.
+
+Note that the rule does not trigger when the parameter is passed by rvalue reference.
+This parameter is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid using indeterminate values, which can result from
+calls to the std::forward function.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+#include &lt;cstdint&gt;
+#include &lt;utility&gt;
+   
+template &lt;typename T1, typename T2&gt;
+void bar (T1 const &amp; t1, T2 &amp; t2);
+                 
+template &lt;typename T1, typename T2&gt;
+void foo (T1 &amp;&amp; t1, T2 &amp;&amp; t2)
+{
+   bar (std::forward&lt;T1&gt; (t1), std::forward&lt;T2&gt; (t2));
+   ++t2;  			// VIOLATION
+}
+   
+int main ()
+{
+   int32_t i = 0;
+   foo (0, i);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, do not subsequently use the argument to std::forward:
+#include &lt;cstdint&gt;
+#include &lt;utility&gt;
+   
+template &lt;typename T1, typename T2&gt;
+void bar (T1 const &amp; t1, T2 &amp; t2);
+
+template &lt;typename T1, typename T2&gt;
+void foo (T1 &amp;&amp; t1, T2 &amp;&amp; t2)
+{
+    bar (std::forward&lt;T1&gt; (t1), std::forward&lt;T2&gt; (t2));
+}    // NO VIOLATION
+   
+int main ()
+{
+   int32_t i = 0;
+   foo (0, i);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 28.6.3 An object shall not be used while in a potentially moved-from state
+
+High Integrity C++ Coding Standard
+17.3.3 Do not subsequently use the argument to std::forward
+
+AUTOSAR C++14 Coding Guidelines
+Rule A18-9-4 An argument to std::forward shall not be subsequently used
+
+</PRE>
+</BODY>
+</HTML>

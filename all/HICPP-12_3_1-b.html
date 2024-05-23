@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Write operator delete[] if you write operator new[] [HICPP-12_3_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Write operator delete[] if you write operator new[] [HICPP-12_3_1-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule makes sure that if you write your own version of operator new[ ],
+you also write a corresponding operator delete[ ]. If you write delete when
+you write new, you ensure that new and delete share the same assumptions.
+See also: MRM-26
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Writing operator delete and operator new in concert helps
+prevent memory corruption and memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+class A {        // Violation
+public:
+    A( ) {}
+    void* operator new[](size_t size);
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+class A {        // OK
+public:
+    A( ) {}
+    void* operator new[](size_t size);
+    void operator delete[]( void* );
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-11. "operator new" and "operator delete" shall be defined together.
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. High Integrity C++ Coding Standard
+   12.3.1. Correctly declare overloads for operator new and delete
+
+4. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter: "Memory Management", Item 10
+
+</PRE>
+</BODY>
+</HTML>

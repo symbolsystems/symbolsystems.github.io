@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A switch-expression shall not have essentially Boolean type [MISRA2012-RULE-16_7_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A switch-expression shall not have essentially Boolean type [MISRA2012-RULE-16_7_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The Standard requires the controlling expression of a switch statement to have
+an integer type. Since the type that is used to implement Boolean values
+is an integer, it is possible to have a switch statement controlled by a Boolean
+expression. In this instance an if-else construct would be more appropriate."
+
+The rule reports a violation if as switch condition is used variable, parameter
+or expression of type:
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+  - reference to above type
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents using values that are effectively Boolean in switch condition.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Boolean {FALSE, TRUE};
+typedef enum {FALSE_T, TRUE_T} BOOL_T;
+
+typedef int bool_type;
+typedef int BOOL_TYPE;
+
+void fn1()
+{
+    enum Boolean e;
+    BOOL_T et;
+    bool_type bt;
+    BOOL_TYPE BT;
+  
+    switch(e){          // Violation
+        //...
+    }
+    switch(et){         // Violation
+        //...
+    }
+    switch(bt){         // Violation
+        //...
+    }
+    switch(BT){         // Violation
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Boolean {FALSE, TRUE};
+
+void fn1()
+{
+    enum Boolean e;
+  
+    if(e){              // OK
+        //...
+    } else {
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 15, Rule 15.4
+
+2. Origin: Misra Guidelines - Rule 63
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.7
+
+</PRE>
+</BODY>
+</HTML>

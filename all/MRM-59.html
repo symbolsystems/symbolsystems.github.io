@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare the 'new' and 'delete' operators [MRM-59]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare the 'new' and 'delete' operators [MRM-59-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The user can declare the overloaded versions of the 'new' and 'delete'
+operators, but if their matching versions are not provided, then this may result
+in undefined behavior. The same applies to the array forms of new[]
+and delete[].
+
+This rule detects user-defined 'new' and 'delete' operators.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+
+class C {
+public:
+    C( ) {}
+    void* operator new(size_t size);          // Violation
+};
+
+void operator delete(void* ptr) noexcept      // Violation
+{
+    std::free(ptr);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not declare the 'new' and 'delete' operators.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.3 Advanced memory management shall not be used
+
+</PRE>
+</BODY>
+</HTML>

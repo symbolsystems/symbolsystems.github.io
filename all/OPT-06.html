@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary local variables [OPT-06]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary local variables [OPT-06-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a declared local variable is not used inside
+a body of function or is used only in expressions where it could be removed
+without a change of functionality.
+See also: OPT-02, OPT-03
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations on variables of type class/struct that 
+have explicitly declared constructor or destructor.
+
+The rule does not trigger on variables captured by lambda expressions. 
+It assumes that lambdas use every variable they capture.
+See also: CODSTA-MCPP-18_a, CODSTA-MCPP-18_b
+
+void func() 
+{
+    int i = 2;     // No violation (although 'i' is not used inside the lambda)
+    auto lambda = [&amp;]() 
+    { 
+    };
+    lambda();
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Eliminating local variables that are not useful increases efficiency
+and legibility of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+};
+
+int func(int p) {
+    A a;       // Violation
+    int i = 0; // Violation
+    i = p;
+    i++;
+    return p;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A();
+};
+
+int func(int p) {
+    A a;       // OK - implicit call of constructor can cause additional action
+    int i = 0; // OK
+    i = p;
+    i++;
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MSC13-C. Detect and remove unused values
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC13-C.+Detect+and+remove+unused+values">https://wiki.sei.cmu.edu/confluence/display/c/MSC13-C.+Detect+and+remove+unused+values</A>
+
+</PRE>
+</BODY>
+</HTML>

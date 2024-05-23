@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Types of bit-fields should have defined sizes [AUTOSAR-A9_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Types of bit-fields should have defined sizes [AUTOSAR-A9_6_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The use of bit-fields is allowed for interfacing with hardware or conforming
+to communication protocols, so they should have only types that have a defined
+size.
+This rule detects bit-fields that have types whose size is not defined.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that types with defined sizes are only fixed width integer
+types: std::int8_t, std::int16_t, std::int32_t, std::int64_t, std::uint8_t,
+std::uint16_t, std::uint32_t, std::uint64_t, and enumeration types if they
+have been explicitly declared with a fixed width integer type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E
+{
+    E1, E2
+};
+
+struct S
+{
+    char var1 : 2;     // Violation
+    E var2 : 2;        // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+enum E : std::int32_t
+{
+    E1, E2
+};
+
+struct S
+{
+    std::int8_t var1 : 2;     // OK
+    E var2 : 2;               // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A9-6-1. Data types used for interfacing with hardware or conforming to
+   communication protocols shall be trivial, standard-layout and only contain
+   members of types with defined sizes.
+
+</PRE>
+</BODY>
+</HTML>

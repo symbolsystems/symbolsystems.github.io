@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using macro definitions [HICPP-16_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using macro definitions [HICPP-16_1_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The #define pre-processor directive will only be used as part of the technique
+to prevent multiple inclusions of the same header file." [JOINT STRIKE FIGHTER]
+
+"Macros ignore scopes, ignore the type system, ignore all other language
+features and rules, and hijack the symbols they #define for the remainder of
+a file. Macro invocations look like symbols or function calls, but are neither.
+Macros are not 'hygienic', meaning that they can expand to significantly
+and surprisingly different things depending on the context in which they
+are used." [C++ Coding Standards]
+
+This rule detects macros defined with the #define directive.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"C++ provides safer, more readable and easier to maintain ways of achieving
+what is often done using the pre-processor. The pre-processor does not obey
+the linkage, lookup and function call semantics. Instead, constant objects,
+constexprs, inline functions and templates are to be used." [AUTOSAR A16-0-1]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule allows using the #define directive in the mechanism that prevents
+multiple inclusions of the same header file.
+
+#ifndef FOO_HH
+#define FOO_HH   // OK
+//...
+#endif
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid issues that may be caused by the use of macros.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define PI 3.14                             // Violation
+
+#define SUM(A,B) ((A)+(B))                  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const double PI = 3.14;                     // OK
+
+int sum( int a, int b ) {                   // OK
+    return (a + b);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A16-0-1. The pre-processor shall only be used for unconditional and
+   conditional file inclusion and include guards, and using the following
+   directives: (1) #ifndef, (2) #ifdef, (3) #if, (4) #if defined, (5) #elif,
+   (6) #else, (7) #define, (8) #endif, (9) #include
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards: 101 Rules,
+   Guidelines, and Best Practices" 1st Edition
+   Chapter: "Coding Style", Rule 16
+
+3. High Integrity C++ Coding Standard
+   16.1.1. Use the preprocessor only for implementing include guards, and
+   including header files with include guards
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.6 Pre-Processing Directives, AV Rule 31
+
+5. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-2-1
+
+</PRE>
+</BODY>
+</HTML>

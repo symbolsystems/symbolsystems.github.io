@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Explicitly specify array bounds in array declarations with initializers [CODSTA-200]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Explicitly specify array bounds in array declarations with initializers [CODSTA-200-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an array of unknown size is initialized, its size is determined by the
+largest indexed element with an explicit initializer." [ISO/IEC 9899:1999]
+"Although compilers can compute the size of an array on the basis of its
+initialization list, explicitly specifying the size of the array provides
+a redundancy check, ensuring that the array's size is correct. It also enables
+compilers to emit warnings if the array's size is less than the size implied
+by the initialization." [CERT-ARR02-C]
+
+This rule detects when an array of unknown size is initialized with an explicit
+aggregate initializer.
+
+See also: CODSTA-197
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not report when an array is initialized by a string literal.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to detect if the array's size is incorrect.
+If the size of the array is explicitly specified and if the number
+of initializers exceeds the number of elements to initialize,
+then some compilers emit warnings or errors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int T_ARR[];
+
+int arr1[] = {1,2,3,4};                     /* Violation */
+int arr2[][2] = {0};                        /* Violation */
+
+void f1() {
+    unsigned char arr3[] = {1,2,3,4};       /* Violation */
+    T_ARR arr4 = {1,2,3};                   /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef int T_ARR[3];
+
+int arr1[4] = {1,2,3,4};                    /* OK */
+int arr2[4][2] = {0};                       /* OK */
+
+enum { SIZE = 4 };
+void f1() {
+    unsigned char arr3[SIZE] = {1,2,3,4};   /* OK */
+    T_ARR arr4 = {1,2,3};                   /* OK */
+}
+
+const char str[] = "string";                /* OK - Exception */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   ARR02-C. Explicitly specify array bounds, even if implicitly defined by an
+   initializer
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR02-C.+Explicitly+specify+array+bounds%2C+even+if+implicitly+defined+by+an+initializer">https://wiki.sei.cmu.edu/confluence/display/c/ARR02-C.+Explicitly+specify+array+bounds%2C+even+if+implicitly+defined+by+an+initializer</A>
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.8 Initialization
+
+3. ISO/IEC 14882:2003 Programming languages -- C++
+   8.5.1 Aggregates
+
+</PRE>
+</BODY>
+</HTML>

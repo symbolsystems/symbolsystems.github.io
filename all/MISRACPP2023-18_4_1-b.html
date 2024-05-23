@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions used as initializers of non-constexpr non-local variables shall be noexcept [MISRACPP2023-18_4_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions used as initializers of non-constexpr non-local variables shall be noexcept [MISRACPP2023-18_4_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when a function or constructor directly called
+(explicitly or implicitly) to initialize a non-constexpr, non-local variable
+with static or thread storage duration is not noexcept.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid unexpected calls to std::terminate resulting from 
+exceptions thrown from the initializers of objects that may be constructed
+before the main function starts, making it impossible to catch those exceptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+  C() {}                      // Not noexcept
+};
+ 
+int f() {}                    // Not noexcept
+
+C c;                          // Violation
+int x1 = f();                 // Violation
+int x2 = 1 + f();             // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+  C() noexcept {}
+};
+ 
+int f() {}
+
+C c;                          // OK - constructor is noexcept
+
+void g() {
+  int x1 = f();               // OK - the caller of g() has a chance to catch
+                              // exceptions thrown by this initialization
+  static int x2 = 1 + f();    // OK - the caller of g() has a chance to catch
+                              // exceptions, as the initialization will happen
+                              // on the first call to g()
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 18.4.1 Exception-unfriendly functions shall be noexcept
+
+</PRE>
+</BODY>
+</HTML>

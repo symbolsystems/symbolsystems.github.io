@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no unused parameters (named or unnamed) in the set of parameters for a virtual function and all the functions that override it [MISRA2008-0_1_12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no unused parameters (named or unnamed) in the set of parameters for a virtual function and all the functions that override it [MISRA2008-0_1_12-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects parameters (named or unnamed) of a virtual function that
+are not used in that virtual function or any of the functions that override it.
+Findings are reported on the in-class declarations of virtual functions
+at the highest level in the inheritance hierarchy.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+If a function definition is not available in the testing scope,
+then the rule assumes that the parameters of the function are not used.
+
+When the unused parameter is removed from the virtual function in
+a base class, then it should also be removed from all the virtual functions
+that override it.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Unused function parameters are often due to design changes and can lead to
+mismatched parameter list" [MISRA C++:2008 Rule 0-1-12]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not analyze bodies of non-instantiated class template member
+functions, which may result in some false positives or negatives.
+Note that the MISRA2008 standard recommends that all class template member
+functions be instantiated (Rule 14-7-1).
+
+The rule does not detect when parameters are used in asm blocks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    virtual void foo (int* p1,   // Violation
+                      int* p2,   // Violation
+                      int) = 0;  // Violation
+};
+
+class B1: public A
+{
+public:
+    virtual void foo (int* p1, int* p2, int)
+    {
+        // missing code - parameters are unused
+    }
+};
+
+class B2: public A
+{
+public:
+    virtual void foo (int* p1, int* p2, int)
+    {
+        // missing code - parameters are unused
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    virtual void foo (int* p1,       // OK
+                      int* p2 ) = 0; // OK
+    // unnamed parameter was removed
+};
+
+class B1: public A
+{
+public:
+    virtual void foo (int* p1, int* p2)
+    {
+        // unnamed parameter was removed
+        *p1 = 1;
+    }
+};
+
+class B2: public A
+{
+public:
+    virtual void foo (int* p1, int* p2)
+    {
+        // unnamed parameter was removed
+        *p2 = 1;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-12
+
+</PRE>
+</BODY>
+</HTML>

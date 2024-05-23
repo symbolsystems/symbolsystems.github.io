@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use a trailing return type syntax if the return type is preceded by the 'typename' keyword [HICPP-7_1_7-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use a trailing return type syntax if the return type is preceded by the 'typename' keyword [HICPP-7_1_7-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When using a trailing return type, lookup for the function return type starts
+from the same scope as the function declarator. In many cases, this will remove
+the need to specify a fully qualified return type along with the 'typename'
+keyword." [High Integrity C++]
+
+This rule detects template functions that meet the following conditions:
+- The return type of the template function depends either on types of its type
+  template parameters or on values of its non-type template parameters.
+- The 'typename' keyword is explicitly used before the return type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects when the return type is a nested complex type explicitly
+preceded by the 'typename' keyword even if template parameters are not used
+in the return type. In this case,  the 'typename' keyword before the return
+type is redundant.
+
+template &lt;typename T&gt;
+class A
+{
+public:
+    struct S1 {int m1;};
+    int m3;
+};
+
+template &lt;typename T&gt;
+typename A&lt;int&gt;::S1 f1(T*){ A&lt;int&gt;::S1 s1; return s1; }       // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+template &lt;typename T&gt;
+struct S1
+{
+    struct S2 {int m1;};
+    typedef int TINT;
+
+    S1&lt;T&gt;::TINT f2(T t);
+};
+
+template &lt;typename T&gt;
+typename S1&lt;T&gt;::S2 f1(T t){ typename S1&lt;T&gt;::S2 s2; return s2; }  // Violation
+
+template &lt;typename T&gt;
+typename S1&lt;T&gt;::TINT S1&lt;T&gt;::f2(T t){ return 0; }                 // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using the trailing return type syntax.
+
+template &lt;typename T&gt;
+struct S1
+{
+    struct S2 {int m1;};
+    typedef int TINT;
+
+    S1&lt;T&gt;::TINT f2(T t);
+};
+
+template &lt;typename T&gt;
+auto f1(T t) -&gt; typename S1&lt;T&gt;::S2 { typename S1&lt;T&gt;::S2 s2; return s2; }  // OK
+
+template &lt;typename T&gt;
+auto S1&lt;T&gt;::f2(T t) -&gt; TINT { return 0; }                                 // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.7. Use a trailing return type in preference to type disambiguation
+   using typename
+
+2. AUTOSAR C++14 Coding Guidelines
+   A8-2-1. When declaring function templates, the trailing return type
+   syntax shall be used if the return type depends on the type of parameters.
+
+</PRE>
+</BODY>
+</HTML>

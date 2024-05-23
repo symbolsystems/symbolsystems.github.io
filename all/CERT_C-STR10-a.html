@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Narrow and wide string literals shall not be concatenated [CERT_C-STR10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Narrow and wide string literals shall not be concatenated [CERT_C-STR10-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Concatenation of wide and narrow string literals leads to undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+wchar_t array[] = "Hello" L"World";    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+wchar_t array[] = L"Hello" L"World";   // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 2, Rule 2-13-5
+
+2. SEI CERT C Coding Standard
+   STR10-C. Do not concatenate different type of string literals
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR10-C.+Do+not+concatenate+different+type+of+string+literals">https://wiki.sei.cmu.edu/confluence/display/c/STR10-C.+Do+not+concatenate+different+type+of+string+literals</A>
+
+</PRE>
+</BODY>
+</HTML>

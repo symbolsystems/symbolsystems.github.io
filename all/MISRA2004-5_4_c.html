@@ -1,0 +1,75 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The name of typedef should not be the same as the name of type that is typedef'd [MISRA2004-5_4_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The name of typedef should not be the same as the name of type that is typedef'd [MISRA2004-5_4_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"No tag name shall be reused for any other purpose within the program.
+ISO 9899:1990 does not define the behaviour when an aggregate declaration
+uses a tag in different forms of type specifier." [MISRA C:2004]
+
+The rule reports a violation if the tag name is the same as the typedef
+name with which it is associated.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Reuse of tag names can lead to errors and confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct stag
+{
+    int a;
+} stag;                 // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef struct stag
+{
+    int a;
+} t_stag;               // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 5, Rule 5.4
+
+</PRE>
+</BODY>
+</HTML>

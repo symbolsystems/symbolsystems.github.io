@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The increment expression in a for loop will perform no action other than to change a single loop parameter to the next value for the loop [CODSTA-53]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The increment expression in a for loop will perform no action other than to change a single loop parameter to the next value for the loop [CODSTA-53-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The increment expression in a 'for' loop will perform no action other
+than to change a single loop parameter to the next value 'for' the loop."
+
+The rule reports a violation if:
+- in increment expression in a 'for' loop is used more than one assignment, or
+- increment expression contains an expression that is not used to modification
+  any variable
+
+If a function call is not in an assignment context then it is counted
+as an expression that modifies a variable.
+
+See also: CODSTA-49, CODSTA-52, MISRA2004-13_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is not recommended to use a 'for' loop with empty increment expression.
+See rule CODSTA-49. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo_int();
+
+void foo1(int* ptr)
+{
+    int var1 = 0;
+    int var2 = 0;
+    
+    for(var1 = 2 ; var1 &gt; 0; var1--, var2 = 3){}        // Violation - more than one variable
+                                                        // is modified in increment expression
+    
+    for(int i = 0, j = 2; i &lt; 10, j &lt; 20; i++, j++){}   // Violation - more than one variable
+                                                        // is modified in increment expression
+    
+    for(int i = 0; i &lt; 10; i = *ptr++){}                // Violation - more than one variable
+                                                        // is modified in increment expression
+    
+    for(var2 = var1; var2 &gt; 0; var2 + 1){}              // Violation - increment expression 
+                                                        // does not modify any variable
+	
+    for(var1 = 0; var1 &lt; 10; var1++, foo_int() ){}      // Violation - function call can cause 
+                                                        // the change of a variable 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo_int();
+
+void foo1()
+{
+    int var1 = 0;
+    int var2 = 0;
+    
+    for(var1 = 2 ; var1 &gt; 0; var1--){}                 // OK
+    
+    for(var1 = 2 ; var1 &gt; 0; var1 -= 1){}              // OK
+    
+    for(var1 = 2 ; var1 &gt; 0; var1 = var1 - 1){}        // OK
+    
+    for(var1 = 2 ; var1 &gt; 0;){}                        // OK
+    
+    for(var1 = 2 ; var1 &gt; 0; var1 = foo_int()){}       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-5-4. For-init-statement and expression should not perform actions other
+   than loop-counter initialization and modification
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 199
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer to use cbegin(), crbegin, cend(), crend() functions [CODSTA-MCPP-10_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer to use cbegin(), crbegin, cend(), crend() functions [CODSTA-MCPP-10_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In Modern C++ (from C++11) the use of const_iterators doesn't have
+limitations that exist in the previous versions of the C standard. You can use
+them always when an object pointed by an iterator does not need to be modified.
+If an iterator type is deduced based on its initializer, then you can change
+it replacing standard library functions begin(), end(), rbegin(), rend()
+by their const versions cbegin(), cend(), crbegin(), crend().
+
+This rule reports a violation if a local variable with the deduced
+iterator type points to an object that is not modified in the function
+and its initializer contains the call to one of the following functions:
+begin(), end(), rbegin(), rend().
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects only the container member functions begin(), end(),
+rbegin(), rend() from the standard library.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using of const_iterators can prevent exploits that could lead to modifying data.
+Dereferencing const_iterators produces a const object, which results in better
+overload resolution and helps you avoid security concerns.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+void foo()
+{
+    std::vector&lt;int&gt; values;
+    auto it = find(values.begin(), values.end(), 90);         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+void foo()
+{
+    std::vector&lt;int&gt; values;
+    auto it = find(values.cbegin(), values.cend(), 90);       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use of
+C++11 and C++14", Item 13
+
+</PRE>
+</BODY>
+</HTML>

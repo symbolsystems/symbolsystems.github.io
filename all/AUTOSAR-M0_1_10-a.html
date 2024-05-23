@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every defined function with external linkage shall be used at least once [AUTOSAR-M0_1_10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every defined function with external linkage shall be used at least once [AUTOSAR-M0_1_10-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+
+This rule detects definitions of unused functions that can be referred to
+from scopes of other translation units.
+The rule assumes that a function is used when it is called
+or has its address taken.
+
+This rule checks:
+- functions with external C linkage
+- functions with external C++ linkage that are not defined in anonymous
+  namespaces (except default constructors, destructors and virtual functions)
+
+See also: OPT-30
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+An unused function prototype or a definition of a 'main' function are not 
+considered to be a violation of this rule. 
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Functions or procedures that are not called may be symptomatic
+of a serious problem, such as missing paths." [MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* The functions 'foo1', 'foo2', foo3' are not used in the testing scope */
+void foo1() { /* ... */ }              /* Violation */
+
+struct S {
+    void foo2();
+    static void foo3() { /* ... */ }   /* Violation */
+};
+
+void S::foo2() { /* ... */ }           /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1() { /* ... */ }              /* OK */
+
+struct S {
+    void foo2();                       /* OK */
+    static void foo3() { /* ... */ }   /* OK */
+};
+
+void S::foo2() { /* ... */ }           /* OK */
+
+extern void foo4(int);                 /* OK - prototype */
+
+int main() {                           /* OK */
+    void (*fp)() = foo1;
+    struct S* sp;
+    sp-&gt;foo2();
+    S::foo3();
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+   
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-10
+
+2. AUTOSAR C++14 Coding Guidelines
+   M0-1-10. Every defined function should be called at least once
+
+</PRE>
+</BODY>
+</HTML>

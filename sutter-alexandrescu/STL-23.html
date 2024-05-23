@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Follow remove-like algorithms by erase to remove elements from a container [STL-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Follow remove-like algorithms by erase to remove elements from a container [STL-23-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Because the only way to eliminate an element from a container is to invoke
+a member function on that container, and because remove cannot know the
+container holding the elements on which it is operating, it is not possible for
+remove to eliminate elements from a container.
+...
+Once you understand that remove can't really remove things from a container,
+using it in conjunction with erase becomes second nature. The only other thing
+you need to bear in mind is that remove isn't the only algorithm for which this
+is the case. There are two other remove-like algorithms: remove_if and unique."
+[Scott Meyers, Chapter 5, item 32]
+
+This rule detects when the global function 'remove', 'remove_if' or 'unique'
+is used to remove an element from the container and the result is not passed to
+the 'erase' function call.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"In fact, remove and erase are so closely allied, the two are merged in the
+list member function remove. This is the only function in the STL named remove
+that eliminates elements from a container" [Scott Meyers, Chapter 5, item 32]
+
+#include &lt;algorithm&gt;
+#include &lt;list&gt;
+using namespace std;
+
+void bar()
+{
+  list&lt;int&gt; l;
+  for (int i = 1; i &lt;= 20; ++i) l.push_front(i);
+  l.remove(13);                                                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve efficiency and prevent memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+void foo( ) {
+  vector&lt;int&gt; coll;
+  for ( int i=0; i &lt; 10; i++ ) {
+    coll.push_back( i + 65 );
+  }
+  vector&lt;int&gt;::iterator pos;
+  pos = remove( coll.begin(), coll.end(), 5 );                   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+void foo( ) {
+  vector&lt;int&gt; coll;
+  for ( int i=0; i &lt; 10; i++ ) {
+    coll.push_back( i + 65 );
+  }
+  coll.erase( remove( coll.begin(), coll.end(), 5 ), coll.end() );     // OK                      
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "STL: Containers", Rule 82
+
+3. High Integrity C++ Coding Standard
+   17.5.1. Do not ignore the result of std::remove, std::remove_if or
+   std::unique
+
+4. Scott Meyers, "Effective STL: 50 Specific Ways to Improve Your Use of the 
+   Standard Template Library", Chapter 5, item 32
+
+</PRE>
+</BODY>
+</HTML>

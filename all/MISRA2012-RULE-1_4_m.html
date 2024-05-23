@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use following macros: RSIZE_MAX, L_tmpnam_s, TMP_MAX_S [MISRA2012-RULE-1_4_m]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use following macros: RSIZE_MAX, L_tmpnam_s, TMP_MAX_S [MISRA2012-RULE-1_4_m-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. The following
+shall not be used:
+- Other than defining __STDC_WANT_LIB_EXT1__ to '0', the facilities of Annex K
+(Boundschecking interfaces) shall not be used." [MISRA C:2012 Amendment 2]
+
+The Annex K specifies following macros:
+- 'RSIZE_MAX' defined the &lt;stdint.h&gt; header
+- 'L_tmpnam_s' and 'TMP_MAX_S' defined in &lt;stdio.h&gt; header
+
+This rule detects when 'RSIZE_MAX', 'L_tmpnam_s' and 'TMP_MAX_S' identifiers
+are used in the code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports all occurrences of the 'RSIZE_MAX', 'L_tmpnam_s'
+and 'TMP_MAX_S' identifiers. For this reason, the rule may detect 'RSIZE_MAX',
+L_tmpnam_s' or 'TMP_MAX_S' that does not represent the macro from 'stdint.h' 
+or 'stdio.h' library header files.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+int i = RSIZE_MAX;                                      // Violation
+
+#include &lt;stdio.h&gt;
+int j = TMP_MAX_S;                                      // Violation
+int k = L_tmpnam_s;                                     // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use 'RSIZE_MAX', 'L_tmpnam_s' and 'TMP_MAX_S' macros.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   Annex K, K.3.4 Integer types &lt;stdint.h&gt;, K.3.5 Input/output &lt;stdio.h&gt;
+ 
+
+</PRE>
+</BODY>
+</HTML>

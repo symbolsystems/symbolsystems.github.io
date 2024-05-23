@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A thread should not be created by another thread [MISRA2012-DIR-5_3]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A thread should not be created by another thread [MISRA2012-DIR-5_3-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a thread is created by another thread.
+
+This rule recognizes the following thread-creating functions:
+
+&lt;threads.h&gt; (C Standard Library)
+	int thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
+
+&lt;thread&gt; (C++ Standard Library)
+	std::thread::thread(Function&amp;&amp; f, Args&amp;&amp;... args)
+	
+&lt;pthread.h&gt; (POSIX)
+	int pthread_create(pthread_t *restrict thread, const pthread_attr_t *restrict attr, void *(*start_routine)(void *), void *restrict arg)
+
+&lt;processthreadsapi.h&gt; (Windows)
+	HANDLE CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId)
+
+If any of these functions is called (directly or indirectly) from a function which itself
+is a thread entry point, the rule will report a violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Dynamic thread creation causes uncertainty about the number of threads running
+at any given time, which increases error proneness and reduces analyzability.
+Also, the overhead of creating and destroying threads is hard to predict.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you keep a predictable number of threads running concurrently.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+
+pthread_t thread1, thread2;
+
+void *fun02( void* ignore )
+{
+    // ...
+    return 0;
+}
+
+void *fun01( void* ignore )
+{
+    // ...
+    pthread_create(&amp;thread2, NULL, &amp;fun02, NULL); // VIOLATION
+    return 0;
+}
+
+int main(void)
+{
+    pthread_create(&amp;thread1, NULL, &amp;fun01, NULL); // NO VIOLATION
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+A thread should not be created by another thread.
+
+#include &lt;pthread.h&gt;
+
+pthread_t thread1, thread2;
+
+void *fun02( void* ignore )
+{
+    // ...
+    return 0;
+}
+
+void *fun01( void* ignore )
+{
+    // ...
+    return 0;
+}
+
+int main(void)
+{
+    pthread_create(&amp;thread1, NULL, &amp;fun01, NULL); // NO VIOLATION
+    pthread_create(&amp;thread2, NULL, &amp;fun02, NULL); // NO VIOLATION
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.1 Section 7 - Directives, Dir 5.3
+
+</PRE>
+</BODY>
+</HTML>

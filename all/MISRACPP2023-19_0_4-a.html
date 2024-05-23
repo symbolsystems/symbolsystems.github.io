@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+#undef should only be used for macros defined previously in the same file [MISRACPP2023-19_0_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+#undef should only be used for macros defined previously in the same file [MISRACPP2023-19_0_4-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The use of the #undef directive may lead to confusion about
+the existence or meaning of the macro used in the code.
+
+Sometimes it is needed to reduce the number of active macros, so this
+rule allows you to use #undef for macros defined in the same file.
+
+This rule detects #undef directives for macros that are not defined
+in the same file by the #define directive.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid confusion regarding the existence or meaning
+of a given macro.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// File.h
+#define M 10
+
+// File.cpp
+#include "File.h"
+//...
+#undef M           // Violation - M is not defined within the current file
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// File.cpp
+#define M 10
+//...
+#undef M          // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.0.4 #undef should only be used for macros defined previously in the same file
+
+</PRE>
+</BODY>
+</HTML>

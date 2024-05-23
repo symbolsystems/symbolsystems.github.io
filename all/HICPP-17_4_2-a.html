@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer 'std::make_shared' to the direct use of new [HICPP-17_4_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer 'std::make_shared' to the direct use of new [HICPP-17_4_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Compared to the direct use of the 'new' operator, the std::make_shared function
+is more efficient and exception safe, as well as increases the speed of code
+execution, potentially reducing the total memory footprint for a program.
+
+This rule detects when a 'new' operator is used when a smart pointer
+'std::shared_ptr' is created.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+There are several cases when std::make_shared cannot or should not be used:
+  1. When a custom deleter needs to be used. For example:
+
+       void logAndDelete(int* name);
+       std::shared_ptr&lt;int&gt; custShPtr(new int, logAndDelete);          // OK
+
+  2. When braced initializers need to be passed. For example:
+
+       std::shared_ptr&lt;int&gt; s2(new int[5] {1,2,3,4,5});                // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The std::make_shared function eliminates source code duplication, improves
+exception safety, and generates code that is more concise and faster.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+std::shared_ptr&lt;int&gt; s(new int);                   // Violation
+
+void foo() {
+  std::shared_ptr&lt;int&gt; sp;
+  sp.reset(new int);                               // Violation
+  sp.reset();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+std::shared_ptr&lt;int&gt; s(std::make_shared&lt;int&gt;());   // OK
+
+void foo() {
+  std::shared_ptr&lt;int&gt; sp;
+  sp = std::make_shared&lt;int&gt;();                    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A20-8-6. std::make_shared shall be used to construct objects owned by
+   std::shared_ptr
+
+2. High Integrity C++ Coding Standard
+   17.4.2. Use API calls that construct objects in place
+
+3. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 4: "Smart Pointers.",
+   Item 21: "Prefer std::make_unique and std::make_shared to direct use of new."
+
+</PRE>
+</BODY>
+</HTML>

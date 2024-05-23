@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The controlling expression of a generic selection shall have an essential type that matches its standard type [MISRAC2012-RULE_23_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The controlling expression of a generic selection shall have an essential type that matches its standard type [MISRAC2012-RULE_23_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The association selected by a generic selection must be in line with the type
+system under which the code was designed, in order to be useful and consistent.
+Code written under MISRA guidelines is subject to the essential type system,
+and therefore if the selected type is not consistent with the essential type
+of the controlling expression, the generic selection will have violated the
+type system used for the design.
+Because generic selections choose a standard type by name, they can expose
+this difference if used with an argument that has inconsistent essential
+and standard types." [MISRA C:2012 Amendment 3]
+
+The rule detects when the essential type of the controlling expression
+of a generic selection is different than its standard type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"This rule does not apply to integer constant expressions which would have
+an essentially signed or unsigned type of lower rank than 'int', because
+of the Type of Lowest Rank rule, but are neither character constants
+nor essentially boolean." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define GENERIC(X) (_Generic ((X) \
+ , int: 1                         \
+ , default: 2))
+
+void f1()
+{
+    short s = 0;
+    GENERIC (s + 1);                   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by ensuring that the essential type of the controlling
+expression is the same as its standard type.
+
+#define GENERIC(X) (_Generic ((X) \
+ , int: 1                         \
+ , default: 2))
+
+void f1()
+{
+    short s = 1;
+    GENERIC ((int)(s + 1));            // OK
+    GENERIC (10);                      // OK - Exception
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.6
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Appendix D Essential types
+
+</PRE>
+</BODY>
+</HTML>

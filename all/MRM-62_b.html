@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'std::unique_ptr::release' function should not be used [MRM-62_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'std::unique_ptr::release' function should not be used [MRM-62_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The dynamic memory should be managed automatically using facilities
+such as 'std::make_unique' or 'std::vector'.
+
+This rule detects when the 'std::unique_ptr::release' function
+is called or when its address is taken.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+struct S
+{
+    S();
+    ~S();
+};
+
+void del(S* foo)
+{
+    delete foo;
+}
+
+void f1()
+{
+    std::unique_ptr&lt;S&gt; managed_foo(new S);
+    del(managed_foo.release());                      // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'std::unique_ptr::release' function.
+
+#include &lt;memory&gt;
+
+struct S
+{
+    S();
+    ~S();
+};
+
+void f()
+{
+    std::unique_ptr&lt;S&gt; v1 = std::make_unique&lt;S&gt;();    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.2 Dynamic memory shall be managed automatically
+
+</PRE>
+</BODY>
+</HTML>

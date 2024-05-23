@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If you have a non-trivial copy constructor or copy assignment operator, you should also declare a destructor [MRM-40_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If you have a non-trivial copy constructor or copy assignment operator, you should also declare a destructor [MRM-40_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If you define a non-trivial copy constructor or copy assignment operator, you
+should probably have a destructor as well. If the "special" work in the copying
+functions is intended to allocate or duplicate some resources, you probably need
+to deallocate it in the destructor.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks if the copy constructor or copy assignment operator is
+non-empty. It does not check if you actually allocate some resources there.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents memory management problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A // Violation - no destructor
+{
+    int *p;
+    A&amp; operator=(const A&amp;o) {
+        p = new int(*o.p);
+        return *this;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct A // OK - destructor declared
+{
+    int *p;
+    A&amp; operator=(const A&amp;o) {
+        p = new int(*o.p);
+        return *this;
+    }
+    ~A();
+};
+
+class B // OK - empty copy constructor
+{
+    B(const B&amp;) {
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 52
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

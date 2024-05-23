@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The first or the last label of a switch statement should be the 'default' label unless all enumeration values are tested [MISRACPP2023-9_4_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The first or the last label of a switch statement should be the 'default' label unless all enumeration values are tested [MISRACPP2023-9_4_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Using the 'default' label in every switch statement is a defensive programming
+practice and ensures that the programmer will consider a scenario where none of
+the other options have been selected. Placing the 'default' label as the first
+or the last label in a switch makes the code easier to review.
+
+This rule detects when a 'switch' statement does not contain the 'default'
+label or when the 'default' label is not the first or the last label
+in a switch.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The 'default' label is not required when the condition of a switch contains
+an expression of an unscoped enumeration type that does not have a fixed
+underlying type, and all its enumerators are used as indexes in case labels.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to improve the readability and maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Colours { RED, BLUE, GREEN } colour;
+
+void f1(int i)
+{
+    switch( i )              // Violation
+    {
+        case 0:
+            break;
+        case 1:
+        case 2:
+            break;
+    }
+
+    switch( colour )         // Violation
+    {
+        case RED:
+            break;
+        case GREEN:
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Colours { RED, BLUE, GREEN } colour;
+
+void foo(int i)
+{
+    switch( i )              // OK
+    {
+        case 0:
+            break;
+        case 1:
+        case 2:
+            break;
+        default:
+            // Suitable comment
+            break;
+    }
+
+    switch( colour )         // OK - Exception
+    {
+        case RED:
+            break;
+        case BLUE:
+            break;
+        case GREEN:
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+</PRE>
+</BODY>
+</HTML>

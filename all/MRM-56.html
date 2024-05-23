@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Copy assignment operators should not have side effects that could affect copying the object [MRM-56]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Copy assignment operators should not have side effects that could affect copying the object [MRM-56-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is expected behavior that the move/copy assigned operator are only used
+to move/copy the object of the class type and possibly set moved-from object
+to a valid state. Those operators are not supposed to provide any performance
+overhead or side effects that could affect moving or copying the object."
+[AUTOSAR A6-2-1]
+
+This rule detects when a copy assignment operator function contains one of
+the following:
+- A member variable that is assigned with an expression other than simply
+  copying this member variable.
+- A member variable that is modified by using a compound assignment operator
+  or an increment/decrement operator.
+
+See also: MRM-57
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check assignment to variables of pointer type.
+
+class C1 {
+public:
+    C1&amp; operator=(const C1&amp; rhs) {
+        ptr1 = new int(*rhs.ptr1);     // OK - not reported
+        return *this;
+    }
+
+private:
+    int* ptr1;
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent performance overhead and unexpected side effects
+while copying objects.
+In addition, enforcing this rule allows you to improve code maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int copy(int);
+
+class C1 {
+public:
+    C1&amp; operator=(const C1&amp; rhs) {
+        if(&amp;rhs == this ) {
+            return *this;
+        }
+        m1 = rhs.m1 * 2;               // Violation
+        m2 += rhs.m2;                  // Violation
+        m3 = copy(rhs.m3);             // Violation
+        m4 = rhs.m3;                   // Violation
+        return *this;
+    }
+
+private:
+    int m1;
+    int m2;
+    int m3;
+    int m4;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, ensure that the copy assignment operator is only used
+to copy the object.
+
+class C1 {
+public:
+    C1&amp; operator=(const C1&amp; rhs) {
+        if(&amp;rhs == this ) {
+            return *this;
+        }
+        m1 = rhs.m1;                   // OK
+        return *this;
+    }
+
+private:
+    int m1;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-2-1 Move and copy assignment operators shall either move or respectively
+   copy base classes and data members of a class, without any side effects.
+
+</PRE>
+</BODY>
+</HTML>

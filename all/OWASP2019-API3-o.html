@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid functions which use time from MFC library [OWASP2019-API3-o]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid functions which use time from MFC library [OWASP2019-API3-o-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects usage of time-related functions from MFC library.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents the use of functions from MFC library, which may open security holes. 
+Getting the current system time might be suspicious and could lead to security
+problems if used as a key for accessing sensitive information or allow access
+to specific functions. Do not use the following functions:
+- GetTime
+- GetYear
+- GetMonth
+- GetDay
+- GetHour
+- GetMinute
+- GetSecond
+- GetDayOfWeek
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;afx.h&gt;
+void dangerFunction(time_t t);
+int main () {
+    CTime t(NULL);
+    time_t Time = t.GetTime(); // Violation
+    t.GetHour();               // Violation 
+    t.GetMinute();             // Violation
+    dangerFunction(Time);
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove usage of functions from MFC library, which may open security hole.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. David A. Wheeler, Programming Secure Applications for Unix-like Systems (pdf),
+   <A HREF="http://www.dwheeler.com/secure-programs">http://www.dwheeler.com/secure-programs</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. OWASP API Security Top 10-2019
+   API3-Excessive Data Exposure
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

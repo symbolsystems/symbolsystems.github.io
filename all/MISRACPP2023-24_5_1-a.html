@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The character handling functions from &lt;cctype&gt; and &lt;cwctype&gt; shall not be used [MISRACPP2023-24_5_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The character handling functions from &lt;cctype&gt; and &lt;cwctype&gt; shall not be used [MISRACPP2023-24_5_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When values other than in the range of type unsigned char or a negative value
+corresponding to EOF are passed as an argument to a function declared
+in the Standard Library header &lt;cctype&gt; or &lt;cwctype&gt; (or its equivalent
+&lt;ctype.h&gt; or &lt;wctype.h&gt;), then this results in undefined behavior.
+
+This rule detects when functions with the following names that are defined
+with extern C linkage (in external library or locally by the user) are used
+(called or their addresses are taken):
+'isalnum', 'isalpha', 'isblank', 'iscntrl', 'isdigit', 'isgraph', 'islower',
+'isprint', 'ispunct', 'isspace', 'isupper', 'isxdigit', 'tolower', 'toupper',
+'iswalnum', 'iswalpha', 'iswblank', 'iswcntrl', 'iswctype', 'iswdigit',
+'iswgraph', 'iswlower', 'iswprint', 'iswpunct', 'iswspace', 'iswupper',
+'iswxdigit', 'towctrans', 'towlower', 'towupper', 'wctrans', 'wctype'.
+
+This rule detects function-like macros with the above names, when one
+of the headers: &lt;cctype&gt;, &lt;ctype.h&gt;, &lt;cwctype&gt; or &lt;wctype.h&gt; is included
+in a translation unit.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule recommends using equivalent classification and case mapping functions
+from the &lt;locale&gt; header that are safer to use.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cctype&gt;
+
+void f1(int a)
+{
+  std::isalnum(a);                    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by using functions from the &lt;locale&gt; header.
+
+#include &lt;locale&gt;
+
+void f1(int a, const char* loc)
+{
+  std::isalnum(a, std::locale(loc));  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 24.5.1 The character handling functions from &lt;cctype&gt; and &lt;cwctype&gt; shall not be used
+
+</PRE>
+</BODY>
+</HTML>

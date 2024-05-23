@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'std::forward' function should be used to forward forwarding references [HICPP-17_3_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'std::forward' function should be used to forward forwarding references [HICPP-17_3_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'std::move' function unconditionally casts an rvalue reference to rvalue,
+while the 'std::forward' function does the same if and only if the argument was
+initialized with an rvalue.(...)
+'std::forward' should be used for forwarding forwarding references to other
+functions, as forwarding reference might be bound to lvalue or rvalue"
+[AUTOSAR A18-9-2]
+
+This rule detects when a forwarding reference is passed as an argument
+to a function other than 'std::forward'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A forwarding reference is a function argument that is declared as an rvalue
+reference to a cv-unqualified function template parameter.
+
+A parameter of type 'auto&amp;&amp;' is also considered as a forwarding reference
+for the purpose of this rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code consistency and clarity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;utility&gt;
+class C { };
+
+void foo(C&amp; c){}
+void foo(C&amp;&amp; c){}
+
+template&lt;class T&gt;
+void f1(T&amp;&amp; arg)
+{
+    foo(arg);                   // Violation
+}
+
+auto a1 = [](auto&amp;&amp; x) {
+    foo(std::move(x));          // Violation
+};
+
+C retC();
+
+void instance(C c)
+{
+    f1(retC());
+    a1(retC());
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use the 'std::forward' function to pass the forwarding
+reference.
+
+#include &lt;utility&gt;
+class C { };
+
+void foo(C&amp; c){}
+void foo(C&amp;&amp; c){}
+
+template&lt;class T&gt;
+void f1(T&amp;&amp; arg)
+{
+  foo(std::forward&lt;T&gt;(arg));             // OK
+}
+
+auto a1 = [](auto&amp;&amp; x) {
+    foo(std::forward&lt;decltype(x)&gt;(x));   // OK
+};
+
+C retC();
+
+void instance(C c)
+{
+    f1(retC());
+    a1(retC());
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-9-2. Forwarding values to other functions shall be done via:
+   (1) std::move if the value is an rvalue reference,
+   (2) std::forward if the value is forwarding reference.
+
+2. High Integrity C++ Coding Standard
+   17.3.2. Use std::forward to forward universal references
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 28.6.2 Forwarding references and std::forward shall be used together
+
+4. Scott Meyers,
+   "Effective Modern C++: 42 Specific ways to improve your use C++11 and C++14",
+   O'Reilly, Copyright 2015, Chapter 5:
+   "Rvalue References, Move Semantics, and Perfect Forwarding", Item 25
+
+</PRE>
+</BODY>
+</HTML>

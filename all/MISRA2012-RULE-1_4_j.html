@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The '__STDC_WANT_LIB_EXT1__' macro should not be defined to the value other than '0' [MISRA2012-RULE-1_4_j]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The '__STDC_WANT_LIB_EXT1__' macro should not be defined to the value other than '0' [MISRA2012-RULE-1_4_j-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. . .
+- Other than defining __STDC_WANT_LIB_EXT1__ to '0', the facilities of Annex K
+ (Bounds-checking interfaces) shall not be used." [MISRA C:2012 Amendment 2]
+
+"The functions, macros, and types declared or defined in K.3 and its subclauses
+are declared and defined by their respective headers if __STDC_WANT_LIB_EXT1__
+is defined as a macro which expands to the integer constant 1 at the point
+in the source file where the appropriate header is first included."
+[ISO/IEC 9899:2011]
+
+The rule detects when the '__STDC_WANT_LIB_EXT1__' macro is defined
+to a value other than '0'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define  __STDC_WANT_LIB_EXT1__ 1              /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by defining the '__STDC_WANT_LIB_EXT1__' macro to 0.
+
+#define  __STDC_WANT_LIB_EXT1__ 0              /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   Annex K, K.3.1.1 Standard headers
+
+</PRE>
+</BODY>
+</HTML>

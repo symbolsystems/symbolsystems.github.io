@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An initializer using chained designators shall not contain initializers without designators [PB-80]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An initializer using chained designators shall not contain initializers without designators [PB-80-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When an aggregate initializer uses in an initializer list a chained designator
+to specify an element in a sub-object, but not all elements in that list have
+explicit designators, then it can be not clear which element of the object is
+being initialized. Using explicit designators for each initializer at the same
+level makes the initializer more clear for the programmer.
+
+This rule detects when an element of the object is initialized using
+a chained designator and some element at the same level is initialized
+without a designator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that the chained designator is a designator list with more
+than one item.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule allows to omit designators for a braced sub-object initializer if it
+does not contain any chained designators and if any element of this sub-object
+is not initialized using chained designators.
+
+int arr[2][2] = {
+    [0][0] = 1,         // OK
+    [0][1] = 2,         // OK
+    [1] = { 1, 2 }      // OK - Exception
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected behavior and confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct S1
+{
+    int m11;
+    int m12;
+} TS1;
+
+typedef struct S2
+{
+    int m21;
+    TS1 mts1;
+    int m22;
+} TS2;
+
+TS2 ts2 = {
+    1,                   // Violation
+    .mts1.m11 = 2,
+    3,                   // Violation
+};
+
+int arr[2][2] = {
+    1,                   // Violation
+    [0][1] = 2,
+    3                    // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef struct S1
+{
+    int m11;
+    int m12;
+} TS1;
+
+typedef struct S2
+{
+    int m21;
+    TS1 mts1;
+    int m22;
+} TS2;
+
+TS2 ts2 = {
+    1,                  // OK
+    {2, 3},             // OK
+    4,                  // OK
+};
+
+int arr[2][2] = {
+    [0][0] = 1,         // OK
+    [0][1] = 2,         // OK
+    [1][0] = 1,         // OK
+    [1][1] = 2,         // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.3 Rule 9.6
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.9 Initialization
+
+</PRE>
+</BODY>
+</HTML>

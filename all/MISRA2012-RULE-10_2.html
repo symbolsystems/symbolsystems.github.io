@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Expressions of essentially character type shall not be used inappropriately in addition and subtraction operations [MISRA2012-RULE-10_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Expressions of essentially character type shall not be used inappropriately in addition and subtraction operations [MISRA2012-RULE-10_2-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Expressions of essentially character type shall not be used inappropriately
+in addition and subtraction operations.
+
+The appropriate uses are:
+1. For the + operator, one operand shall have essentially character type and the
+   other shall have essentially signed type or essentially unsigned type having
+   a rank lower than or equal to that of int. The result of the operation has
+   essentially character type.
+2. For the - operator, the first operand shall have essentially character type
+   and the second shall have:
+   - essentially signed type or essentially unsigned type or essentially
+     character type; and
+   - a rank lower than or equal to that of int
+If both operands have essentially character type then the result
+has the standard type (usually int in this case) else the result
+has essentially character type." [MISRA C:2012 with Technical Corrigendum 2 Rule 10.2]
+
+This rule checks operands of the following operators:
++ (binary), -(binary) (and appropriate compound assignments: +=,-=)
+
+A violation is reported if the type of one operand is of essentially character
+and the type of the other operand is different than the types specified above
+in points 1 and 2.
+
+The term "essential type" is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents confusion and ensures that expressions with the essentially
+character type are not used arithmetically.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef enum {EN1, EN2} TE1;   /* essentially enum type */
+enum { EN11, EN12 } en1;       /* essentially enum type */
+
+void foo()
+{
+    char ch;
+    unsigned long ul;
+    TE1 te1;
+    float f;
+    ch   + EN1;         /* Violation - "character"     + "enum constant" */
+    ch   -= f;          /* Violation - "character"     - "floating" */
+    EN12 - ch;          /* Violation - "enum constant" - "character" */
+    en1  += ch;         /* Violation - "enum"          + "character" */
+    1    - ch;          /* Violation - "signed"        - "character" */
+    te1  -= '1';        /* Violation - "enum"          - "character" */
+    ch   + ul;          /* Violation - "character"     + "unsigned long" */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+enum { EN11, EN12 };    /* EN11, EN22 have essentially signed type */
+
+void foo( int res )
+{
+    char ch;
+    int  i;
+    unsigned char uch;
+    float f;
+    EN11 + ch;          /* OK - "signed"    + "character" */
+    1u   + ch;          /* OK - "unsigned"  + "character" */
+    ch   - EN12;        /* OK - "character" - signed */
+    ch   -= i;          /* OK - "character" - int */
+    ch   -= 'a';        /* OK - "character" - "character" */
+    uch  += ch;         /* OK - "unsigned character" + "character" */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.2
+
+2. MISRA C:2012 Technical Corrigendum 2, Technical clarification of MISRA C:2012
+   Section 3: Clarification of rules, 3.9 Rule 10.2
+
+</PRE>
+</BODY>
+</HTML>

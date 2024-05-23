@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass 0 value as a size argument to the realloc function [BD-API-REALLOC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass 0 value as a size argument to the realloc function [BD-API-REALLOC-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Invoking realloc with a size argument equal to zero is an obsolescent feature."
+[ISO/IEC 9899:2017]
+
+"Obsolescent language features shall not be used."
+[MISRA C:2012 Amendment 3]
+
+This rule detects cases when zero value is passed to the realloc function 
+as a size parameter.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2022.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Passing zero value as a size parameter to the realloc function is an
+obsolescent feature and may cause different implementation-defined behaviors.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent obsolescent realloc function usage which leads to 
+implementation-defined results.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+static void example(int *ptr)
+{
+    int x = 0;
+    ptr = realloc(ptr, x); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Do not pass zero value as a size parameter to the realloc() function.
+
+#include &lt;stdlib.h&gt;
+
+static void repair(int *ptr)
+{
+    int x = sizeof(int);
+    ptr = realloc(ptr, x); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018 Phase 2 - New C11/C18 Features
+2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+ISO/IEC 9899:2017 Programming languages -- C
+7.31 Future library directions
+7.31.12 General utilities &lt;stdlib.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

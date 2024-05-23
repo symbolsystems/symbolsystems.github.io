@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Never use unfiltered data from an untrusted user as the format parameter [APSC_DV-002560-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Never use unfiltered data from an untrusted user as the format parameter [APSC_DV-002560-d-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Never use unfiltered data from an untrusted user as a format parameter.
+Failing this guideline usually results in a format string vulnerability.
+A particularly nasty case is printf's %n conversion specification, 
+which writes the number of characters written so far into the pointer argument;
+using this, an attacker can overwrite a value that was intended for printing.
+
+The rule reports a violation if an argument passed as format parameter in call 
+of 'printf' function (or other similar function, e.g. 'sprintf', 'fprintf', ...)
+contains parameter, variable or function's call.  
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents attempts of overwriting a value that was intended for printing.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+const char* ret_string(char*);
+
+void foo( char* stringFromUntrustedUser, char* data ) {
+    const char *message = "string";
+
+    printf( stringFromUntrustedUser );          // Violation
+    printf( ret_string("%s"), data );           // Violation
+    printf( message );                          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+const char* ret_string(char*);
+
+void foo( char* stringFromUntrustedUser, char* data ) {
+
+    printf( "%s", stringFromUntrustedUser );    // OK
+    printf( "%s", data );                       // OK
+    printf( "string");                          // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. David A. Wheeler, Programming Secure Applications for Unix-like Systems (pdf), 
+   <A HREF="http://www.dwheeler.com/secure-programs">http://www.dwheeler.com/secure-programs</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. SEI CERT C Coding Standard
+   FIO30-C. Exclude user input from format strings
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO30-C.+Exclude+user+input+from+format+strings">https://wiki.sei.cmu.edu/confluence/display/c/FIO30-C.+Exclude+user+input+from+format+strings</A>
+
+4. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002520: The application must protect from canonical representation vulnerabilities
+
+5. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002530: The application must validate all input
+
+6. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002550: The application must not be vulnerable to XML-oriented attacks
+
+7. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002560: The application must not be subject to input handling vulnerabilities
+
+</PRE>
+</BODY>
+</HTML>

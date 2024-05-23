@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All non-empty functions with void return type shall have external side effect(s) [OPT-32]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All non-empty functions with void return type shall have external side effect(s) [OPT-32-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A function which does not return a value and which does not have external side
+effects will only consume time and will not contribute to the generation of any
+outputs, which may not meet developer expectations.
+The following are examples of external side effects:
+- Reading or writing to a file, stream, etc.;
+- Changing the value of a non local variable;
+- Changing the value of an argument having reference type;
+- Using a volatile object;
+- Raising an exception." [MISRA C++:2008]
+
+This rule detects when a non-empty function with void return type does not
+have an external side effect.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. Every call to a function is detected as a side effect.
+
+int f1(int i) {
+    // No side effect
+    return i;
+}
+
+class C
+{
+public:
+    C(){}
+};
+
+void fs1() {        // No violation even if 'f1' does not have a side effect
+    int i = f1(0);
+}
+
+void fs2() {        // No violation - implicit call to the 'C()' constructor
+                    // is detected even if it does not have a side effect
+   C c;
+}
+
+2. Violations are not reported on empty functions.
+
+void f3() {}       // No violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to avoid unnecessary time consumption and developer
+confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( void ) // Violation
+{
+    int local;
+    local = 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by improving or removing the function.
+
+int foo( int p ) // OK
+{
+    int local;
+    local = 10*p;
+    /* ... */
+    return local;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M0-1-8. All functions with void return type shall have external side
+   effect(s)
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-8
+
+</PRE>
+</BODY>
+</HTML>

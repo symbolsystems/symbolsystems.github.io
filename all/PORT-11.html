@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast an int pointer to a long pointer [PORT-11]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast an int pointer to a long pointer [PORT-11-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to an int is not compatible with a pointer to a long. Even the use
+of explicit casting is not correct."
+A pointer to an int has 4-byte alignment, and a pointer to long has 8-byte
+alignment on some 64-bit platforms.
+See also: PORT-05, PORT-06, PORT-07, PORT-08, PORT-10, PORT-12
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks only explicit casts.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents misaligned memory accesses on 64-bit platforms.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f2005() {
+    int *intPointer;
+    long *longPointer;
+    longPointer = (long *)intPointer;	// Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not cast an int pointer to a long pointer.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 18 Portable Code - 18.2 Sizes of Types - Port. Rec. 2
+
+2. <A HREF="http://developers.sun.com/solaris/articles/64_bit_driver.html">http://developers.sun.com/solaris/articles/64_bit_driver.html</A>
+   3.1.1 Converting Driver Code to Be 64-Bit Clean, Example 3
+
+</PRE>
+</BODY>
+</HTML>

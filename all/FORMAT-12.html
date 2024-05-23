@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be a single ASCII space character between a conditional statement keyword and its opening parenthesis [FORMAT-12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be a single ASCII space character between a conditional statement keyword and its opening parenthesis [FORMAT-12-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if between a conditional statement keyword
+and its opening parenthesis:
+- there is no space
+- there is more than one space
+- there is a tab or comment
+or the opening parenthesis is not in the same line as conditional statement
+keyword.
+As conditional statement keywords are recognized: if, for, switch, while
+See also: FORMAT-13
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int x, int y)
+{
+   if(x &lt; y){}                 /* Violation - no space */
+   if  (x &gt; y){}               /* Violation - two spaces */
+   for	(;;);                  /* Violation - tab is used */
+   while
+       (x &lt; 10)                /* Violation in a line above */
+       x++;
+   do{ /* .. */ }while(y &gt; 1); /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int x, int y)
+{
+   if (x &lt; y){}                 /* OK */
+   if (x &gt; y){}                 /* OK */
+   for (;;);                    /* OK */
+   while (x &lt; 10)               /* OK */
+       x++;
+   do{ /* .. */ }while (y &gt; 1); /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

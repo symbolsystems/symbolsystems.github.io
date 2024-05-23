@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Return value of a function must match declared return type [PB-05]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Return value of a function must match declared return type [PB-05-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a type of returned value does not match
+to declared function's return type.
+A violation is not reported if a function returns:
+- a typedef or reference to returned type
+- a type that differs only by const or volatile qualifier from returned type
+- a pointer to non-void object or to function
+- a reference to base class of returned type
+See also: PORT-14, MISRA2004-10_1_e, PB-06, PB-11
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+In C language the type of a single character constant is 'int', but this rule
+assumes it as 'char' (similarly as is defined in C++) to prevents confusions. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents implicit conversions which may result in a loss of information
+and improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+float foo1( int i ) {
+    return i;            // Violation
+}
+
+void* foo3(int* ptr ) {
+    return ptr;          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef int int_t;
+
+float foo1( int i ) {
+    return (float)i;            // OK
+}
+
+void* foo2(int* ptr ) {
+    return (void*)ptr;          // OK
+}
+
+int foo3(const volatile int_t cvi ) {
+    return cvi;            // OK
+}
+
+int foo4(int&amp; ref ) {
+    return ref;            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

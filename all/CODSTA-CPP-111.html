@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'NULL' identifier should not be used [CODSTA-CPP-111]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'NULL' identifier should not be used [CODSTA-CPP-111-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The macro NULL, defined in any of &lt;clocale&gt;, &lt;cstddef&gt;, &lt;cstdio&gt;, &lt;cstdlib&gt;,
+&lt;cstring&gt;, &lt;ctime&gt;, or &lt;cwchar&gt;, is an implementation-defined C++ null pointer
+constant in this International Standard" [ISO/IEC 14882:2011]
+
+The 'NULL' macro usually expands to literal constant '0' and can be used
+as a pointer or integral type, which can be confusing for developers.
+
+This rule detects when the 'NULL' identifier is used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define NULL 0              // Violation
+void f1()
+{
+    int one = NULL + 1;     // Violation
+}
+#undef NULL                 // Violation
+
+#include &lt;cstdlib&gt;
+void f2()
+{
+    int* ptr = NULL;        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define MY_NULL 0            // OK
+void f1()
+{
+    int one = MY_NULL + 1;   // OK
+}
+#undef MY_NULL               // OK
+
+#include &lt;cstdlib&gt;
+void f2()
+{
+    int* ptr = nullptr;      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.11.1 nullptr shall be the only form of the null-pointer-constant
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   C.3 C standard library, C.3.2.4 Macro NULL
+
+</PRE>
+</BODY>
+</HTML>

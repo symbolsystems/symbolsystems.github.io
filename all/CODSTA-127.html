@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A conversion should not be performed between a pointer to object and an integer type [CODSTA-127]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A conversion should not be performed between a pointer to object and an integer type [CODSTA-127-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversion of an integer into a pointer to object may result in a pointer
+that is not correctly aligned, resulting in undefined behaviour.
+Conversion of a pointer or a array to object into an integer may produce a
+value that cannot be represented in the chosen integer type resulting
+in undefined behaviour." [MISRA C:2012]
+
+The rule detects when a conversion (explicit or implicit) is performed between
+an integral type and a pointer to object type.
+
+Implicit conversion of a pointer is detected in the following cases:
+- using an assignment operator,
+- using an expression to initialize all or part of an object,
+- passing an argument to a function call,
+- returning an expression from a function.
+
+The rule checks only conversions to a pointer to object type. Conversions
+to pointer to function, pointer to void and to pointer to incomplete types
+are not reported.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The C99 types intptr_t and uintptr_t, declared in &lt;stdint.h&gt;, are respectively
+signed and unsigned integer types capable of representing pointer values.
+Despite this, conversions between a pointer to object and these types
+is not permitted by this rule because their use does not avoid the undefined
+behaviour associated with misaligned pointers." [MISRA C:2012]
+
+"Casting between a pointer and an integer type should be avoided where possible,
+but may be necessary when addressing memory mapped registers or other hardware
+specific features. If casting between integers and pointers is used, care should
+be taken to ensure that any pointers produced do not give rise to the undefined
+behaviour" [MISRA C:2012]
+
+"Except when it is the operand of the sizeof operator or the unary &amp; operator,
+or is a string literal used to initialize an array, an expression that has type
+'array of type' is converted to an expression with type 'pointer to type' that
+points to the initial element of the array object and is not an lvalue."
+[ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A null pointer constant that has integer type may be converted into a pointer
+to object." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrect code */
+void f1 (int*);
+void f2 (int );
+
+int foo (int* ptr1)
+{
+    int i;
+    unsigned char c = ptr1;  /* Violation - implicit conversion
+                                from pointer to int type to unsigned
+                                char type in initialization */
+
+    int arr1[10];
+    unsigned char c1 = arr1; /* Violation - implicit conversion
+                                from array of int type to unsigned
+                                char type in initialization */
+
+    signed int* ptr2 = c;    /* Violation - implicit conversion
+                                from unsigned char type to pointer
+                                to int type in initialization */
+
+    i = (int) ptr1;          /* Violation - explicit cast is not allowed */
+
+    f1(0x0FF);               /* Violation - implicit conversion of integer
+                                constant to pointer to int type in function
+                                call */
+
+    f2(ptr1 - 1);            /* Violation - implicit conversion of expression
+                                of pointer to int type to int type in function
+                                call */
+
+    return ptr2;             /* Violation - implicit conversion from pointer
+                                to int type to int type in function return */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by the rule */
+#define NULL 0
+
+void f1 (int );
+
+int foo (int* ptr1, void* vptr)
+{
+    signed int* ptr2 = NULL; /* OK - exception for null pointer constant */
+
+    f2(ptr1 - ptr2);         /* OK - the expression passed as argument to
+                                function f2 has integral type */
+
+    ptr1 += 1;               /* OK - no conversion is used */
+
+    return vptr;             /* OK - the rule does not check conversion
+                                between pointer to void type and integer type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.4
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2 Other operands, 6.5 Expressions
+
+</PRE>
+</BODY>
+</HTML>

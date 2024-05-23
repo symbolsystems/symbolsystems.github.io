@@ -1,0 +1,195 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A function shall not return a pointer or reference to a non-static local object [MISRA2012-RULE-1_3_m]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A function shall not return a pointer or reference to a non-static local object [MISRA2012-RULE-1_3_m-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the address of an automatic object is returned from a function, then 
+the object containing the address may exist beyond the time when the original
+object ceases to exist (and its address becomes invalid)." [MISRA C:2004]
+
+The rule reports a violation if a function returns a reference or a pointer
+to a non-static local variable or to a parameter.
+
+See also: MRM-23
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Automatic variables are destroyed at the end of the function call.
+Returning a reference or pointer to such a variable allows it
+to be used after its destruction, leading to undefined behaviour."
+[MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule has only limited support for control flow checking. For example,
+a violation will not be reported if an address to a local object is first
+assigned to an expression and then this expression is returned from a function.
+
+struct S
+{
+    int* ps;
+};
+
+int* foo1()
+{
+    int var;
+    int* tab[3];
+    tab[1] = &amp;var;        // assigned to expression "tab[1]"
+    return tab[1];        // Not reported
+}
+
+int* foo2(int p)
+{
+    struct S s;
+    s.ps = &amp;p;            // assigned to expression "s.ps"
+    return s.ps;          // Not reported
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int* foo1(){
+    int i;
+    return &amp;i;     // Violation - an address of local variable returned
+}
+
+int* foo2(int p) {
+    return &amp;p;     // Violation - an address of parameter returned
+}
+
+int* foo3(){
+    int i;
+    int* p = &amp;i;
+    return p;      // Violation - an address of local variable returned
+}
+
+int&amp; foo4(){
+    int i;
+    return i;      // Violation - reference to local variable returned
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+A function shall not return a pointer or reference to an automatic variable.
+
+/* Examples of code where a rule does not report violation */
+int* foo1(){
+    static int i;
+    return &amp;i;     // OK - an address of static local variable returned
+}
+
+int* foo2(){
+    int* p;
+    return p;      // OK - any address is not assigned to pointer
+}
+
+int gv;
+int&amp; foo3(){
+    int&amp; i = gv;
+    return i;      // OK - reference to global variable returned
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+    Ellemtel Telecommunication Systems Laboratories, Sweden.
+    From: 9 Functions - 9.4 Return Types and Values - Rule 34
+
+2.  AUTOSAR C++14 Coding Guidelines
+    M7-5-1. A function shall not return a reference or a pointer to an
+    automatic variable (including parameters), defined within the function
+
+3.  General Principles of Software Validation;
+    Final Guidance for Industry and FDA Staff
+    Document issued on: January 11, 2002
+
+4.  High Integrity C++ Coding Standard
+    3.4.1. Do not return a reference or a pointer to an automatic variable
+    defined within the function
+    <A HREF="http://www.codingstandard.com/rule/3-4-1-do-not-return-a-reference-or-a-pointer-to-an-automatic-variable-defined-within-the-function/">http://www.codingstandard.com/rule/3-4-1-do-not-return-a-reference-or-a-pointer-to-an-automatic-variable-defined-within-the-function/</A>
+
+5.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.13 Function, AV Rule 111
+
+6.  MISRA C++:2008
+    Guidelines for the use of the C++ language in critical systems
+    Chapter 6, Section 7, Rule 7-5-1, Rule 7-5-2
+
+7.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 6.8.2 A function must not return a reference or a pointer to a local variable with automatic storage duration
+
+8.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 18.6, Rule 1.3
+
+9.  MISRA-C:2004
+    Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 17
+
+10. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+    Your Programs and Design", Second Edition, Addison-Wesley,
+    (C) 2005 Pearson Education, Inc.,
+    Chapter: "Classes and Functions: Implementation", Item 31
+
+11. SEI CERT C Coding Standard
+    DCL30-C. Declare objects with appropriate storage durations
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL30-C.+Declare+objects+with+appropriate+storage+durations">https://wiki.sei.cmu.edu/confluence/display/c/DCL30-C.+Declare+objects+with+appropriate+storage+durations</A>
+
+12. SEI CERT C++ Coding Standard
+    EXP54-CPP. Do not access an object outside of its lifetime
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP54-CPP.+Do+not+access+an+object+outside+of+its+lifetime">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP54-CPP.+Do+not+access+an+object+outside+of+its+lifetime</A>
+
+</PRE>
+</BODY>
+</HTML>

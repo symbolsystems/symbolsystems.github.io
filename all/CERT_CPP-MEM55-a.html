@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The user defined 'new' operator should throw the 'std::bad_alloc' exception when the allocation fails [CERT_CPP-MEM55-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The user defined 'new' operator should throw the 'std::bad_alloc' exception when the allocation fails [CERT_CPP-MEM55-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A replacement for any of the dynamic memory allocation or deallocation
+functions must meet the semantic requirements specified by the appropriate
+'Required behavior': clause of the replaced function." [CERT-MEM55-CPP]
+
+If the replacement function fails to implement the semantics of the applicable
+'Required behavior', then the behavior is undefined.
+
+The C++ standard ISO/IEC 14882:2014 defines the following 'Required behavior'
+for the 'new' operators:
+- operator new(std::size_t):
+  "Required behavior: Return a non-null pointer to suitably aligned storage
+   (3.7.4), or else throw a bad_alloc exception."
+
+- operator new[](std::size_t):
+  "Required behavior: Same as for operator new(std::size_t)."
+
+This rule detects the replacement functions 'operator new'
+and 'operator new[]' that never throw the 'std::bad_alloc' exception.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule triggers when the 'std::bad_alloc' exception is thrown,
+but it is caught inside a try-catch block that catches 'std::bad_alloc',
+'std::exception', or all exceptions.
+
+The 'std::bad_alloc' exception can be thrown directly from the operator
+function or from another function that is called inside the operator function.
+This rule analyzes four levels of nesting function calls.
+
+The rule does not trigger when another 'new' operator (from the standard
+library or user-defined) is used inside the function's body.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not check the 'new' operators if they are declared
+with a non-throwing exception specification.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+"In certain cases (replacement functions, ...), the C++ standard library depends
+on components supplied by a C++ program. If these components do not meet their
+requirements, the Standard places no requirements on the implementation."
+[ISO/IEC 14882:2014]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+
+extern void *allocate(std::size_t);
+
+void *operator new(std::size_t size) {                          // Violation
+    return allocate(size);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// The code compiles only if one of the 'new' operators is defined in the file
+#include &lt;new&gt;
+extern void *allocate(std::size_t);
+
+void *operator new(std::size_t size) throw (std::bad_alloc) {   // OK
+    if (void *ret = allocate(size)) {
+        return ret;
+    }
+    throw std::bad_alloc();
+}
+
+/* Examples of correct code */
+void *operator new(std::size_t size) noexcept {                // OK
+    return allocate(size);
+}
+
+void *operator new(std::size_t size) {                         // OK
+    return ::new char[10];
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-9. Custom implementations of dynamic memory allocation and
+   deallocation functions shall meet the semantic requirements specified in
+   the corresponding "Required behaviour" clause from the C++ Standard
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   17.6.4 Constraints on programs
+   18.6.1 Storage allocation and deallocation
+
+3. SEI CERT C++ Coding Standard
+   MEM55-CPP. Honor replacement dynamic storage management requirements
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM55-CPP.+Honor+replacement+dynamic+storage+management+requirements">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM55-CPP.+Honor+replacement+dynamic+storage+management+requirements</A>
+
+</PRE>
+</BODY>
+</HTML>

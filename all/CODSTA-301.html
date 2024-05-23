@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A conversion shall not remove any 'const', 'volatile' or '_Atomic' qualification from the type pointed to by a pointer [CODSTA-301]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A conversion shall not remove any 'const', 'volatile' or '_Atomic' qualification from the type pointed to by a pointer [CODSTA-301-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when a 'const', 'volatile' or '_Atomic' qualification is
+removed by a conversion from the type pointed to by a pointer.
+Both implicit conversions and explicit casts are checked.
+
+"Any attempt to remove the qualification associated with the addressed type
+is a violation of the principle of type qualification." [MISRA-C:2012]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The presence of the _Atomic qualifier designates an atomic type. The size,
+representation, and alignment of an atomic type need not be the same as those
+of the corresponding unqualified type." [ISO/IEC 9899:2017]
+
+This rule is enabled for C only - nothing will be reported on C++ files.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent the issues listed below.
+
+"Some of the problems that might arise if a qualifier is removed from the
+addressed object are:
+* Removing a 'const' qualifier might circumvent the read-only status of an
+  object and result in it being modified
+* Removing a 'const' qualifier might result in an exception when the object
+  is accessed
+* Removing a 'volatile' qualifier might result in accesses to the object
+  being optimized away
+* Removing an _Atomic qualifier might circumvent the lock status of an object
+  and potentially result in memory corruption"
+[MISRA C:2012 Rule 11.8 with Amendment 4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+volatile int* v1;
+const volatile int* v2;
+void bar(int*);
+int* foo1(_Atomic int* v3) {
+    const int* v4 = v1;         // Violation (volatile removed)
+    v4 = v2;                    // Violation (volatile removed)
+    bar(v3);                    // Violation (_Atomic removed)
+    return v2;                  // Violation (const, volatile removed)
+}
+int* foo2(_Atomic int* v3) {
+    const int* v4 = (const int*)v1;   // Violation (volatile removed)
+    v4 = (const int*)v2;              // Violation (volatile removed)
+    bar((int*)v3);                    // Violation (_Atomic removed)
+    return (int*)v2;                  // Violation (const, volatile removed)
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+volatile int* v1;
+const volatile int* v2;
+void bar(_Atomic int*);
+const volatile int* foo1(_Atomic int* v3) {
+    const volatile int* v4 = v1;    // OK
+    v4 = v2;                        // OK
+    bar(v3);                        // OK
+    return v2;                      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.6 Rule 11.8
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.8
+
+3. ISO/IEC 9899:2017 Programming languages -- C
+   6.2.5 Types
+
+</PRE>
+</BODY>
+</HTML>

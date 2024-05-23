@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Global function names should start with lowercase [NAMING-34]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Global function names should start with lowercase [NAMING-34-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Global function names should start with lowercase.
+This rule checks only first character of the identifier and reports a violation
+if the character is not a lowercase letter (a-z).
+
+See also: NAMING-05, NAMING-06, NAMING-07, NAMING-35
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule reports violations also on extern functions declared but not defined in
+current translation unit. For example:
+  extern void Foo(); // Violation
+There might be many reasons for such declarations:
+- the function is simply defined in a different translation unit
+- the function definition is not yet written
+- the function is provided as a prototype and the definition should be provided
+  by the user of the function
+- the function definition is provided by a 3rd party library, but the library
+  does not provide function declaration, so the user of the library must
+  declare the function in order to use it
+In the last case, it might be not possible to change the function name. In that
+situation the violation can be suppressed.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Joint Strike Fighter coding standard allows uppercase letters in acronyms.
+For example:
+  void RGB_value();   // OK if "RGB" is an acronym
+  void UTF8();        // OK if "UTF8" is an acronym
+The acronym should be separated from the rest of the identifier with
+an underscore. For example:
+  void RGBvalue();    // Violation even if RGB is an acronym
+
+To support this exception set CPPTEST_JSF_ACRONYMS environment variable to the
+path to a text file containing whitespace-separated list of words. Each word
+is recognized as an acronym. Example content of the file:
+   RGB
+   UTF8
+
+If the CPPTEST_JSF_ACRONYMS is not set or the file could not be opened, the rule
+works as if there were no acronyms at all. Opening file errors are silently
+ignored.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void Foo( ) {}   // Violation
+void _Bar( );    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( );     // OK
+void aBar( ) {}  // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 5 Assigning Names - Rule 13
+
+</PRE>
+</BODY>
+</HTML>

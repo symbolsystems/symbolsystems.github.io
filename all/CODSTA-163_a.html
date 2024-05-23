@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value of an expression shall not be assigned to an object with a narrower essential type [CODSTA-163_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value of an expression shall not be assigned to an object with a narrower essential type [CODSTA-163_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C language allows the programmer considerable freedom and will permit 
+assignments between different arithmetic types to be performed automatically.
+However, the use of these implicit conversions can lead to unintended results,
+with the potential for loss of value, sign or precision. The use of stronger
+typing, as enforced by the MISRA essential type model, reduces the likelihood
+of these problems occurring." [MISRA C:2012 Rule 10.3]
+
+This rule detects cases when the value of an expression is assigned to an
+object with a narrower essential type. A violation is not reported if an
+expression is converted to a different essential type category (such cases
+are reported by the CODSTA-163_b rule).
+
+The term "essential type" is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+"The following operations are covered by this rule:
+- Assignment by means of one of the assignment operators;
+- Passing an argument to a function, in which case the argument is copied as 
+  if by assignment to the corresponding parameter;
+- Returning an expression from a function, in which case the result is copied
+  as if by assignment to an object with the function's return type;
+- Using an expression to initialize all or part of an object, including a 
+  compound literal in C99, in which case the expression is copied as if by 
+  assignment to the destination;
+- The conversion of the constant expression in a switch statement’s case label
+  to the promoted type of the controlling expression."
+[MISRA C:2012 Rule 10.3, Appendix J]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents unintended results and data loss.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void short_int(unsigned int i){ };
+
+signed char foo(int i)
+{
+    signed char sch = 128;      /* Violation */
+    sch = i;                    /* Violation */
+    short_int(1ULL);            /* Violation */
+    switch(sch)
+    {
+        case 1000:  ;           /* Violation */
+        case 2L:  ;             /* Violation */
+    }
+    return i;                   /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+void short_int(unsigned int i){ };
+
+signed char foo(int i)
+{
+    signed short sch = 128;     /* OK */
+    sch = (signed char)i;       /* OK */
+    short_int(1U);              /* OK */
+    switch(sch)
+    {
+        case 1000:  ;           /* OK */
+    }
+    return (signed char)i;      /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.3
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.8 Rule 10.3
+
+3. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

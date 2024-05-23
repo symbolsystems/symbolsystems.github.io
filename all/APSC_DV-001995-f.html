@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using thread-unsafe functions [APSC_DV-001995-f]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using thread-unsafe functions [APSC_DV-001995-f-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Some C standard library functions are not guaranteed to be reentrant with
+respect to threads. Multiple threads invoking the same function can cause
+concurrency problems, which often result in abnormal behavior and can cause
+more serious vulnerabilities, such as abnormal termination, denial-of-service
+attack, and data integrity violations." [CERT-CON33-C]
+
+This rule detects when a call to any of the following functions is used
+or when the address of any of the following functions is taken:
+asctime(), basename(), catgets(), crypt(), ctime(), dbm_clearerr(),
+dbm_close(), dbm_delete(), dbm_error(), dbm_fetch(), dbm_firstkey(),
+dbm_nextkey(), dbm_open(), dbm_store(), dirname(), dlerror(), drand48(),
+encrypt(), endgrent(), endpwent(), endutxent(), ftw(), getdate(), getenv(),
+getgrent(), getgrgid(), getgrnam(), gethostent(), getlogin(), getnetbyaddr(),
+getnetbyname(), getnetent(), getopt(), getprotobyname(), getprotobynumber(),
+getprotoent(), getpwent(), getpwnam(), getpwuid(), getservbyname(),
+getservbyport(), getservent(), getutxent(), getutxid(), getutxline(), gmtime(),
+hcreate(), hdestroy(), hsearch(), inet_ntoa(), l64a(), lgamma(), lgammaf(),
+lgammal(), localeconv(), localtime(), lrand48(), mblen(), mbtowc(), mrand48(),
+nftw(), nl_langinfo(), ptsname(), putenv(), pututxline(), rand(), readdir(),
+setenv(), setgrent(), setkey(), setlocale(), setpwent(), setutxent(),
+strerror(), strsignal(), strtok(), system(), ttyname(), unsetenv(), wctomb(),
+srand(), getenv_s(), ATOMIC_VAR_INIT(), atomic_init(), tmpnam(), mbrtoc16(),
+c16rtomb(), mbrtoc32(), c32rtomb().
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Race conditions caused by multiple threads invoking the same library function
+can lead to abnormal termination of the application, data integrity violations,
+or a denial-of-service attack." [CERT-CON33-C]
+
+This rule helps you avoid race conditions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+
+void foo()
+{
+    char *name = ttyname(1);               // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+
+void foo()
+{
+    char name[100];
+    int status = ttyname_r(1, name, 100);  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   CON33-C. Avoid race conditions when using library functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON33-C.+Avoid+race+conditions+when+using+library+functions">https://wiki.sei.cmu.edu/confluence/display/c/CON33-C.+Avoid+race+conditions+when+using+library+functions</A>
+
+2. The Open Group Base Specifications Issue 7, 2018 edition
+   IEEE Std 1003.1-2017 (Revision of IEEE Std 1003.1-2008)
+   2.9.1 Thread-Safety
+   <A HREF="https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09_01">https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_09_01</A>
+
+3. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+4. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-001995: The application must not be vulnerable to race conditions
+
+5. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002400: The application must restrict the ability to launch Denial of Service (DoS)
+   attacks against itself or other information systems
+
+</PRE>
+</BODY>
+</HTML>

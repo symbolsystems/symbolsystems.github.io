@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An element of an object shall not be initialized more than once [MISRA2012-RULE-9_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An element of an object shall not be initialized more than once [MISRA2012-RULE-9_4-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An aggregate initializer shall not contain two designators that refer to the
+same sub-object. An aggregate initializer shall not allow the current object to
+implicitly initialize an element that has been initialized previously in the
+initializer list." [MISRA C:2012 Amendment 4]
+
+This rule detects cases when an array element or a member of a structure
+or an union is initialized more than once. An element can be initialized
+more than once only with designated initializers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule applies to the C99 standard.
+
+"This rule applies to initializers for both objects and subobjects."
+[MISRA C:2012 Rule 9.4]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Care is required when using designated initializers since the initialization
+of object elements can be inadvertently repeated. The C Standard specifies that
+the value produced by the syntactically-last initializer referring to an
+element in the list is used, overriding any preceding initializers for that
+element. The Standard leaves unspecified whether overridden initializers are
+evaluated, and therefore whether or not any side effects in the initializing
+expressions occur or not." [MISRA C:2012 Amendment 4]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule does not check following cases:
+- initializers that have more than three nesting levels, for example:
+
+  typedef struct {
+    int ms1;
+    int ms2;
+  }TS;
+
+  TS arr[2][3][4] = { { { {.ms1 = 1, .ms1 = 1} } } }; /* No Violation */
+
+- initializers that are used in compound literals, for example:
+
+  int *p = (int [4]){2, [0] = 4};  /* No Violation */
+
+- initializers that initialize members of nested types, for example:
+
+  struct S1 {
+    int a1;
+    union {
+      int b1;
+      short b2;
+    };
+    int a2;
+  };
+  struct S1 s1 = {.a1 = 0, .b1 = 1, .b1 = 2, .a2 = 3 };  /* No Violation */
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int a1[ 2 ] = { [ 0 ] = 1, [ 0 ] = 2 };                /* Violation */
+float a2[ 2 ][ 2 ] = { 1, 2, 1, [ 0 ][ 0 ] = 2 };      /* Violation */
+
+struct S
+{
+    int  m1;
+    char m2;
+};
+
+struct S s2 = { 1, 'a', .m1 = 1 };                     /* Violation  */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int a1[ 2 ] = { [ 0 ] = 1, 2 };                        /* OK */
+float a2[ 2 ][ 2 ] = { [ 0 ][ 0 ] = 1, 2, 1, 2 };      /* OK */
+
+struct S
+{
+    int  m1;
+    char m2;
+};
+
+struct S s1 = { 1, 'a'};                     /* OK */
+struct S s2 = {.m1 = 1, .m2 = 'a'};          /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 9.4
+
+2. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 3.1.6 Rule 9.4
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.8 Initialization
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not acquire locks in different order [MISRAC2012-DIR_5_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not acquire locks in different order [MISRAC2012-DIR_5_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where two mutexes are locked in different orders, which
+can cause a deadlock. The violation will be reported if there exist at least
+two locks and at least two paths on which they are acquired in different orders.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Reported violation presents at least two separate paths to show different
+order of lock acquisitions. Therefore, each of these path contains a top-level
+node describing the path and the actual flow path is reported one level below.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents application deadlocks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* lock1;
+pthread_mutex_t* lock2;
+int v1;
+int v2;
+
+void takeLocksA(pthread_mutex_t* a, pthread_mutex_t* b) {
+    pthread_mutex_lock(a);
+    v1++;
+    pthread_mutex_lock(b);
+    v2++;
+    pthread_mutex_unlock(b);
+    pthread_mutex_unlock(a);
+}
+
+void takeLocksB(pthread_mutex_t* a, pthread_mutex_t* b) {
+    pthread_mutex_lock(b);
+    v2++;
+    pthread_mutex_lock(a);
+    v1++;
+    pthread_mutex_unlock(a);
+    pthread_mutex_unlock(b);
+}
+
+void fooA() {
+    takeLocksA(lock1, lock2);
+}
+
+void fooB() {
+    takeLocksB(lock1, lock2);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* lock1;
+pthread_mutex_t* lock2;
+int v1;
+int v2;
+
+void takeLocksA(pthread_mutex_t* a, pthread_mutex_t* b) {
+    pthread_mutex_lock(a);
+    v1++;
+    pthread_mutex_lock(b);
+    v2++;
+    pthread_mutex_unlock(b);
+    pthread_mutex_unlock(a);
+}
+
+void takeLocksB(pthread_mutex_t* a, pthread_mutex_t* b) {
+    pthread_mutex_lock(b);
+    v2++;
+    pthread_mutex_lock(a);
+    v1++;
+    pthread_mutex_unlock(a);
+    pthread_mutex_unlock(b);
+}
+
+void fooA() {
+    takeLocksA(lock1, lock2);
+}
+
+void fooB() {
+    takeLocksB(lock2, lock1);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.1 Section 7 - Directives, Dir 5.2
+
+SEI CERT C Coding Standard
+CON35-C. Avoid deadlock by locking in a predefined order
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON35-C.+Avoid+deadlock+by+locking+in+a+predefined+order">https://wiki.sei.cmu.edu/confluence/display/c/CON35-C.+Avoid+deadlock+by+locking+in+a+predefined+order</A>
+
+SEI CERT C Coding Standard
+POS51-C. Avoid deadlock with POSIX threads by locking in predefined order
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS51-C.+Avoid+deadlock+with+POSIX+threads+by+locking+in+predefined+order">https://wiki.sei.cmu.edu/confluence/display/c/POS51-C.+Avoid+deadlock+with+POSIX+threads+by+locking+in+predefined+order</A>
+
+SEI CERT C++ Coding Standard
+CON53-CPP. Avoid deadlock by locking in a predefined order
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON53-CPP.+Avoid+deadlock+by+locking+in+a+predefined+order">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON53-CPP.+Avoid+deadlock+by+locking+in+a+predefined+order</A>
+
+CWE-833: Deadlock
+<A HREF="http://cwe.mitre.org/data/definitions/833.html">http://cwe.mitre.org/data/definitions/833.html</A>
+
+High Integrity C++ Coding Standard
+18.3.2 Ensure that order of nesting of locks in a project forms a DAG
+
+</PRE>
+</BODY>
+</HTML>

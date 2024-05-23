@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The operands of the remainder operator '%' should be of unsigned integer types [CERT_C-INT10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The operands of the remainder operator '%' should be of unsigned integer types [CERT_C-INT10-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In C89 (and historical K&amp;R implementations), the meaning of the remainder
+operator for negative operands was implementation-defined. This behavior was
+changed in C99, and the change remains in C11. Because not all C compilers
+are strictly C-conforming, programmers cannot rely on the behavior of the %
+operator if they need to run on a wide range of platforms with many different
+compilers." [CERT-INT10-C]
+
+This rule detects when an operand of the remainder operator is of integer type
+other than an unsigned type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule allows you to use an integer or enumeration constant with a positive
+value as the operand of the remainder operator, even if its type is not
+unsigned.
+
+void f1(unsigned int index)
+{
+    unsigned int remainder;
+    remainder = index % 5;      // OK - Exception
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Incorrectly assuming that the result of the remainder operator for signed
+operands will always be positive can lead to an out-of-bounds memory accessor
+other flawed logic." [CERT-INT10-C]
+
+This rule helps you avoid undefined and implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1(int index, int size)
+{
+    unsigned int remainder;
+    remainder = (index + 1) % size;           // Violation
+    remainder %= size;                        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f1(unsigned int index, unsigned int size)
+{
+    unsigned int remainder;
+    index = (index + 1) % size;               // OK
+    index %= size;                            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   INT10-C. Do not assume a positive remainder when using the % operator
+   <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152120">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152120</A>
+
+</PRE>
+</BODY>
+</HTML>

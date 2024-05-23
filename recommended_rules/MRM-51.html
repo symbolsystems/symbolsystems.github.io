@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'delete' on pointers to a void type [MRM-51]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'delete' on pointers to a void type [MRM-51-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the dynamic type of the object to be deleted differs from its static type,
+the behavior is undefined. This implies that an object cannot be deleted using
+a pointer of type void* because there are no objects of type void"
+[ISO/IEC 14882:1998]
+
+Deleting a void pointer may cause a resource leak because the destructor won't
+be called on the value it actually points to.
+
+The rule reports a violation if the operand of the 'delete' operator
+is a pointer to a void type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents undefined behaviors and memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void delete_object(void * vptr) {
+    delete vptr;                    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'delete' on pointers to void type
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:1998 Programming languages — C++
+   5.3.5 Delete
+
+</PRE>
+</BODY>
+</HTML>

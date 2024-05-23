@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Place CV-qualifiers on the right hand side of the type they apply to [HICPP-7_1_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Place CV-qualifiers on the right hand side of the type they apply to [HICPP-7_1_4-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The const or volatile qualifiers can appear either to the right or left of the
+type they apply to. When the unqualified portion of the type is a typedef name
+(declared in a previous typedef declaration), placing the CV-qualifiers on the
+left hand side, may result in confusion over what part of the type the
+qualification applies to." [HIC++ Coding Standard]
+
+This rule detects when the 'const' or 'volatile' qualifier is placed
+on the left side of the type it applies to.
+This rule checks all types.
+
+See also: FORMAT-47_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int* PINT;
+void foo(const PINT p1) {    // Violation
+    volatile int vi;         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, place the 'const' and 'volatile' operators on the right side
+of the type.
+
+typedef int* PINT;
+void foo(PINT const p1) {    // OK
+    int volatile vi;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.4. Place CV-qualifiers on the right hand side of the type they apply to
+
+</PRE>
+</BODY>
+</HTML>

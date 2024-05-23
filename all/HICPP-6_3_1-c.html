@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Any label referenced by a goto statement shall be declared in the same block, or in a block enclosing the goto statement [HICPP-6_3_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Any label referenced by a goto statement shall be declared in the same block, or in a block enclosing the goto statement [HICPP-6_3_1-c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Unconstrained use of goto can lead to programs that are extremely difficult to
+comprehend, analyse and, for C++, can also lead to the program exhibiting
+unspecified behaviour.
+
+However, in many cases a total ban on goto requires the introduction of flags
+to ensure correct control flow, and it is possible that these flags may
+themselves be less transparent than the goto they replace.
+
+Therefore, the restricted use of goto is allowed where that use will not lead
+to semantics contrary to developer expectations. Jumping in to nested blocks is
+prohibited as it may lead to complex flow graphs."
+
+This rule reports a violation if 'goto' is used to jump into a nested block, or
+into a block which does not enclose (directly or indirectly) current block.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. For the purposes of this rule, a switch-clause that does not consist
+of a compound statement is treated as if it were a block. For example:
+  void f1 ( int k ) {
+    switch ( k ) {
+      case 0:
+        goto L1;  /* Non-compliant */
+        [...]
+      case 1:
+        /* This 'case' is treated as a 'block' even if not a compound block */
+        L1: [...]
+    }
+  }
+MISRA C:2012 is explicit about disallowing such jumps.
+MISRA C++:2008 does not discuss such cases, but as such jumps lead to complex
+flow graphs and result in semantics contrary to developer expectations, we
+believe such code is against intention of the standard and should not be used.
+
+2. "C99 is more restrictive when variably modified types are used. An attempt to
+make a jump from outside the scope of an identifier with a variably modified
+type into such a scope results in a constraint violation."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Preventing jumps between blocks, or into nested blocks, helps to minimize visual
+code complexity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int f1 ( void )
+{
+    int j;
+    goto L1;  /* Violation - jump into nested block */
+
+    for ( j = 0; j &lt; 10 ; ++j )
+    {
+        /* ... */
+    L1:
+        return j;
+    }
+}
+void f2 ( int k )
+{
+  if ( k &gt; 0 )
+  {
+    goto L; /* Violation: target block does not enclose current block */
+  }
+  if ( k &lt; 0 )
+  {
+    L:
+    ++k;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1 ( void )
+{
+    int j = 0;
+	
+    for ( j = 0; j &lt; 10 ; ++j )
+    {
+        goto L1; /* OK - jump into outside block */
+        /* ... */
+    }
+
+    L1:
+    return j;
+}
+void f2 ( int k )
+{
+  while ( k &lt; 0 )
+  {
+    int j = k * 2;
+    while ( j &lt; 10 )
+    {
+      if ( k &gt; 0 )
+      {
+        goto L; /* OK: target block encloses current block (indirectly) */
+      }
+    }
+    L:
+    ++k;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-6-1. Any label referenced by a goto statement shall be declared in the
+   same block, or in a block enclosing the goto statement
+
+2. High Integrity C++ Coding Standard
+   6.3.1. Ensure that the label(s) for a jump statement or a switch condition
+   appear later, in the same or an enclosing block
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 6, Rule 6-6-1
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.6.2 A goto statement shall reference a label in a surrounding block
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 15.3
+
+</PRE>
+</BODY>
+</HTML>

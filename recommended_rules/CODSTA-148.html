@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use string literals as operands of equality or relational operators [CODSTA-148]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use string literals as operands of equality or relational operators [CODSTA-148-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a string literal is used as an operand of an equality or relational
+operator, then it is not the content of the string that is compared,
+but rather the address of the first element in the string. Such a comparison
+might not be what was expected.
+
+The rule reports a violation if one operand of an equality or relational
+operator is a string literal and the other operand is a pointer or array
+type. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+A violation is not reported if a string literal is compared with a null
+pointer constant.
+
+#include &lt;stdio.h&gt;
+
+#define CHECK_VALUE(pointer)      \
+    if(pointer != NULL)           \
+      return pointer;             \
+    else                          \
+      return "";
+
+char* foo(char* str) {
+    CHECK_VALUE("string")         // OK - Exception
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps identify code that might produce unintended results.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(char* str) {
+    if(str == "str"){          // Violation
+        //...
+    }
+}
+
+void foo2(char arr[]) {
+    if("str" != arr){          // Violation
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include&lt;string.h&gt;
+
+void foo1(char* str) {
+
+    if(strcmp(str, "str") == 0){          // OK - use library function 'strcmp'
+        //...
+    }
+}
+
+void foo2(char arr[]) {    
+    if(strncmp(arr, "str", 4) == 0){      // OK - use library function 'strncmp'
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

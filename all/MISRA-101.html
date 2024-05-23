@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointer arithmetic should not be used [MISRA-101]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointer arithmetic should not be used [MISRA-101-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule refers to explicitly calculating pointer values. Any such pointer
+value then has the potential to access unintended or invalid memory addresses.
+This is an area where there is a danger of serious errors occuring in the code
+at run time. Pointers may go out of bounds of arrays or structures, or may even
+point to effectively arbitrary locations."
+See also: MISRA2004-17_1, MISRA2004-17_2, MISRA2004-17_4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents from access to unintended or invalid memory addresses.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int* foo(int* par) {
+    int* ptr1 = 0;
+    int arr[10];
+    
+    ptr1 = par + 1;  // Violation
+    ptr1++;          // Violation
+    ptr1 = arr - 1;  // Violation
+    return ptr1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+"If pointer arithmetic is necessary, then appropriate reviews and/or dynamic
+checking code will be required to ensure that the resulting pointer can not 
+point to unintended or invalid memory addresses"
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 101
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.28 Portable Code, AV Rule 215
+
+3. SEI CERT C Coding Standard
+   ARR39-C. Do not add or subtract a scaled integer to a pointer
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer">https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer</A>
+
+4. SEI CERT C Coding Standard
+   EXP08-C. Ensure pointer arithmetic is used correctly
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly">https://wiki.sei.cmu.edu/confluence/display/c/EXP08-C.+Ensure+pointer+arithmetic+is+used+correctly</A>
+
+</PRE>
+</BODY>
+</HTML>

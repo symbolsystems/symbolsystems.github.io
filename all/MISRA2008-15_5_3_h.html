@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Where a function's declaration includes an exception-specification, the function shall only be capable of throwing exceptions of the indicated type(s) [MISRA2008-15_5_3_h]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Where a function's declaration includes an exception-specification, the function shall only be capable of throwing exceptions of the indicated type(s) [MISRA2008-15_5_3_h-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a function declared with an exception-specification throws an exception
+of a type not included in the specification, the function unexpected()
+is called. The behaviour of this function can be overridden within a project,
+but by default causes an exception of std::bad_exception to be thrown.
+If std::bad_exception is not listed in the exception-specification,
+then terminate() will be called, leading to implementation-defined
+termination of the program." [MISRA C++:2008]
+
+The rule detects when a function with a dynamic-exception-specification
+throws an exception or calls a function that throws an exception
+that is not allowed by the exception-specification.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks only two levels of nested function calls.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some compilers (most notably Microsoft Visual Studio C++ Compiler) might
+ignore some exception specifications. This can also depend on used compiler
+options. In such case no violation will be reported.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Exception{};
+
+void foo ( )
+{
+    throw ( 21 );
+}
+
+void goo ( ) throw ( Exception )  // Violation
+{
+    foo ( );
+}
+
+void bar ( ) throw ( )            // Violation
+{
+    foo ( );
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Exception{};
+
+void foo ( )
+{
+    throw ( 21 );
+}
+
+void goo ( ) throw ( Exception, int ) // OK
+{
+    foo ( );
+}
+
+void bar ( ) throw ( int )            // OK
+{
+    foo ( );
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-3. The std::terminate() function shall not be called implicitly
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-5-2, Rule 15-5-3
+
+4. Programming languages -- C++ ISO/IEC 14882:2011
+   15.4 Exception specifications
+   15.5.1 The std::terminate() function
+
+5. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+6. SEI CERT C++ Coding Standard
+   ERR55-CPP. Honor exception specifications
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR55-CPP.+Honor+exception+specifications">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR55-CPP.+Honor+exception+specifications</A>
+
+</PRE>
+</BODY>
+</HTML>

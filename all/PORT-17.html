@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Don't use 'i64' or 'L' suffixes directly [PORT-17]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Don't use 'i64' or 'L' suffixes directly [PORT-17-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If integer constant suffixes are used in the code, you might need to modify
+the code for use on 64-bit architecture, because the 'L' or 'l' suffix 
+(meaning long) in Windows(64-bit) is a 32-bit type. Windows(64-bit) uses
+the 'i64' suffix.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Adding a centrally defined macro in the file will make the code generic,
+so that it can be compiled for use on both the UNIX(64-bit)
+and the Windows(64-bit) operating systems. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(){
+    long l;
+    unsigned long ul;
+    l = 123456789l;   // Violation
+    l = 123456789L;   // Violation
+    ul = 123456789ul; // Violation
+    ul = 123456789uL; // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#ifdef _WIN64
+   #define CONST3264(a) (a##i64)
+#else
+   #define CONST3264(a) (a##L)
+#endif
+
+void foo(){
+    long l;
+    unsigned long ul;
+    l = CONST3264( 123456789 );   // OK
+    ul = CONST3264( 123456789u ); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

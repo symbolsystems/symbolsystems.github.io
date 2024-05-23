@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Arrays shall not be partially initialized [MISRA2004-9_2_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Arrays shall not be partially initialized [MISRA2004-9_2_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If any element of an array object or subobject is explicitly initialized,
+then the entire object or subobject shall be explicitly initialized."
+[MISRA C:2012 Rule 9.3]
+
+This rule detects when an aggregate initializer for an array object
+is partially initialized.
+
+See also: MISRA2004-9_2, MISRA2004-9_2_c
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An initializer of the form { 0 } may be used to explicitly initialize all
+elements of an array object or subobject." [MISRA C:2012 Rule 9.3]
+
+"An array whose initializer consists only of designated initializers may be
+used, for example to perform a sparse initialization." [MISRA C:2012 Rule 9.3]
+
+"An array initialized using a string literal does not need an initializer
+for every element." [MISRA C:2012 Rule 9.3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Providing an explicit initialization for each element of an array makes
+it clear that every element has been considered." [MISRA C:2012 Rule 9.3]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int arr1[3] = { 1, 2 };                       /* Violation */
+int arr2[3][2] = { {1, 2}, {5, 6} };          /* Violation */
+int arr3[3][2] = { {1}, {3, 4}, {5, 6} };     /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int arr1[3] = { 1, 2, 3 };                    /* OK */
+int arr2[3][2] = { {1, 2}, {3, 4}, {5, 6} };  /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M8-5-2. Braces shall be used to indicate and match the structure in the
+   non-zero initialization of arrays and structures
+
+2. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 8, Rule 8-5-2
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 9.3
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 9, Rule 9.2
+
+</PRE>
+</BODY>
+</HTML>

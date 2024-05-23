@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Consider adding constructor to initialize 'struct' member variables [INIT-15]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Consider adding constructor to initialize 'struct' member variables [INIT-15-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Constructors should initialize all member variables. A violation is reported
+if 'struct' have no constructor at all, but have member variables which may
+need initialization.
+
+Please note that no violation is reported for 'class', or if there is a
+constructor but it does not initialize all member variables. INIT-06 should be
+enabled together with this rule to ensure that member variables are initialized.
+
+See also: INIT-06
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Member variables which are static or have class or struct type are ignored.
+Static variables should not be initialized in constructor.
+Class/struct variables are assumed to be initialized by their own constructors.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents reading from uninitialized variables.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+'struct' types are often used for simple data aggregation and have no
+constructors at all and are designed to be initialized from outside.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A {          // Violation - no constructor
+    int _x;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct A {          // OK - have a constructor
+    A() : _x(0) {}
+    int _x;
+};
+
+// Examples of cases where a violation is not reported:
+struct B {          // OK:
+    static int x;   // static variable ignored
+    A _y;           // class-type variable ignored
+};
+class C {           // OK - no violation on 'class'
+public:
+    int _x;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 4
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

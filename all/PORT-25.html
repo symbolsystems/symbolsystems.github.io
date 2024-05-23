@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The names of identifiers should not be longer than 64 characters [PORT-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The names of identifiers should not be longer than 64 characters [PORT-25-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"User-specified identifiers (internal and external) will not rely
+on significance of more than 64 characters." [JSF]
+
+This rule detects when an identifier has more than 64 characters in its name.
+
+The rule checks the following identifiers:
+- variables, functions, function parameters
+- classes, structures, unions, typedefs
+- enumerations and enumeration constants
+- namespaces
+- labels
+- template parameters and template parameter constants
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check the names of conversion operators.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability and readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1_45678901234567890123456789012345678901234567890123456789012345();        // Violation
+void f1_45678901234567890123456789012345678901234567890123456789012345(){}       // Violation
+
+void f1(int p1_45678901234567890123456789012345678901234567890123456789012345) { // Violation
+    int v1_45678901234567890123456789012345678901234567890123456789012345;       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by modifying the names of identifiers.
+
+void f1_4567890123456789012345678901234567890123456789012345678901234();        // OK
+void f1_4567890123456789012345678901234567890123456789012345678901234(){}       // OK
+
+void f1(int p1_4567890123456789012345678901234567890123456789012345678901234) { // OK
+    int v1_4567890123456789012345678901234567890123456789012345678901234;       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 46
+
+</PRE>
+</BODY>
+</HTML>

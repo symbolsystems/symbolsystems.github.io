@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A class, structure, or enumeration will not be declared in the definition of its type [AUTOSAR-A7_1_9-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A class, structure, or enumeration will not be declared in the definition of its type [AUTOSAR-A7_1_9-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Declaring an enumeration in the definition of its type can lead to readability
+problems and unnamed data types. Separation of the declaration and definition
+are preferred. Note that this requires the data type to be named which provides
+a mechanism to create other variables of the same type and the ability to type
+cast."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and prevents creating unnamed data types.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum EN
+{
+  EN1,
+  EN2
+} en1;     // Violation
+
+struct S {
+  int i;
+} s1, s2;  // Violation
+
+enum
+{
+  E1,
+  E2
+} e1;      // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum EN
+{
+  EN1,
+  EN2
+};           // OK
+EN en1;      // OK
+
+struct S {
+	int i;
+};           // OK
+S s1;        // OK
+S s2;        // OK
+
+class X {
+  enum
+  {
+    E1,
+    E2
+  };         // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-9. A class, structure, or enumeration shall not be declared in the
+   definition of its type.
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 141
+
+</PRE>
+</BODY>
+</HTML>

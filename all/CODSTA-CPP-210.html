@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parameters in an overriding virtual function shall not specify different default arguments [CODSTA-CPP-210]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parameters in an overriding virtual function shall not specify different default arguments [CODSTA-CPP-210-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when an overriding function specifies a default argument
+value and:
+* it is not a constant expression, or
+* the overridden function does not specify a default value for this
+parameter, or
+* the overridden function specifies a default value for this parameter
+that is not a constant expression, or
+* the overridden function specifies a different value of the argument.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report when either the overridden or overriding function is
+a template instance or a template specialization.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid confusion about which default argument value will
+be used when calling a virtual function via a pointer or reference to the base
+or derived class.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    virtual void f1(int32_t a = 0);
+    virtual void f2(int32_t a = 0);
+    virtual void f3(int32_t a = x());
+    virtual void f4(int32_t a = x());
+    virtual void f5(int32_t a);
+};
+class Derived: public Base
+{
+public:
+    void f1(int32_t a = 1) override;   // Violation - different value
+    void f2(int32_t a = 1) override;   // Violation - different value
+    void f3(int32_t a = x()) override; // Violation - not a constant
+    void f4(int32_t a = 1) override;   // Violation - different value
+    void f5(int32_t a = 1) override;   // Violation - introducing a default value
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    virtual void f1(int32_t a = 0);
+    virtual void f2(int32_t a = 0);
+    virtual void f3(int32_t a = x());
+    virtual void f4(int32_t a = x());
+    virtual void f5(int32_t a);
+};
+class Derived: public Base
+{
+public:
+    void f1(int32_t a = 0) override;   // OK
+    void f2(int32_t a) override;       // OK
+    void f3(int32_t a) override;       // OK
+    void f4(int32_t a) override;       // OK
+    void f5(int32_t a) override;       // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 13.3.2 Parameters in an overriding virtual function shall not specify different default arguments
+
+</PRE>
+</BODY>
+</HTML>

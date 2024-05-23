@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A base class shall only be declared virtual if it is used in a diamond hierarchy [GLOBAL-VIRTBASECLASS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A base class shall only be declared virtual if it is used in a diamond hierarchy [GLOBAL-VIRTBASECLASS-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A base class shall only be declared virtual if that base class is 
+to be used as a common base class in a diamond hierarchy."
+[MISRA C++:2008 Rule 10-1-2]
+
+This rule detects when a base class that is not used as a common base class in
+a diamond hierarchy is declared virtual.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The use of virtual base classes can introduce a number of undefined
+and potentially confusing behaviours."
+[MISRA C++:2008 Rule 10-1-2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* test1.cpp */
+class A {};
+class B : virtual public A {};
+class C : virtual public A {};
+class D : virtual public B, virtual public C {};   /* Violation */
+class E : virtual public C {};
+class F : public D, public E {};
+  
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* test1.cpp */
+class A {};
+class B : virtual public A {};
+class C : virtual public A {};
+class D : public B, virtual public C {};	         /* OK */
+class E : virtual public C {};
+class F : public D, public E {};
+   
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 10, Rule 10-1-2
+
+2. AUTOSAR C++14 Coding Guidelines
+   M10-1-2. A base class shall only be declared virtual if it is used in a
+   diamond hierarchy
+
+</PRE>
+</BODY>
+</HTML>

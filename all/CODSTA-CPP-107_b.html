@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Comparison operators shall be non-member functions with identical parameter types and noexcept [CODSTA-CPP-107_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Comparison operators shall be non-member functions with identical parameter types and noexcept [CODSTA-CPP-107_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Since comparison is a fundamental operation, it should never throw
+an exception." [AUTOSAR A13-5-5]
+
+This rule detects when a comparison operator is declared as one of
+the following:
+- a non-member function that is not declared 'noexcept'
+- a non-member function whose parameters are of different types
+
+The rule checks the following operators: '==', '!=', '&lt;', '&lt;=', '&gt;', and '&gt;='.
+
+
+See also: CODSTA-CPP-107
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and comply with coding standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B
+{
+};
+
+class C : public B
+{
+private:
+  int m;
+public:
+  friend bool operator &gt;(C const &amp; lhs, C const &amp; rhs )           // Violation
+  {
+    return lhs.m == rhs.m;
+  }
+  friend bool operator ==(C const &amp; lhs, B const &amp; rhs ) noexcept // Violation
+  {
+    return lhs.m == rhs.m;
+  }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B
+{
+};
+
+class C : public B
+{
+private:
+  int m;
+public:
+  friend bool operator &gt;(C const &amp; lhs, C const &amp; rhs )  noexcept // OK
+  {
+    return lhs.m == rhs.m;
+  }
+  friend bool operator ==(C const &amp; lhs, C const &amp; rhs ) noexcept // OK
+  {
+    return lhs.m == rhs.m;
+  }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-5-5. Comparison operators shall be non-member functions with identical
+   parameter types and noexcept
+
+</PRE>
+</BODY>
+</HTML>

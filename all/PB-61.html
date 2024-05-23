@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointer arithmetic performed on freshly allocated memory [PB-61]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointer arithmetic performed on freshly allocated memory [PB-61-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports a violation if you do pointer arithmetic directly on result of
+'malloc', 'calloc', 'realloc' or 'new'. For example:
+    malloc(s) + x
+    T *p = new T - 10;
+    return calloc(n, s) - ptr;
+
+When you do pointer arithmetic on freshly allocated memory, you may:
+- leak memory because you don't have pointer to the beginning of the
+  allocated memory region or you don't have any pointer at all
+- cause invalid memory access when you point before allocate memory region
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Detects possible memory leaks and invalid memory accesses.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;stddef.h&gt;
+
+ptrdiff_t foo(int x)
+{
+    /* Addition */
+    int *p = x + (int*) malloc(10); /* Violation */
+
+    /* Subtraction */
+    (int*)malloc(20) - 2; /* Violation */
+
+    /* Pointer difference */
+    /* Following code is also invalid because pointers
+     do not point to the same array */
+    return (int*) malloc(sizeof(int)) - p; /* Violation */
+}
+void bar(size_t nmemb, size_t size)
+{
+    void *p = (int*)calloc(nmemb, size) + 1; /* Violation */
+    (int*)realloc(p, nmemb * size + 1) - 1; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Example of code which does not cause a violation */
+
+#include &lt;stdlib.h&gt;
+void bar(int x)
+{
+    int *p = (int*) malloc(10); /* OK */
+    int *q = x + p; /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

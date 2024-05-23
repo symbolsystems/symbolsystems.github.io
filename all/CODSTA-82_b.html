@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use empty infinite loops [CODSTA-82_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use empty infinite loops [CODSTA-82_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A program should not include infinite loops that are empty. Although empty
+infinite loops may be intentionally used to make a program wait for a user
+action (consume processor cycles), they are likely to be unexpectedly removed
+by optimizing compilers. This can result in undefined behavior.
+
+As a remedy, you can, for example, call the sleep() function in the body of an
+infinite loop.
+
+This rule detects infinite loops with empty bodies.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that infinite loops are:
+- loops whose conditions contain one of the following:
+  - an integer or enumeration constant whose value is other than '0'
+  - a boolean constant whose value evaluates to 'true'
+  - a constant variable that was initialized with an integer or enumeration
+    constant whose value is other than '0', or with a boolean constant whose
+    value evaluates to 'true'
+  - a unary negation operator '!' - if its operand is an integer or
+    enumeration constant whose value is '0', or a boolean constant whose value
+    evaluates to 'false'
+- 'for' loops with empty conditions
+
+This rule assumes that empty loops are loops that do not contain any expressions
+or statements other than an empty statement ';' or a block statement'{}'.
+'for' loops that contain an expression in the iteration section are
+not considered to be empty.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected behavior and prevent wasting processor
+resources and time.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1 () {
+    for(;;){          // Violation
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include&lt;time.h&gt;
+void f1 () {
+    for(;;){         // OK
+        sleep(1);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

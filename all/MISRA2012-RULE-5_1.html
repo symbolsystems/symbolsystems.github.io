@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+External identifiers shall be distinct [MISRA2012-RULE-5_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+External identifiers shall be distinct [MISRA2012-RULE-5_1-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule requires that different external identifiers be distinct within the
+limits imposed by the implementation.
+
+The definition of distinct depends on the implementation and on the version of
+the C language that is being used:
+- In C90 the minimum requirement is that the first 6 characters of external
+  identifiers are significant but their case is not required to be significant;
+- In C99 the minimum requirement is that the first 31 characters of external
+  identifiers are significant, with each universal character or corresponding
+  extended source character occupying between 6 and 10 characters.
+
+In practice, many implementations provide greater limits. For example it is
+common for external identifiers in C90 to be case-sensitive and for at least
+the first 31 characters to be significant." [MISRA C:2012 Rule 5.1]
+
+This rule detect cases when different external identifiers have the same first
+31 characters of their names.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Long identifiers may impair the readability of code. While many automatic code
+generation systems produce long identifiers, there is a good argument for
+keeping identifier lengths well below this limit." [MISRA C:2012 Rule 5.1]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Keeping external identifiers distinct can help you avoid undefined behaviors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int ID1_global_identifier_number_01_1;
+int ID1_global_identifier_number_01_2;               /* Violation */
+
+extern void ID2_global_identifier_number_01_1();
+extern void ID2_global_identifier_number_01_2();     /* Violation */
+
+void ID2_global_identifier_number_01_2()             /* Violation */
+{
+    extern int ID3_global_identifier_number_01_1;
+}
+int ID3_global_identifier_number_01_2;               /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* External identifiers should be distinct in first 31 characters */ 
+int ID1_global_identifier_number_01;
+int ID1_global_identifier_number_02;                   /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.1
+
+</PRE>
+</BODY>
+</HTML>

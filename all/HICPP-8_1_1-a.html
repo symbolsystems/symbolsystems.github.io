@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The declaration should not contain more than one level of pointer indirection [HICPP-8_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The declaration should not contain more than one level of pointer indirection [HICPP-8_1_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Use of more than one level of pointer indirection can seriously impair
+the ability to understand the behaviour of the code, and should therefore
+be avoided.
+
+See also: CODSTA-05, CODSTA-94, CODSTA-95, MISRA2004-17_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.3
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not apply to arguments of the 'main' function.
+
+int main(int argc, char** argv) {       // OK - Exception
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintanability of your
+code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int** INTPTR;  /* Violation */
+int** ptr;             /* Violation */
+int* a[];              /* Violation */
+struct S{
+    int** s;           /* Violation */
+};
+
+struct S** ps;         /* Violation */
+
+int** foo();           /* Violation */
+int(**pfunc1)();       /* Violation */
+int**(*pfunc2)();      /* Violation */
+void fun( int** par,   /* Violation */
+          INTPTR par_t /* Violation */
+        )
+{
+    int* a[10];        /* Violation */
+    int ** ptr;        /* Violation */
+    INTPTR ptr_t = 0;  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not declare more than one level of pointer indirection.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   8.1.1. Do not use multiple levels of pointer indirection
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+3. The Power of Ten - Rules for Developing Safety Critical Code.
+   Rule 9
+
+</PRE>
+</BODY>
+</HTML>

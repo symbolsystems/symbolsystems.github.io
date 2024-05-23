@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not initialize objects with a non-trivial class type using C standard library functions [CERT_CPP-OOP57-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not initialize objects with a non-trivial class type using C standard library functions [CERT_CPP-OOP57-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not use std::memset() to initialize an object of nontrivial class type
+as it may not properly initialize the value representation of the object.
+Do not use std::memcpy() (or related bytewise copy functions) to initialize
+a copy of an object of nontrivial class type, as it may not properly
+initialize the value representation of the copy." [CERT-OOP57-CPP]
+
+This rule detects when a pointer to a nontrivial class is passed as an argument
+to one of the following functions from the standard library:
+memset(), memcpy(), memmove(), strcpy().
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule refers to the trivial class as defined by the C++17 Standard.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined or abnormal program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstring&gt;
+
+class A1 {
+public:
+    A1() : m(10) { }
+private:
+    int m;
+};
+
+void f1 () {
+    A1 a1;
+    std::memset(&amp;a1, 0, 10);         // Violation
+}
+
+void f2 () {
+    A1 a11;
+    A1 a12;
+    std::memcpy(&amp;a11, &amp;a12, 10);     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;utility&gt;
+
+class A1 {
+public:
+    A1() : m(10) { }
+    A1&amp; operator=(const A1&amp; rhs);
+private:
+    int m;
+};
+
+template &lt;typename T&gt;
+T&amp; clear(T &amp;o) {
+    using std::swap;
+    T empty;
+    swap(o, empty);
+    return o;
+}
+
+void f1 () {
+    A1 a1;
+    clear(a1);           // OK
+}
+
+void f2 () {
+    A1 a11;
+    A1 a12;
+    a11 = a12;           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   OOP57-CPP. Prefer special member functions and overloaded operators to C
+   Standard Library functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP57-CPP.+Prefer+special+member+functions+and+overloaded+operators+to+C+Standard+Library+functions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP57-CPP.+Prefer+special+member+functions+and+overloaded+operators+to+C+Standard+Library+functions</A>
+
+2. ISO/IEC 14882:2017 Programming languages - C++
+   12 Classes
+
+</PRE>
+</BODY>
+</HTML>

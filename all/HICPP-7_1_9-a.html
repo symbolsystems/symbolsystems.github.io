@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not explicitly specify the return type of a lambda [HICPP-7_1_9-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not explicitly specify the return type of a lambda [HICPP-7_1_9-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Allowing the return type of a lambda to be implicitly deduced reduces the
+danger of unexpected implicit conversions, as well as simplifying future
+maintenance, where changes to types used in the lambda would otherwise result
+in the need to change the return type." [HIC++ v4.0, Rule 7.1.9]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Reduces the amount of code maintenance on lambdas if types change in the
+future. Prevents the compiler from performing unexpected implicit type
+conversions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;algorithm&gt;
+#include &lt;cstdint&gt;
+#include &lt;vector&gt;
+
+void f(const std::vector&lt;int32_t&gt; &amp;v1, std::vector&lt;int32_t&gt; &amp;v2) {
+    v2.reserve(v1.size());
+    std ::transform(
+        v1.cbegin(), v1.cend(), v2.begin(),
+        [](std ::vector&lt;int32_t&gt;::value_type i) -&gt; int32_t // Violation
+        { return i + 10; });
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;algorithm&gt;
+#include &lt;cstdint&gt;
+#include &lt;vector&gt;
+
+void f(std ::vector&lt;int32_t&gt; const &amp;v1, std ::vector&lt;int32_t&gt; &amp;v2) {
+    v2.reserve(v1.size());
+    std ::transform(v1.cbegin(), v1.cend(), v2.begin(),
+                    [](std ::vector&lt;int32_t&gt;::value_type i) // OK
+                    { return i + 10; });
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.9. Do not explicitly specify the return type of a lambda
+
+</PRE>
+</BODY>
+</HTML>

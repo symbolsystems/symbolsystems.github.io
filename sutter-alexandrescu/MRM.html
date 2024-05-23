@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Memory and Resource Management [MRM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+MRM
+</STRONG>
+<PRE>
+Memory and Resource Management
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="MRM-01.html">Do not allocate resources in function argument list because the order of evaluation of a function's parameters is undefined [MRM-01-1]</a></code><br>
+<code><a href="MRM-02.html">Do not allocate more than one resource in a single statement [MRM-02-3]</a></code><br>
+<code><a href="MRM-04.html">All classes should contain the assignment operator or appropriate comment [MRM-04-3]</a></code><br>
+<code><a href="MRM-05.html">All classes should contain the copy constructor or appropriate comment [MRM-05-3]</a></code><br>
+<code><a href="MRM-07.html">Don't memcpy or memcmp non-PODs [MRM-07-3]</a></code><br>
+<code><a href="MRM-14.html">If a class defines any overload of operator new, it should provide overloads of all three of plain, in-place, and non-throwing operator new [MRM-14-3]</a></code><br>
+<code><a href="MRM-15.html">If a class defines any overload of operator new[], it should provide overloads of all three of plain, in-place, and non-throwing operator new[] [MRM-15-3]</a></code><br>
+<code><a href="MRM-16.html">If a class defines any overload of operator delete, it should provide overloads of all three of plain, in-place, and non-throwing operator delete [MRM-16-3]</a></code><br>
+<code><a href="MRM-17.html">If a class defines any overload of operator delete[], it should provide overloads of all three of plain, in-place, and non-throwing operator delete[] [MRM-17-3]</a></code><br>
+<code><a href="MRM-28.html">Always provide new and delete together [MRM-28-3]</a></code><br>
+<code><a href="MRM-29.html">Always provide new[] and delete[] together [MRM-29-3]</a></code><br>
+<code><a href="MRM-31.html">Freed memory shouldn't be accessed under any circumstances [MRM-31-3]</a></code><br>
+<code><a href="MRM-37.html">Declare a copy assignment operator for classes with dynamically allocated memory [MRM-37-1]</a></code><br>
+<code><a href="MRM-38.html">Declare a copy constructor for classes with dynamically allocated memory [MRM-38-1]</a></code><br>
+<code><a href="MRM-40.html">Copy and destroy consistently [MRM-40-3]</a></code><br>
+</BODY>
+</HTML>

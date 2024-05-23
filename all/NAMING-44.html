@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All letters contained in function and variable names will be composed entirely of lowercase letters [NAMING-44]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All letters contained in function and variable names will be composed entirely of lowercase letters [NAMING-44-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All letters contained in function and variable names will be composed
+entirely of lowercase letters." [JSF]
+
+This rule detects functions and non-const variables whose names contain
+an uppercase letter.
+
+See also: NAMING-05, NAMING-06, NAMING-07, NAMING-34, NAMING-35, NAMING-42
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not detect uppercase letters in the names of constructors,
+destructors, and conversion operators.
+
+The Joint Strike Fighter coding standard allows uppercase letters in acronyms.
+For the rule to support this exception, you must:
+1. Create a text file that contains a whitespace-separated list of acronyms
+   you want this rule to recognize. For example, the file content may resemble
+   the following:
+     RGB XYZ
+2. Create an environment variable called CPPTEST_JSF_ACRONYMS and set its value
+   to the path of the above file.
+
+This will prevent the rule from reporting uppercase letters in the acronyms
+listed in the file. For example:
+  int RGB_value;      // OK if "RGB" is an acronym
+  void f_XYZ_1();     // OK if "XYZ" is an acronym
+
+Note that the acronym must be separated from other parts of the identifier name
+with an underscore. For example:
+  int RGBvalue;      // Violation - "RGB" is not recognized as an acronym
+  void fXYZ_1();     // Violation - "XYZ" is not recognized as an acronym
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Sample_class
+{
+public:
+    int Some_function();      // Violation
+private:
+    int Some_variable;        // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, replace the uppercase letters with lowercase letters in
+the function name and the variable name.
+
+class Sample_class
+{
+public:
+    Sample_class();           // OK - Exception
+    int some_function();      // OK
+private:
+    static const int C = 10;  // OK - Exception
+    int some_variable;        // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 51
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Eliminate unused parameters [OPT-03]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Eliminate unused parameters [OPT-03-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports violations on parameters that are not used inside body 
+of function. It is recommended to remove unused parameters or to omit 
+their names (possible only in C++ language). 
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not trigger on parameters captured by lambda expressions. 
+It assumes that lambdas use every parameter they capture.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report violations on virtual functions and on functions
+that are used as callback (an address of function is taken in translation unit).
+The rule does not report violations on unnamed parameters.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves legibility and increases efficiency of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int i, int k) {      // Violation
+    i = 5 * i;
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int i) {      // OK
+    i = 5 * i;
+    return i;
+}
+
+// Exceptions
+
+class A {
+public:
+    virtual void foo(int a);
+};
+
+void A::foo(int a){          // OK - virtual function
+}
+
+int callback(int a, int b){} // OK - address of function is taken
+
+void useCb(){
+    int(*fp)(int, int);
+    fp = callback;
+}
+
+int unpar(int a, int){       // OK - unnamed parameter
+    a++;
+    return a;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A0-1-4. There shall be no unused named parameters in non-virtual functions
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 0.2.2 A named function parameter shall be used at least once
+
+4. Scott Meyers, "More Effective C++: 35 New Ways to Improve
+   Your Programs and Designs", Addison Wesley, (31 Mar 1996), Item 6
+
+</PRE>
+</BODY>
+</HTML>

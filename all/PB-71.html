@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not copy instances of structures containing a flexible array member [PB-71]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not copy instances of structures containing a flexible array member [PB-71-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Flexible array structures must
+* Have dynamic storage duration (be allocated via malloc() or another dynamic
+  allocation function)
+* Be dynamically copied using memcpy() or a similar function
+  and not by assignment
+* When used as an argument to a function, be passed by pointer and not copied
+  by value"
+[CERT-MEM33-C]
+
+This rule detects when a structure that contains a flexible array member is:
+* copied by assignment
+* passed to a function by value
+* returned from a function by value
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct flex_array_struct {
+    int m1;
+    int farr[];
+};
+
+void func(struct flex_array_struct * arg1,
+          struct flex_array_struct * arg2) {
+    *arg1 = *arg2;                                                // Violation
+}
+
+struct flex_array_struct foo(struct flex_array_struct arg) {
+    return arg;                                                   // Violation
+}
+
+void bar() {
+    struct flex_array_struct tmp_str;
+    foo(tmp_str);                                                 // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+struct flex_array_struct {
+    int m1;
+    int farr[];
+};
+
+void func(struct flex_array_struct * arg1,
+          struct flex_array_struct * arg2) {
+    memcpy(arg2, arg1, sizeof(struct flex_array_struct) +         // OK
+           sizeof(arg1-&gt;m1) * sizeof(int));
+}
+
+struct flex_array_struct* foo(struct flex_array_struct * parg) {
+    struct flex_array_struct* pfas;
+    return pfas;                                                  // OK
+}
+
+void bar() {
+    struct flex_array_struct* pfas;
+    foo(pfas);                                                    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MEM33-C. Allocate and copy structures containing a flexible array member
+   dynamically
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM33-C.++Allocate+and+copy+structures+containing+a+flexible+array+member+dynamically">https://wiki.sei.cmu.edu/confluence/display/c/MEM33-C.++Allocate+and+copy+structures+containing+a+flexible+array+member+dynamically</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid possible integer overflow in expressions in which the result is compared to an expression of a wider integer type [CERT_C-INT18-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid possible integer overflow in expressions in which the result is compared to an expression of a wider integer type [CERT_C-INT18-b-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an exceptional condition occurs during the evaluation of an expression
+(that is, if the result is not mathematically defined or not in the range
+of representable values for its type), the behavior is undefined."
+[ISO/IEC 9899:1999]
+
+"If an integer expression involving an operation is compared to a larger
+integer size, that integer expression should be evaluated in that larger
+size by explicitly casting one of the operands." [CERT C: INT18-C]
+
+If the result of integer multiplication, addition, subtraction,
+or left-shift operation is converted to a wider integer type, 
+then unexpected integer overflow is possible.
+
+This rule reports a violation if the result of multiplication, addition,
+subtraction, or left-shift operation is implicitly converted from an integer
+type to a wider integer type in equality or relational statement.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    unsigned long long ull;
+};
+
+void foo1(int i, int j) {
+    struct S s;
+    long l;
+    long long ll1;
+    if (ll1 == i * 1024){    // Violation
+        //...
+    }
+    if (ll1 != i + j){       // Violation
+        //...
+    }
+    if (j - 1024 &gt; ll1){     // Violation
+        //...
+    }
+    if (i &lt;&lt; 8 &lt; s.ull){     // Violation
+        //...
+    }
+    if (l == i * 1024){      // Violation only if sizeof(long) &gt; sizeof(int)
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+    unsigned long long ull;
+};
+
+void foo1(int i, int j) {
+    struct S s;
+    long l;
+    long long ll1;
+    if (ll1 == (long long)i * 1024){ // OK
+        //...
+    }
+    if (ll1 != i + (long long)j){    // OK
+        //...
+    }
+    if (j - 1024LL &gt; ll1){           // OK
+        //...
+    }
+    if ((long long)i &lt;&lt; 8 &lt; s.ull){  // OK
+        //...
+    }
+    if (l == i * 1024){              // OK only if sizeof(long) == sizeof(int)
+        //...
+    }
+}
+
+// Examples not reported by the rule
+void foo2(int i, int j) {
+    short s1, s2;
+    long long ll1;
+    if (ll1 == (long long)(i * 1024)){  // OK - explicit cast
+        //...
+    }
+    if (ll1 == i / j){                  // OK - division 
+        //...
+    }
+    if (i == s1 * s2){                  // OK - integral promotion
+        //...
+    }
+    if (ll1 == i &gt;&gt; j){                 // OK - right-shift operation 
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.5 Expressions
+
+3. ISO/IEC 14882:2003 Programming languages -- C++
+   5 Expressions
+
+4. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-190: Integer Overflow or Wraparound
+   <A HREF="https://cwe.mitre.org/data/definitions/190.html">https://cwe.mitre.org/data/definitions/190.html</A>
+
+5. SEI CERT C Coding Standard
+   INT18-C. Evaluate integer expressions in a larger size before comparing or
+   assigning to that size
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT18-C.+Evaluate+integer+expressions+in+a+larger+size+before+comparing+or+assigning+to+that+size">https://wiki.sei.cmu.edu/confluence/display/c/INT18-C.+Evaluate+integer+expressions+in+a+larger+size+before+comparing+or+assigning+to+that+size</A>
+
+</PRE>
+</BODY>
+</HTML>

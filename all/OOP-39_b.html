@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A stateful virtual base shall be explicitly declared in each derived class that accesses it [OOP-39_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A stateful virtual base shall be explicitly declared in each derived class that accesses it [OOP-39_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A stateful virtual base shall be explicitly declared 
+in each derived class that accesses it.
+
+See also: OOP-39
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. A 'stateful' class is a class which has any member variables, either declared
+directly or inherited from a base class. For example:
+  struct A {                // Stateful class
+    int x;
+  };
+  struct B : public A { };  // Stateful class
+
+2. By 'accessing' a class this rule understands:
+- calling a member function (including constructor)
+- setting or reading member variable (including taking address of the variable)
+Those operations can be done on "this" object or on any other object.
+For example:
+  struct A { int x; };  // Stateful
+  struct B : public virtual A { };
+  struct C : public B { // Violation
+    void foo(A a) {
+      ++a.x;          // 'A' accessed
+    }
+  };
+
+3. A class can have both virtual and non virtual base classes of a given type.
+In such case this rule still reports a violation. For example:
+  struct B { int x; }; // Stateful class
+  struct X : virtual public B { };
+  struct Y : virtual public B { };
+  struct Z : public B { };
+  // 'B' is inherited both virtually (through X and Y)
+  // and non-virtually (through Z)
+  struct A1 : public X, public Y, public Z {  // Violation
+    void foo() {
+      ++X::x; // "++x" is ambiguous
+    }
+  };
+
+4. In case of templates, to detect inheritance and to detect if class is
+accessed, the template and a function which accesses the class must be
+instantiated.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicitly declaring a stateful virtual base at each level in a hierarchy
+(where that base is used), documents that fact that no assumptions can be made
+with respect to the exclusive use of the data contained within the virtual
+base." [JSF AV Rule 88.1]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A {                                // Stateful class
+    int x;
+    void foo();
+};
+
+struct B : public virtual A {};
+struct C : public B {                     // Violation ('A')
+    void foo() {
+        ++x;                              // 'A' used
+    }
+};
+
+struct D : public A {                     // Stateful class
+    void bar();
+};
+struct E : public virtual D {};
+struct F : public E {                     // Violation ('D')
+    void foo() {
+        bar();                            // 'D' used
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct A {                                // Stateful class
+    int x;
+    void foo();
+};
+
+struct B : public virtual A {};
+struct C : public B, public virtual A {   // OK
+    void foo() {                       
+        ++x;                              // 'A' used
+    }
+};
+
+struct D : public A {                     // Stateful class
+    void bar();
+};
+struct E : public virtual D {};
+struct F : public E, public virtual D {   // OK
+    void foo() {
+        bar();                            // 'D' used
+    }
+};
+
+struct G : public B {                     // OK ('A' not used)
+    void foo() { }
+};
+
+struct H {                                // Not a stateful class
+    void foo();
+};
+struct I : public virtual H {};
+struct J : public I {                     // OK
+    void bar() {
+        foo();
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 88.1
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

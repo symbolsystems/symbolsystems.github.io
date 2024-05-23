@@ -1,0 +1,102 @@
+<HTML><HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<TITLE>Enabled Rules</TITLE></HEAD>
+<BODY BGCOLOR=white><FONT FACE="Arial, Helvetica"><H1>Enabled Rules</H1>
+<UL>
+<LI><B><A HREF="BD.html">Flow Analysis [BD]</A></B>
+<UL>
+<LI><B><A HREF="BD-PB.html">Possible Bugs [BD-PB]</A></B>
+<UL>
+<LI><A HREF="BD-PB-NORETURN.html">Never return from functions that should not return [BD-PB-NORETURN-2]</A>
+<LI><A HREF="BD-PB-SUBSEQFRWD.html">Do not subsequently use the argument to std::forward [BD-PB-SUBSEQFRWD-2]</A>
+</UL>
+</UL>
+<LI><B><A HREF="CODSTA.html">Coding Conventions [CODSTA]</A></B>
+<UL>
+<LI><B><A HREF="CODSTA-MCPP.html">Coding Conventions for Modern C++ [CODSTA-MCPP]</A></B>
+<UL>
+<LI><A HREF="CODSTA-MCPP-01.html">User-conversion cast operators should be made explicit [CODSTA-MCPP-01-3]</A>
+<LI><A HREF="CODSTA-MCPP-02.html">Prefer alias declarations to typedefs [CODSTA-MCPP-02-3]</A>
+<LI><A HREF="CODSTA-MCPP-03.html">Prefer Scoped Enums to Unscoped Enums [CODSTA-MCPP-03-3]</A>
+<LI><A HREF="CODSTA-MCPP-04.html">Prefer 'nullptr' over 'NULL' or '0'(zero) [CODSTA-MCPP-04-4]</A>
+<LI><A HREF="CODSTA-MCPP-05.html">Each overriding virtual function shall be declared with the override or final specifier [CODSTA-MCPP-05-3]</A>
+<LI><A HREF="CODSTA-MCPP-06_a.html">Declare copy constructor and copy assignment operators with the 'delete' specifier to prevent copying of class [CODSTA-MCPP-06_a-3]</A>
+<LI><A HREF="CODSTA-MCPP-06_b.html">Declare copy constructor and copy assignment operators with the 'delete' specifier instead of using a base class with private methods to prevent copying of class [CODSTA-MCPP-06_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-07.html">Prefer lambdas over std::bind, std::bind1st and std::bind2nd [CODSTA-MCPP-07-2]</A>
+<LI><A HREF="CODSTA-MCPP-07_b.html">The 'binder1st' and 'binder2nd' identifiers should not be used [CODSTA-MCPP-07_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-08_a.html">Prefer 'auto' to explicit type names in variable declarations [CODSTA-MCPP-08_a-2]</A>
+<LI><A HREF="CODSTA-MCPP-08_b.html">Prefer 'auto' to explicit type names for function return types [CODSTA-MCPP-08_b-2]</A>
+<LI><A HREF="CODSTA-MCPP-09.html">Declare functions 'noexcept' if they will not emit exceptions [CODSTA-MCPP-09-3]</A>
+<LI><A HREF="CODSTA-MCPP-101.html">A for-range-initializer shall contain at most one function call [CODSTA-MCPP-101-3]</A>
+<LI><A HREF="CODSTA-MCPP-103.html">Variables should be captured explicitly in a non-transient lambda [CODSTA-MCPP-103-3]</A>
+<LI><A HREF="CODSTA-MCPP-104.html">A non-transient lambda shall not implicitly capture this [CODSTA-MCPP-104-3]</A>
+<LI><A HREF="CODSTA-MCPP-105.html">Special member functions shall be provided appropriately [CODSTA-MCPP-105-3]</A>
+<LI><A HREF="CODSTA-MCPP-10_a.html">Prefer const iterators to iterators [CODSTA-MCPP-10_a-3]</A>
+<LI><A HREF="CODSTA-MCPP-10_b.html">Prefer to use cbegin(), crbegin, cend(), crend() functions [CODSTA-MCPP-10_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-11_a_cpp11.html">Use constexpr to declare const variables whenever possible [CODSTA-MCPP-11_a_cpp11-4]</A>
+<LI><A HREF="CODSTA-MCPP-11_b_cpp11.html">Use constexpr to declare functions whenever possible [CODSTA-MCPP-11_b_cpp11-4]</A>
+<LI><A HREF="CODSTA-MCPP-13.html">Use std::move() on rvalue references and std::forward() on forwarding references [CODSTA-MCPP-13-3]</A>
+<LI><A HREF="CODSTA-MCPP-13_b.html">The 'std::forward' function should be used to forward forwarding references [CODSTA-MCPP-13_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-13_c.html">The 'std::forward' function should only be used to forward forwarding references [CODSTA-MCPP-13_c-3]</A>
+<LI><A HREF="CODSTA-MCPP-13_d.html">The 'std::move' function should be used to forward rvalue references [CODSTA-MCPP-13_d-3]</A>
+<LI><A HREF="CODSTA-MCPP-14.html">Avoid Overloading on Forwarding References [CODSTA-MCPP-14-3]</A>
+<LI><A HREF="CODSTA-MCPP-15_a.html">Avoid default capture modes [CODSTA-MCPP-15_a-3]</A>
+<LI><A HREF="CODSTA-MCPP-15_b.html">Use the 'this' pointer explicitly in lambdas with a default by-reference capture [CODSTA-MCPP-15_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-16_a.html">Prefer smart pointer members over raw pointer members [CODSTA-MCPP-16_a-4]</A>
+<LI><A HREF="CODSTA-MCPP-16_b.html">Prefer smart pointers over raw pointers for arrays or STL containers [CODSTA-MCPP-16_b-4]</A>
+<LI><A HREF="CODSTA-MCPP-16_c.html">Prefer 'std::make_shared' to the direct use of new [CODSTA-MCPP-16_c-3]</A>
+<LI><A HREF="CODSTA-MCPP-16_d.html">Prefer to use std::unique_ptr instead of std::auto_ptr [CODSTA-MCPP-16_d-3]</A>
+<LI><A HREF="CODSTA-MCPP-16_e.html">'std::make_unique' shall be used to construct objects owned by 'std::unique_ptr' [CODSTA-MCPP-16_e-3]</A>
+<LI><A HREF="CODSTA-MCPP-17.html">Never return lambdas that capture local objects by reference [CODSTA-MCPP-17-3]</A>
+<LI><A HREF="CODSTA-MCPP-17_b.html">Never capture local objects from an outer lambda by reference [CODSTA-MCPP-17_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-17_c.html">The lambda that captures local objects by reference should not be assigned to the variable with a greater lifetime [CODSTA-MCPP-17_c-3]</A>
+<LI><A HREF="CODSTA-MCPP-18_a.html">Avoid unnecessary default capture modes in lambda expressions [CODSTA-MCPP-18_a-3]</A>
+<LI><A HREF="CODSTA-MCPP-18_b.html">Avoid unnecessary lambda captures [CODSTA-MCPP-18_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-19.html">Declare assignment operators with the ref-qualifier &amp; [CODSTA-MCPP-19-3]</A>
+<LI><A HREF="CODSTA-MCPP-20.html">Prefer smart pointers over raw local pointers [CODSTA-MCPP-20-4]</A>
+<LI><A HREF="CODSTA-MCPP-21.html">Do not call lock() directly on a mutex [CODSTA-MCPP-21-4]</A>
+<LI><A HREF="CODSTA-MCPP-22.html">Use explicit ref-qualifiers on auto declarations in range-based 'for' loops [CODSTA-MCPP-22-3]</A>
+<LI><A HREF="CODSTA-MCPP-23.html">If a public destructor of a class is non-virtual, then the class should be declared final [CODSTA-MCPP-23-3]</A>
+<LI><A HREF="CODSTA-MCPP-24.html">Only one of virtual, override or final should be specified in a member function declaration [CODSTA-MCPP-24-3]</A>
+<LI><A HREF="CODSTA-MCPP-25.html">Digit sequences separators ' shall only be used consistently [CODSTA-MCPP-25-3]</A>
+<LI><A HREF="CODSTA-MCPP-26.html">A pointer to member virtual function shall only be tested for equality with null-pointer-constant [CODSTA-MCPP-26-3]</A>
+<LI><A HREF="CODSTA-MCPP-27.html">All std::hash specializations for user-defined types shall have a noexcept function call operator [CODSTA-MCPP-27-2]</A>
+<LI><A HREF="CODSTA-MCPP-28.html">A lambda shall not be an operand to typeid [CODSTA-MCPP-28-3]</A>
+<LI><A HREF="CODSTA-MCPP-29.html">Use smart pointers when passing a pointer to an object in a thread [CODSTA-MCPP-29-3]</A>
+<LI><A HREF="CODSTA-MCPP-30.html">Consider using 'std::unique_ptr' instead of 'std::shared_ptr' for local objects [CODSTA-MCPP-30-3]</A>
+<LI><A HREF="CODSTA-MCPP-31.html">Define both sized and unsized versions of operator delete [CODSTA-MCPP-31-3]</A>
+<LI><A HREF="CODSTA-MCPP-32.html">Static and thread-local objects shall be constant-initialized [CODSTA-MCPP-32-3]</A>
+<LI><A HREF="CODSTA-MCPP-33.html">User defined literals operators shall only perform conversion of passed parameters [CODSTA-MCPP-33-3]</A>
+<LI><A HREF="CODSTA-MCPP-34.html">A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [CODSTA-MCPP-34-3]</A>
+<LI><A HREF="CODSTA-MCPP-35.html">A parameter should only be declared as a non-const lvalue reference to 'std::shared_ptr' or 'std::unique_ptr' if the function replaces the managed object [CODSTA-MCPP-35-3]</A>
+<LI><A HREF="CODSTA-MCPP-36.html">Do not declare the type of a parameter as an rvalue reference to 'std::shared_ptr' or 'std::unique_ptr' [CODSTA-MCPP-36-3]</A>
+<LI><A HREF="CODSTA-MCPP-37.html">Derived classes that do not need further explicit initialization and require all the constructors from the base class shall use inheriting constructors [CODSTA-MCPP-37-3]</A>
+<LI><A HREF="CODSTA-MCPP-38.html">Braced-initialization {}, without equals sign, shall be used for variable initialization [CODSTA-MCPP-38-3]</A>
+<LI><A HREF="CODSTA-MCPP-39.html">A variable of type auto shall not be initialized using '{}' or '={}' braced-initialization [CODSTA-MCPP-39-3]</A>
+<LI><A HREF="CODSTA-MCPP-40.html">Do not overuse 'auto' specifier [CODSTA-MCPP-40-3]</A>
+<LI><A HREF="CODSTA-MCPP-41.html">The 'random_shuffle' identifier should not be used [CODSTA-MCPP-41-3]</A>
+<LI><A HREF="CODSTA-MCPP-42.html">Do not use the increment operator (++) on an operand of type 'bool' [CODSTA-MCPP-42-3]</A>
+<LI><A HREF="CODSTA-MCPP-43.html">The 'set_unexpected' identifier should not be used [CODSTA-MCPP-43-3]</A>
+<LI><A HREF="CODSTA-MCPP-44.html">Lambda expressions should not be defined inside another lambda expression [CODSTA-MCPP-44-3]</A>
+<LI><A HREF="CODSTA-MCPP-45.html">Return type of a non-void return type lambda expression should be explicitly specified [CODSTA-MCPP-45-3]</A>
+<LI><A HREF="CODSTA-MCPP-46.html">Include a parameter list in every lambda expression [CODSTA-MCPP-46-3]</A>
+<LI><A HREF="CODSTA-MCPP-47.html">Avoid overloading constructors with std::initializer_list [CODSTA-MCPP-47-3]</A>
+<LI><A HREF="CODSTA-MCPP-47_b.html">A class shall only define an initializer-list constructor when it is the only constructor [CODSTA-MCPP-47_b-3]</A>
+<LI><A HREF="CODSTA-MCPP-48.html">Multiple output values from a function should be returned as a struct or tuple [CODSTA-MCPP-48-3]</A>
+<LI><A HREF="CODSTA-MCPP-49.html">User-defined copy and move assignment operators should use user-defined no-throw swap function [CODSTA-MCPP-49-3]</A>
+<LI><A HREF="CODSTA-MCPP-50.html">A for-loop that loops through all elements of the container and does not use its loop-counter shall not be used [CODSTA-MCPP-50-3]</A>
+<LI><A HREF="CODSTA-MCPP-51.html">Use const container calls when the result is immediately converted to a const iterator [CODSTA-MCPP-51-3]</A>
+<LI><A HREF="CODSTA-MCPP-52.html">Do not introduce virtual functions in a final class [CODSTA-MCPP-52-3]</A>
+<LI><A HREF="CODSTA-MCPP-53.html">Do not use std::move on objects declared with the const or const &amp; type [CODSTA-MCPP-53-3]</A>
+<LI><A HREF="CODSTA-MCPP-54.html">Do not create an rvalue reference of std::array [CODSTA-MCPP-54-3]</A>
+<LI><A HREF="CODSTA-MCPP-55.html">Use std::call_once rather than the Double-Checked Locking pattern [CODSTA-MCPP-55-3]</A>
+<LI><A HREF="CODSTA-MCPP-56.html">If a class declares a copy or move operation, or a destructor, either via '=default', '=delete', or via a user-provided declaration, then all others of these five special member functions shall be declared as well [CODSTA-MCPP-56-2]</A>
+<LI><A HREF="CODSTA-MCPP-57.html">The raw pointer constructors of 'std::shared_ptr' and 'std::unique_ptr' should not be used [CODSTA-MCPP-57-3]</A>
+<LI><A HREF="CODSTA-MCPP-58.html">Do not include headers deprecated in the C++17 standard [CODSTA-MCPP-58-3]</A>
+<LI><A HREF="CODSTA-MCPP-59.html">The 'uncaught_exception' function deprecated in the C++17 standard should not be used [CODSTA-MCPP-59-3]</A>
+<LI><A HREF="CODSTA-MCPP-60.html">The condition of a 'switch' statement should only be preceded by an optional simple-declaration [CODSTA-MCPP-60-3]</A>
+<LI><A HREF="CODSTA-MCPP-61.html">Define =delete functions with parameters of type rvalue reference to const [CODSTA-MCPP-61-3]</A>
+</UL>
+</UL>
+</UL>
+</BODY></HTML>

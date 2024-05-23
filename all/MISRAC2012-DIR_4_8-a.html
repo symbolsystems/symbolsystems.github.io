@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If a pointer to a structure or union is never dereferenced within a translation unit, then the implementation of the object should be hidden [MISRAC2012-DIR_4_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If a pointer to a structure or union is never dereferenced within a translation unit, then the implementation of the object should be hidden [MISRAC2012-DIR_4_8-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Hiding the implementation details creates an opaque type that may
+be referenced via a pointer whose contents may not be accessed. The
+implementation of an object should be hidden by means of a pointer
+to an incomplete type." [MISRA C:2012]
+
+This rule reports a violation if the implementation of the structure
+or the union is not required in a translation unit. If the structure
+is defined in a header file, then its implementation can be required
+in one translation unit and not required in the other, so the user
+should take care when refactoring the code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If a pointer to a structure or union is never dereferenced, then the 
+implementation details of the object are not needed and its contents 
+should be protected from unintentional changes." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* test.h */
+struct S                  // Violation - the implemetation of the structure 'S'
+                          // is not required in a translation unit 'test1.c'
+{
+    int i;
+};
+
+void foo1(struct S* s);
+void foo2(struct S* s);
+
+struct S* get();
+void use(struct S* p);
+
+/* test1.c */
+#include "test.h"
+
+void foo2(struct S* s)
+{
+    foo1(s);
+}
+
+/* test2.c */
+#include "test.h"
+
+void foo1(struct S* s)
+{
+    int i = s-&gt;i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* test1.h */
+struct S;                  // OK
+
+void foo1(struct S* s);
+void foo2(struct S* s);
+
+/* test2.h */
+struct S                   // OK - the implemantation of the structure 'S' is
+                           // only required in a translation unit 'test2.c'
+{
+    int i;
+};
+
+
+/* test1.c */
+#include "test1.h"
+
+void foo2(struct S* s)
+{
+    foo1(s);
+}
+
+/* test2.c */
+#include "test1.h"
+#include "test2.h"
+
+void foo1(struct S* s)
+{
+    int i = s-&gt;i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.8
+
+2. SEI CERT C Coding Standard
+   DCL12-C. Implement abstract data types using opaque types
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL12-C.+Implement+abstract+data+types+using+opaque+types">https://wiki.sei.cmu.edu/confluence/display/c/DCL12-C.+Implement+abstract+data+types+using+opaque+types</A>
+
+</PRE>
+</BODY>
+</HTML>

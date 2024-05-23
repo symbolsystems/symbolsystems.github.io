@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast an array to the pointer to a structure of a larger size than the size of the array [CODSTA-205]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast an array to the pointer to a structure of a larger size than the size of the array [CODSTA-205-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+An array can be assigned to the pointer to a structure by using an explicit
+cast. However, if the size of the structure is larger than the size of
+the array, then accessing a structure element may result in memory access
+beyond the allocated range.
+
+This rule detects when a fixed-size array is explicitly cast to the pointer
+to a structure of a larger size than the size of this array.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid undefined behavior by preventing out-of-bounds memory
+access.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the size of the array assigned to the pointer
+to structure S is smaller than the size of structure S.
+
+struct S
+{
+    int m;
+};
+
+void foo()
+{
+    char tab[2];
+    S* p = (S*)tab;                           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, ensure that the size of the array is not smaller than
+the size of structure S.
+
+struct S
+{
+    int m;
+};
+
+void foo()
+{
+    char tab[sizeof(S)];
+    S* p = (S*)tab;                           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

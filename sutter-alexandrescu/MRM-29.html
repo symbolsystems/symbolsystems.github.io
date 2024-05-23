@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always provide new[] and delete[] together [MRM-29]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always provide new[] and delete[] together [MRM-29-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Every class-specific overload 'operator new' must be accompanied 
+by a matching overload 'operator delete'. 
+The same goes for the array forms new[] and delete[].
+
+A declaration of a deallocation function matches the declaration 
+of the allocation function if it has the same number of parameters and all
+parameter types except the first are identical.
+
+The reason is that if new-expression allocates memory but later 
+initialization of the created object terminates by throwing an exception
+and a suitable deallocation function can be found, the deallocation function 
+is called to free the memory in which the object was being constructed.
+If the suitable deallocation function does not exists it is likely to 
+result in a memory leak.
+
+See also: MRM-26, MRM-29
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule described in Rule 45 of Herb Sutter &amp; Andrei Alexandrescu 
+"C++ Coding Standards" has been modified to match C++ standard.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+A declaration of a non-placement deallocation function with exactly
+two parameters, the second of which has type std::size_t matches
+a non-placement allocation function with one parameter.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents spurious memory leaks in cases when overloaded new operator fails.
+Ensures that corresponding new and delete operators share the same assumptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+class MemoryPool;
+class A {
+public:
+    void * operator new[](std::size_t);                 // Violation
+    void * operator new[](std::size_t, MemoryPool&amp;);    // Violation
+    void * operator new[](std::size_t, float*);         // Violation
+    void operator delete[](void*, std::size_t, float*);
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;new&gt;
+class MemoryPool;
+class A {
+public:
+    void * operator new[](std::size_t);              // OK
+    void * operator new[](std::size_t, MemoryPool&amp;); // OK
+    void * operator new[](std::size_t, float*);      // OK
+    void operator delete[](void*);
+    void operator delete[](void*, MemoryPool&amp;);
+    void operator delete[](void*, float*);
+};
+
+class B {
+public:
+    // non-placement allocation function
+    void * operator new[](std::size_t);              // OK
+    // non-placement deallocation function
+    void operator delete[](void*, std::size_t);
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+ISO/IEC 14882:2003(E) C++ standard
+Sections 5.3.4, 3.7.3
+
+Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+(C) 2005 Pearson Education, Inc.
+Chapter: "Class Design and Inheritance", Rule 45
+
+</PRE>
+</BODY>
+</HTML>

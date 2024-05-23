@@ -1,0 +1,202 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use of possibly not null-terminated string with functions expecting null-terminated string [CERT_C-POS30-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use of possibly not null-terminated string with functions expecting null-terminated string [CERT_C-POS30-c-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Traditionally, strings are represented as a region of memory containing 
+data terminated with a NULL character. Older string-handling methods frequently
+rely on this NULL character to determine the length of the string. If a buffer
+that does not contain a NULL terminator is passed to one of these functions,
+the function will read past the end of the buffer." [CWE-170]
+
+This rule reports a violation if it detects that:
+* a buffer was created by a function which is known to create not
+  null-terminated buffers (for example 'readlink', 'read', 'fread'), and
+* the buffer was passed to a function which is known to expect a null-terminated
+  buffer (for example 'strlen', 'strcpy', 'rename'), and
+* the buffer was not used between those two calls, and
+* the buffer was not initialized by null characters '\0'
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The rule does not report a violations if it detects that the buffer might be
+   modified or checked between the calls:
+
+   void doSth(char*);
+   void foo1(const char* path, char* buf, int n) {
+      readlink(path, buf, n);           // not reported
+      doSth(buf);                       // use detected
+      strlen(buf);         
+   }
+
+2. If the buffer is a complex expression, then the rule does not report the
+   violation if any part of the expression is used:
+
+   struct S {
+      char buf1[10];
+      char buf2[10];
+   };
+   void doSth(char*);
+   void foo2(const char* path, struct S* sptr, int n) {
+      readlink(path, sptr-&gt;buf1, n); // not reported
+      doSth(sptr-&gt;buf2);    // detected use of "sptr" - it is also part of the
+      strlen(sptr-&gt;buf1);   // "sptr-&gt;buf1" expression
+   }
+
+3. Control flow is ignored, the rule only compares line/column numbers:
+
+   void foo3(const char* path, char* buf, int n, int i) {
+      if (i) {
+         readlink(path, buf, n); // Violation reported
+      } else {
+         strlen(buf);  // strlen(buf) called after readlink(..., buf, ...)
+                       // and 'buf' not used between the calls
+      }
+   }
+
+4. The rule supports only identical buffer expressions:
+
+   void foo4(const char* path, char* buf, int n) {  
+      readlink(path, buf + 10, n); // not reported - different expressions
+      strlen(buf + 5 + 5); // "buf+5+5" is different than "buf+10"
+   }
+
+5. The violation might be not reported if the buffer and the function expecting
+   null-terminated string are used as part of one expression:
+
+   void doSth(size_t, char*);
+   char* foo5(const char* path, char* buf, int n) {
+      readlink(path, buf, n);  // not reported 
+      doSth(strlen(buf), buf); // 'buf' and 'strlen(buf)' used in the same
+                               // expression
+
+      readlink(path, buf, n);  // not reported 
+      return strlen(buf) + buf;// 'buf' and 'strlen(buf)' used in the same
+                               // expression
+   }
+
+6. The rule assumes that a local buffer is correctly terminated when the whole
+   buffer is initialized by null characters '\0' and the size of the buffer
+   is determined by the expression 'sizeof(buf) - 1' in the 'readlink'
+   (or similar) function call.
+
+   void foo6(const char *path) {
+      char buf[10] = {'\0'};   // initialized by '\0'
+      int length;
+      readlink(path, buf, sizeof(buf) - 1);  // not reported
+      //...
+      length = strlen(buf);  // 'buf' is correctly null terminated
+   }
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If a null character is omitted from a string, then most string-copying functions
+will read data until they locate a null character, even outside of the intended
+boundaries of the string. This could:
+ - cause a crash due to a segmentation fault
+ - cause sensitive adjacent memory to be copied and sent to an outsider
+ - trigger a buffer overflow when the copy is being written to a fixed-size
+   buffer" [CWE-170]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+void foo1(const char *path) {
+    char buf[10];
+    size_t bufsize = 100;
+    int length;
+  
+    readlink(path, buf, bufsize); // Violation - The buffer can be not 
+                                  // terminated by null character
+    //...
+    length = strlen(buf);         // it is not sure if 'buf' contains
+                                  // the expected null terminator
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+void foo1(const char *path) {
+    char buf[10];
+    size_t bufsize = 100;
+    int length;
+    int len;
+
+    if(len = readlink(path, buf, sizeof(buf) - 1) != -1) {            // OK 
+        buf[len] = '\0';
+    } else {
+        // error
+    }
+  
+    length = strlen(buf); // 'buf' contains null terminator
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-170: Improper Null Termination
+   cwe.mitre.org/data/definitions/170.html
+
+2. SEI CERT C Coding Standard
+   POS30-C. Use the readlink() function properly
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS30-C.+Use+the+readlink%28%29+function+properly">https://wiki.sei.cmu.edu/confluence/display/c/POS30-C.+Use+the+readlink%28%29+function+properly</A>
+
+</PRE>
+</BODY>
+</HTML>

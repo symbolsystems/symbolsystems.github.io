@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value returned by a POSIX library function that may return an error should be used [CERT_C-POS54-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value returned by a POSIX library function that may return an error should be used [CERT_C-POS54-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All standard library functions, including I/O functions and memory allocation
+functions, return either a valid value or a value of the correct return type
+that indicates an error (for example, −1 or a null pointer). Assuming that all
+calls to such functions will succeed and failing to check the return value for
+an indication of an error is a dangerous practice that may lead to unexpected
+or undefined behavior when an error occurs. It is essential that programs
+detect and appropriately handle all errors in accordance with an
+error-handling policy." [CERT-POS54-C]
+
+This rule detects when values returned from POSIX library functions are not
+used. All functions whose names are the same as the names of functions declared
+in the POSIX library are detected as POSIX library functions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that the function return value is used when it is assigned to
+a variable, returned from a function, checked in a selection or iteration
+statement, used to call a function, etc.
+
+The list of function names can be modified by the user in the python method
+'initPosixFuncSet' implemented on top of the rule. The list of functions can be
+extended by adding a name to the 'funcSet' or limited by removing the name from
+the 'funcSet' or adding it to the 'excludedSet'.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Return values from some functions are ignored because their historical use has
+overwhelmingly omitted error checking, and the consequences are not relevant to
+security.
+
+The excluded functions are: printf(), putchar(), puts(), putwchar(), vprintf(),
+vwprintf(), and wprintf().
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected or undefined behavior when an error
+occurs during the call to the POSIX library function.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of unused function return value: */
+#include &lt;stdio.h&gt;
+void bar (void *p)
+{
+    posix_memalign(&amp;p, 128, 128);                  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of used function value: */
+#include &lt;stdio.h&gt;
+int bar (void *p)
+{
+    if(0 != posix_memalign(&amp;p, 128, 128))          /* OK */
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   POS54-C. Detect and handle POSIX library errors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS54-C.+Detect+and+handle+POSIX+library+errors">https://wiki.sei.cmu.edu/confluence/display/c/POS54-C.+Detect+and+handle+POSIX+library+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid functions that modify global variables [CODSTA-27]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid functions that modify global variables [CODSTA-27-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if in function is modified:
+- a global variable, or
+- a member variable of global object, or
+- an element of global array
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+In multithread environment using global
+variables makes code extremely error prone.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+	int a;
+}g_struct;
+
+int g_i;
+int g_arr[10];
+
+void foo(){
+    g_i++;             // Violation
+    g_struct.a = 10;   // Violation
+    g_arr[3] += 2;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not modify global variables.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://charm.cs.uiuc.edu/manuals/html/tcharm/2_1.html">http://charm.cs.uiuc.edu/manuals/html/tcharm/2_1.html</A>
+
+</PRE>
+</BODY>
+</HTML>

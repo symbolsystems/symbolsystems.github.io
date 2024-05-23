@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Line-splicing shall not be used in // comments [MISRA2012-RULE-3_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Line-splicing shall not be used in // comments [MISRA2012-RULE-3_2-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Line-splicing occurs when the \ character is immediately followed by a new-line
+character. 
+
+If the source line containing a // comment ends with a \ character in the source
+character set, the next line becomes part of the comment. This may result in
+unintentional removal of code." [MISRA C:2012 Rule 3.2]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents unintentional removal of code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+During preprocessing, before the line-splicing, following phase occurs:
+
+"Physical source file multibyte characters are mapped, in an implementation-
+defined manner, to the source character set (introducing new-line characters for
+end-of-line indicators) if necessary. Trigraph sequences are replaced by
+corresponding single-character internal representations."
+
+This phase is not supported - if backslash or new-line is a result of multibyte
+character mapping or trigraph sequence replacing, this rule will not recognize
+it and will not report a violation.
+
+You can enable rule MISRA2004-4_2 which reports a violation if trigraphs are
+used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// This examples shows that it's easy to have a comment which ends with a
+// backslash and change the meaning of the code:
+
+// The backslashCount variable is not declared and the next line results
+// in a Violation:
+// Count number of backslashes: \
+extern int backslashCount;
+
+void foo(char *p)
+{
+  // Due to backslash in the comment, the "return" is always execucted!
+  // The next line results in a Violation:
+  // Check if pointer is not a backslash character: \
+  if (p &amp;&amp; *p == '\\')
+  {
+    return;
+  }
+
+  // Following code will never be executed
+  // ...
+}
+
+// This rule reports a violation also if there is no code after the comment
+// with a backslash:
+// Violation \
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Modify the comment, for example remove the trailing backslash:
+// Count number of backslashes:
+extern int backslashCount;
+
+void foo(char *p)
+{
+  // You can move it so it's not the last character:
+  // Check if pointer is not a backslash '\' character:
+  if (p &amp;&amp; *p == '\\')
+  {
+    return;
+  }
+  //...
+}
+
+/* Only  C++-style comments are checked, this backslash is not a violation: \
+ */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-7-1. The character \ shall not occur as a last character of a C++
+   comment
+
+2. ISO/IEC 14882:2003 Programming languages -- C++
+   2.1 Phases of translation
+
+3. ISO/IEC 9899:1990 Programming languages -- C
+   5.1.1.2 Translation phases
+
+4. ISO/IEC 9899:1999 Programming languages -- C
+   5.1.1.2 Translation phases
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.7.3 Line-splicing shall not be used in // comments
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 3.2
+
+7. SEI CERT C Coding Standard
+   MSC04-C. Use comments consistently and in a readable fashion
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion">https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion</A>
+
+</PRE>
+</BODY>
+</HTML>

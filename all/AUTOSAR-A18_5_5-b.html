@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Freed memory shouldn't be accessed under any circumstances [AUTOSAR-A18_5_5-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Freed memory shouldn't be accessed under any circumstances [AUTOSAR-A18_5_5-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"There are three major kinds of invalid objects:
+- Destroyed objects: Typical examples are automatic objects that have gone out
+  of scope and deleted heap-based objects.
+- Semantically invalidated objects: Typical examples include dangling pointers
+  to deleted objects (e.g., a pointer p after a delete p;) and invalidated 
+  iterators. It is generally undefined and unsafe to do anything except assign
+  another valid value to an invalidated object.
+- Objects that were never valid.
+Be aware of object lifetimes and validity. Never dereference an invalid iterator
+or pointer. Don't make assumptions about what delete does and doesn't do; 
+freed memory is freed, and shouldn't be subsequently accessed under
+any circumstances."
+
+The rule reports violations on the use of pointers to deleted objects.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks only simple cases (use of variables, parameters, 
+a[b], a.b, a-&gt;b, or *a expressions after they were deleted).
+The rule does not check a flow. It assumes that pointer to deleted object
+is used if between 'delete' and an use of that pointer there is no 'case',
+'default', 'break', 'continue', 'return', 'throw', 'goto', exit(), abort().
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents writing unsafe and error prone code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+char* foo1( ) {	
+    char * a = new char;
+    delete a;
+    return a;         // Violation
+};
+
+char* foo2(char * ptr){
+    char * a = new char;
+    if(a &gt; ptr){
+        delete a;
+        (*a)++;       // Violation
+    } else {
+        (*a)++;       // OK
+    }
+    a = ptr + 1;
+    return a;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Don't use invalid objects.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-5. Memory management functions shall ensure the following: (a)
+   deterministic behavior resulting with the existence of worst-case execution
+   time, (b) avoiding memory fragmentation, (c) avoid running out of memory,
+   (d) avoiding mismatched allocations or deallocations, (e) no dependence on
+   non-deterministic calls to kernel
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Type Safety", Rule 99
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 70.1
+
+5. 2022 CWE Top 25 Most Dangerous Software Errors
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-416: Use After Free
+   <A HREF="https://cwe.mitre.org/data/definitions/416.html">https://cwe.mitre.org/data/definitions/416.html</A>
+
+</PRE>
+</BODY>
+</HTML>

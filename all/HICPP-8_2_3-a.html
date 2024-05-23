@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pass small objects with a trivial copy constructor by value [HICPP-8_2_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pass small objects with a trivial copy constructor by value [HICPP-8_2_3-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Because passing by const reference involves an indirection, it will be
+less efficient than passing by value for a small object with a trivial
+copy constructor." [High Integrity C++]
+
+This rule detects when a parameter of const reference to a small type
+is declared.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a small type is a class or a struct type
+whose size is no larger than 64 bits.
+
+This rule detects a trivial copy constructor according to its definition
+in the C++11 standard.
+
+This rule does not check parameters of const reference to incomplete
+or non-instantiated template types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to improve the efficiency of your code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class C {
+  public:
+    C(C const &amp;) = default; // Trivial copy constructor
+
+  private:
+    int32_t m_j;
+};
+
+void foo(const C &amp;c) {}     // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class C {
+  public:
+    C(C const &amp;) = default; // Trivial copy constructor
+
+  private:
+    int32_t m_j;
+};
+
+void foo(C c) {}            // OK - passing object by value
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   8.2.3. Pass small objects with a trivial copy constructor by value
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   12.8 Copying and moving class objects
+
+</PRE>
+</BODY>
+</HTML>

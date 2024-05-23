@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The identifier name of a non-member object with static storage duration shall not be reused within a namespace [AUTOSAR-A2_10_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The identifier name of a non-member object with static storage duration shall not be reused within a namespace [AUTOSAR-A2_10_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"No identifier with static storage duration should be re-used in the same
+namespace across any source files in the project. This may lead to the
+developer or development tool confusing the identifier with another one."
+[AUTOSAR A2-10-4]
+
+This rule detects non-member objects with static storage duration whose
+names are reused as function or object names, or as other identifiers. 
+
+The rule compares fully qualified names--the qualification includes named
+namespaces, classes, structures, and unions.
+If an identifier is declared in the scope of a function, the rule assumes
+that the qualification of the identifier is the same as the qualification
+of this function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid reusing identifier names in order to prevent
+confusion.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check the following identifiers:
+- objects explicitly declared as extern
+- functions declared in nested blocks
+- enumeration constants from enums declared in template classes
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following example assumes that the testing scope contains only
+'test1.cpp' and 'test2.cpp'.
+
+// test1.cpp
+static int s1;   // Violation
+static int s2;   // Violation
+int s3;          // Violation
+
+// test2.cpp
+static int s1;   // Violation
+
+void f1() {
+    int s2;      // Violation
+}
+
+void s3();       // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by renaming the functions, objects, and identifiers
+that reuse the original identifier name, or move them to a qualified
+scope.
+
+
+// test1.cpp
+static int s1;      // OK
+static int s2;      // OK
+int s3;             // OK
+
+// test2.cpp
+namespace N1 {
+    static int s1;  // OK - qualifier 'N1'
+}
+
+struct S1 {
+    void f1() {
+        int s2;     // OK - qualifier 'S1'
+    }	
+};
+
+
+void f_s3();        // OK - renamed
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-10-4. The identifier name of a non-member object with static storage
+   duration or static function shall not be reused within a namespace
+
+</PRE>
+</BODY>
+</HTML>

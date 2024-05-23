@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When binary arithmetic operators are defined  ( + , - , * , / , ^ , % , | , &amp; ), assignment versions should be provided too [CODSTA-CPP-28]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When binary arithmetic operators are defined  ( + , - , * , / , ^ , % , | , &amp; ), assignment versions should be provided too [CODSTA-CPP-28-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When defining binary arithmetic operators, provide their assignment versions
+as well. In general, for some binary operator @ (be it +, -, *, and so on),
+you should define its assignment version such that a@=b and a=a@b have the same
+meaning." [C++ Coding Standards - Rule 27]
+
+The rule reports a violation on declaration of a binary arithmetic operator
+ ( + , - , * , / , ^ , % , | , &amp; ) if its assignment version isn't declared
+in the same namespace. The binary operator can be defined as global function
+(with two parameters) or as member function of class (with one parameter 
+- the first parameter is a class object).
+
+The rule assumes that binary arithmetic operator and its assignment
+version have the same meaning if their types of paremeters and their
+return types are the same.
+
+See also: CODSTA-CPP-20, CODSTA-CPP-29
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is recommended to define operator@ in terms of operator@=. In some cases
+(e.g., operator*= on complex numbers, an operator might mutate its left-hand
+side so significantly that it can be more advantageous to implement operator*=
+in terms of operator* rather than the reverse.
+Where possible, make operator@= a non-member function.
+
+The rule doesn't report violations on overloaded shift operators ( &gt;&gt; , &lt;&lt; ) 
+because they are commonly used as insertion and extraction operators, which 
+do not require assignment versions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Assignment versions of operator are more efficient than stand-alone versions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A{};
+A operator+( A&amp; lhs, A&amp; rhs );   // Violation - operator+= defined in this scope
+A operator+=( A&amp; lhs, int rhs ); //             has different parameter type
+
+A operator-( A&amp; lhs, A&amp; rhs );   // Violation - operator-= is not defined
+                                 //             in this scope
+
+class B{
+    B operator+( B&amp; rhs );       // Violation - operator+= defined in this
+    A operator+=( B&amp; rhs );      //              scope has different return type
+};
+
+class C{};
+namespace N {
+    C operator+( C&amp; lhs, C&amp; rhs ); // Violation - operator+= is defined
+                                   //             in different scope
+};
+
+C operator+=( C&amp; lhs, C&amp; rhs );
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A{};
+A operator+( A&amp; lhs, A&amp; rhs );   // OK
+A operator+=( A&amp; lhs, A&amp; rhs );
+
+class B{
+public:
+    B operator+=( B&amp; rhs );
+};
+
+B operator+( B&amp; lhs, B&amp; rhs ){   // OK
+    B temp(lhs);
+    return temp += rhs;
+}
+
+class C{};
+namespace N {
+    C operator+( C&amp; lhs, C&amp; rhs ); // OK
+};
+
+namespace N {
+    C operator+=( C&amp; lhs, C&amp; rhs );
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Functions and Operators", Rule 27
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

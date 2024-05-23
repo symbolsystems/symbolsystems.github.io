@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Move assignment operators should not have side effects that could affect moving the object [AUTOSAR-A6_2_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Move assignment operators should not have side effects that could affect moving the object [AUTOSAR-A6_2_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is expected behavior that the move/copy assigned operator are only used
+to move/copy the object of the class type and possibly set moved-from object
+to a valid state. Those operators are not supposed to provide any performance
+overhead or side effects that could affect moving or copying the object."
+[AUTOSAR A6-2-1]
+
+This rule detects when a move assignment operator function contains one of
+the following:
+- A member variable that is assigned with an expression other than a call to
+  the 'std::move()' function that moves this member variable (see Notes).
+- A member variable that is modified by using a compound assignment operator
+  or an increment/decrement operator.
+
+See also: MRM-56
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not trigger when a member variable of type other than class/struct
+type is assigned with an expression that simply copies this member variable.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent performance overhead and unexpected side effects
+while moving objects.
+In addition, enforcing this rule allows you to improve code maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;utility&gt;
+
+struct S {
+    S&amp; operator=(S&amp; rhs);
+    S&amp; operator=(S&amp;&amp; rhs);
+    S&amp; operator+(const int rhs)const;
+};
+
+class C1 {
+public:
+    C1&amp; operator=(const C1&amp;&amp; rhs) {
+        m1 = rhs.m1 + 1;               // Violation
+        s1 = std::move(rhs.s1 + 1);    // Violation
+        p1 = new int;                  // Violation
+        return *this;
+    }
+
+private:
+    S s1;
+    int m1;
+    int* p1;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, ensure that the move assignment operator is only used
+to move the object.
+
+#include &lt;utility&gt;
+
+struct S {
+    S&amp; operator=(S&amp; rhs);
+    S&amp; operator=(const S&amp;&amp; rhs);
+    S&amp; operator+(const int rhs)const;
+};
+
+class C1 {
+public:
+    C1&amp; operator=(const C1&amp;&amp; rhs) {
+        m1 = rhs.m1;                  // OK
+        s1 = std::move(rhs.s1);       // OK
+        p1 = std::move(rhs.p1);       // OK
+        return *this;
+    }
+
+private:
+    S s1;
+    int m1;
+    int* p1;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-2-1 Move and copy assignment operators shall either move or respectively
+   copy base classes and data members of a class, without any side effects.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,266 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Protect against SQL injection [APSC_DV-000480-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Protect against SQL injection [APSC_DV-000480-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects possible SQL injections when possibly tainted data reaches functions
+that prepare or execute SQL queries, retrieve connections, etc. 
+
+When an application uses data provided by the user (or some other unverified data source)
+to construct SQL queries and does not verify/validate such data before it is used,
+it is possible for an attacker to alter the SQL statements in a way that the developer
+did not intend. As a result, the attacker can take total control of the database or
+execute commands on the system.
+
+The rule supports the following database APIs: ODBC, ADO, OLE DB.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+If data that appears in an SQL query has not been validated,
+it may enable a malicious user to take control of the database.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+
+The "Validating functions" parameter allows you to specify functions that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating functions is called. 
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the validating function. If disabled, the rule
+    does not consider the function to be a validating function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to function with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance functions.
+- "'this' object is validated" - if enabled,  the function cleans the object it
+    is called on.
+- 'Returns validated data' - if enabled, the function cleans its return value.
+- 'Validated parameters' - specifies which function parameters are cleaned by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+See the SECURITY RELEVANCE section.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Consider an example where an application reads the user name and the password
+from a file and then, for authentication purposes, tries to find the user
+information in a database. The code supporting this could look like below:
+
+#include &lt;sql.h&gt;
+#include &lt;stdio.h&gt;
+
+const int BUFFER_SIZE = 1000;
+
+const char* requestBeginning = "SELECT user_id, user_class, rights FROM users WHERE user_name = '";
+const char* requestPassword = "' and password = '";
+const char* requestEnding = "'";
+
+extern char* extractUsername(const char*);
+extern char* extractPassword(const char*);
+
+extern SQLHSTMT statementHandle;
+
+void handleRequest(FILE* file)
+{
+    char parametersString[BUFFER_SIZE];
+    fread(parametersString, 1, BUFFER_SIZE, file);
+    SQLCHAR request[BUFFER_SIZE];
+    strcpy(request, requestBeginning);
+    strcat(request, extractUsername(parametersString));
+    strcat(request, requestPassword);
+    strcat(request, extractPassword(parametersString));
+    strcat(request, requestEnding);
+    SQLExecDirect(statementHandle, request, strlen(request));
+}
+
+If the user enters the following string as both the user name and the password:
+
+' or ''='
+
+then the SQL statement will look like this:
+
+SELECT user_id, user_class, rights FROM users WHERE user_name = '' or ''='' and password = '' or ''=''
+
+As a result, all users information will be retrieved and the attacker will be authenticated
+as the first user in the users table -- even though he did not provide the required
+authorization information.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Using the SQLPrepare() function and setting the data from the user via the SQLBindParameter() function
+(instead of directly creating a textual query that includes parameter values) ensures protection
+against SQL injection:
+
+#include &lt;sql.h&gt;
+#include &lt;sqltypes.h&gt;
+#include &lt;sqlext.h&gt;
+#include &lt;stdio.h&gt;
+
+const int BUFFER_SIZE = 1000;
+
+const char* requestString = "SELECT user_id, user_class, rights FROM users WHERE user_name = '?' and password = '?'";
+
+extern char* extractUsername(const char*);
+extern char* extractPassword(const char*);
+
+extern SQLHSTMT statementHandle;
+SQLINTEGER nameLen = SQL_NTS, passLen = SQL_NTS;
+
+
+void handleRequest(FILE* file)
+{
+    char parametersString[BUFFER_SIZE];
+    fread(parametersString, 1, BUFFER_SIZE, file);
+    
+    char* name = extractUsername(parametersString);
+    char* pass = extractPassword(parametersString);
+    
+    SQLBindParameter(statementHandle, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 20, 0, name, 0, &amp;nameLen);
+    SQLBindParameter(statementHandle, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 20, 0, pass, 0, &amp;passLen);
+    
+    SQLPrepare(statementHandle, requestString, SQL_NTS);
+    SQLExecute(statementHandle);
+}
+
+EDUCATION AND TRAINING
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/9a894cb7-ebaf-4cdc-9d6d-554fde43775a">https://app.hackedu.com/link/9a894cb7-ebaf-4cdc-9d6d-554fde43775a</A>
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+OWASP Top 10-2021
+A03:2021 - Injection
+<A HREF="https://owasp.org/Top10/A03_2021-Injection/">https://owasp.org/Top10/A03_2021-Injection/</A>
+
+OWASP Top 10 2017
+A1-Injection
+<A HREF="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html">https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="http://cwe.mitre.org/data/definitions/20.html">http://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
+<A HREF="http://cwe.mitre.org/data/definitions/89.html">http://cwe.mitre.org/data/definitions/89.html</A>
+
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 1: New directives, Dir 4.14
+
+SEI CERT C Coding Standard
+STR02-C. Sanitize data passed to complex subsystems
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR02-C.+Sanitize+data+passed+to+complex+subsystems">https://wiki.sei.cmu.edu/confluence/display/c/STR02-C.+Sanitize+data+passed+to+complex+subsystems</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-000480: The application must enforce approved authorizations for controlling the flow of information within the system based on organization-defined information flow control policies.
+APSC-DV-001290: The application must protect audit information from unauthorized modification.
+APSC-DV-001300: The application must protect audit information from unauthorized deletion.
+APSC-DV-002520: The application must protect from canonical representation vulnerabilities.
+APSC-DV-002530: The application must validate all input.
+APSC-DV-002540: The application must not be vulnerable to SQL Injection.
+APSC-DV-002550: The application must not be vulnerable to XML-oriented attacks.
+APSC-DV-002560: The application must not be subject to input handling vulnerabilities.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not check for a non-negative value after passing as a non-negative argument [BD-API-REVNEGPARAM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not check for a non-negative value after passing as a non-negative argument [BD-API-REVNEGPARAM-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a value that was passed as an argument to
+a function expecting a non-negative parameter is later checked for
+being non-negative.
+
+This rule checks values passed to the following functions:
+    int close(int non_neg)
+    ssize_t read(int non_neg_1, void*, size_t non_neg_2)
+    ssize_t write(int non_neg_1, const void*, size_t non_neg_2)
+    ssize_t pread(int non_neg_1, void*, size_t non_neg_2, off_t)
+    ssize_t pwrite(int non_neg_1, const void*, size_t non_neg_2, off_t)
+    void* calloc(size_t non_neg_1, size_t non_neg_2)
+    void* malloc(size_t non_neg)
+    void* realloc(void*, size_t non_neg)
+    void* aligned_alloc(size_t non_neg_1, size_t non_neg_2)
+    void* memcpy(void*, const void*, size_t non_neg)
+    void* memmove(void*, const void*, size_t non_neg)
+    char* strncpy(char*, const char*, size_t non_neg)
+    char* strncat(char*, const char*, size_t non_neg)
+    int memcmp(const void*, const void*, size_t non_neg)
+    int strncmp(const char*, const char*, size_t non_neg)
+    size_t strxfrm(char*, const char*, size_t non_neg)
+    void* memchr(void*, int, size_t non_neg)
+    void* memset(void*, int, size_t non_neg)
+    char* strerror(int non_neg)
+    int setvbuf(FILE*, char*, int, size_t non_neg)
+    int snprintf(char*, size_t non_neg, const char*, ...)
+    char* fgets(char*, int non_neg, FILE*)
+    size_t fread(void*, size_t non_neg_1, size_t non_neg_2, FILE*)
+    size_t fwrite(const void*, size_t non_neg_1, size_t non_neg_2, FILE*)
+    int fseek(FILE*, long int non_neg, int) (when the last parameter is set to SEEK_SET(0 assumed))
+    int vsnprintf(char*, size_t non_neg, const char*, va_list)
+
+See also BD-API-NEGPARAM
+    
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Passing negative parameter to a function that does not expect it is an API
+violation. This may lead to runtime errors (e.g., when a negative value
+overflows to a large positive value).   
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+void example_1(int size)
+{
+    void* ptr = malloc(size);
+    
+    if (size &lt; 0) { // VIOLATION
+        // ..
+    }
+}
+
+void example_2(const char* str, char* dest, int size)
+{
+    memcpy(dest, str, size);
+    
+    if (size &gt;= 0) { // VIOLATION
+        // ...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+void repair_1(int size)
+{
+    if (size &gt; 0) {
+        void* ptr = malloc(size);
+    }
+    
+    if (size &lt; 0) { // OK
+        // ..
+    }
+}
+
+void repair_2(const char* str, char* dest, int size)
+{
+    if (size &gt;= 0) { // OK
+        memcpy(dest, str, size);
+    
+        // ...
+    }
+}
+
+</PRE>
+</BODY>
+</HTML>

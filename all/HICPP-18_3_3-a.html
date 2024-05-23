@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use std::recursive_mutex [HICPP-18_3_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use std::recursive_mutex [HICPP-18_3_3-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In almost all cases, the use of std::recursive_mutex is indicative of poor
+design. When recursive mutexes are used, only the thread that originally locked
+the mutex can release it, which can lead to deadlocks if a different thread
+requires the mutex.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves the code quality, and security, avoids unexpected race
+conditions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+
+class DataWrapper {
+  public:
+    int32_t incrementAndReturnData() {
+        std::lock_guard&lt;std::recursive_mutex&gt; guard(mut);
+        incrementData();
+        return data;
+    }
+
+    void incrementData() {
+        std::lock_guard&lt;std::recursive_mutex&gt; guard(mut);
+        ++data;
+    }
+
+  private:
+    int32_t data;
+    mutable std::recursive_mutex mut; // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Refactor the code such that a common function manipulates the data
+// and is EXPECTED to be called with the mutex locked.
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+
+class DataWrapper {
+  public:
+    int32_t incrementAndReturnData() {
+        std::lock_guard&lt;std::mutex&gt; guard(mut);
+        inc(guard); // Lock Expected idiom (See References)
+        return data;
+    }
+
+    void incrementData() {
+        std::lock_guard&lt;std::mutex&gt; guard(mut);
+        inc(guard); // Lock Expected idiom (See References)
+    }
+
+  private:
+    // Mutex must be locked before calling this function.
+    // Passing the std::lock_guard&lt;&gt; by const reference as an unnamed parameter
+    // is a convenient idiom which allows developers to understand that the
+    // function MUST be called in a locked context, and that the mutex
+    // will not be unlocked.
+    // Alternatively, if this function is going to call *another* function
+    // which expects a locked context, then the parameter can be named, and
+    // passed on to that callee.
+    void inc(std::lock_guard&lt;std::mutex&gt; const &amp;) { ++data; }
+    mutable std::mutex mut; // OK
+    int32_t data;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   18.3.3. Do not use std::recursive mutex
+
+</PRE>
+</BODY>
+</HTML>

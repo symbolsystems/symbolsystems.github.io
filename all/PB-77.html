@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Expression statements shall not be explicit calls to constructors of temporary objects only [PB-77]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Expression statements shall not be explicit calls to constructors of temporary objects only [PB-77-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"[T]here are no unnamed variables in C++, it is in fact only
+creating a temporary object that gets destroyed again at the end
+of the full expression." [AUTOSAR A6-2-2]
+
+This rule detects when an expression statement only contains a call
+to the constructor of a temporary object.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid code defects that may result from creating
+a temporary object instead of a local variable.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B {
+public:
+    B();
+    B(int);
+};
+
+void f1(int i) {
+    B();          // Violation
+    B(1);         // Violation
+    B{};          // Violation
+    B{i};         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by changing the expressions into variable
+declarations.
+
+class B {
+public:
+    B();
+    B(int);
+};
+
+void f1(int i) {
+    B b1;            // OK
+    B b2(1);         // OK
+    B b3{};          // OK
+    B b4{i};         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-2-2 Expression statements shall not be explicit calls to constructors
+   of temporary objects only.
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.2.1 An explicit type conversion shall not be an expression statement
+
+</PRE>
+</BODY>
+</HTML>

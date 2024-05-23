@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The unbounded functions of library &lt;cstring&gt; shall not be used [AUTOSAR-M18_0_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The unbounded functions of library &lt;cstring&gt; shall not be used [AUTOSAR-M18_0_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The strcpy, strcmp, strcat, strchr, strspn, strcspn, strpbrk, strrchr, strstr,
+strtok and strlen functions within the &lt;cstring&gt; library can read or write
+beyond the end of a buffer, resulting in undefined behaviour."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef char char_t;
+#include &lt;cstring&gt;
+void fn ( const char_t * pChar )
+{
+    char_t array [ 10 ];
+    strcpy ( array, pChar ); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Ideally, a safe string handling library should be used.
+Use of bounded functions (e.g. strncpy) is also possible. */
+typedef char char_t;
+#include &lt;cstring&gt;
+void fn ( const char_t * pChar )
+{
+    char_t array [ 10 ];
+    strncpy ( array, pChar, 10 ); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M18-0-5. The unbounded functions of library &lt;cstring&gt; shall not be used
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 18, Rule 18-0-5
+
+</PRE>
+</BODY>
+</HTML>

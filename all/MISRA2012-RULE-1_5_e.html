@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use 'bool', 'false' or 'true' identifiers in the #undef directive [MISRA2012-RULE-1_5_e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use 'bool', 'false' or 'true' identifiers in the #undef directive [MISRA2012-RULE-1_5_e-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The ability to undefine and perhaps then redefine the macros bool, true,
+and false is an obsolescent feature." [ISO/IEC 9899:2017]
+
+This rule detects when 'bool', 'false' or 'true' is used as an identifier
+in the #undef directive.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Features are declared as obsolescent by the C Standard when they are superseded
+by safer or better alternatives, or are considered to exhibit undesirable
+behaviour. Features declared as obsolescent by a particular version of the C
+Standard may be withdrawn in a later version" [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdbool.h&gt;
+
+//...
+
+#undef bool                                         // Violation
+#undef false                                        // Violation
+#undef true                                         // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'bool', 'false' or 'true' identifiers in the #undef directive.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+2. ISO/IEC 9899:2017 Programming languages -- C
+   7.31 Future library directions
+   7.31.9 Boolean type and values &lt;stdbool.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

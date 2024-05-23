@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Precautions shall be taken in order to prevent the contents of a header file being included more than once [MISRA2012-DIR-4_10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Precautions shall be taken in order to prevent the contents of a header file being included more than once [MISRA2012-DIR-4_10-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Every include file must contain a mechanism that prevents multiple inclusion 
+of the file.
+
+Following patterns are recognized and accepted:
+
+#ifndef SOME_MACRO
+#define SOME_MACRO
+// code
+#endif
+
+or
+
+#if !defined(SOME_MACRO)
+#define SOME_MACRO
+// code
+#endif
+
+See also: PFO-07, PFO-08, MISRA2004-19_15
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The only elements which can be outside of include guard are whitespaces and
+comments.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents confusion caused by including the same header multiple times,
+prevents undefined or erroneous behaviour caused by multiple or conflicting
+definitions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// file foo.hh
+// Violation - no multiple inclusion mechanism present
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// file foo.hh
+// OK
+#ifndef FOO_HH
+#define FOO_HH
+int i;
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 4 Source Code in Files - 4.4 Include Files - Rule 7
+
+2. AUTOSAR C++14 Coding Guidelines
+   M16-2-3. Include guards shall be provided
+
+3. High Integrity C++ Coding Standard
+   16.1.1. Use the preprocessor only for implementing include guards, and
+   including header files with include guards
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.6 Pre-Processing Directives, AV Rule 27, AV Rule 35
+
+5. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-2-3
+
+6. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.2.1 Precautions shall be taken in order to prevent the contents of a header file being included more than once
+
+7. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.10
+
+8. SEI CERT C Coding Standard
+   PRE06-C. Enclose header files in an include guard
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE06-C.+Enclose+header+files+in+an+include+guard">https://wiki.sei.cmu.edu/confluence/display/c/PRE06-C.+Enclose+header+files+in+an+include+guard</A>
+
+</PRE>
+</BODY>
+</HTML>

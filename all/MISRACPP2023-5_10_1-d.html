@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User defined suffixes of the user defined literal operators shall start with underscore followed by one or more letters [MISRACPP2023-5_10_1-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User defined suffixes of the user defined literal operators shall start with underscore followed by one or more letters [MISRACPP2023-5_10_1-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Suffixes that do not begin with the underscore character are reserved
+for operators provided by the standard library." [AUTOSAR A13-1-2]
+
+The rule detects user-defined suffixes of the user-defined literal operators
+that do not start with an underscore followed by a letter.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+long double operator"" meters(long double mtrs) // Violation
+{
+  // ...
+  return mtrs;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+long double operator"" _m(long double mtrs)     // OK
+{
+  // ...
+  return mtrs;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-1-2. User defined suffixes of the user defined literal operators shall
+   start with underscore followed by one or more letters
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.10.1 User-defined identifiers shall have an appropriate form
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+'void' should be used when a function is passed or returns no values [CODSTA-40]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+'void' should be used when a function is passed or returns no values [CODSTA-40-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In many compiler implementations, functions which do not declare return
+type are automatically assigned int return type. This will conflict with
+semantics of function implementation.
+The empty parameter list in a function declarator that is not part of
+a definition of that function specifies that no information about
+the number or types of the parameters is supplied. The special case
+of an unnamed parameter of type void as the only item in the list
+specifies that the function has no parameters.
+Explicitly specifying parameter and return types as void clearly conveys
+the function intent.
+
+The rule reports a violation if:
+- a function is declared or defined with an empty parameter list or
+- a function does not have an explicit return type and does not contain
+  return statement with a value
+The rule is enabled only for C language.
+
+See also: MISRA2004-8_2_a, MISRA2004-16_5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1();         /* Violation - there is no 'void' in parameter list */
+void foo1() {}       /* Violation - there is no 'void' in parameter list */
+
+foo2(void);          /* Violation - there is no 'void' in return type */
+foo2(void) {}        /* Violation - there is no 'void' in return type */
+foo3(void) {return;} /* Violation - there is no 'void' in return type */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(void);          /* OK */
+void foo1(void) {}        /* OK */
+
+void foo3(void) {return;} /* OK */
+
+foo4(void){ return 0;} /* OK - the 'return' statement with a value in function */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 16
+
+2. Origin: Misra Guidelines - Rule 76
+
+</PRE>
+</BODY>
+</HTML>

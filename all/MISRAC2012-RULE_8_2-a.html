@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers shall be given for all of the parameters in a function prototype declaration [MISRAC2012-RULE_8_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers shall be given for all of the parameters in a function prototype declaration [MISRAC2012-RULE_8_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule requires that names be specified for all the parameters
+in a declaration. The parameter names can provide useful information
+regarding the function interface and a mismatch between a declaration
+and definition might be indicative of a programming error."[MISRA C:2012]
+
+See also: CODSTA-158, CODSTA-159
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Function types other than in function declarations are checked
+by rule CODSTA-158.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and clarity of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(int);    /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(int p);       /* OK */
+
+/* Examples not reported by this rule */
+void foo2(int){}        /* OK - this code is compilable in C++ only */
+void foo3(void);        /* OK */
+void foo4(int p, ...);  /* OK */   
+typedef void foot(int); /* OK - reported by rule CODSTA-158 */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 16
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.2,
+
+</PRE>
+</BODY>
+</HTML>

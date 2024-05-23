@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The same code (after preprocessing) in two branches of if-else-if chain [OPT-40_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The same code (after preprocessing) in two branches of if-else-if chain [OPT-40_a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if several branches of an 'if-else-if' chain 
+after preprocessing are identical and the duplicated code is non-trivial
+(simple cases are ignored).
+
+See also: PB-67
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks preprocessed code. Due to this:
+- macros which expand to the same code are treated as identical
+- whitespaces, comments and preprocessor directives are ignored.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the same code is used in several branches of if-else-if chain, then it may
+be an implementation error or indicate that the code is a candidate for code 
+refactoring.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int, int, int, int);
+
+void foo_if_else(int x, int y, int z)
+{
+    if(x == 1)                /* Violation - mistake in code */
+        x = foo(x, y, z, 1);
+    else if(x == 2)
+        x = foo(x, y, z, 1);
+    else
+        x = foo(x, y, z, 3);
+    
+    if(x == 1)                /* Violation - unnecessary duplication */
+        x = foo(x, y, z, 1);
+    else if(x == 2)
+        x = foo(x, y, z, 2);
+    else
+        x = foo(x, y, z, 1);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int, int, int, int);
+
+void foo_if_else(int x, int y, int z)
+{
+    if(x == 1)                /* OK */
+        x = foo(x, y, z, 1);
+    else if(x == 2)
+        x = foo(x, y, z, 2);
+    else
+        x = foo(x, y, z, 3);
+    
+    if(x == 2)                /* OK */
+        x = foo(x, y, z, 2);
+    else
+        x = foo(x, y, z, 1);
+    
+    if(x == 1)                /* OK - simple cases are not reported  */
+        x = y;
+    else if(x == 2)
+        x = y;
+    else
+        x = y;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

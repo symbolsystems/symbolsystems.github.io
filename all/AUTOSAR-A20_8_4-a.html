@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Consider using 'std::unique_ptr' instead of 'std::shared_ptr' for local objects [AUTOSAR-A20_8_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Consider using 'std::unique_ptr' instead of 'std::shared_ptr' for local objects [AUTOSAR-A20_8_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+" 'std::unique_ptr' is more predictable in terms of its destruction,
+as it happens at the end of the scope unless ownership transfer occurred.
+It also has lower overhead than a 'std::shared_ptr', as it does not keep
+internal reference counting." [AUTOSAR A20-8-4]
+
+This rule detects when a local shared pointer 'std::shared_ptr' meets
+the following conditions:
+- It is created with 'std::make_shared' or with a constructor that does not
+  share ownership of another object and does not use a deleter.
+- It is not returned from the function.
+- It is not passed as an argument to another function (except thread constructors).
+- It is not passed as an argument to more than one thread constructor.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you simplify your code, make it more predictable, and improve
+its performance.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;thread&gt;
+#include &lt;memory&gt;
+
+class C {
+public:
+    C() {}
+    C(int x) : x(x){}
+private:
+    int x;
+};
+
+void f1() {
+    std::shared_ptr&lt;C&gt; p = std::make_shared&lt;C&gt;();           // Violation
+    C* c = p.get();
+}
+
+void BAR(std::shared_ptr&lt;C&gt; obj) { }
+
+void f2(void)
+{
+    std::shared_ptr&lt;C&gt; sp{new C(1)};                        // Violation
+    std::thread th{&amp;BAR, sp};
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using 'std::unique_ptr' instead of 'std::shared_ptr'.
+
+#include &lt;thread&gt;
+#include &lt;memory&gt;
+
+class C {
+public:
+    C() {}
+    C(int x) : x(x){}
+private:
+    int x;
+};
+
+void f1() {
+    std::unique_ptr&lt;C&gt; p = std::make_unique&lt;C&gt;();           // OK
+    C* c = p.get();
+}
+
+void BAR(std::shared_ptr&lt;C&gt; obj) { }
+
+void f2(void)
+{
+    std::shared_ptr&lt;C&gt; sp{new C(1)};             // OK - 'shared_ptr' is passed
+                                                 // to the more than one thread
+    std::thread th1{&amp;BAR, sp};
+    std::thread th2{&amp;BAR, sp};
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A20-8-4 A std::unique_ptr shall be used over std::shared_ptr if ownership sharing is not required
+
+</PRE>
+</BODY>
+</HTML>

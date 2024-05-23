@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A thread synchronization object should not be destroyed by a thread [BD-TRS-THRDSTR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A thread synchronization object should not be destroyed by a thread [BD-TRS-THRDSTR-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a thread synchronization object or 
+a thread-specific storage pointer is destroyed inside of a thread.
+
+For a list of recognized thread-creating functions, see the rule BD-TRS-THRTHR.
+
+This rule recognizes the following destruction functions:
+
+&lt;threads.h&gt; (C Standard Library)
+	void mtx_destroy( mtx_t *mutex );
+	void cnd_destroy( cnd_t* cond );
+	void tss_delete( tss_t tss_id );
+	
+&lt;pthread.h&gt; (POSIX)
+	int pthread_mutex_destroy(pthread_mutex_t *mutex);
+	int pthread_cond_destroy(pthread_cond_t *cond);
+	int pthread_key_delete(pthread_key_t key);
+
+&lt;synhapi.h&gt; (Windows)
+    VOID DeleteCriticalSection (LPCRITICAL_SECTION lpCriticalSection);
+    WINBOOL DeleteSynchronizationBarrier (LPSYNCHRONIZATION_BARRIER lpBarrier);
+    BOOL TlsFree (DWORD dwTlsIndex);
+	
+If any of these functions is called (directly or indirectly) from a function which itself
+is a thread entry point, the rule will report a violation.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule does not report a violation when an object of the C++ Standard Library mutex type is destroyed.
+However, the rule BD-TRS-THRINIT will report a violation when an object of the C++ Standard Library mutex type is constructed.
+    
+The "CloseHandle(HANDLE hObject)" function which closes a mutex or a semaphore also 
+closes more objects (e.g. File, Console input or Event). It is difficult to recognize 
+when the function is called to close a mutex or a semaphore. To avoid false positive 
+violations, the CloseHandle function is not supported by this rule.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Destroying a thread synchronization object or a thread-specific storage pointer 
+inside of a thread can cause undefined behavior, because another thread might 
+still have access to the destroyed resource.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior when thread synchronization 
+objects or thread-specific storage pointers are destroyed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include&lt;pthread.h&gt;
+
+pthread_t thread1, thread2;
+
+pthread_mutex_t mutex;      
+static pthread_key_t key;     
+
+void *t1( void* ignore )
+{
+    pthread_key_delete(key); // VIOLATION
+    return 0;
+}
+
+void *t2( void* ignore )
+{
+    pthread_mutex_destroy(&amp;mutex); // VIOLATION
+    return 0;
+}
+
+int main(void)
+{
+    pthread_mutex_init(&amp;mutex, NULL);
+    pthread_key_create(&amp;key, NULL);
+    
+    pthread_create(&amp;thread1, NULL, &amp;t1, NULL);
+    pthread_create(&amp;thread2, NULL, &amp;t2, NULL);
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, destroy the thread synchronization object and thread-specific storage pointer
+outside of the created thread.
+
+#include&lt;pthread.h&gt;
+
+pthread_t thread1, thread2;
+
+pthread_mutex_t mutex;      
+static pthread_key_t key;     
+
+void *t1( void* ignore )
+{             
+    return 0;
+}
+
+void *t2( void* ignore )
+{             
+    return 0;
+}
+
+int main(void)
+{
+    pthread_mutex_init(&amp;mutex, NULL); 
+    pthread_key_create(&amp;key, NULL);
+    
+    pthread_create(&amp;thread1, NULL, &amp;t1, NULL);
+    pthread_create(&amp;thread2, NULL, &amp;t2, NULL);
+
+    pthread_join(thread1,NULL);
+    pthread_join(thread2,NULL);
+
+    pthread_key_delete(key); // NO VIOLATION
+    pthread_mutex_destroy(&amp;mutex); // NO VIOLATION
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.15
+
+</PRE>
+</BODY>
+</HTML>

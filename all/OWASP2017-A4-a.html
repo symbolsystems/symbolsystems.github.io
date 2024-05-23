@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Disable resolving XML external entities (XXE) in libxerces-c [OWASP2017-A4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Disable resolving XML external entities (XXE) in libxerces-c [OWASP2017-A4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when an XML input is processed by a weakly configured XML
+parser from the libxerces-c library.
+
+The rule triggers when XML is parsed by a newly created XercesDOMParse,
+SAXParser, or SAX2XMLReader parser in which resolving external entities is not
+explicitly disabled by calling the following methods with proper arguments:
+
+* XercesDOMParser:
+   * setCreateEntityReferenceNodes(false)
+* SAXParser: 
+   * setDisableDefaultEntityResolution(true)
+* SAX2XMLReader:
+   * setFeature(XMLUni::fgXercesDisableDefaultEntityResolution, true)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"XML eXternal Entity injection (XXE). . . is a type of attack against
+an application that parses XML input. This attack may lead to the disclosure of
+confidential data, denial of service, Server Side Request Forgery (SSRF), port
+scanning from the perspective of the machine where the parser is located, and
+other system impacts".[OWASP Cheat Sheet Series, XML External Entity (XXE)
+Prevention Cheat Sheet]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you protect against XML External Entity injection attack. See
+the SECURITY RELEVANCE section.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the XML input is processed by a newly created
+XercesDOMParser parser:
+
+#include &lt;xercesc/parsers/XercesDOMParser.hpp&gt;
+
+void example(InputSource&amp; source) {
+    XercesDOMParser *parser = new XercesDOMParser;
+    parser-&gt;parse(source);      // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, explicitly disable resolving external entities by calling
+the setCreateEntityReferenceNodes(false) method.
+
+#include &lt;xercesc/parsers/XercesDOMParser.hpp&gt;
+
+void repair(InputSource&amp; source) {
+    XercesDOMParser *parser = new XercesDOMParser;
+    parser-&gt;setCreateEntityReferenceNodes(false);
+    parser-&gt;parse(source);      // NO VIOLATION
+}
+
+EDUCATION AND TRAINING
+
+Additional training about this vulnerability and preventative best practices are available via our educational partner.
+Please contact your Parasoft support team for more information how to access these resources.
+<A HREF="https://app.hackedu.com/link/685d887e-9eb3-4f72-99d1-003469b7b55f">https://app.hackedu.com/link/685d887e-9eb3-4f72-99d1-003469b7b55f</A>
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+OWASP Top 10 2017
+OWASP Top 10-2021
+A05:2021 - Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+A4-XML External Entities (XXE)
+<A HREF="https://owasp.org/www-project-top-ten/2017/A4_2017-XML_External_Entities_(XXE).html">https://owasp.org/www-project-top-ten/2017/A4_2017-XML_External_Entities_(XXE).html</A>
+
+OWASP API Security Top 10-2019
+API8-Injection
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa8-injection.md</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-611: Improper Restriction of XML External Entity Reference
+<A HREF="https://cwe.mitre.org/data/definitions/611.html">https://cwe.mitre.org/data/definitions/611.html</A>
+
+OWASP Cheat Sheet Series
+XML External Entity (XXE) Prevention Cheat Sheet
+<A HREF="https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002390: XML-based applications must mitigate DoS attacks by using XML filters, parser options, or gateways.
+
+</PRE>
+</BODY>
+</HTML>

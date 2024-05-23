@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use recursion [CERT_C-MEM05-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use recursion [CERT_C-MEM05-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a method calls itself, including indirect recursion.
+
+See also MISRA2004-16_2
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+int binarySearch(int* tab, int a, int b, int val)
+{
+    int index = (a + b) / 2;
+    if (tab[index] &gt; val) {
+        return binarySearch(tab, a, index - 1, val); // VIOLATION
+    } else if (tab[index] &lt; val) {
+        return binarySearch(tab, index + 1, b, val); // VIOLATION
+    } else {
+        return index;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int binarySearch(int* tab, int a, int b, int val)
+{
+    while (a &lt;= b) {
+        int index = (a + b) / 2;
+        if (tab[index] &gt; val) {
+            b = index - 1;
+        } else if (tab[index] &lt; val) {
+            a = index + 1;
+        } else {
+            return index;
+        }
+    }
+    return -1;
+} // NO VIOLATION
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA-C Guidelines
+Rule 70
+
+MISRA-C:2004 Guidelines for the use of the C language in critical systems
+Chapter 6, Section 16
+   
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 7, Rule 7-5-4
+   
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 17.2
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 8.2.10 Functions shall not call themselves, either directly or indirectly
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+Chapter 4.13 Function, AV Rule 119
+   
+High Integrity C++ Coding Standard
+5.2.2 Ensure that functions do not call themselves, either directly or indirectly
+
+SEI CERT C Coding Standard
+MEM05-C. Avoid large stack allocations
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM05-C.+Avoid+large+stack+allocations">https://wiki.sei.cmu.edu/confluence/display/c/MEM05-C.+Avoid+large+stack+allocations</A>
+
+</PRE>
+</BODY>
+</HTML>

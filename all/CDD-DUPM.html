@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid function duplication [CDD-DUPM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid function duplication [CDD-DUPM-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule identifies duplicated implementations of functions. The rule finds duplicated
+implementations across all tested code, whether or not the duplicated code appears
+in the same file. A violation is reported for each occurrence.
+See also: CDD-DUPC
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+This rule can be parameterized to achieve best results. 
+* Minimal number of duplicated tokens (default value is 80) 
+  This parameter value defines minimum size of function which may be reported by this rule.
+  Variable names, string and numeric literals, keywords, operators are count as one token.
+  For example:
+   
+  if (param1 == 0) {   // 7 tokens
+      return a;        // 3 tokens
+  }                    // 1 token
+
+"Ignore ..." parameters allows some differences to be ignored 
+and reported as duplicated code:    
+
+* Ignore string literals (default is off) 
+  Turn it on to ignore string literals differences   
+
+* Ignore number literals (default is off) 
+  Turn it on to ignore number literals differences     
+
+* Ignore boolean literals (default is off)
+  Turn it on to ignore boolean literals differences   
+
+* Ignore identifiers (local/global variables, function names, ...) (default is off) 
+  Turn it on to ignore identifiers differences   
+
+"Report function duplicate found" parameter allows to change scope of 
+ duplicated function findings:
+
+* Anywhere in the test scope (default)
+  All function duplicates in the test scope are reported
+
+* In the same project
+  Only function duplicates located in the same project are reported
+  
+* In the same file
+  Only function duplicates located in the same file are reported 
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability. Simplifies and reduce code size.
+Copying and pasting code will increase the cost of code maintenance because 
+each time a modification is required, multiple instance of the same code 
+will need to be identified and then modified. Reducing or eliminating the amount 
+of duplicated code can prevent this problem.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Parameters: Ignore identifiers turned on, minimum duplicated tokens size set to 20.
+
+int foo(int a, int b)
+{
+    int r;            
+    if (a &lt; b) {
+        r = b - a;
+    } else {
+        r = a - b;
+    }
+    return r;
+}
+
+int bar(int p, int q)
+{
+    int result;
+    if (p &lt; q) {
+        result = q - p;
+    } else {
+        result = p - q;
+    }
+    return result;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+After a thorough review of duplicated functions (to be sure their logic is exactly the same), 
+one of these functions could be removed and all references could be set to the other (existing) one.
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

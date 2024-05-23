@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Local variables shall not have static storage duration [CODSTA-04]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Local variables shall not have static storage duration [CODSTA-04-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Functions containing variables with static storage duration are more difficult
+to understand and maintain. Using non-const variables with static storage
+duration, even if they have no linkage, can result in hidden temporal coupling.
+
+This rule detects declarations of non-const static local variables.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve maintainability of the code and prevent data races.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1()
+{
+    static int x1 = 0;        // Violation
+    x1++;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static int x1 = 0;            // OK
+void f1()
+{
+    x1++;
+}
+
+void f2()
+{
+    static const int s1 = 0;  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.7.1 Local variables shall not have static storage duration
+
+2. Programming languages -- C++ ISO/IEC 14882:2017
+   6.7.1 Static storage duration
+
+</PRE>
+</BODY>
+</HTML>

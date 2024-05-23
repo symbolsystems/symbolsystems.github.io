@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not overuse 'auto' specifier [AUTOSAR-A7_1_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not overuse 'auto' specifier [AUTOSAR-A7_1_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using the auto specifier may lead to unexpected type deduction results,
+and therefore to developers confusion. In most cases using the auto specifier
+makes the code less readable.
+
+Note that it is allowed to use the auto specifier in following cases:
+1. When declaring a variable that is initialized with a function call
+  or initializer of non-fundamental type. Using the auto specifier for implicit
+  type deduction in such cases will ensure that no unexpected implicit
+  conversions will occur. In such case, explicit type declaration would not aid
+  readability of the code.
+2. When declaring a generic lambda expression with auto parameters
+3. When declaring a function template using trailing return type syntax"
+[AUTOSAR A7-1-5]
+
+This rule detects when the 'auto' specifier is used in:
+- declarations of variables of fundamental type that are not directly
+  initialized with a function call.
+- declarations of non-template functions.
+- declarations of template functions without the trailing return type syntax.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected results of type deduction and improve
+code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+auto i = 1;                                        // Violation
+auto pi = 3.14;                                    // Violation
+
+template &lt;typename T, typename U&gt;
+auto foo(T t, U u)                                 // Violation
+{
+    return t + u;
+}
+
+auto bar() -&gt; int { return 1; }                    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by replacing the 'auto' specifier with a proper
+fundamental type or by adding the trailing return type syntax to the template
+function.
+
+int i = 1;                                         // OK
+double pi = 3.14;                                  // OK
+
+template &lt;typename T, typename U&gt;
+auto foo(T t, U u) -&gt; decltype(t + u)              // OK
+{
+    return t + u;
+}
+
+int bar() { return 1; }                            // OK
+
+/* examples of correct code */
+
+double getPi();
+auto pi = getPi();                                 // OK
+
+class C {
+public:
+    C(int) {}
+};
+
+auto c = C(1);                                     // OK
+
+auto ptr = new int;                                // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-5 The auto specifier shall not be used apart from following cases:
+   (1) to declare that a variable has the same type as return type
+       of a function call,
+   (2) to declare that a variable has the same type as initializer
+       of non-fundamental type,
+   (3) to declare parameters of a generic lambda expression,
+   (4) to declare a function template using trailing return type syntax.
+
+</PRE>
+</BODY>
+</HTML>

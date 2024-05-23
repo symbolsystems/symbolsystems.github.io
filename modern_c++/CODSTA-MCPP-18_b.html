@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary lambda captures [CODSTA-MCPP-18_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary lambda captures [CODSTA-MCPP-18_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A lambda capture allows the body of a lambda expression to include identifiers
+from the reaching scope of the local lambda expression.
+A lambda capture can contain a simple capture (an identifier or 'this'),
+a capture default (&amp;, =) or an init capture. If an element in a lambda capture
+list is not necessary, then it should be removed.
+
+This rule detects unnecessary elements in lambda capture lists. The rule assumes
+that an element is unnecessary when no entity it captures is used in the body
+of a lambda expression.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not check lambda captures that contain only a capture default.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves readability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule does not report violations on lambda expressions that are used in
+template functions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A {
+    int *m;
+
+    void func(int p) {
+        int i;
+        auto a1 = [i, p](int a)     // Violation - unnecessary 'p' in capture
+                  {
+                      return a + i;
+                  };
+        auto a2 = [i, this](int a)  // Violation - unnecessary 'this' in capture
+                  {
+                      return a + i;
+                  };
+        auto a3 = [&amp;, i](int a)     // Violation - unnecessary default capture
+                  {
+                      return a + i;
+                  };
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct A {
+    int *m;
+
+    void func(int p) {
+        int i;
+        auto a1 = [i](int a)             // OK
+                  {
+                      return a + i;
+                  };
+        auto a2 = [i, this](int a)       // OK
+                  {
+                      return a + i + *m;
+                  };
+        auto a3 = [i](int a)             // OK
+                  {
+                      return a + i;
+                  };
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 6: Lambda Expressions, Item 31: "Avoid default capture modes"
+
+2. Programming Languages — C++
+   ISO/IEC 14882:2014
+   5.1.2 Lambda expressions
+
+</PRE>
+</BODY>
+</HTML>

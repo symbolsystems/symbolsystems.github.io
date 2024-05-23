@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The library functions bsearch and qsort of &lt;stdlib.h&gt; shall not be used [MISRA2012-RULE-21_9]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The library functions bsearch and qsort of &lt;stdlib.h&gt; shall not be used [MISRA2012-RULE-21_9-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the comparison function does not behave consistently when comparing
+elements, or it modifies any of the elements, the behaviour is undefined."
+
+"The bsearch function returns a pointer to a matching element of the array,
+or a null pointer if no match is found. If two elements compare as equal,
+which element is matched is unspecified."
+
+"The qsort function shall return an integer less than, equal to, or greater
+than zero if the first argument is considered to be respectively less than,
+equal to, or greater than the second. If two elements compare as equal,
+their order in the resulting sorted array is unspecified."
+
+"The implementation of qsort is likely to be recursive and will therefore
+place unknown demands on stack resource. This is of concern in embedded
+systems as the stack is likely to be a fixed, often small, size."
+
+The rule reports a violation if the function 'bsearch' or 'qsort' of &lt;stdlib.h&gt;
+library is called.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The unspecified behaviour, which relates to the treatment of elements
+that compare as equal, can be avoided by ensuring that the comparison function
+never returns 0. When two elements are otherwise equal, the comparison function
+could return a value that indicates their relative order in the initial array."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unspecified and undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+int comp (const void * a, const void * b)
+{
+    return ( *(int*)a - *(int*)b );
+}
+
+int values[] = { 50, 20, 60, 40, 10, 30 };
+
+int* foo()
+{
+    int* pos;
+    int key = 40;
+  
+    qsort (values, 6, sizeof (int), comp);                      // Violation
+   
+    pos = (int*) bsearch (&amp;key, values, 6, sizeof (int), comp); // Violation
+  
+    return pos;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'bsearch' and 'qsort' functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.9
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   7.10.5 Searching and sorting utilities
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   7.20.5 Searching and sorting utilities
+
+</PRE>
+</BODY>
+</HTML>

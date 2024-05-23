@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every switch statement shall have at least two switch-clauses [MISRAC2012-RULE_16_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every switch statement shall have at least two switch-clauses [MISRAC2012-RULE_16_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Every switch statement shall have at least two switch-clauses.
+A switch statement with a single path is redundant and may be indicative
+of a programming error."
+
+A switch-clause in this rule is defined as a group of 'case' and 'default'
+labels followed by at least one statement.
+
+See also: CODSTA-35, CODSTA-119, MISRA2004-15_2, MISRA2004-15_5, OPT-21
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents redundant and possibly incorrect code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void example ( int i )
+{
+  switch ( i )                        /* Violation */
+  {
+    case 0:
+    case 1:
+      /* A switch-clause */
+      i = i + 1;
+      break;
+    default:
+      /* There are no statements here so this is not counted
+       * as a switch-clause */
+  }
+
+  switch ( i )                        /* Violation */
+  {
+    case 1:
+    default:
+      /* A switch-clause */
+      i = i + 1;
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void repair ( int i )
+{
+  /* The first switch was rewritten into an 'if' */
+  if ( ( i == 0 ) || ( i == 1 ) )
+  {
+    i = i + 1;
+  }
+
+  /* The second switch has been modified to contain two switch-clauses */
+  switch ( i )                        /* Compliant */
+  {
+    case 1:
+      /* A switch-clause */
+      break;
+    default:
+      /* A switch-clause */
+      i = i + 1;
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.6, Rule 16.1
+
+</PRE>
+</BODY>
+</HTML>

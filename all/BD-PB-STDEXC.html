@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always throw the created std::exception object [BD-PB-STDEXC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always throw the created std::exception object [BD-PB-STDEXC-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when objects of type std::exception 
+or any derived type are created, but are not thrown. 
+"If an instance of an object inheriting from std::exception 
+is created, then such an object must appear in a throw expression."
+[High Integrity C++ Coding Standard; 15.1.1 Only use instances
+of std::exception for exceptions]
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;exception&gt;
+
+class MyException : public std::exception
+{
+
+};
+
+void f1 ()
+{
+    MyException myExcp;    // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, use "myExcp" in the throw statement:
+
+#include &lt;exception&gt;
+
+class MyException : public std::exception
+{
+
+};
+
+void f2 ()
+{
+    MyException myExcp;    // NO VIOLATION
+    throw myExcp;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+High Integrity C++ Coding Standard
+15.1.1 Only use instances of std::exception for exceptions
+
+</PRE>
+</BODY>
+</HTML>

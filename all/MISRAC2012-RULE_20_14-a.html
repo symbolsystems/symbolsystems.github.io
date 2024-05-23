@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if or #ifdef directive to which they are related [MISRAC2012-RULE_20_14-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if or #ifdef directive to which they are related [MISRAC2012-RULE_20_14-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When the inclusion and exclusion of blocks of statements is controlled 
+by a series of preprocessor directives, confusion can arise 
+if all of the relevant directives do not occur within one file." 
+This rule requires that the number of preprocessor directives #if/ifdef/ifndef 
+matches the number of #endif directives in the file.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves good code structure and prevents maintenance problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Violation */
+
+/* file.c */
+#if defined(X)
+  /*...*/
+#elif defined(Y)
+  /*...*/
+#include "file.h"
+  /*...*/
+
+/* file.h */
+#else
+  /*...*/
+#ifdef C
+  /*...*/
+#endif
+  /*...*/
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* OK */
+
+/* file.c */
+#if defined(X)
+  /*...*/
+#elif defined(Y)
+  /*...*/
+#else
+  #include "file.h"
+  /*...*/
+#endif
+
+/* file.h */
+
+#ifdef C
+  /*...*/
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M16-1-2. All #else, #elif and #endif pre-processor directives shall reside
+   in the same file as the #if or #ifdef directive to which they are related
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-1-2
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.1.2 All #else, #elif and #endif preprocessor directives shall reside in the same file as the #if, #ifdef or #ifndef directive to which they are related
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.14
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 19, Rule 19.17
+
+</PRE>
+</BODY>
+</HTML>

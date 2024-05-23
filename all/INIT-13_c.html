@@ -1,0 +1,197 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use possibly uninitialized nonstatic member variables of base classes in base class constructors [INIT-13_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use possibly uninitialized nonstatic member variables of base classes in base class constructors [INIT-13_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Do not pass nonstatic data members of base classes to base class constructors in
+constructor initialization list, because they might not be initialized yet at
+that point.
+
+C++ standard specifies following initialization order:
+  1. initialize virtual base classes
+  2. initialize direct base classes
+  3. initialize nonstatic data members
+  4. execute body of the constructor
+
+This rule reports a violation when you use member variable of 
+- a virtual base class (initialized in step 1) as part of a virtual base class
+  constructor (executed in step 1), or
+- a direct base class (initialized in step 2) as part of a direct base class
+  constructor (executed in step 2)
+
+The violation is reported both when the value or the address of the variable
+is used.
+
+See also: INIT-13, INIT-13_a, INIT-13_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. If a class is inherited both as virtual and nonvirtual base, a violation will
+   be reported also when:
+   - passing variable from virtual base to nonvirtual base
+   - passing variable from nonvirtual base to virtual base
+   For example:
+      struct A {
+        int a;
+        A ( int );
+        A ( );
+      };
+      struct B : public virtual A {
+        B ( int );
+        B ( );
+      };
+      struct C : public A { };
+      // "A" is inherited both as virtual and nonvirtual base:
+      struct D : public B, public C {
+        D ( char ) : B ( B::a )    // Violation
+        { }
+        D ( long ) : A ( C::a )    // Violation
+        { }
+      };
+
+2. A violation will be reported if member variable from a nonvirtual base is
+   passed to a different nonvirtual base class, even if the former is
+   initialized first. Similar for virtual base classes. For example:
+      struct A {
+        int a;
+      };
+      struct B {
+        B ( int );
+      };
+      struct C : public A, public B {
+        // A is initialized before B
+        C ( ) : B ( a ) { }   // Violation
+      };
+
+3. For some compilers or with some compilation options a violation might be not
+   reported on const members initialized in class scope. For example:
+    struct B {
+      const int x = 1;
+    };
+    struct V {
+      V ( int );
+    };
+    struct S : public virtual V, public B {
+      S () :
+        V ( x )    // no violation is reported
+      {
+      }
+    };
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using value which may be uninitialized.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of code which cause violations
+struct A {
+    A ( int );
+    int a;
+};
+struct B {
+    B ( int );
+    int b;
+};
+struct C {
+    C ( int* );
+    int c;
+};
+struct D : public virtual A, public B, public C {
+    D ( char ) :
+      A ( a ),          // Violation
+      B ( this-&gt;c ),    // Violation
+      C ( &amp;b )          // Violation
+    { }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of code which do not cause violations
+struct A {
+    A ( int );
+    int a;
+};
+struct B {
+    B ( int );
+    int b;
+};
+struct C {
+    C ( int* );
+    int c;
+};
+struct D : public virtual A, public B, public C {
+    D ( C *cp ) :
+      //  Not checked - member of nonvirtual base passed to virtual base:
+      A ( b ),              // OK
+      // Operand of sizeof:
+      B ( sizeof a ),       // OK
+      // Member of some unspecified object:
+      C ( &amp;(cp-&gt;c) )        // OK
+    { }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2003 Programming languages -- C++
+   12.6.2 Initializing bases and members, point 5
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 71
+
+</PRE>
+</BODY>
+</HTML>

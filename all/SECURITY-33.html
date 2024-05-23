@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Usage of functions which do not properly handle non-NULL terminated strings is not allowed [SECURITY-33]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Usage of functions which do not properly handle non-NULL terminated strings is not allowed [SECURITY-33-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The strlen() function can be associated with problems if a string is not null
+terminated or if it is used in a way that causes a null terminator to be lost.
+The use of strlen() can easily cause off-by-one errors, since copying a string
+of length strlen(buf) actually requires copying strlen(buf)+1 characters
+(including the null terminator). The resulting unterminated strings can cause
+subsequent problems when functions such as strlen() are run on them."
+The rule reports violations if the following functions are used:
+strlen, lstrlen, _tcslen, _mbslen, and wcslen.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents using functions that can cause buffer overflows
+and security problems. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void foo()
+{
+    char buffer[61] = "string example";
+    unsigned int len;
+    len = strlen(buffer);               // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use strlen, lstrlen, _tcslen, _mbslen, and wcslen functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/852-BSI.html">https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/852-BSI.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+</PRE>
+</BODY>
+</HTML>

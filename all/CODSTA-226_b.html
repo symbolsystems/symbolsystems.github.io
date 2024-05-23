@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The standard library functions for which return values need not be checked should be cast to 'void' [CODSTA-226_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The standard library functions for which return values need not be checked should be cast to 'void' [CODSTA-226_b-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The majority of the standard library functions, including I/O functions and
+memory allocation functions, return either a valid value or a value of the
+correct return type that indicates an error (e.g. -1 or a null pointer).
+Assuming that all calls to such functions will succeed and failing to check
+the return value for an indication of an error is a dangerous practice that
+may lead to unexpected or undefined behavior when an error occurs. It is
+essential that programs detect and appropriately handle all errors in
+accordance with an error-handling policy." [SEI CERT C Coding Standard]
+
+This rule detects when the value returned from the following standard library
+functions is neither used nor explicitly cast to the 'void' type:
+putchar, putwchar, puts, printf, vprintf, wprintf, vwprintf, kill_dependency,
+memcpy, wmemcpy, memmove, wmemmove, strcpy, wcscpy, strncpy, wcsncpy, strcat,
+wcscat, strncat, wcsncat, memset, wmemset.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that the function return value is used when it is assigned
+to a variable, returned from a function, checked in a selection or iteration
+statement, used to call a function, etc.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"It is acceptable to ignore the return value of a function if:
+( . . .) it is one of a handful of functions whose return values are not
+traditionally checked.
+The function's results should be explicitly cast to void to signify programmer
+intent." [SEI CERT C Coding Standard]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+void bar ()
+{
+    printf("Hello, world\n");              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by casting the result of the 'prinft()' function
+to the 'void' type.
+
+#include &lt;stdio.h&gt;
+int bar ()
+{
+    (void)printf("Hello, world\n");        // OK - cast to void
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   ERR33-C. Detect and handle standard library errors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR33-C.+Detect+and+handle+standard+library+errors">https://wiki.sei.cmu.edu/confluence/display/c/ERR33-C.+Detect+and+handle+standard+library+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

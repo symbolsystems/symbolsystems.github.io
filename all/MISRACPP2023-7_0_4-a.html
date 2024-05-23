@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Operands of bitwise and complement operators shall have an unsigned type [MISRACPP2023-7_0_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Operands of bitwise and complement operators shall have an unsigned type [MISRACPP2023-7_0_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when the operands of bitwise operators and complement operator
+do not have an unsigned type.
+
+The following operators are checked:
+* the binary bitwise operators and their compound versions: &amp;, |, ^, &amp;=, |=, ^=
+* the unary complement operator ~
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected or undefined behavior.
+The result of bit operations is only guaranteed to be defined
+if the sign bit is not affected.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int p, unsigned int q)
+{
+    p &amp; 1u;         // Violation - left-hand-side operand is not unsigned
+    2 | 3;          // Violation 2x - neither of the operands is unsigned
+    q ^ p;          // Violation - right-hand-side operand is not unsigned
+    ~p;             // Violation - operand is not unsigned
+
+    q &amp;= p;         // Violation - right-hand-side operand is not unsigned
+    p |= (p + 3u);  // Violation - left-hand-side operand is not unsigned
+    p ^= p;         // Violation 2x - neither of the operands is unsigned
+}
+
+enum E : signed long { V };
+void bar(signed char p) {
+    V &amp; 1u;         // Violation - left-hand-side operand is not unsigned
+    ~p;             // Violation - operand is not unsigned
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Examples of correct code:
+
+void foo(int p, unsigned int q, unsigned short r)
+{
+    q &amp; 1u;                 // OK - both operands are unsigned
+    2u | 3u;                // OK - both operands are unsigned
+    q ^ r;                  // OK - both operands are unsigned
+    ~((unsigned int)p);     // OK - operand is unsigned
+
+    p &lt;&lt; 3;                 // OK - rule does not check shift operators
+}
+
+enum E : unsigned long { V };
+void bar(unsigned char p)
+{
+    V &amp; 1u;                 // OK - both operands are unsigned
+    ~p;                     // OK - operand is unsigned
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.4 The operands of bitwise operators and shift operators shall be appropriate
+
+</PRE>
+</BODY>
+</HTML>

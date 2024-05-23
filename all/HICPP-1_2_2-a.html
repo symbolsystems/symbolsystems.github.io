@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All non-null statements shall either have at least one side-effect however executed or cause control flow to change [HICPP-1_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All non-null statements shall either have at least one side-effect however executed or cause control flow to change [HICPP-1_2_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Any statement (other than a null statement) which has no side effect and does
+not result in a change of control flow will normally indicate a programming
+error." [MISRA-C:2004]
+
+"Accessing a volatile object, modifying an object, modifying a file,
+or calling a function that does any of those operations are all side effects,
+which are changes in the state of the execution environment."
+[ISO/IEC 9899:1999]
+
+"The expression in an expression statement is evaluated as a void expression
+for its side effects.
+A null statement (consisting of just a semicolon) performs no operations." 
+[ISO/IEC 9899:1999]
+
+This rule detects when an evaluation of an expression in an expression
+statement does not cause a side effect.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that:
+- Any function call causes a side effect, even if no variable is modified
+  as a result.
+- Empty function bodies and empty blocks are acceptable and are ignored by
+  the rule.
+
+The rule triggers when an expression has no side effects, even if its
+operands cause side effects.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A cast to void is assumed to indicate a value that is intentionally
+not being used. The cast is therefore not dead code itself. It is treated
+as using its operand which is therefore also not dead code." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid code defects that may be caused by using statements
+that neither change control flow, nor have side effects.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    int m;
+    char * p;
+};
+
+int bar();
+
+void foo() {
+    int i = 0;
+    volatile int v1 = 0;
+    volatile int v2 = 0;
+    struct S s, *ps;
+    // Examples of incorrect code
+    i + 3;                              // Violation
+    3;                                  // Violation
+    i;                                  // Violation
+    (long)v1;                           // Violation
+    v1 + v2;                            // Violation
+    i + bar();                          // Violation
+    ps-&gt;p + s.m;                        // Violation
+    ps-&gt;m &lt;&lt; s.m;                       // Violation
+    *(ps-&gt;p);                           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the statements without side effects,
+or by modifying them so that they cause side effects.
+
+struct S {
+    int m;
+    char * p;
+};
+
+int bar();
+
+volatile struct S vS;
+
+void foo() {
+    int i = 0;
+    volatile int v1 = 0;
+    volatile int v2 = 0;
+    struct S s, *ps;
+    // Examples of correct code
+    i = i + 3;               // OK - assignment
+    i &lt;&lt;= 3;                 // OK - assignment
+    bar();                   // OK - function call
+    v1;                      // OK - volatile variable
+    v1;v2;                   // OK - volatile variables
+    vS.p;                    // OK - volatile variable
+    if(ps-&gt;m){}              // OK - causes control flow to change
+    ;                        // OK - null statement
+    {}                       // OK - empty block
+    (void)i;                 // OK - cast to void type
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M0-1-9. There shall be no dead code
+
+2. High Integrity C++ Coding Standard
+   1.2.2. Ensure that no expression or sub-expression is redundant
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   5.1.2.3 Program execution
+   6.8.3 Expression and null statements
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 187
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 0, Rule 0-1-9
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 2.2
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical system
+   Chapter 6, Section 14
+
+8. Origin: Misra Guidelines - Rule 53
+
+9. SEI CERT C Coding Standard
+   MSC12-C. Detect and remove code that has no effect or is never executed
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed">https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed</A>
+
+</PRE>
+</BODY>
+</HTML>

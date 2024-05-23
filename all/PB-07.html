@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assign function return value to a variable of incompatible type [PB-07]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assign function return value to a variable of incompatible type [PB-07-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports violation if a function call is assigned to expression
+that does not have a compatible type.
+
+See also: MISRA-043, PORT-14, MISRA2004-10_1_g, PB-05, PB-06, PB-11
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that compatible types are: 
+ - typedefs
+ - references
+ - types differs only by const or volatile specifier
+ - base and derived types
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents data loss and improves readability
+and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+unsigned int ret_unsigned_int();
+int* ret_pointer_int();
+
+void foo1(signed int signed_int, void* pointer_void){
+    unsigned short unsigned_short;
+
+    signed_int = ret_unsigned_int();        // Violation
+    unsigned_short = ret_unsigned_int();    // Violation
+    pointer_void = ret_pointer_int();       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+unsigned int ret_unsigned_int();
+int* ret_pointer_int();
+
+void foo1(signed int signed_int, void* pointer_void){
+    unsigned short unsigned_short;
+
+    signed_int = (signed int)ret_unsigned_int();          // OK
+    unsigned_short = (unsigned short)ret_unsigned_int();  // OK
+    pointer_void = (void*)ret_pointer_int();              // OK
+}
+
+// Cases not reported by rule
+
+typedef int UINT;
+
+UINT ret_typedef_int();
+signed int ret_signed_int();
+const int ret_const_int();
+int&amp; ret_reference_int();
+char* ret_pointer_char();
+
+void foo2(){
+    int int_type;
+    const char* const_pointer_char;
+	
+    int_type = ret_typedef_int();            // OK
+    int_type = ret_signed_int();             // OK
+    int_type = ret_const_int();              // OK
+    int_type = ret_reference_int();          // OK
+    const_pointer_char = ret_pointer_char(); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

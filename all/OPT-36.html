@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use a variable inside its own initializer [OPT-36]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use a variable inside its own initializer [OPT-36-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The variable used inside its own initializer may by automatically
+initialized to 0 or may not be automatically initialized.
+
+The use of variable in its own initializer is not reliable and may cause
+undefined behaviours.
+
+It might be caused by a misspelled identifier name (typographical error).
+Or maybe the user intended to assign a different variable with the same name
+but different scope? This can result in a logic error and the code should be
+modified.
+
+It might be an unwanted/dead code left behind by mistake, for example after
+code refactoring or cleaning. In this case the code can be removed.
+
+A careful code review is needed to check what was the intention of programmer
+and how the code should be changed.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Variables used in sizeof are excluded. The sizeof does not use a value
+of the variable, but the type, so it does not matter that variable might
+be not initialized.
+There is allowed taking an address of variable.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code and prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foot(int);
+int var_;
+
+void foo(){
+    // The code should be carefully reviewed
+    int z = z + 1;        // Violation - this looks like a unwanted code
+    int var = foot(var);  // Violation - this looks like a typo
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foot(int);
+int var_;
+
+void foo(){
+    int z = 1;             // OK - unnecessary 'z' was removed
+    int var = foot(var_);  // OK - variable's name was changed
+}
+
+/* Exceptions */
+struct S {
+	S* ps;
+};
+
+void foo1(){
+    int y = sizeof(y);  // OK
+    S s = {&amp;s};         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

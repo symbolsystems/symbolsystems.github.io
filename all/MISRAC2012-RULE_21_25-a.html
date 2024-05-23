@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only 'memory_order_seq_cst' should be used as an explicit memory order argument [MISRAC2012-RULE_21_25-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only 'memory_order_seq_cst' should be used as an explicit memory order argument [MISRAC2012-RULE_21_25-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The enumerated type memory_order specifies the detailed regular (non-atomic)
+memory synchronization operations and may provide for operation ordering.
+Its enumeration constants are as follows: memory_order_relaxed,
+memory_order_consume, memory_order_acquire, memory_order_release,
+memory_order_acq_rel, memory_order_seq_cst" [ISO/IEC 9899:2011]
+
+"The functions not ending in '_explicit' have the same semantics as the
+corresponding '_explicit' function with 'memory_order_seq_cst' for the
+memory_order argument." [ISO/IEC 9899:2011]
+
+The 'memory_order_seq_cst' enumeration is defined in the Standard as the default
+memory order for objects with atomic types. Using of this order does not cause
+undefined behaviors that can occur when another argument is used as an explicit
+memory order argument in Standard Library functions for performing atomic
+operations.
+
+This rule detects when the following functions:
+- atomic_store_explicit,
+- atomic_load_explicit,
+- atomic_exchange_explicit,
+- atomic_compare_exchange_strong_explicit,
+- atomic_compare_exchange_weak_explicit,
+- atomic_fetch_add_explicit,
+- atomic_fetch_sub_explicit,
+- atomic_fetch_or_explicit,
+- atomic_fetch_xor_explicit,
+- atomic_fetch_and_explicit,
+- atomic_flag_test_and_set_explicit,
+- atomic_flag_clear_explicit,
+- atomic_thread_fence,
+- atomic_signal_fence
+are called with a memory order argument other than 'memory_order_seq_cst'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+#include &lt;stdint.h&gt;
+
+typedef struct S
+{
+    uint8_t a;
+    uint8_t b;
+} TS;
+_Atomic TS ast;
+
+void f1()
+{
+    TS lst = {2, 3};
+    atomic_init(&amp;ast, lst);
+    lst = atomic_load_explicit(&amp;ast, memory_order_relaxed); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+#include &lt;stdint.h&gt;
+
+typedef struct S
+{
+    uint8_t a;
+    uint8_t b;
+} TS;
+_Atomic TS ast;
+
+void f1()
+{
+    TS lst = {2, 3};
+    atomic_init(&amp;ast, lst);
+    lst = atomic_load(&amp;ast);                                // OK
+    lst = atomic_load_explicit(&amp;ast, memory_order_seq_cst); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.12 Rule 21.25
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.17 Atomics &lt;stdatomic.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

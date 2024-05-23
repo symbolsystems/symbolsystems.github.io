@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A virtual base shall be explicitly declared in each derived class [OOP-39]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A virtual base shall be explicitly declared in each derived class [OOP-39-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A virtual base shall be explicitly declared in each derived class.
+
+See also: OOP-39_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Documentation purposes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class AA {};
+class BB : virtual AA {};
+class CC : virtual AA {};
+class DD : BB{};          // Violation
+class EE : CC{};          // Violation
+class FF : DD{};          // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class AA {};
+class BB : virtual AA {};
+class CC : virtual AA {};
+class DD : BB, virtual AA {};     // OK
+class EE : CC, virtual AA {};     // OK
+class FF : DD, EE, virtual AA {}; // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

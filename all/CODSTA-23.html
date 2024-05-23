@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All 'if' statements should have an 'else' clause [CODSTA-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All 'if' statements should have an 'else' clause [CODSTA-23-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation on 'if' statement without an 'else' statement.
+See also: MISRA2004-14_10
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule ensures proper data flow and improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int a, int b) {
+    if(a &gt; b){          // Violation
+        return a - b;
+    }
+
+    if(a &lt; b){          // Violation
+    	return b - a;
+    }
+
+    if(a == b)          // Violation
+        return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int a, int b) {
+    if(a &gt; b){          // OK
+        return a - b;
+    } else if(a &lt; b){   // OK
+    	return b - a;
+    } else {
+    	return 1;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

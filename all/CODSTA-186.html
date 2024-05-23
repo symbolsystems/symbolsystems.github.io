@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Where designated initializers are used to initialize an array object the size of the array shall be specified explicitly [CODSTA-186]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Where designated initializers are used to initialize an array object the size of the array shall be specified explicitly [CODSTA-186-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where designated initializers are used to initialize an array object 
+the size of the array shall be specified explicitly.
+
+If the size of an array is not specified explicitly, it is determined
+by the highest index of any of the elements that are initialized."
+[MISRA C:2012 Rule 9.5]
+
+This rule detects when designated initializers are used to initialize
+an array object, but the size of the array is unknown.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule applies to the C99 standard.
+
+"The rule applies equally to an array subobject that is a flexible array 
+member." [MISRA C:2012 Rule 9.5]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"When using designated initializers it may not always be clear which
+initializer has the highest index, especially when the initializer contains
+a large number of elements. To make the intent clear, the array size shall be
+declared explicitly. This provides some protection if, during development
+of the program, the indices of the initialized elements are changed as it is
+a constraint violation to initialize an element outside the bounds of an array."
+[MISRA C:2012 Rule 9.5]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int a1[ ] = { [ 0 ] = 1, 2 };                 /* Violation */
+    int a3[ ][ 2 ] = { [ 0 ][ 0 ] = 2, 1 };       /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int a1[10] = { [ 0 ] = 1, 2 };                /* OK */
+    int a3[2][ 2 ] = { [ 0 ][ 0 ] = 2, 1 };       /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 9.5
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.8 Initialization
+
+</PRE>
+</BODY>
+</HTML>

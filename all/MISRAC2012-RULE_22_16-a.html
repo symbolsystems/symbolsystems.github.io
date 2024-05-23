@@ -1,0 +1,217 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not abandon unreleased locks [MISRAC2012-RULE_22_16-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not abandon unreleased locks [MISRAC2012-RULE_22_16-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where a mutex is locked but not unlocked at an
+appropriate place, which could cause an application deadlock.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Locked object may be unlocked from callers up to specified level" parameter
+allows you to manage the depth of analysis of the call graph. Lower numbers are 
+recommended to enforce the best practice that locking and unlocking occur at the
+same nesting level. This practice is required by MISRA C/C++ &amp; JSF standards.
+
+Higher numbers of the parameter value may be preferred for (rare) cases where 
+locking and unlocking have to be performed on different levels as well as in the
+case where certain functions serve as wrappers to standard locking and unlocking
+functions. The parameter of the value is set to 1  by default. This ensures the
+detection of most bugs related to direct uses of standard locking functions
+as well as the use of custom wrappers around them - without producing
+unnecessary false positives.
+
+To demonstrate this, let's assume the following wrapper functions:
+
+void mutex_lock()
+{
+    pthread_mutex_lock(mutex);
+    // do something else
+}
+
+void mutex_unlock()
+{
+    pthread_mutex_unlock(mutex);
+    // do something else
+}
+
+With the value of parameter set to 0, Flow Analysis will see the call to
+pthread_mutex_lock inside the wrapper function "mutex_lock" and no corresponding
+call to pthread_mutex_unlock inside the function. Consequently, it will report a 
+violation which is in fact a false positive because mutex_lock is not meant to 
+call unlocking function by design and pthread_mutex_unlock is called from the 
+other wrapper function named "mutex_unlock". Setting the depth to values higher
+than 0 prevents false positives for such wrapper functions while still ensuring
+that violations will be reported if the code doesn't call "mutex_unlock".
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents application deadlocks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Example 1. Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+bool preconditionHolds();
+
+void exclusivelyCompute()
+{
+    pthread_mutex_lock(mutex);
+    if (preconditionHolds()) {
+        /* perform some computations */
+        pthread_mutex_unlock(mutex);
+    }
+} // VIOLATION
+
+Example 2. To properly analyze the following example, the parameter
+"Locked object may be unlocked from callers up to specified level" should be set to "3" or more.
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t mutex;
+
+void lockLevel1() { pthread_mutex_lock(&amp;mutex); }
+void unlockLevel1() { pthread_mutex_unlock(&amp;mutex); }
+void lockLevel2() { lockLevel1(); }
+void unlockLevel2() { unlockLevel1(); }
+void lockLevel3() { lockLevel2(); }
+void unlockLevel3() { unlockLevel2(); }
+
+bool preconditionHolds();
+
+void exclusivelyCompute()
+{
+    lockLevel3();
+    if (preconditionHolds()) {
+        /* perform some computations */
+        unlockLevel3();
+    }
+} // VIOLATION
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Example 1. The example can be repaired by performing unlocking on all the branches:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+bool preconditionHolds();
+
+void exclusivelyCompute()
+{
+    pthread_mutex_lock(mutex);
+    if (preconditionHolds()) {
+        /* perform some computations */
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+Example 2.
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t mutex;
+
+void lockLevel1() { pthread_mutex_lock(&amp;mutex); }
+void unlockLevel1() { pthread_mutex_unlock(&amp;mutex); }
+void lockLevel2() { lockLevel1(); }
+void unlockLevel2() { unlockLevel1(); }
+void lockLevel3() { lockLevel2(); }
+void unlockLevel3() { unlockLevel2(); }
+
+bool preconditionHolds();
+
+void exclusivelyCompute()
+{
+    lockLevel3();
+    if (preconditionHolds()) {
+        /* perform some computations */
+    }
+    unlockLevel3();
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.13
+
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.16
+
+SEI CERT C Coding Standard
+CON01-C. Acquire and release synchronization primitives in the same module, at the same level of abstraction
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON01-C.+Acquire+and+release+synchronization+primitives+in+the+same+module%2C+at+the+same+level+of+abstraction">https://wiki.sei.cmu.edu/confluence/display/c/CON01-C.+Acquire+and+release+synchronization+primitives+in+the+same+module%2C+at+the+same+level+of+abstraction</A>
+
+</PRE>
+</BODY>
+</HTML>

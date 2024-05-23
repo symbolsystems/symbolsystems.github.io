@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer to a FILE object shall not be dereferenced by a library function [MISRA2012-RULE-22_5_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer to a FILE object shall not be dereferenced by a library function [MISRA2012-RULE-22_5_b-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to a FILE object shall not be dereferenced directly or indirectly
+(e.g. by a call to memcpy or memcmp)." [MISRA C:2012 Rule 22.5]
+
+This rule detects cases when a pointer to a FILE object is used as one
+of the following:
+- the first argument in a call to the 'memset', 'memchr' or 'realloc' function
+- the first or the second argument in a call to the 'memcpy', 'memcmp' or 'memmove'
+  function
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The Standard (C90 Section 7.9.3(6), C99 Section 7.19.3(6) ) states that the
+address of a FILE object used to control a stream may be significant
+and a copy of the object may not give the same behaviour. This rule ensures
+that such a copy cannot be made." [MISRA C:2012 Rule 22.5]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+void foo()
+{
+    FILE *fp;
+    char *pch = "data";
+
+    memcpy(fp, pch, 4); /* Violation - the type of the first argument
+                                       is 'FILE*' */
+    memcpy(pch, fp, 4); /* Violation - the type of the second argument
+                                       is 'FILE*' */
+    memchr(fp, 'p', 4); /* Violation - the type of the first argument
+                                       is 'FILE*' */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use pointers to a FILE object as arguments in calls to library functions
+'memset', 'memchr', 'realloc', 'memcpy', 'memcmp' or 'memmove'.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 22.5
+
+</PRE>
+</BODY>
+</HTML>

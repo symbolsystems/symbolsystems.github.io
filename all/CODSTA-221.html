@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not include any type qualifiers in the specification of a function type [CODSTA-221]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not include any type qualifiers in the specification of a function type [CODSTA-221-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the specification of a function type includes any type qualifiers,
+the behavior is undefined." [ISO/IEC 9899:2011]
+
+This rule detects when the 'const', 'volatile,' or 'restrict' qualifier is
+specified for a function type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int func( void );
+
+typedef const func func_t;         // Violation
+
+void f1( void ) {
+    volatile func* pfunc;          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, remove the 'const', 'volatile', and 'restrict' qualifiers
+specified for the function type.
+
+typedef const int func( void );   // OK
+
+typedef func func_t;              // OK
+
+void f1( void ) {
+    func* volatile pfunc;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.15 Rule 17.13
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.3 Type qualifiers
+
+</PRE>
+</BODY>
+</HTML>

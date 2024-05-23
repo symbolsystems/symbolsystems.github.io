@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid Overloading on Forwarding References [HICPP-13_1_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid Overloading on Forwarding References [HICPP-13_1_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Functions that take forwarding references as their parameters can be invoked
+in a number of cases. Since forwarding references can be presented as almost all
+data types, such functions can be instantiated with the exact type match for
+each parameter. For this reason, overloading on forwarding references should be
+avoided, because a function with a forwarding reference will be called more
+frequently than expected.
+
+This rule detects cases of overloading on forwarding reference parameters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"Declaring an overloading function that takes a 'forwarding reference' parameter
+to be '=delete' does not violate this rule.
+Declaring a 'forwarding constructor' that is constrained (via SFINAE) to not
+match any other overloads also does not violate this rule" [AUTOSAR A13-3-1]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent overloading on forwarding references,
+which is almost always an error and leads to surprising or incorrect
+program behavior that is difficult to understand or debug.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+template &lt;typename T&gt; void foo(T&amp;&amp; t);
+template &lt;typename T&gt; void foo(const T&amp; t);     // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Avoid overloading on forwarding reference parameters.
+
+#include &lt;type_traits&gt;
+struct S2 {
+  template&lt;class Type&gt;
+  S2(Type&amp;&amp; param, std::enable_if_t&lt;Type::value1,int&gt; = 0) { }
+  S2(S2&amp;&amp; param){ }                                            // OK - Exception
+};
+
+template &lt;typename T&gt; void f1(T&amp;&amp; par) = delete;
+void f1(int&amp; par);                                             // OK - Exception
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-3-1. A function that contains "forwarding reference" as its argument
+   shall not be overloaded
+
+2. High Integrity C++ Coding Standard
+   13.1.2. If a member of a set of callable functions includes a universal
+   reference parameter, ensure that one appears in the same position for all
+   other members
+
+3. Programming languages -- C++ ISO/IEC 14882:2011 
+   8.3.2 References, 13 Overloading
+
+4. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 5: "Rvalue References, Move Semantics, and Perfect Forwarding.",
+   Item 26: "Avoid overloading on universal references"
+
+</PRE>
+</BODY>
+</HTML>

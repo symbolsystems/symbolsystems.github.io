@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid double locking [BD-TRS-DLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid double locking [BD-TRS-DLOCK-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where a lock is acquired twice without intermediate releasing.
+While this is legal for the so-called recursive mutexes, it is not allowed for regular
+locks and may cause deadlocks.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Report on tryLock methods" parameter allows you to specify if the rule will
+trigger when the second lock is obtained through a method with the "tryLock"
+semantics (e.g. pthread_mutex_trylock).
+This option is enabled by default.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents application deadlocks.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+bool preconditionHolds();
+
+void exclusivelyCompute()
+{
+    pthread_mutex_lock(mutex);
+    if (preconditionHolds()) {
+        /* perform some computations */
+        exclusivelyCompute(); // VIOLATION: recursive call will cause double locking
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+void run()
+{
+    mutex = new pthread_mutex_t;
+    pthread_mutex_init(mutex, (const pthread_mutexattr_t*)0);
+    exclusivelyCompute();
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The example can be repaired by separating locking and computation in different functions
+(but ensuring that the function performing unlocked computation is only called from functions
+performing appropriate locking):
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+bool preconditionHolds();
+
+static void nonexclusivelyCompute()
+{
+    if (preconditionHolds()) {
+        /* perform some computations */
+        nonexclusivelyCompute(); // NO VIOLATION: locking is done only once
+    }
+}
+
+void exclusivelyCompute()
+{
+    pthread_mutex_lock(mutex);
+    nonexclusivelyCompute();
+    pthread_mutex_unlock(mutex);
+}
+
+void run()
+{
+    mutex = new pthread_mutex_t;
+    pthread_mutex_init(mutex, (const pthread_mutexattr_t*)0);
+    exclusivelyCompute();
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.13
+
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.18
+
+High Integrity C++ Coding Standard
+18.3.1 Within the scope of a lock, ensure that no static path results in a lock of the same mutex
+
+SEI CERT C++ Coding Standard
+CON56-CPP. Do not speculatively lock a non-recursive mutex that is already owned by the calling thread
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON56-CPP.+Do+not+speculatively+lock+a+non-recursive+mutex+that+is+already+owned+by+the+calling+thread">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON56-CPP.+Do+not+speculatively+lock+a+non-recursive+mutex+that+is+already+owned+by+the+calling+thread</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Call fclose() on pointer member in destructor if the pointer was used to open a file [MRM-42]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Call fclose() on pointer member in destructor if the pointer was used to open a file [MRM-42-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation message when pointer member was used to open
+a file (using 'fopen' function) and the file is not closed in destructor
+(using 'fclose' function).
+
+See also: MRM-33, BD-RES_LEAKS
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that destructor closes a file only if it directly calls:
+- 'fclose' function on a pointer member or
+- member function that directly calls 'fclose' function on a pointer member.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Prevention of resource leaks, especially in error cases.
+Releasing resources in a destructor provides a convenient means of resource
+management, especially in regards to exceptional cases. Moreover, if it is
+possible that a resource could be leaked, then that resource should be wrapped
+in a class whose destructor automatically cleans up the resource." [JSF]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+class A
+{
+public:
+    A (const char *n, const char * a) 
+    { 
+        fp = fopen(n,a); 
+    }
+    
+    ~A ()                               // Violation
+    {
+    }
+
+private:
+    FILE *fp;
+};
+
+class B                                 // Violation
+{
+public:
+    B ();
+    void init(const char *n, const char * a);
+
+private:
+    FILE *fp;
+};
+
+void B::init(const char *n, const char * a) {
+    this-&gt;fp = fopen(n,a);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+class A
+{
+public:
+    A (const char *n, const char * a) 
+    { 
+        fp = fopen(n,a); 
+    }
+    
+    ~A ()                                // OK
+    {
+        fclose(fp);
+    }
+
+private:
+    FILE *fp;
+};
+
+class B                                  // OK
+{
+public:
+    B ();
+    ~B();
+    void init(const char *n, const char * a);
+    void finish();
+
+private:
+    FILE *fp;
+};
+
+void B::init(const char *n, const char * a) {
+    this-&gt;fp = fopen(n,a);
+}
+
+void B::finish() {
+    fclose(this-&gt;fp);
+}
+
+B::~B() {
+    finish();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 79
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

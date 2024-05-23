@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+'std::make_unique' shall be used to construct objects owned by 'std::unique_ptr' [AUTOSAR-A20_8_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+'std::make_unique' shall be used to construct objects owned by 'std::unique_ptr' [AUTOSAR-A20_8_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using 'std::make_unique' to create instances of 'std::unique_ptr&lt;T&gt;' provides
+object allocation without explicit call of new function. It also ensures
+exception safety in complex expressions and prevents from memory leaks caused
+by unspecified-evaluation order-expressions." [AUTOSAR A20-8-5]
+
+This rule detects when a 'new' operator is used instead of 'std::make_unique'
+to create a smart pointer 'std::unique_ptr'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+There are several cases when 'std::make_unique' can not or should not be used:
+  1. When a custom deleter is required. For example:
+       #include &lt;functional&gt;
+       #include &lt;memory&gt;
+       class A {
+       public:
+           A(int m11) : m1(m11) {}
+           int m1;
+       };
+       std::unique_ptr&lt;A, std::function&lt;void(A*)&gt;&gt;
+           ptr(new A(4), [](A* b) { delete b; } );            // OK
+
+  2. When braced initializers need to be passed. For example:
+       #include &lt;memory&gt;
+       std::unique_ptr&lt;int&gt; s2(new int[5] {1,2,3,4,5});       // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve exception safety and prevent memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+struct S { int m; };
+
+std::unique_ptr&lt;S&gt; s(new S());                              // Violation
+
+std::unique_ptr&lt;S[]&gt; foo() {
+    return std::unique_ptr&lt;S[]&gt;(new S[5]);                  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by replacing the 'new' operator with 'std::make_unique'.
+
+#include &lt;memory&gt;
+#include &lt;functional&gt;
+
+struct S { int m; };
+
+std::unique_ptr&lt;S&gt; s(std::make_unique&lt;S&gt;());                // OK
+
+std::unique_ptr&lt;S[]&gt; foo() {
+    return std::unique_ptr&lt;S[]&gt;(std::make_unique&lt;S[]&gt;(5));  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A20-8-5. std::make_unique shall be used to construct objects owned by
+   std::unique_ptr
+
+</PRE>
+</BODY>
+</HTML>

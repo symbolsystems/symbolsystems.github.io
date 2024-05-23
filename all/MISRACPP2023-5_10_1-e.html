@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A user-defined literal suffix should be directly preceded by a literal operator [MISRACPP2023-5_10_1-e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A user-defined literal suffix should be directly preceded by a literal operator [MISRACPP2023-5_10_1-e-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each identifier that begins with an underscore is reserved
+to the implementation for use as a name in the global namespace."
+[ISO/IEC 14882:2017]
+
+It is recommended to begin a user-defined literal suffix with
+a single underscore. However, it should not be preceded by a space,
+comment or another character, because this results in the creation
+of a reserved identifier.
+
+This rule detects when a user-defined literal suffix is not
+directly preceded by the literal operator 'operator""'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using reserved identifiers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+double operator "" _ld(long double);    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+double operator ""_ld(long double);     // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   5.10 Identifiers
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.10.1 User-defined identifiers shall have an appropriate form
+
+</PRE>
+</BODY>
+</HTML>

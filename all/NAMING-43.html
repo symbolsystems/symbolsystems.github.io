@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+File name extension, if present, should be "*.cpp" or "*.h" [NAMING-43]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+File name extension, if present, should be "*.cpp" or "*.h" [NAMING-43-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+File name extension should be either:
+  .cpp (recommended for implementation files)
+  .h   (recommended for header files)
+
+This rule reports a violation if file name extension does not match the 
+templates above.
+
+This rule does not report any violation if there is no extension at all
+(no dot "." in file name).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule is enabled for C++ only.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+//file.cc          // Violation
+//file.hxx         // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+//file.cpp        // OK   
+//file.h          // OK
+//file            // OK (no extension)
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

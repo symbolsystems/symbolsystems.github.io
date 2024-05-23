@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All arguments to any multi-argument type-generic macros declared in &lt;tgmath.h&gt; shall have the same standard type [CODSTA-108_d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All arguments to any multi-argument type-generic macros declared in &lt;tgmath.h&gt; shall have the same standard type [CODSTA-108_d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All operand arguments passed to any of the multi-argument macros defined
+in &lt;tgmath.h&gt; shall have the same standard type, after integer promotion
+has been applied to any integer arguments.
+The final parameter to the 'frexp' and 'remquo' macros is for output, and is
+not considered an operand.
+On platforms with extended real types, the essentially real floating types
+may not be able to be strictly ordered by precision. In this case there
+is a risk that if two arguments have different types, the deduced common
+real type may be an unexpected size or silently lose precision."
+[MISRA C:2012 Amendment 3]
+
+This rule detects when arguments passed to calls of macros: atan2, copysign,
+fdim, fma, fmax, fmin, fmod, hypot, ldexp, nextafter, nexttoward, pow,
+remainder, remquo, scalbn, scalbln from the &lt;tgmath.h&gt; header have different
+standard types.
+
+This rule is applied only if both arguments have essentially signed, essentially
+unsigned or essentially floating types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A violation can be reported when identifiers have the same names as macros
+defined in the &lt;tgmath.h&gt; header file, but are not macros from this file,
+for example:
+
+// file1.h
+#include &lt;math.h&gt;
+float f;
+double d;
+void f(void)
+{
+    pow(f, d);  // Reported, but 'pow' is not a macro from &lt;tgmath.h&gt;
+}
+
+// file2.h
+#include &lt;tgmath.h&gt;
+//...
+
+// file.c
+#include "file1.h"
+#include "file2.h"
+//...
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Ensuring that the types used to determine the corresponding real type
+for the whole call expression are consistent makes the relationship
+between the input values and the result clearer."
+[MISRA C:2012 Amendment 3]
+
+This rule helps you improve the readability and consistency of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;tgmath.h&gt;
+void f1()
+{
+    double d;
+    float f;
+
+    fmax(f, d);            // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;tgmath.h&gt;
+void f1()
+{
+    double d;
+    float f;
+
+    fmax((double)f, d);    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.19 Rule 21.23
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.25 Type-generic math &lt;tgmath.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

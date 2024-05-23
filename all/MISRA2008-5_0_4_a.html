@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An implicit integral conversion shall not change the signedness of the underlying type [MISRA2008-5_0_4_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An implicit integral conversion shall not change the signedness of the underlying type [MISRA2008-5_0_4_a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The value of an expression of integer type shall not be implicitly converted
+to a different underlying type if:
+a) it is not a conversion to a wider integer type of the same signedness
+b) the expression is complex, or
+c) the expression is not constant and is a function argument, or
+d) the expression is not constant and is a return expression."
+[MISRA C:2004, Rule 10.1]
+
+This rule detects when an expression of integer type is implicitly converted
+to a different underlying type with different signedness.
+
+"The term 'underlying type' is defined as describing the type that would
+be obtained from evaluating an expression if it were not for the effects
+of integral promotion." [MISRA C:2004, Underlying type]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check plain char types, which are considered to be neither
+signed nor unsigned.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"By observing the principle whereby all operations are performed in 
+a consistent (underlying) type, it is possible to avoid programmer confusion 
+and some of the dangers associated with integral promotion."
+[MISRA C:2004, Rule 10.1]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef signed int int32_t;
+typedef unsigned int uint32_t;
+
+void bar(int32_t arg);
+
+int32_t foo(int i)
+{
+    uint32_t ui;
+    int32_t si = ui;                    // Violation
+    bar(ui);                            // Violation
+    si = (int32_t)(ui + si);            // Violation
+    if (si &gt; ui) ;                      // Violation
+    si = (i &gt; 0) ? si : ui;             // Violation
+    ui = 100;                           // Violation
+    return ui;                          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef unsigned char uint8_t;
+typedef signed int int32_t;
+typedef unsigned int uint32_t;
+
+void bar(int32_t arg);
+
+int32_t foo(int i)
+{
+    uint32_t ui;
+    int32_t si = (int32_t)ui;           // OK
+    bar((int32_t)ui);                   // OK
+    si = (int32_t)ui + si;              // OK
+    if ((uint32_t)si &gt; ui) ;            // OK
+    si = (i &gt; 0) ? si : (int32_t)ui;    // OK
+    ui = 100u;                          // OK
+    return (int32_t)ui;                 // OK
+}
+
+void foo2()
+{
+    uint8_t uc1, uc2;
+    uc1 = uc1 + uc2;                    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-4. An implicit integral conversion shall not change the signedness of
+   the underlying type
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-4
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10, Rule 10.1
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10.4, Underlying type
+
+</PRE>
+</BODY>
+</HTML>

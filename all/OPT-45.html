@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Non-const objects with internal linkage should be defined at function scope if they are only accessed from within a single function [OPT-45]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Non-const objects with internal linkage should be defined at function scope if they are only accessed from within a single function [OPT-45-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Defining variables in the minimum block scope possible reduces the visibility
+of those variables and therefore reduces the possibility that these identifiers
+will be used accidentally. A corollary of this is that global objects (including
+singleton function objects) shall be used in more than one function."
+[MISRA C++:2008]
+
+This rule detects when a non-const global variable with internal linkage
+is only used inside a single function in a translation unit.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not detect variables that are not used at all.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+A common pattern is to declare all constants at the top of the file,
+so that this rule does not apply to const and constexpr variables.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static int var1 = 10;        // Violation
+
+void f1( )
+{
+    while(var1 &gt;= 0) {
+        var1--;
+    }
+}
+
+void f2 ()
+{
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static int var2 = 10;        // OK
+static const int var3 = 10;  // OK - Exception
+
+void f1( )
+{
+    int var1 = 10;        // OK
+    while(var1 &gt;= 0) {
+        var1--;
+    }
+    var2 = var1 + var2;
+}
+
+void f2 (int p)
+{
+    var2 = p + var2 + var3;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M3-4-1. An identifier declared to be an object or type shall be defined in
+   a block that minimizes its visibility
+
+2. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 3, Rule 3-4-1
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no spaces after the opening '(' and before closing ')' parenthesis that enclose the operand of the 'return' statement or the 'sizeof' operator [FORMAT-24]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no spaces after the opening '(' and before closing ')' parenthesis that enclose the operand of the 'return' statement or the 'sizeof' operator [FORMAT-24-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when a space or tab is used after the opening '(' or before
+closing ')' parenthesis that follow the 'return' or 'sizeof' keyword.
+
+See also: FORMAT-23, FORMAT-25
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Spaces are allowed after the opening parenthesis when they are followed
+by a comment or a backslash on the same line.
+
+Spaces are allowed before the closing parenthesis if they are not
+preceded by another token placed on the same line.
+
+int f1(int x)
+{
+  return (        // OK
+           x + 2
+         );       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int f1( int x )
+{
+   unsigned int ui1 = sizeof( int);            // Violation
+   unsigned int ui2 = sizeof(unsigned int );   // Violation
+   return( x + 1 );                            // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1( int x )
+{
+   unsigned int ui1 = sizeof(int);             // OK
+   unsigned int ui2 = sizeof(unsigned int);    // OK
+   return(x + 1);                              // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

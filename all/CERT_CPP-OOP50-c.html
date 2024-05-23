@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use dynamic type of an object under construction [CERT_CPP-OOP50-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use dynamic type of an object under construction [CERT_CPP-OOP50-c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Dynamic type of the object under construction is not resolved to the most derived class.
+Instead, it is always resolved to the type in which the constructor is declared.
+This may lead to developer confusion and make code error-prone.
+
+Additionally, a call to a pure virtual function from a constructor results in
+undefined behavior.
+
+By default, this rule detects when a dynamic type of an object under
+construction is directly or indirectly used from inside a constructor
+for one of the following purposes:
+ - Making a virtual call to a virtual function.
+ - Using dynamic_cast.
+ - Using typeid on the object of a polymorphic class type.
+ 
+The rule can be parameterized; see PARAMETERS.
+
+See also BD-PB-VDTOR, OOP-16
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not report the use of the dynamic type of an object inside
+an otherwise reported virtual method call.
+
+The rule does not trigger when the virtual function is called using a class
+qualifier or when a final override of a virtual function is called.
+
+See EXAMPLE.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+As a rule, using dynamic type of the object under construction is error-prone and
+may lead to defects ranging from memory leaks to program crashes.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report calls to virtual functions" parameter allows you to specify if
+the rule triggers when a virtual call to a virtual function is made on
+the object under construction from inside a constructor.
+It is enabled by default.
+
+The "Report only when calling pure virtual functions" sub-parameter
+allows you to narrow down calls to virtual functions the rule will report.
+If enabled, the rule only triggers on calls to pure virtual functions.
+It is disabled by default.
+
+The "Report uses of dynamic_cast" parameter allows you to specify if the rule
+triggers when a dynamic_cast is used on the object under construction from
+inside a constructor.
+It is enabled by default.
+
+The "Report uses of typeid on the object of a polymorphic class type" parameter
+allows you to specify if the rule triggers when typeid is used on the object
+under construction of a polymorphic class type from inside a constructor.
+It is enabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior and code defects ranging from
+memory leaks to program crashes.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Test {
+public:
+    Test()
+    {
+        nv();
+        v2();       // VIOLATION
+        Test::v4(); // NO VIOLATION
+        v5();       // NO VIOLATION - call to a final override
+    }
+    
+    void nv()
+    {
+        v1();       // VIOLATION
+    }
+
+    virtual void v1();
+    virtual void v2()
+    {
+        v3();       // NO VIOLATION - call to v2() reported in Test::Test()
+    }
+    virtual void v3();
+    virtual void v4();
+    virtual void v5() final;
+};
+
+Test* createTest()
+{
+    return new Test();
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To fix the code, do not call virtual functions on the object under
+construction. One way to avoid this is to execute the post-initialization code
+after the object is fully created.
+
+class Test {
+public:
+    Test()
+    {
+    }
+
+    void postInitialize()
+    {
+        nv();
+        v2();       // NO VIOLATION
+        Test::v4(); // NO VIOLATION
+        v5();       // NO VIOLATION
+    }
+    
+    void nv()
+    {
+        v1();       // NO VIOLATION
+    }
+
+    virtual void v1();
+    virtual void v2()
+    {
+        v3();       // NO VIOLATION
+    }
+    virtual void v3();
+    virtual void v4();
+    virtual void v5() final;
+};
+
+Test* createTest()
+{
+    Test* test = new Test();
+    test-&gt;postInitialize();
+    return test;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+(C) 2005 Pearson Education, Inc.
+Chapter: "Construction, Destruction, and Copying", Rule 49
+
+Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+Your Programs and Design", Third Edition, Addison-Wesley, 
+(C) 2005 Pearson Education, Inc., Chapter 2, Item 9
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+Chapter 4.10 Classes, AV Rule 71.1
+
+General Principles of Software Validation;
+Final Guidance for Industry and FDA Staff
+Document issued on: January 11, 2002
+   
+AUTOSAR C++14 Coding Guidelines
+M12-1-1. An object's dynamic type shall not be used from the body of its constructor or destructor
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 12, Rule 12-1-1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 15.1.1 An object's dynamic type shall not be used from within its constructor or destructor
+
+High Integrity C++ Coding Standard
+12.4.1 Do not use the dynamic type of an object unless the object is fully constructed
+
+SEI CERT C++ Coding Standard
+OOP50-CPP. Do not invoke virtual functions from constructors or destructors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP50-CPP.+Do+not+invoke+virtual+functions+from+constructors+or+destructors">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP50-CPP.+Do+not+invoke+virtual+functions+from+constructors+or+destructors</A>
+
+</PRE>
+</BODY>
+</HTML>

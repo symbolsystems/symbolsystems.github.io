@@ -1,0 +1,221 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The number of execution paths in a function should not be higher than 80 [METRICS-44]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The number of execution paths in a function should not be higher than 80 [METRICS-44-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the number of execution paths in a function is higher
+than 80.
+
+An execution path is a unique sequence of basic blocks starting from the
+function entry to the point of exit. A basic block is a sequence of
+non-branching statements.
+
+The number of execution paths in a function is computed based on the possible
+control flow decisions to be taken at the branching points in the code.
+This rule considers 'if-else', 'for', 'while', 'do-while', and 'switch'
+instructions as the branching points. The 'if-else' (whether 'else' is explicit
+or not), 'for', 'while', and 'do-while' statements introduce two execution
+paths. The 'switch' statements introduce an execution path for every non-empty
+'case' label and for the 'default' label (whether 'default' is explicit or not).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The limit of the execution paths in a function can be easy modified in the Rule
+Wizard by changing the condition inside the 'ControlFlowPathCount' property.
+The current condition "$$&gt;80" causes the rule to report only on functions
+with more than 80 execution paths.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintainability of your code.
+Functions with a high number of execution paths are difficult to test, maintain
+and comprehend.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1(int n)     /* Violation - number of paths = 100 */
+{
+    if ( n )
+    {
+    } /* PATH1 = 1 */
+    else if ( n )
+    {
+        if ( n )
+        {
+        } /* PATH2 = 1 */
+        else
+        {
+            if ( n )
+            {
+            } /* PATH3 = 1 */
+            else if ( n )
+            {
+            } /* PATH4 = 1 */
+            else
+            {
+            } /* PATH5 = 1 */
+        } /* PATH6 = PATH3 + PATH4 + PATH5 = 3 */
+        /* PATH7 = PATH2 + PATH6 = 4 */
+
+        switch ( n )
+        {
+            case 1 :
+            case 2 : break;
+            case 3 : break;
+            default: break;
+        } /* PATH8 = 3 */
+
+        switch ( n )
+        {
+            case 1 : break;
+            case 2 : break;
+            case 3 : break;
+            /* default: is counted */
+        } /* PATH9 = 4 */
+        /* PATH10 = PATH7 * PATH8 * PATH9 =48 */
+    } /* else is counted: PATH11 = 1 */
+
+    /* PATH12 = PATH1 + PATH10 + PATH11 = 50 */
+
+    if ( n )
+    {
+    } /* PATH13 = 1 */
+    else
+    {
+    } /* PATH14 = 1 */
+    /* PATH15 = PATH13 + PATH14 = 2 */
+
+    /* PATH16 = PATH12 * PATH15 = 100 */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f2(int n)     /* OK - number of paths = 50 */
+{
+    int result;
+    if ( n )
+    {
+    } /* PATH1 = 1 */
+    else if ( n )
+    {
+        if ( n )
+        {
+        } /* PATH2 = 1 */
+        else
+        {
+            if ( n )
+            {
+            } /* PATH3 = 1 */
+            else if ( n )
+            {
+            } /* PATH4 = 1 */
+            else
+            {
+            } /* PATH5 = 1 */
+        } /* PATH6 = PATH3 + PATH4 + PATH5 = 3 */
+        /* PATH7 = PATH2 + PATH6 = 4 */
+
+        switch ( n )
+        {
+            case 1 :
+            case 2 : break;
+            case 3 : break;
+            default: break;
+        } /* PATH8 = 3 */
+
+        switch ( n )
+        {
+            case 1 : break;
+            case 2 : break;
+            case 3 : break;
+            /* default: is counted */
+        } /* PATH9 = 4 */
+        /* PATH10 = PATH7 * PATH8 * PATH9 =48 */
+    } /* else is counted: PATH11 = 1 */
+
+    /* PATH12 = PATH1 + PATH10 + PATH11 = 50 */
+    return result;
+}
+
+void f3(int n)     /* OK - number of paths = 4 */
+{
+    if(f2(n))
+    {
+    } /* PATH1 = 1 */
+    else
+    {
+    } /* PATH2 = 1 */
+    /* PATH3 = PATH1 + PATH2 = 2 */
+
+    if ( n )
+    {
+    } /* PATH4 = 1 */
+    else
+    {
+    } /* PATH5 = 1 */
+    /* PATH6 = PATH3 + PATH4 = 2 */
+
+    /* PATH7 = PATH3 * PATH6 = 4 */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. HIS Source Code Metriken, version 1.3.1
+   Metrik "PATH"
+
+</PRE>
+</BODY>
+</HTML>

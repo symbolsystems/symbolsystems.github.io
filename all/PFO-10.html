@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not define more than on class in a header file [PFO-10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not define more than on class in a header file [PFO-10-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An include file for a class should have a file name of the form
+&lt;class name&gt; + extension. Use uppercase and lowercase letters in the same way
+as in the source code. Since class names must generally be unique within
+a large context, it is appropriate to utilize this characteristic when naming
+its include file." [Ellemtel]
+
+The rule detects when a header file contains more than one declaration of 
+non-POD structures or classes.
+
+See also: NAMING-32, PFO-03 
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that a header file is any file included with the #include
+directive.
+
+The rule ignores nested classes and structures.
+
+A structure is of non-POD type if it has one of the following:
+  + a user-declared constructor
+  + a private or protected non-static data member
+  + a base class
+  + a virtual function
+  + a non-static member of non-POD type (or an array of non-POD elements)
+  + a non-static member of reference type
+  + a user-declared copy assignment operator
+  + a user-declared destructor
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule makes it easier to locate a class declaration using a file-based tool.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'MyClass1' header file contains more than one
+class declaration.
+
+// file.cpp
+#include "MyClass1.hh"
+
+// MyClass1.hh
+class MyClass1{  // Violation
+    int i;
+};
+
+class MyClass2{
+    int i;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, place the declarations of the classes 'MyClass1' and
+'MyClass2' in separate header files.
+
+// file.cpp
+#include "MyClass1.hh"
+#include "MyClass2.hh"
+
+// MyClass1.hh
+class MyClass1{
+    int i;
+};
+
+// MyClass2.hh
+class MyClass2{
+    int i;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 4 Source Code in Files - 4.2 Naming Files - Rec. 7
+
+</PRE>
+</BODY>
+</HTML>

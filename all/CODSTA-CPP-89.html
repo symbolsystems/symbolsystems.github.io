@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assign enumerations to bool [CODSTA-CPP-89]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assign enumerations to bool [CODSTA-CPP-89-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation when you assign an enumeration to a bool.
+
+This rule is enabled for C++ language only.
+
+See also: CODSTA-151, PB-68
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Detects suspicious code that treats enumerations as booleans.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E {
+    EC1,
+    EC2
+};
+void takesBool(bool);
+E returnsEnum();
+bool foo(E e)
+{
+    bool b = e;                 // Violation
+    takesBool(returnsEnum());   // Violation
+    return EC1;                 // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum E {
+    EC1,
+    EC2
+};
+void takesEnum(E);
+E returnsEnum();
+bool foo(E e)
+{
+    bool b = (e != EC1);
+    takesEnum(returnsEnum());
+    return false;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-398 
+   <A HREF="http://cwe.mitre.org/data/definitions/398.html">http://cwe.mitre.org/data/definitions/398.html</A>
+
+</PRE>
+</BODY>
+</HTML>

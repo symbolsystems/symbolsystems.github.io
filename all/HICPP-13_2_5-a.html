@@ -1,0 +1,199 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The overloaded binary operator should be implemented in terms of its corresponding compound assignment operator [HICPP-13_2_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The overloaded binary operator should be implemented in terms of its corresponding compound assignment operator [HICPP-13_2_5-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where a set of operators is overloaded, it's important that the interactions
+between the operators meet developer expectation." [MISRA C++:2008 Rule 5-17-1]
+
+In the following example:
+  void f ( A a1, A a2 )
+  {
+      A x;
+      x = a1 + a2;
+      a1 += a2;
+      if ( x == a1 ){  }
+  }
+the condition of an 'if' statement ( x == a1 ) should be true for any type 'A'
+as it is guaranteed for built-in types.
+
+If for a binary arithmetic operator there exists a corresponding compound
+assignment operator, then the canonical form of the binary operator should be
+implemented in terms of its compound assignment. This ensures better semantic
+equivalence in a set of overloaded operators.
+
+The rule detects when a binary arithmetic operator does not use directly
+its corresponding compound assignment operator. Violations are reported only
+if both operators are overloaded and have the same return and parameter types
+(ignoring references, typedefs and cv-qualifiers).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks the following pairs of overloaded operators:
+- + and +=;
+- - and -=;
+- * and *=;
+- / and /=;
+- % and %=;
+- &amp;(bitand) and &amp;=(and_eq);
+- |(bitor) and |=(or_eq);
+- ^(xor) and ^=(xor_eq);
+- &lt;&lt; and &lt;&lt;=;
+- &gt;&gt; and &gt;&gt;=.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid possible mistakes and allows you preserve
+better semantic equivalence between overloaded binary operators.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+private:
+    int value1;
+    int value2;
+
+public:
+    A &amp; operator+= ( A const &amp; rhs );
+    A const operator+ ( A const &amp; rhs );
+};
+
+A &amp; A::operator+= ( A const &amp; rhs )
+{
+    this-&gt;value1 += rhs.value1;
+    this-&gt;value2 += rhs.value2;
+    return *this;
+}
+
+A const A::operator+ ( A const &amp; rhs )              // Violation
+{
+    A res;
+    res.value1 = this-&gt;value1 += rhs.value1;
+    // 'value2' is not used
+    return res;
+}
+
+class B
+{
+public:
+    int value1;
+};
+
+B &amp; operator -= ( B &amp; lhs, B const &amp; rhs );
+B &amp; operator += ( B &amp; lhs, B const &amp; rhs );
+B const operator - ( B &amp; lhs, B const &amp; rhs )      // Violation
+{
+    lhs += rhs;  // incorrect operator is used
+    return lhs;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+private:
+    int value1;
+    int value2;
+
+public:
+    A &amp; operator+= ( A const &amp; rhs );
+    A const operator+ ( A const &amp; rhs );
+};
+
+A &amp; A::operator+= ( A const &amp; rhs )
+{
+    this-&gt;value1 += rhs.value1;
+    this-&gt;value2 += rhs.value2;
+    return *this;
+}
+
+A const A::operator+ ( A const &amp; rhs )               // OK
+{
+    *this+=rhs;
+    return *this;
+}
+
+class B
+{
+public:
+    int value1;
+};
+
+B &amp; operator -= ( B &amp; lhs, B const &amp; rhs );
+B &amp; operator += ( B &amp; lhs, B const &amp; rhs );
+B const operator - ( B &amp; lhs, B const &amp; rhs )        // OK
+{
+    lhs -= rhs;  // incorrect operator is used
+    return lhs;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-17-1. The semantic equivalence between a binary operator and its
+   assignment operator form shall be preserved
+
+2. High Integrity C++ Coding Standard
+   13.2.5. Implement a minimal set of operators and use them to implement all
+   other related operators
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Section 6.5.17: Assignment operators, Rule 5-17-1
+
+</PRE>
+</BODY>
+</HTML>

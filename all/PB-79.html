@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid function declarations that are syntactically ambiguous [PB-79]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid function declarations that are syntactically ambiguous [PB-79-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not write a syntactically ambiguous declaration."
+[SEI CERT C++ Coding Standard]
+
+Declarations of functions without parameters that return a class type and are
+declared in a local scope are syntactically ambiguous. Such a declaration can
+be interpreted as either a declaration of a function pointer that accepts no
+arguments and returns a class type or a declaration of a local variable of
+class type.
+
+This rule detects declarations of functions without parameters that return
+a class type and are declared in a local scope.
+
+See also: FORMAT-48, FORMAT-49
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not detect functions with exception specifications:
+
+class C;
+
+void foo()
+{
+  C f() noexcept;              // No violation
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {
+  int m;
+};
+
+void foo()
+{
+  C c();                       // Violation - function declaration
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve the code by removing the function declaration from the local
+scope.
+
+// Examples of the correct code
+
+class C {
+  int m;
+};
+
+C c();
+
+void foo()
+{
+  C c1;                        // OK - object declaration
+  C c2{};                      // OK - object declaration
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   DCL53-CPP. Do not write syntactically ambiguous declarations
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL53-CPP.+Do+not+write+syntactically+ambiguous+declarations">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL53-CPP.+Do+not+write+syntactically+ambiguous+declarations</A>
+
+</PRE>
+</BODY>
+</HTML>

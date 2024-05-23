@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Unsigned arithmetic shall not be used [PB-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Unsigned arithmetic shall not be used [PB-25-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Unsigned values will likely be mixed with signed values.
+Mixing signed and unsigned values is error prone as it subjects operations
+to numerous arithmetic conversion and integral promotion rules."
+The rule reports a violation if an operand of arithmetic binary expression
+is unsigned type.
+ 
+The following binary arithmetic operators are checked:
+  '+',  '-',  '*',  '/',  '%',  '^',  '&amp;',  '|',  
+  '+=', '-=', '*=', '/=', '%=', '^=', '&amp;=', '|='
+
+See also: CODSTA-99, CODSTA-100, CODSTA-101, MISRA2004-10_1_a
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Complying with this rule leads to safer and more readable code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+unsigned int foo1(unsigned int ui, signed int si)
+{
+    si += 10U;      // Violation
+    si = si * ui;   // Violation
+    return ui * ui; // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// There is no "correct" way to fix this violation - each occurrence of
+// unsigned should be reviewed and changed/suppressed/cast as appropriate.
+unsigned int foo1(unsigned int ui, signed int si)
+{
+    si += 10;                   // OK
+    si = si * (signed int)ui;   // OK
+    return ui * ui;             // parasoft-suppress PB-25 "reason"
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 163
+
+</PRE>
+</BODY>
+</HTML>

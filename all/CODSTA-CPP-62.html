@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+NULL shall not be used as an integer value [CODSTA-CPP-62]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+NULL shall not be used as an integer value [CODSTA-CPP-62-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In C++, the literal 0 is both an integer type and the null-pointer-constant.
+To meet developer expectations, NULL should be used as the
+null-pointer-constant, and 0 for the integer zero."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"As a result of this rule, NULL is considered to have pointer type."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstddef&gt;
+
+void f1( int );
+
+void foo( int&amp; ref )
+{
+    f1( NULL );  // Violation
+    ref = NULL;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstddef&gt;
+
+void f1( int );
+
+void foo( int&amp; ref )
+{
+    f1( 0 ); // OK
+    ref = 0; // OK
+}
+
+// Examples of code not reported by rule
+
+void foo1 (int*&amp; rptr) {
+    int* ptr;
+    int a1[5];
+    
+    ptr = NULL;        // OK
+    rptr = NULL;       // OK
+    
+    if(a1 == NULL) {}  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-10-1. Only nullptr literal shall be used as the null-pointer-constant
+
+2. AUTOSAR C++14 Coding Guidelines
+   M4-10-1. NULL shall not be used as an integer value
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 4, Rule 4-10-1
+
+</PRE>
+</BODY>
+</HTML>

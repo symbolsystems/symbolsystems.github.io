@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-conversion cast operators should be made explicit [HICPP-12_1_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-conversion cast operators should be made explicit [HICPP-12_1_1-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+User-defined conversion functions enable implicit conversion or explicit
+conversion from a class type to another type. Implicit conversions may lead to
+unpredictable program behavior, and often result in creating and destroying
+temporary objects, which may affect runtime. In addition, they can allow
+the most meaningless code to compile. As a result, problems that could be
+detected at compile time are pushed to runtime testing.
+
+This rule detects cases when user-conversion cast operators are defined
+without explicit identifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve runtime performance and predictability of program
+behavior. It can detect severe coding defects masked by the compiler.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Foo
+{
+public:
+    operator bool() const;          // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Foo
+{
+public:
+    explicit operator bool() const; // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-5-2. All user-defined conversion operators shall be defined explicit
+
+2. High Integrity C++ Coding Standard
+   12.1.1. Do not declare implicit user defined conversions
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.1.3 Conversion operators and constructors that are callable with a single argument shall be explicit
+
+4. Scott Meyers, "More Effective C++: 35 New Ways to Improve Your Programs and
+   Designs", Addison-Wesley, Copyright 1996, Chapter: "Operators", Item 5
+
+</PRE>
+</BODY>
+</HTML>

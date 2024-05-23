@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An argument passed via ellipsis shall have an appropriate type [CODSTA-CPP-207]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An argument passed via ellipsis shall have an appropriate type [CODSTA-CPP-207-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when an argument passed to a function via ellipsis is
+a class type, which:
+* has virtual functions, or
+* has non-trivial copy or move operations, or
+* has a non-trivial destructor.
+
+Passing objects of such types via ellipsis is conditionally supported and
+results in implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report if the call is part of unevaluated context (e.g. inside
+sizeof).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid implementation-defined behavior and portability
+problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    ~C();
+};
+void f(C c, int i, ...);
+
+void g()
+{
+    C c;
+    f(c, 10, c); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    ~C();
+};
+void f(C c, int i, ...);
+
+void g()
+{
+    C c;
+    f(c, 10, &amp;c); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.11 An argument passed via ellipsis shall have an appropriate type
+
+</PRE>
+</BODY>
+</HTML>

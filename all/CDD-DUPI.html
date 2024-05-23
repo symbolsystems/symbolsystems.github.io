@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid duplication of #include directives [CDD-DUPI]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid duplication of #include directives [CDD-DUPI-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule checks if there are duplicated #include directives.
+
+Rule compares directives in one file at time (for example no violation
+will be reported if the same file is included in header and source file).
+
+Rule compares text used in #include directive so a violation will be reported
+only if the text is identical (for example no violation will be reported if
+different path was used to include a file).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.2
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability. Simplifies the code and
+decreases preprocessing time.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+// --- header1.h ---
+#include "header2.h"
+// --- file.cpp ---
+#include "header1.h" /* Violation: found duplicated "header1.h" includes */
+#include "header2.h" /* OK: not checked against includes in other files */
+#include "header1.h"
+#define HEADER "header1.h"
+#include HEADER /* Violation: found duplicated HEADER includes */
+#include HEADER
+#include &lt;header1.h&gt; /* OK: &lt;header1.h&gt; is different than "header1.h" */
+#include "./header1.h" /* OK: "./header1.h" is different than "header1.h" */
+#if 0
+#include "header1.h" 
+#include "header3.h" /* OK: "header3.h" included in different conditional scope */
+#else
+#include "header3.h" /* OK: "header3.h" included in different conditional scope */
+#endif
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Remove duplicated #include directives if they are not needed.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   16.1.5 Include directly the minimum number of headers required for
+   compilation
+
+</PRE>
+</BODY>
+</HTML>

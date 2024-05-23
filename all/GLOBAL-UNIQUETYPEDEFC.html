@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A typedef name shall be a unique identifier [GLOBAL-UNIQUETYPEDEFC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A typedef name shall be a unique identifier [GLOBAL-UNIQUETYPEDEFC-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A typedef name shall be unique across all name spaces and translation units.
+Multiple declarations of the same typedef name are only permitted by this rule
+if the type definition is made in a header file and that header file
+is included in multiple source files."
+[MISRA C:2012]
+
+This rule detects typedefs whose names are duplicated or reused as other
+identifiers (including other typedefs). 
+
+Since this rule checks if the typedef name is unique across all name spaces,
+it is recommended to use it for C code. For C++ code we recommend
+using the GLOBAL-UNIQUETYPEDEF rule, which takes into account qualifications
+of identifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The typedef name may be the same as the structure, union or enumeration tag
+name associated with the typedef."
+[MISRA C:2012]
+
+typedef struct S                            /* OK */
+{
+  int mbr1;
+  int mbr2;
+} S;                                        /* OK */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent developer confusion.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check the following identifiers:
+- macros
+- functions declared in nested blocks
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.c' and 'test2.c'.
+
+/* test1.c */
+typedef int INT1;                           /* Violation */
+typedef short INT2;                         /* Violation */
+
+void foo1() {
+    typedef int TYPE;                       /* Violation */
+}
+
+/* test2.c */
+typedef int INT1;                           /* Violation */
+
+void foo2() {
+    typedef int INT2;                       /* Violation */
+    float TYPE;                             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.c', 'test2.c' and 'test.h'.
+
+/* test.h */
+typedef int INT1;                           /* OK */
+
+/* test1.c */
+#include "test.h"
+
+typedef short INT2;                         /* OK */
+
+void foo1() {
+    typedef int TYPE;                       /* OK */
+}
+
+/* test2.c */
+#include "test.h"
+
+void foo2() {
+    typedef int FOOINT2;                    /* OK */
+    float f;                                /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.6
+
+</PRE>
+</BODY>
+</HTML>

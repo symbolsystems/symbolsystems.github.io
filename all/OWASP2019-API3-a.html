@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass empty container iterators to std algorithms as destinations [OWASP2019-API3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass empty container iterators to std algorithms as destinations [OWASP2019-API3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when an iterator to an empty container is passed
+as a destination/output iterator to one of the following functions
+from &lt;algorithm&gt; header:
+    std::copy
+    std::copy_backward
+    std::copy_if
+    std::copy_n
+    std::fill_n
+    std::generate_n
+    std::merge
+    std::move
+    std::move_backward
+    std::partition_copy
+    std::remove_copy
+    std::remove_copy_if
+    std::replace_copy
+    std::replace_copy_if
+    std::reverse_copy
+    std::rotate_copy
+    std::set_difference
+    std::set_intersection
+    std::set_symmetric_difference
+    std::set_union
+    std::transform
+    std::unique_copy
+
+The rule checks the following types of containers:
+    std::deque
+    std::forward_list
+    std::list
+    std::multiset
+    std::unordered_set
+    std::unordered_multiset
+    std::set
+    std::vector
+   
+This rule assumes that a container is empty if it was created with a default
+constructor or its size was reduced to 0 by calling clear() or resize() with
+a parameter equal to 0.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Copying data into a container that is not large enough to hold that data
+results in a buffer overflow. To prevent such errors, data copied to
+the destination container must be restricted on the basis of the destination
+container's size, or preferably, the destination container must be guaranteed
+to be large enough to hold the data to be copied."
+[SEI CERT C++ Coding Standard, CTR52-CPP]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid security threats that may be caused by a buffer
+overflow, such as executing arbitrary code or exposing sensitive data.
+See SECURITY RELEVANCE.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+The rule may report false negatives when a std::forward_list object is created
+using a default constructor.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+
+void f(const std::vector&lt;int&gt; &amp;src) {
+    std::vector&lt;int&gt; dest;
+    std::copy(src.begin(), src.end(), dest.begin()); // VIOLATION
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The destination vector should be initialized to be able to hold the copied elements.
+
+#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+
+void f(const std::vector&lt;int&gt; &amp;src) {
+    // Initialize dest with src.size() default-inserted elements
+    std::vector&lt;int&gt; dest(src.size());
+    std::copy(src.begin(), src.end(), dest.begin()); // NO VIOLATION
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+CTR52-CPP. Guarantee that library functions do not overflow
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR52-CPP.+Guarantee+that+library+functions+do+not+overflow">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR52-CPP.+Guarantee+that+library+functions+do+not+overflow</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

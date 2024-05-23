@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+typedefs to basic types should contain some digits in their name [MISRA2012-DIR-4_6_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+typedefs to basic types should contain some digits in their name [MISRA2012-DIR-4_6_a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation on typedef declarations if following conditions
+are met:
+
+1. the typedef directly denotes one of following types: 
+        float, double, long double
+        float complex, double complex, long double complex
+        short, int, long, long long
+        signed char, unsigned char
+   For "char" type, only typedefs to explicitly signed or explicitly unsigned
+   char type are checked (typedefs to plain char are not checked)
+
+2. the typedef name does not contain any digits
+
+See also: MISRA2004-6_3_b, CODSTA-155
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. When you declare a typedef of a basic type, you should specify size of the
+basic type in typedef name. This rule reports only if there are no digits at all
+in the typedef name. If there is at least one digit, there is no violation. The
+rule does not check if the digits really specify basic type size. Example:
+    typedef int my_int;     // Violation (no digits at all)
+    typedef int name_1_2_3; // OK (some digits were found)
+
+2. Only typedefs which directly denote types listed in Description section are
+checked. Typedef to typedef are not checked, even if they indirectly denote such
+type. Example:
+    typedef int my_int;             /* Violation */
+    typedef my_int another_int;     /* OK (not checked - typedef to typedef) */
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule does not report on typedefs with name that starts with "bool". Such typedef
+can be used to declare a user-defined "boolean" type which is not always
+available. Example:
+    typedef int boolean_type;       /* OK (name starts with "bool") */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Clarification of the size of the storage.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef float my_f;             /* Violation - no digits */
+typedef signed char another;    /* Violation - no digits */
+typedef unsigned long a_type;   /* Violation - no digits */
+typedef short my_short;         /* Violation - no digits */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Correct use of typedef: */
+typedef signed int my_int32;    /* OK */
+typedef signed char int8_t;     /* OK */
+typedef short int s16_t;        /* OK */
+typedef double float64;         /* OK */
+typedef const int cs32_t;       /* OK */
+s16_t foo(                      /* OK */
+        my_int32* p_char)       /* OK */
+{
+    float64 h;                  /* OK */
+    cs32_t z = 1;               /* OK */
+    return 1;
+}
+
+/* Exceptions: */
+typedef char char_t;            /* OK (plain char) */
+typedef unsigned char BOOL;     /* OK (typedef name starts with 'bool' prefix */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 18 Portable Code - 18.1 Data Abstraction - Port. Rec. 1
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.28 Portable Code, AV Rule 209
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.6
+
+5. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.2 Section 7 - Directives, 2.2.1 Directive 4.6
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The NULL pointer shall not be dereferenced [MISRA-107_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The NULL pointer shall not be dereferenced [MISRA-107_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where a function returns a pointer and that pointer is subsequently 
+de-referenced, the program should first check that the pointer is not NULL."
+If a control statement contains in condition non-dereferenced pointer, then 
+the rule assumes that this pointer is checked. In such cases rule does not
+report violations in spite of it does not check if a control statement is
+really used to prevent null pointer dereference. 
+See also: MISRA-107_b, BD-PB-NP
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Complying with this rule leads to safer code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int* ret_ptr(int* p){
+    return p;
+}
+
+void func(int i, int* par){
+    int* ptr;
+
+    ptr = ret_ptr(par);
+    /* here pointer 'ptr' should be checked */
+    i = *ptr;    /* Violation - pointer 'ptr' may be null */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int* ret_ptr(int* p){
+    return p;
+}
+
+int check(int* p){
+    if(p == 0)
+        return 0;
+    if(p &gt; 0)
+        return 1;
+}
+
+void func1(int i, int* par){
+    int* ptr;
+
+    ptr = ret_ptr(par);
+    if(ptr){
+    	i = *ptr;    /* OK - pointer 'ptr' was checked in 'if' condition */
+    }
+
+}
+
+void func2(int i, int* par){
+    int* ptr;
+
+    ptr = ret_ptr(par);
+    if(!ptr){
+        return;
+    }
+    i = *ptr;       /* OK - pointer 'ptr' was checked in 'if' condition */
+
+}
+
+void func3(int i, int* par){
+    int* ptr;
+
+    ptr = ret_ptr(par);
+    if(check(ptr)){
+    	i = *ptr;   /* OK - pointer 'ptr' was checked in 'check' function */
+    }
+}
+
+void func4(int i, int* par){
+    int* ptr;
+
+    ptr = ret_ptr(par);
+    if(ptr == 0){
+        i = *ptr;    /* OK - pointer 'ptr' was checked in 'if' condition.
+                        The 'if' condition is not correct, but the rule
+                        does not check such cases. To detect this issue
+                        could be used Bug Detectiv rule - BD-PB-NP */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 107
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.22 Pointers &amp; References, AV Rule 174
+
+3. <A HREF="http://cwe.mitre.org/data/definitions/476.html">http://cwe.mitre.org/data/definitions/476.html</A>
+
+4. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

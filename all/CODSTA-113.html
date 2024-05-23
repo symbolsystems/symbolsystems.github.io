@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Flexible array members shall not be declared [CODSTA-113]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Flexible array members shall not be declared [CODSTA-113-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The last element of a structure with more than one named member may
+have an incomplete array type; this is called a flexible array member.
+
+"The presence of flexible array members modifies the behaviour of the sizeof
+operator in ways that might not be expected by a programmer. The assignment
+of a structure that contains a flexible array member to another structure
+of the same type may not behave in the expected manner as it copies only those
+elements up to but not including the start of the flexible array member."
+
+See also: MISRA2004-18_1
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S
+{
+    int mv;
+    int ma[ ];   /* Violation */
+} str;
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use flexible array members.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 18.7
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.2.1 Structure and union specifiers
+
+</PRE>
+</BODY>
+</HTML>

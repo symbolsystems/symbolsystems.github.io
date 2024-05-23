@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+List members in an initialization list in the order in which they are declared [INIT-10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+List members in an initialization list in the order in which they are declared [INIT-10-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Members of a class are initialized in the order in which they are declared, 
+not the order in which they appear in the initialization list."
+
+"Recall that the destructors for the members of an object are always called 
+in the inverse order of their constructors. Thus, if members were initialized 
+in the order of their appearance in an initialization list, compilers would 
+have to keep track of the order in which the members were initialized for each 
+object, just to ensure that the destructors would be called in the right order. 
+That would be an expensive proposition. To avoid that overhead, the order 
+of construction and destruction is the same for all objects of a given type, 
+and the order of members in an initialization list is ignored."
+
+"Base class data members are initialized before derived class data members,
+so if you're using inheritance, you should list base class initializers
+at the very beginning of your member initialization lists. If you're using
+multiple inheritance, your base classes will be initialized in the order
+in which you inherit from them; the order in which they're listed in your
+member initialization lists will again be ignored."
+
+See also: INIT-06, INIT-14, MISRA-030
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents reading from uninitialized variables and improves
+readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A( int x ) : a( x ), b( a ) {}         // Violation
+private:
+    int b;
+    int a;
+};
+
+class B : public A {
+public:
+    B( int );
+private:
+    int a;
+    int b;
+};
+
+B::B( int y ) : a( 5 ), A( a ), b( y ) {}  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A( int x ) : b( x ), a( b ) {}           // OK - 'b' is declared before 'a'
+private:
+    int b;
+    int a;
+};
+
+class B : public A {
+public:
+    B( int );
+private:
+    int a;
+    int b;
+};
+
+B::B( int y ) : A( 5 ), a( 5 ),  b( y ) {}   // OK - Base class data members
+                                             //      are initialized before
+                                             //      derived class data members
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-5-1. In an initialization list, the order of initialization shall be
+   following: (1) virtual base classes in depth and left to right order of the
+   inheritance graph, (2) direct base classes in left to right order of
+   inheritance list, (3) non-static data members in the order they were
+   declared in the class definition
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. High Integrity C++ Coding Standard
+   12.4.4. Write members in an initialization list in the order in which they
+   are declared
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 75
+
+5. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.,
+   Chapter: "Constructors, Destructors, and Assignment Operators", Item 13
+
+6. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 4
+
+7. SEI CERT C++ Coding Standard
+   OOP53-CPP. Write constructor member initializers in the canonical order
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP53-CPP.+Write+constructor+member+initializers+in+the+canonical+order">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP53-CPP.+Write+constructor+member+initializers+in+the+canonical+order</A>
+
+</PRE>
+</BODY>
+</HTML>

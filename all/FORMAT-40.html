@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+White spaces after the opening square bracket '[' and before its closing square bracket ']' shall be used in consistent way [FORMAT-40]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+White spaces after the opening square bracket '[' and before its closing square bracket ']' shall be used in consistent way [FORMAT-40-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule checks if after the opening square bracket '[' and before the closing
+square bracket ']' the white spaces are used in consistent way.
+
+See also: FORMAT-41
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is possible to adapt this rule to standard that allows or disallows to use
+white spaces after '[' and before ']'. The modification can be done in python
+method 'formatRule'. To variable 'format' should be assigned the string 
+containing the preferred format. 
+
+There are three possibilities:
+
+1. format = "[ 1 ] or [1]" (the default)
+   In this case there are two correct patterns:
+   - at least one white space both after the opening square brace '[' and
+      before the closing square brace ']'
+   - no white space neither after the opening square brace '[' nor before
+      the closing square brace ']'. For example:
+   int a1[1];   // OK
+   int a2[ 1];  // Violation
+   int a3[1 ];  // Violation
+   int a4[ 1 ]; // OK
+
+2. format = "[1]"
+   In this case should be no white space neither after the opening square
+   brace '[' nor before the closing square brace ']'. For example:
+   int a1[1];   // OK
+   int a2[ 1];  // Violation
+   int a3[1 ];  // Violation
+   int a4[ 1 ]; // Violation
+
+3. format = "[ 1 ]"
+   In this case there should be at least one white space after the opening
+   square brace '[' and before the closing square brace ']'. For example:
+   int a1[1];   // Violation
+   int a2[ 1];  // Violation
+   int a3[1 ];  // Violation
+   int a4[ 1 ]; // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// the default format:
+int tab[ 10];  /* Violation */
+void foo() {
+  tab[0 ] = 0; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// the default format:
+int tab[10];    /* OK - space removed */
+void foo() {
+  tab[ 0 ] = 0; /* OK - space added */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

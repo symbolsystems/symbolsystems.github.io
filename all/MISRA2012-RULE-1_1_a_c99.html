@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A program should not exceed the translation limits imposed by The Standard (c99) [MISRA2012-RULE-1_1_a_c99]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A program should not exceed the translation limits imposed by The Standard (c99) [MISRA2012-RULE-1_1_a_c99-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A program shall not exceed the translation limits imposed by the
+implementation. The minimum translation limits are specified
+by The Standard but an implementation may provide higher limits."
+[MISRA C:2012 Rule 1.1]
+
+This rule detects cases where the minimum translation limits specified
+by the C99 standard are exceeded:
+- 12 pointer, array, and function declarators (in any combinations) modifying 
+  an arithmetic, a structure, a union, or an incomplete type in a declaration
+- 4095 external identifiers in one translation unit
+- 63 characters in an internal identifier
+- 31 characters in an external identifier 
+- 63 levels of nested structure or union definitions in a single 
+  struct-declaration-list
+- 1023 case labels for a switch statement (excluding those for any 
+  nested switch statements)
+- 65535 bytes in an object
+- 1023 members in a single structure or union
+- 1023 enumeration constants in a single enumeration
+- 511 identifiers with block scope declared in one block
+- 127 parameters in one function definition
+- 127 arguments in one function call
+- 127 nesting levels of compound statements, iteration control structures,
+  and selection control structures
+
+See also: CODSTA-174_b_c99
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the Rule Wizard to change the default limits, if necessary.
+These limits are defined in the Python method 'defineLimits'.
+For example, if you need to increase the limit for the number of characters
+in an internal identifier to 127, change the following definition:
+
+  # characters in an internal identifier
+  Limit_InternalIdentifierNameLength = 63
+
+to:
+  # characters in an internal identifier
+  Limit_InternalIdentifierNameLength = 127
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents undefined behaviors and improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Violation - More than 4095 external identifiers in one translation unit */
+extern int e1;
+/* ... */
+extern int e4096();
+
+/* More than 31 characters in an external identifier */
+int i2345678901234567890123456789012;                         /* Violation */
+
+/* More than 65535 bytes in an object */
+char a1[65536];                                               /* Violation */
+
+/* More than 12 pointer declarators */
+typedef int************* P12INT;                              /* Violation */
+
+/* More than 127 parameters in one function definition */
+void foo1(int p1, /* ... */int p63/* ... */, int p128)        /* Violation */
+{
+    /* More than 31 characters in an internal identifier */
+    int i2345___64_characters_in_name___01234;                /* Violation */
+
+    /* More than 511 identifiers with block scope declared in one block */
+    {                                                         /* Violation */
+        int i1;
+        /* ... */
+        int i512;
+    }
+
+    /* More than 1023 case labels for a switch statement */
+    switch(p1) {                                              /* Violation */
+        case 1:
+        /* ... */
+        case 1024:
+          ;
+    }
+
+    if(p1 &gt; 0) {
+        /* ... */
+      /* More than 127 nesting levels of compound statements, iteration
+       * control structures, and selection control structures */
+        if(p128) {                                            /* Violation */
+            /* ... */
+        }
+    }
+}
+
+void foo2( void ) {
+    /* More than 127 arguments in one function call */
+    foo(1, /* ... */ 128 );                                   /* Violation */
+}
+
+/* More than 1023 enumeration constants in a single enumeration */
+enum E {                                                      /* Violation */
+    E1,
+    /* ... */
+    E1024
+};
+
+/* More than 1023 members in a single structure or union */
+struct S1 {                                                   /* Violation */
+    int m1;
+    /* ... */
+    struct S2 {
+        /* ... */
+        /* More than 63 levels of nested structure or union
+         * definitions in a single struct-declaration-list */
+        struct S64 {                                          /* Violation */
+            int m64;
+        } s64;
+    } s1023;
+    int m1024;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not exceed translation limits of an implementation.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 1.1
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   5.2.4.1 Translation limits
+
+</PRE>
+</BODY>
+</HTML>

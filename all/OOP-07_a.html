@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Multiple inheritance shall be limited to at most 1 protected implementation [OOP-07_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Multiple inheritance shall be limited to at most 1 protected implementation [OOP-07_a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Multiple inheritance shall only be allowed if at most one protected
+implementation is used.
+
+Rule counts number of base classes which:
+* are directly inherited, and
+* are inherited with protected access specifier, and
+* are not "interfaces"
+
+A violation is reported when more than one such class is found.
+
+An "interface" is a class which has no member variables and all
+member functions (except for destructor) are pure virtual.
+
+See also: OOP-07_b, OOP-07, OOP-06, OOP-05, OOP-04, OOP-03
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Simpler and easier to maintain and understand inheritance hierarchy.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Non-interface (implementation)
+class A { int x; };
+
+// Non-interface (implementation)
+struct B { virtual void foo(); };
+
+// Examples of non-compliant code:
+
+// More than one protected implementation inheritance:
+struct D : protected A, protected B { };   // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Non-interface (implementation)
+class A { int x; };
+
+// Non-interface (implementation)
+struct B { virtual void foo(); };
+
+// Interface
+struct C { virtual void foo() = 0; };
+
+// Examples of compliant code:
+
+// One protected implementation inheritance:
+struct D : protected A, private B { };   // OK
+
+// One protected implementation inheritance, one protected interface:
+class E : protected A, protected C { };   // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Class Design and Inheritance", Rule 36
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10.8 Operator Overloading, AV Rule 88
+
+</PRE>
+</BODY>
+</HTML>

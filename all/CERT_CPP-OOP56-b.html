@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Properly define unexpected handlers [CERT_CPP-OOP56-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Properly define unexpected handlers [CERT_CPP-OOP56-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+The required behavior for a unexpected_handler is to terminate execution of a program
+without returning to the caller.
+This rule detects when functions registered as unexpected handlers return - instead of
+terminating execution or throwing an exception. 
+
+Functions can be registered as unexpected handlers by calling the set_unexpected() function.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+"Failing to meet the required behavior for a replacement handler results in undefined behavior."
+[OOP56-CPP. Honor replacement handler requirements]
+
+This rule helps you avoid undefined behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+ 
+#include &lt;exception&gt;
+#include &lt;cstdlib&gt;
+
+void unexp1() {
+    extern int some_condition;
+    if (some_condition) {
+        exit(0);
+    }
+} // VIOLATION
+
+int foo(void) {
+    std::set_unexpected(unexp1);
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;exception&gt;
+#include &lt;cstdlib&gt;
+
+void unexp1() {
+    extern int some_condition;
+    if (some_condition) {
+        
+    }
+    exit(0);
+} 
+
+int foo(void) {
+    std::set_unexpected(unexp1);
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+OOP56-CPP. Honor replacement handler requirements
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP56-CPP.+Honor+replacement+handler+requirements">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP56-CPP.+Honor+replacement+handler+requirements</A>
+
+</PRE>
+</BODY>
+</HTML>

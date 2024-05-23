@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The increment (++) and decrement (--) operators should not be mixed with other operators in an expression [HICPP-5_1_2-h]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The increment (++) and decrement (--) operators should not be mixed with other operators in an expression [HICPP-5_1_2-h-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is the intention of the rule that when the increment or decrement operator
+is used, it should be the only side-effect in the statement." [MISRA-C:2004]
+
+"The use of increment and decrement operators in combination with other
+arithmetic operators is not recommended, because:
+ - It can significantly impair the readability of the code.
+ - It introduces additional side effects into a statement, with the potential
+   for undefined behaviour." [MISRA C++:2008]
+
+This rule detects when the result of an increment or decrement operation is
+assigned to another object or used as one of the following:
+- the operand of an arithmetic operator
+- an initializer
+- an array index
+- an argument of a function call
+- the value of a return statement
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int g1 = 0;
+
+void bar(int arg);
+int foo1() {
+    int x, y;
+    int tab[10];
+    int index = 0;
+    int var = g1++;            // Violation
+
+    tab[index++];              // Violation
+    x = --y + x++;             // Violation
+    bar(x++);                  // Violation
+    return ++y;                // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by moving the increment and decrement operations to
+separate statements.
+
+int g1 = 0;
+
+void bar(int arg);
+int foo() {
+    int x, y;
+    int tab[10];
+    int index = 0;
+    int var = g1;
+
+    g1++;
+    tab[index];
+    index++;                   // OK
+    --y;                       // OK
+    x = y + x;
+    x++;                       // OK
+    bar(x);
+    x++;                       // OK
+    ++y;                       // OK
+    return y;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   5.1.2. Do not rely on the sequence of evaluation within an expression
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Edition 2 reprinted July 2008 incorporating Technical Corrigendum 1
+   Chapter 6, Section 12, Rule 12.13
+
+</PRE>
+</BODY>
+</HTML>

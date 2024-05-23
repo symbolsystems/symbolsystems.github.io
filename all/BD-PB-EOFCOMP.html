@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The macro EOF should be compared with the unmodified return value from the Standard Library function [BD-PB-EOFCOMP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The macro EOF should be compared with the unmodified return value from the Standard Library function [BD-PB-EOFCOMP-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects comparisons of the EOF macro with the value returned
+by a Standard Library function capable of returning EOF that has been
+converted to another type before the comparison.
+
+
+The list of function that are capable of returning EOF:
+	int fclose ( FILE * stream )
+	int fflush ( FILE * stream )
+	int fgetc ( FILE * stream )
+	int fputc ( int character, FILE * stream )
+    int fputs ( const char * str, FILE * stream )
+	int fputws (const wchar_t* ws, FILE* stream)
+	int fscanf ( FILE * stream, const char * format, ... )
+	int fwscanf (FILE* stream, const wchar_t* format, ...)
+	int getc ( FILE * stream )
+	int getchar ( void )
+	int putc ( int character, FILE * stream )
+	int putchar ( int character )
+	int puts ( const char * str )
+	int scanf ( const char * format, ... )
+	int sscanf ( const char * s, const char * format, ...)
+	int swscanf (const wchar_t* ws, const wchar_t* format, ...)
+	int ungetc ( int character, FILE * stream )
+	int vfscanf ( FILE * stream, const char * format, va_list arg )
+	int vfwscanf (FILE* stream, const wchar_t* format, va_list arg)
+	int vscanf ( const char * format, va_list arg )
+	int vsscanf ( const char * s, const char * format, va_list arg )
+	int vswscanf (const wchar_t* ws, const wchar_t* format, va_list arg)
+	int wscanf (const wchar_t* format, ...)
+	int wctob (wint_t wc)
+	int wscanf (const wchar_t* format, ...)
+	
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"An EOF return value from these functions is used to indicate that a stream
+is either at end-of-file or that a read or write error has occurred. The EOF
+value may become indistinguishable from a valid character code if the value
+returned is converted to another type. In such cases, testing the converted
+value against EOF will not reliably identify if the end of file has been
+reached or if an error has occurred". 
+[MISRA C:2012 Amendment 1 Rule 22.7]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you ensure that the comparison between the EOF macro and
+the value returned by the functions listed above is reliable. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+
+void f1 (FILE* f)
+{
+	char ch;
+	ch = (char)fgetc(f);
+	 /*
+	 * The following test is non-compliant. It will not be reliable as the
+	 * return value is cast to a narrower type before checking for EOF.
+	 */
+	if (EOF != (int32_t)ch)		// VIOLATION
+	{
+	}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+
+void f2 (FILE* f)
+{
+    char ch;
+    ch = (char)fgetc(f);
+
+    if (!feof(f))			// NO VIOLATION
+    {
+    }
+}
+
+void f3 (FILE* f)
+{
+    int32_t i_ch;
+    i_ch = fgetc(f);
+
+     /*
+    * The following test is compliant. It will be reliable as the
+    * unconverted return value is used when checking for EOF.
+    */
+    if (EOF != i_ch)				// NO VIOLATION
+    {
+        char ch;
+        ch = (char)i_ch;
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 2: New rules, Rule 22.7
+
+SEI CERT C Coding Standard
+FIO34-C. Distinguish between characters read from a file and EOF or WEOF
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO34-C.+Distinguish+between+characters+read+from+a+file+and+EOF+or+WEOF">https://wiki.sei.cmu.edu/confluence/display/c/FIO34-C.+Distinguish+between+characters+read+from+a+file+and+EOF+or+WEOF</A>
+
+</PRE>
+</BODY>
+</HTML>

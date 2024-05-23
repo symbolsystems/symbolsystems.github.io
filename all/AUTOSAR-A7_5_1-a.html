@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A function shall not return a pointer or a reference to a parameter that is passed by const reference [AUTOSAR-A7_5_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A function shall not return a pointer or a reference to a parameter that is passed by const reference [AUTOSAR-A7_5_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Depending on the implementation, a temporary object may be introduced when
+passing an object to a function by const reference. When the function returns,
+the temporary object will no longer exist, resulting in undefined behavior.
+
+This rule checks functions for parameters passed by const reference and
+reports a violation if a function returns a reference or pointer to such
+a parameter.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents non-deterministic behavior and helps you achieve compliance
+with some coding guidelines.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A { };
+
+const A&amp; Fn1(const A&amp; ref)
+{
+    return ref;                 // Violation
+}
+
+const A* Fn2(const A&amp; ref)
+{
+    return &amp;ref;                // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A { };
+
+const A Fn1(const A&amp; ref)
+{
+    return ref;                 // OK - returns copy
+}
+
+const A&amp; Fn2(A&amp; ref)            // OK - parameter is non-const reference
+{
+    return ref;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-5-1. A function shall not return a reference or a pointer to a parameter
+   that is passed by reference to const
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.13.1 Function Declaration, Definition and Arguments, AV Rule 111
+
+</PRE>
+</BODY>
+</HTML>

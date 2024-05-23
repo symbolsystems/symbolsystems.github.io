@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The size_t argument passed to any function in string.h shall have an appropriate value [BD-API-STRSIZE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The size_t argument passed to any function in string.h shall have an appropriate value [BD-API-STRSIZE-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the "num" argument passed to one of the functions listed 
+below is greater than the size of any of the objects passed to this function
+through a pointer parameter or when the "num" argument is equal to 0. 
+
+This rule checks values passed to the following functions:
+    void * memchr (void * ptr, int value, size_t num );
+    int memcmp ( const void * ptr1, const void * ptr2, size_t num );
+    void * memcpy ( void * destination, const void * source, size_t num );
+    void * memmove ( void * destination, const void * source, size_t num );
+    void * memset ( void * ptr, int value, size_t num );
+    char * strncat ( char * destination, const char * source, size_t num );
+    int strncmp ( const char * str1, const char * str2, size_t num );
+    char * strncpy ( char * destination, const char * source, size_t num );
+    size_t strxfrm ( char * destination, const char * source, size_t num );
+In the "strxfrm" function, the rule only checks the "destination" pointer 
+and the "num" argument can be equal to 0.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+By default, the rule does not report violations when the value of the "num"
+argument is greater than the size of the zero-terminated string object passed
+as one of the following:
+	* any pointer parameter to the 'strncmp' function
+	* a source pointer parameter to the 'strncat' or 'strncpy' function
+You can customize the default behavior; see PARAMETERS.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Incorrect use of a function listed above may result in a read or write access
+beyond the bounds of an object passed as a parameter, resulting in undefined
+behaviour." [MISRA C:2012 Amendment 1]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Report violations when the zero-terminated string object is safely
+used" option is enabled, the rule will also trigger when the size of
+the safely used zero-terminated string object is smaller than the "num"
+argument; see NOTES. 
+
+The "Report violations when access within the bounds of the structure is out of the array bounds"
+parameter enables reporting violations in two cases:
+- the pointer parameter points out of bounds of the object which is the last field of the structure
+and which also is an array with size declared to have a length of 0 or 1,
+- the pointer parameter points out of bounds of the object which is an array field of the structure,
+but still points to a location within the structure.
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps prevent API violations caused by incorrect use of a function.
+Such violations could cause runtime errors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+char buf1[ 5 ] = "12345";
+char buf2[ 10 ] = "1234567890";
+
+void f ( void )
+{
+    if ( memcmp ( buf1, buf2, 6 ) == 0 )    // VIOLATION
+    { }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+char buf1[ 5 ] = "12345";
+char buf2[ 10 ] = "1234567890";
+
+void f ( void )
+{
+    if ( memcmp ( buf1, buf2, 5 ) == 0 )    // NO VIOLATION
+    { }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 2: New rules, Rule 21.18
+
+</PRE>
+</BODY>
+</HTML>

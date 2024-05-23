@@ -1,0 +1,235 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Consistently check the returned value of non-void functions [MISRAC2012-DIR_4_7-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Consistently check the returned value of non-void functions [MISRAC2012-DIR_4_7-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects unchecked returned values for methods that typically check returned values.
+
+Returned values can be checked in one of the following ways:
+- the returned value is used in a conditional statement (if, switch, while etc.)
+- the returned value is used in a binary expression with &gt;, &lt;, &gt;=, &lt;=, !=, == operators
+- the returned value is passed to a validating method as a parameter.
+
+Using the returned value means:
+- passing it as a parameter to a method other than a validating method
+- dereferencing a pointer, accessing its fields, invoking its methods etc.
+
+The returned value is considered unchecked if:
+- it is used before it has been checked
+- it has not been checked at all
+- it is not used.
+
+This rule works only on a scope of one method. For this reason, the returned values that are
+passed further to another method are counted neither as checked nor as unchecked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+If returned values are unchecked, then an attacker may force the function to fail or return a value
+that is not expected. This may lead to a software state that the programmer assumed would not be possible.
+For example, if a program calls a function to drop privileges, but does not check the return code to ensure
+that privileges were successfully dropped, then the program may continue to operate with the higher privileges.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Unchecked ratio threshold" parameter allows you to specify when a violation should be reported.
+The value expresses the ratio of the number of times returned values are checked to the number of
+the method invocations. If the ratio is lower than the specified threshold, the rule will report a violation.
+The default value is 0.2. 
+
+The "Validating functions" parameter allows you to specify a list of functions that can be used to check returned values.
+The returned value will be considered to be checked if it is passed to one of the listed functions as a parameter.
+
+The following columns allow you to define different aspects of functions in the tables: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions
+  for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide
+  the fully qualified name of the type or namespace where the function is declared.
+  Use '*' if you want to describe a function declared in any type or namespace, or
+  a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' column should contain the name of the described function.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current row will apply
+  to functions with the given name defined in subclasses of the given class. Note that this
+  applies to both instance and non-instance functions.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Checking the value returned form a method can prevent unexpected states and conditions that may
+lead to crashes or other unintended behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+int function_with_error_code() {
+  int ret;
+  //...
+  return ret;
+}
+
+void handle_error();
+
+void usual_function_1() {
+    int rv = function_with_error_code();
+    if (rv == -1) {
+        handle_error();
+    }
+}
+
+void usual_function_2() {
+    if (function_with_error_code()) {
+        handle_error();
+    }
+}
+
+void usual_function_3() {
+    int rv = function_with_error_code();
+    if (rv &lt; 0) {
+        handle_error();
+    }
+}
+
+void usual_function_4() {
+    if (function_with_error_code() &gt; 0) {
+        handle_error();
+    }
+}
+
+void usual_function_5() {
+    int rv;
+    if ((rv = function_with_error_code()) &gt; 0) {
+        handle_error();
+    }
+}
+
+void unusual_function() {
+    function_with_error_code(); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int function_with_error_code() {
+  int ret;
+  //...
+  return ret;
+}
+
+void handle_error();
+
+void usual_function_1() {
+    int rv = function_with_error_code();
+    if (rv == -1) {
+        handle_error();
+    }
+}
+
+void usual_function_2() {
+    if (function_with_error_code()) {
+        handle_error();
+    }
+}
+
+void usual_function_3() {
+    int rv = function_with_error_code();
+    if (rv &lt; 0) {
+        handle_error();
+    }
+}
+
+void usual_function_4() {
+    if (function_with_error_code() &gt; 0) {
+        handle_error();
+    }
+}
+
+void usual_function_5() {
+    int rv;
+    if ((rv = function_with_error_code()) &gt; 0) {
+        handle_error();
+    }
+}
+
+int unusual_function() {
+    int rv = function_with_error_code();
+    if(rv == -1){
+        handle_error();
+    }
+    return rv;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-252: Unchecked Return Value
+<A HREF="http://cwe.mitre.org/data/definitions/252.html">http://cwe.mitre.org/data/definitions/252.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.7
+
+</PRE>
+</BODY>
+</HTML>

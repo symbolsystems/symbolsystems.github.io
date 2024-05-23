@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call putenv() with a pointer to an automatic variable as the argument [BD-PB-PUTENV]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call putenv() with a pointer to an automatic variable as the argument [BD-PB-PUTENV-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"The "putenv()" function does not create a copy of the string supplied to it as an argument;
+rather, it inserts a pointer to the string into the environment array. If a pointer to 
+a buffer of automatic storage duration is supplied as an argument to "putenv()", the memory 
+allocated for that buffer may be overwritten when the containing function returns and stack 
+memory is recycled."
+[SEI CERT C Coding Standard, POS34-C. Do not call "putenv()" with a pointer to an 
+automatic variable as the argument]
+
+This rule detects when the POSIX function "putenv()" is called with a pointer to an
+automatic variable as the argument.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Providing a pointer to a buffer of automatic storage duration as an argument to "putenv()" may 
+cause that buffer to take on an unintended value. Depending on how and when the buffer is used, 
+it can cause unexpected program behavior or possibly allow an attacker to run arbitrary code."
+[SEI CERT C Coding Standard, POS34-C. Do not call "putenv()" with a pointer to an 
+automatic variable as the argument]
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior and prevents an attacker from running arbitrary code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int func(const char *var) {
+    char env[1024];
+    int retval = snprintf(env, sizeof(env),"TEST=%s", var);
+    if (retval &lt; 0 || (size_t)retval &gt;= sizeof(env)) {
+        /* Handle error */
+    }
+ 
+    return putenv(env);		// VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Create environment variable as a static.
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int func(const char *var) {
+    static char env[1024];
+ 
+    int retval = snprintf(env, sizeof(env),"TEST=%s", var);
+    if (retval &lt; 0 || (size_t)retval &gt;= sizeof(env)) {
+        /* Handle error */
+    }
+ 
+    return putenv(env);		// NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+POS34-C. Do not call putenv() with a pointer to an automatic variable as the argument
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS34-C.+Do+not+call+putenv%28%29+with+a+pointer+to+an+automatic+variable+as+the+argument">https://wiki.sei.cmu.edu/confluence/display/c/POS34-C.+Do+not+call+putenv%28%29+with+a+pointer+to+an+automatic+variable+as+the+argument</A>
+
+</PRE>
+</BODY>
+</HTML>

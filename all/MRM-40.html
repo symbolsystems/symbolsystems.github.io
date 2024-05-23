@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Copy and destroy consistently [MRM-40]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Copy and destroy consistently [MRM-40-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If you define any of the copy constructor, copy assignment operator,
+or destructor, you might need to define one or both of the others.
+If you write/disable either the copy constructor ot the copy assignment
+operator, you probably need to do the same for the other: If one does
+'special' work, probably so should the other because the two functions
+should have similar effects.
+If you explicitly write the copying functions, you probably need to write
+the destructor: If the 'special' work in the copy constructor is to allocate
+or duplicate some resource, you need to deallocate in the destructor.
+If you explicitly write the destructor, you probably need to explicitly
+write or disable copying." [C++ Coding Standards]
+
+This rule detects when a class defines any special member function '=default',
+'=delete' or with a function definition, but not all of the special member
+functions are defined. As special functions this rule detects copy constructors,
+copy assignment operators and destructors.
+
+See also: CODSTA-CPP-02, CODSTA-CPP-19, CODSTA-CPP-21, CODSTA-CPP-24, MRM-04,
+      MRM-05, MRM-37, MRM-38, MRM-47, MRM-48, MRM-49, OOP-27, OOP-30, OOP-34
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"When any of the special functions are declared only to make
+them private or virtual, but without special semantics, it doesn't
+imply that the others are needed." [C++ Coding Standards]
+
+This rule does not trigger when a missing special member function is declared
+as private or as deleted in a base class.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents from memory management problems.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {       // Violation - copy constructor is missing
+public:
+    A() {}
+    A&amp; operator=(const A&amp;) {
+        return *this;
+    }
+    ~A(){}
+};
+
+class B {       // Violation - assignment operator is missing
+public:
+    B();
+    B(B&amp;);
+    ~B();
+};
+
+class C {       // Violation - destructor is missing
+public:
+    C() = default;
+    C(C&amp;) = delete;
+    C&amp; operator=(const C&amp;) = delete;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {       // OK - copy constructor, assignment operator and destructor
+public:
+    A(){}
+    A(A&amp;){}
+    A&amp; operator=(const A&amp;){
+        return *this;
+    }
+    ~A(){}
+};
+
+class B {  // OK no defined copy constructor, assignment operator and destructor
+};
+
+class C {       // OK - copy constructor, assignment operator and destructor
+public:
+    C() = default;
+    ~C() = default;
+    C(C&amp;) = delete;
+    C&amp; operator=(const C&amp;) = delete;
+};
+
+class D {       // OK - destructor is virtual and not defined
+public:
+    D();
+    virtual ~D();
+};
+
+class Base {
+    Base();
+private:
+    Base(Base&amp;);
+    Base&amp; operator=(const Base&amp;);
+};
+
+class Derived : public Base {  // OK - copying is disabled in a base class
+public:
+    Derived();
+    ~Derived();
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 52
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

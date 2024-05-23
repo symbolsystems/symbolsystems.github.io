@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An identifier shall not contain a double underscore '__' [NAMING-33_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An identifier shall not contain a double underscore '__' [NAMING-33_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each identifier that contains a double underscore '__' (...) is reserved
+to the implementation for any use." [ISO/IEC 14882:2017]
+
+Using a double underscore might result in the creation of a reserved identifier.
+
+This rule detects when a double underscore '__' is used inside a declaration
+of an identifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using reserved identifiers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int var__1;    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int var_1;     // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   5.10 Identifiers
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.10.1 User-defined identifiers shall have an appropriate form
+
+</PRE>
+</BODY>
+</HTML>

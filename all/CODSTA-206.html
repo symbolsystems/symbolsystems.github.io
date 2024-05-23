@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The '_Noreturn' function specifier should not be used [CODSTA-206]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The '_Noreturn' function specifier should not be used [CODSTA-206-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. The following
+shall not be used:
+- The _Noreturn function specifier and the &lt;stdnoreturn.h&gt; header file;"
+[MISRA C:2012 Amendment 2]
+
+This rule detects when one of the following is used in code:
+- the '_Noreturn' function specifier
+- a macro that expands to the '_Noreturn' function specifier (such as
+  the 'noreturn' macro from the 'stdnoreturn.h' library)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+_Noreturn int  f1() { return 3; }    /* Violation */
+_Noreturn void f2() { }              /* Violation */
+
+#include &lt;stdnoreturn.h&gt;
+noreturn  int  f3() { return 3; }    /* Violation */
+noreturn  void f4() { }              /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use the '_Noreturn' function specifier or the macro that
+expands to the '_Noreturn' specifier.
+
+int  f1() { return 3; }              /* OK */
+void f2() { }                        /* OK */
+
+#include &lt;stdnoreturn.h&gt;
+int  f3() { return 3; }              /* OK */
+void f4() { }                        /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+</PRE>
+</BODY>
+</HTML>

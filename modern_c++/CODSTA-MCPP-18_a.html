@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unnecessary default capture modes in lambda expressions [CODSTA-MCPP-18_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unnecessary default capture modes in lambda expressions [CODSTA-MCPP-18_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A lambda capture can include one of the following default capture modes:
+- the by-reference[&amp;] mode captures by reference the current object (if it
+  exists) and all automatic variables in the body of a lambda
+- the by-value [=] mode captures by value the current object (if it exists)
+  and all automatic variables in the body of a lambda
+
+Captures apply only to non-static local variables (including parameters)
+that are visible in the scope where the lambda is created.
+
+This rule detects when a lambda capture contains only a capture default,
+but the lambda expression does not have any automatic variables.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves readability of code and helps you avoid confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int g_i;
+void func(void)
+{
+    [=]{ return 1;};        /* Violation - no captured variables */
+    [&amp;]{ return g_i;};      /* Violation - global variable is not captured */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int g_i;
+void func(void)
+{
+    []{ return 1;};        /* OK */
+    []{ return g_i;};      /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 6: Lambda Expressions, Item 31: "Avoid default capture modes"
+
+</PRE>
+</BODY>
+</HTML>

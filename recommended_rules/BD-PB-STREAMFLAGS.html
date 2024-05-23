@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Suspicious setting of stream flags [BD-PB-STREAMFLAGS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Suspicious setting of stream flags [BD-PB-STREAMFLAGS-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when stream flags are set using a suspicious value. Stream flags
+should always be set using builtin enums (e.g., std::ios::hex).
+
+The following methods can be used to set stream flags:
+- fmtflags setf(fmtflags flags);
+- fmtflags setf(fmtflags flags, fmtflags mask);
+- void unsetf(fmtflags mask);
+- fmtflags flags(fmtflags flags);
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Setting the stream format with suspicious value can indicate a possible bug in the code.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+void bad(iostream&amp; stream) {
+    cout.setf((ios_base::fmtflags) 1); // VIOLATION
+    cout.setf(ios_base::hex | (ios_base::fmtflags) 0x08); // VIOLATION
+    ios_base::fmtflags flags = (ios_base::fmtflags) 123;
+    stream.unsetf(flags); // VIOLATION
+    ios_base::fmtflags flags2 = flags | ios_base::uppercase;
+    stream.flags(flags2); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+void ok(iostream&amp; stream) {
+    cout.setf(ios_base::hex);
+    cout.setf(ios_base::hex | ios_base::uppercase);
+    ios_base::fmtflags flags = ios_base::hex;
+    stream.unsetf(flags);
+    ios_base::fmtflags flags2 = flags | ios_base::uppercase;
+    stream.flags(flags2);
+}
+
+</PRE>
+</BODY>
+</HTML>

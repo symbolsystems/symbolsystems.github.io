@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The lowercase character 'l' shall not be used in a literal suffix [MISRA2012-RULE-7_3]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The lowercase character 'l' shall not be used in a literal suffix [MISRA2012-RULE-7_3-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Lower case letter 'l' (ell) can easily be confused with the digit '1' (one).
+This can be particularly confusing when indicating that an integer literal
+constant is a long value. The compliant solution improvises by using an upper
+case 'L' instead of lower case 'l' to disambiguate the visual appearance.
+Likewise, you should use 'LL' rather than 'll' when indicating that an integer
+literal constant is a long long value."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents confusions and improves the readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define S1 11l    // Violation
+
+void foo1(){
+    long l;
+    long long ll;
+    unsigned long ul;
+
+    ul = 11lu;    // Violation
+    l  = 11l;     // Violation
+    ll = 11111ll; // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define S1 11L    // OK
+
+void foo1(){
+    long l;
+    long long ll;
+    unsigned long ul;
+
+    ul = 11LU;    // OK
+    l  = 11L;     // OK
+    ll = 11111LL; // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.4 Environment, AV Rule 14
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.13.5 The lowercase form of "L" shall not be used as the first character in a literal suffix
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 7.3
+
+4. SEI CERT C Coding Standard
+   DCL16-C. Use "L," not "l," to indicate a long value
+   <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152241">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152241</A>
+
+</PRE>
+</BODY>
+</HTML>

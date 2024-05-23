@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use NULL instead of literal zero (0) as the null-pointer-constant [CODSTA-131]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use NULL instead of literal zero (0) as the null-pointer-constant [CODSTA-131-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Literal 0 can be used both as null pointer constant, and as integer. To make
+clear what was the developer intention, use use NULL macro as the null pointer
+constant, and 0 for the integer zero.
+
+"An integer constant expression with the value 0 shall be derived from expansion
+of the macro NULL if it appears in any of the following contexts:
+  - As the value being assigned to a pointer;
+  - As an operand of an == or != operator whose other operand is a pointer;
+  - As the second operand of a ?: operator whose third operand is a pointer;
+  - As the third operand of a ?: operator whose second operand is a pointer."
+[MISRA C:2012 Rule 11.9]
+
+This rule reports a violation if in line in which the literal 0 is assigned to
+or compared with a pointer there is no "NULL" token used.
+
+See also: CODSTA-CPP-63
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. This rule works by comparing original source code with preprocessed code.
+Due to this the use of macros can limit precision of the results. See Drawbacks
+section for details.
+
+2. "A null pointer constant of the form (void *)0 is permitted, whether or not
+it was expanded from NULL.
+The use of the macro NULL provided by the implementation is always permitted,
+even if it expands to an integer constant expression with value 0."
+[MISRA C:2012 Rule 11.9]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using NULL rather than 0 makes it clear that a null pointer constant
+was intended." [MISRA C:2012 Rule 11.9]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The use of macros can limit precision of results:
+    #define NULL 0
+    #define PTR_CHECK(x) if ((x) == NULL) return;
+    void foo ( int * p, int * q ) {
+        /* A violation is reported because in preprocessed code there is the 
+         * literal 0 compared with a pointer, but in this line in original
+         * source code there is no NULL token */
+        PTR_CHECK(p);    /* Violation is reported */
+    }
+
+2. Integer constants expressions are not supported - no violation will be
+reported. For example:
+    void f1 ( int * p ) {
+        p = 1 - 1;  /* No violation is reported */
+    }
+
+3. Object initialization is not supported - no violation will be reported.
+For example:
+    struct S {
+        int *p;
+    };
+    void f1 ( void ) {
+        struct S p = { 0 }; /* No violation is reported */
+    }
+
+4. The use of multiple null pointer constants in one line can limit precision
+of results:
+    #define NULL 0
+    void foo ( int * p, int * q ) {
+        /* The rule sees a NULL in the following line so it does not report
+         * any violations, even though first argument of the call should use 
+         * NULL too */
+        foo(0, NULL);  /* No violation is reported */
+    }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define MY_NULL 0
+#define CALL_FUNC(x) (getptr( (x) ))
+void getptr(int*);
+
+int* foop1(int* p1)
+{
+    int* v1 = 0;  /* Violation */
+    p1 = MY_NULL; /* Violation */
+    if(0 == v1);  /* Violation */
+    CALL_FUNC(0); /* Violation */
+
+    /* Literal 0 is used as 2nd or 3rd operand of "?:" and the other operand
+     * has pointer type */
+    p1 ? 0 : p1;  /* Violation */
+
+    return 0;     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define NULL 0
+#define CALL_FUNC(x) (getptr( (x) ))
+void getptr(int*);
+
+int* foop1(int* p1)
+{
+    int* v1 = NULL;     /* OK */
+    p1 = NULL;          /* OK */
+    if((void*)0 == v1); /* OK */
+    CALL_FUNC(NULL);    /* OK */
+    p1 ? (void*)0 : p1; /* OK */
+    return NULL;        /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.9
+
+</PRE>
+</BODY>
+</HTML>

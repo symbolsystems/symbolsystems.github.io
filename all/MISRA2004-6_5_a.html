@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Unnamed bit-fields with signed integer type shall have a length of more than one bit [MISRA2004-6_5_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Unnamed bit-fields with signed integer type shall have a length of more than one bit [MISRA2004-6_5_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+MISRA C:2004 standard disallows the use of signed-type bit-fields, including
+unnamed bit fields.
+
+This rule reports a violation if an unnamed bit-field with signed type is
+declared with width of 0 or 1 bits.
+
+See also: MISRA2004-6_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Next revision of MISRA standard, the MISRA C:2012, allows the use of such
+unnamed bit fields as their values cannot be accessed.
+
+Unnamed bit fields are useful for example for padding to conform to
+externally-imposed layouts. As a special case, an unnamed bit-field with a
+width of zero specifies alignment of the next bit-field at an allocation unit
+boundary.
+
+A bit-field with width 0 must be unnamed, according to C/C++ standard.
+
+Bit-fields with following types are checked: char, short int, int, long int, 
+long long int, wchar_t. Please note that signedness of char and wchar_t is 
+compiler-dependent.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Compliance with MISRA C:2004 standard.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of "bad" code: */
+struct Bad
+{
+   signed short :0;            /* Violation */
+   signed int :1;              /* Violation */
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code which is not a violation of this rule: */
+struct Good
+{
+   unsigned int :0;            /* OK - unsigned type */
+
+   /*Note that MISRA2004-6_5 disallows named bit-fields with single-bit width*/
+   signed int b :1;            /* OK - named bit-field */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA Guidelines for the use of the C language in vehicle based software
+   Rule 112
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6, Rule 6.4
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   Section 6.7.2.1 Structure and union specifiers
+
+4. ISO/IEC 14882:2003 Programming languages -- C++
+   Section 9.6 Bit-fields
+
+</PRE>
+</BODY>
+</HTML>

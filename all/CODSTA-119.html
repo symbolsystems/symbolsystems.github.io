@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A 'default' label shall have a statement or a comment before terminating 'break' [CODSTA-119]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A 'default' label shall have a statement or a comment before terminating 'break' [CODSTA-119-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The switch-clause following the 'default' label shall, prior to the terminating
+'break' statement, contain either:
+* A statement, or
+* A comment." [MISRA C:2012 Rule 16.4]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+No violation is reported if there is no 'default' label or no terminating
+'break' statement.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void fn1 ( int i )
+{
+  switch ( i )
+  {
+    /* No comment nor statement before terminating 'break' */
+    default:
+      break;    /* Violation */
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code which is compliant with this rule: */
+void fn1 ( int i )
+{
+  switch ( i )
+  {
+    /* There is a statement before terminating break: */
+    default:
+      ++i;
+      break;    /* OK */
+  }
+  switch ( i )
+  {
+    /* There is a comment before terminating break: */
+    default:
+      /* A comment which explains why the default can be empty */
+      break;    /* OK */
+  }
+  switch ( i )
+  {
+    /* 'case' is not checked: */
+    case 1:
+      break;
+    default:
+      ++i;
+      break;
+  }
+  switch ( i )
+  {
+    /* No violation is reported if there is no terminating 'break': */
+    default:
+      return;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.4, Rule 16.1
+
+</PRE>
+</BODY>
+</HTML>

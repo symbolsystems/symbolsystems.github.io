@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value returned by a function having non-void return type shall be used [CODSTA-122_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value returned by a function having non-void return type shall be used [CODSTA-122_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is possible to call a function without using the return value, which may be
+an error. If the return value of a function is intended not to be used
+explicitly, it should be cast to the void type." [MISRA C:2012 Rule 17.7]
+
+This rule does not check the first operand of comma operator (","). It is
+checked by a separate rule: CODSTA-122_b
+
+See also: CODSTA-122_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule requires that function return value should be used. For example it
+can be assigned to a variable, returned from a function, checked in selection
+or iteration statement, used to call a function, etc.
+
+If the function call is used in an expression, the expression must be used.
+For example, an expression which adds two function calls will result in a
+violation, unless the expression is used:
+  f1() + f2(); /* Violation */
+  return f1() + f2(); /* OK */
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+In C++ the rule does not report on overloaded operators. The operators are often
+designed to be used for their side-effect, without the need to use or check of
+their return value.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents errors caused by not using or checking function return value.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some function return values are intended as an extra information, which does not
+need to be checked or used on every function call. It is not possible to
+automatically recognize the intention of the return value, so such cases also
+result in a violation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of unused function return value: */
+int foo ();
+void bar ()
+{
+  foo ( );                /* Violation */
+  foo ( ) + foo ( );      /* Violation */
+  foo ( ) &amp;&amp; foo ( );     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of used function value: */
+int foo ();
+void goo ( int i );
+int bar ( int i )
+{
+  i = foo ( );                  /* OK - assigned */
+  goo ( foo ( ) + foo ( ) );    /* OK - passed to a function */
+  if ( foo ( ) )                /* OK - used in selection statement */
+  {
+    ( void ) foo ( );           /* OK - cast to void */
+  }
+  return foo ( ) &amp;&amp; foo ( );    /* OK - returned */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.7
+
+2. SEI CERT C Coding Standard
+   EXP12-C. Do not ignore values returned by functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP12-C.+Do+not+ignore+values+returned+by+functions">https://wiki.sei.cmu.edu/confluence/display/c/EXP12-C.+Do+not+ignore+values+returned+by+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

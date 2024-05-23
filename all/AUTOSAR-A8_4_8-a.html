@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Output parameters shall not be used [AUTOSAR-A8_4_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Output parameters shall not be used [AUTOSAR-A8_4_8-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Output parameters are passed to a function as non-const references
+or pointers that can denote either in-out or out-only parameter.
+Using return value prevents from possible misuse of such a parameter."
+[AUTOSAR A8-4-8]
+
+This rule detects output parameters in functions with 'void' return type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that an output parameter is a parameter of non-const
+reference type that is assigned in a function via an assignment operator
+and is not used within this function in any other way.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent misuse of output parameters and improve code
+clarity and readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'p1' output parameter is used in a void function.
+
+void f1(int a, int b, int&amp; p1) {  // Violation
+    p1 = a + b;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by not using the output parameter in the void function.
+
+In the following example, the 'f1' function has a return value instead of
+the output parameter.
+
+int f1(int a, int b) {            // OK
+    return (a + b);
+}
+
+In the following example, the 'p1' parameter of the 'f2' function is
+an input-output parameter.
+
+void f2(int a, int b, int&amp; p1) {  // OK
+    p1 = a + b + p1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-8 A Output parameters shall not be used.
+
+</PRE>
+</BODY>
+</HTML>

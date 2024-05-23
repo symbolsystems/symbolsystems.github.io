@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assertions should not contain function calls nor function-like macro calls [CODSTA-150_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assertions should not contain function calls nor function-like macro calls [CODSTA-150_b-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Expressions used as arguments to the standard assert() macro should not have
+side effects. The behavior of the assert() macro depends on the definition
+of the object-like macro NDEBUG. If the macro NDEBUG is undefined, the assert()
+macro is defined to evaluate its expression argument and, if the result of the
+expression compares equal to 0, call the abort() function. If NDEBUG is defined,
+assert is defined to expand to ((void)0). Consequently, the expression
+in the assertion is not evaluated, and no side effects it may have had otherwise
+take place in non-debugging executions of the code." [CERT C: PRE31-C]
+
+The rule reports a violation when it detects function-like macros that have
+names ending with 'assert', and when the macros' arguments contain a function
+call or a function-like macro call. The function call or the function-like macro
+call may cause a side effect that may or may not be evaluated.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves maintainability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The rule detects calls of macros and functions. A violation is reported
+   if the function call is used as an argument to a function with a name ending
+   with 'assert'.
+
+   void fassert(int);
+   int fcall(int);
+
+   void foo(){
+      int x;
+      fassert(fcall(x));   // Violation reported
+   }
+
+2. The rule does not report violation if a function call is used in macro
+   that is not a function-like macro.
+
+   #include &lt;assert.h&gt;
+   int fcall(int);
+
+   #define FC fcall(0)
+
+   void foo(){
+      int x;
+      assert(FC);  // Not reported if a function call is used in macro
+   }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;assert.h&gt;
+
+int gx;
+int fcall1(){ return gx++; }  // Function contains side effect
+int fcall2(){ return 0; }     // Function does not contain side effect
+
+#define FL_MACRO_SE(x) x++  // Function-like macro contains side effect
+#define FL_MACRO_WSE(x) x   // Function-like macro does not contain side effect
+
+
+void foo(){
+    int x;
+    assert(fcall1() == 0);         // Violation
+    assert(fcall2() == 0);         // Violation
+    assert(FL_MACRO_SE(x) == 0);   // Violation
+    assert(FL_MACRO_WSE(x) == 0);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+If possible, avoid calling function calls and function-like macros in assertions
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   PRE31-C. Avoid side effects in arguments to unsafe macros
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE31-C.+Avoid+side+effects+in+arguments+to+unsafe+macros">https://wiki.sei.cmu.edu/confluence/display/c/PRE31-C.+Avoid+side+effects+in+arguments+to+unsafe+macros</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not rely on the value of a moved-from object [CERT_CPP-EXP63-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not rely on the value of a moved-from object [CERT_CPP-EXP63-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects uses of arguments that were earlier used as parameters
+in calls to the std::move function.
+"Do not rely on the value of a moved-from object unless the type of the object is 
+documented to be in a well-specified state." 
+[SEI CERT C++ Coding Standard EXP63-CPP. Do not rely on the value of a moved-from
+object]
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"While the object is guaranteed to be in a valid state, relying on unspecified 
+values leads to unspecified behavior. Since the behavior need not be documented, 
+this can in turn result in abnormal program behavior and portability concerns."
+[SEI CERT C++ Coding Standard EXP63-CPP. Do not rely on the value of a moved-from
+object]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Safe types" parameter allows you to specify types that are guaranteed to be
+in a well-specified state after they are passed to the std::move function.
+
+The "Report when the function argument passed by reference is in the moved-from state" parameter
+allows you to enable reporting violations when a function argument passed by lvalue reference
+is used as a parameter in the call to the 'std::move' function and it remains in the 
+moved-from state on the method exit. This helps you prevent using the variable after 
+the method exits, which is potentially dangerous behavior.
+
+Note that the rule does not trigger when the parameter is passed by rvalue reference.
+This parameter is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid using unspecified values, which can result from
+calls to the std::move function.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+#include &lt;iostream&gt;
+ 
+void g(std::string v) {
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+}
+ 
+void f1() {
+    std::string s;
+    for (unsigned i = 0; i &lt; 10; ++i) {
+        s.append(1, static_cast&lt;char&gt;('0' + i));    // VIOLATION
+        g(std::move(s));
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, do not subsequently use the argument to std::move:
+#include &lt;iostream&gt;
+
+void g(std::string v) {
+    std::cout &lt;&lt; v &lt;&lt; std::endl;
+}
+ 
+void f1() {
+    for (unsigned i = 0; i &lt; 10; ++i) {
+        std::string s(1, static_cast&lt;char&gt;('0' + i)); // NO VIOLATION
+        g(std::move(s));
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 28.6.3 An object shall not be used while in a potentially moved-from state
+
+SEI CERT C++ Coding Standard
+EXP63-CPP. Do not rely on the value of a moved-from object
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP63-CPP.+Do+not+rely+on+the+value+of+a+moved-from+object">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP63-CPP.+Do+not+rely+on+the+value+of+a+moved-from+object</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A12-8-3 Moved-from object shall not be read-accessed
+
+</PRE>
+</BODY>
+</HTML>

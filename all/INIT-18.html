@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Both NSDMI and a non-static member initializer in a constructor shall not be used in the same type [INIT-18]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Both NSDMI and a non-static member initializer in a constructor shall not be used in the same type [INIT-18-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Since 2011 C++ Language Standard it is allowed to initialize a non-static
+member along with the declaration of the member in the class body using NSDMI
+('non-static data member initializer'). To avoid possible confusion which
+values are actually used, if any member is initialized by NSDMI or with a
+constructor, then all others should be initialized the same way."
+[AUTOSAR A12-1-2]
+
+This rule detects when non-static member variables in a class are initialized
+using both constructors and NSDMI.
+This rule assumes that a variable is initialized in the constructor when:
+- it is initialized in the constructor initializer list, or
+- it is assigned inside the body of a constructor or inside a function called
+  from the constructor (two levels of nested function calls are checked).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid possible confusion as to which values are actually
+used to initialize the non-static member in a class.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A                        // Violation
+{
+public:
+    A(): a_(1) {}
+private:
+    int a_;
+    int b_ = 2;
+};
+
+class B                        // Violation
+{
+public:
+    B(int x): a_(x) {}
+private:
+    int a_;
+    int b_ = 2;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A                        // OK
+{
+public:
+    A() {}
+private:
+    int a_ = 1;
+    int b_ = 2;
+};
+
+class B                        // OK
+{
+public:
+    B(int x): a_(x), b_(2) {}
+private:
+    int a_;
+    int b_;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-1-2. Both NSDMI and a non-static member initializer in a constructor
+   shall not be used in the same type
+
+</PRE>
+</BODY>
+</HTML>

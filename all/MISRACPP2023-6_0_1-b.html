@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parameter names in function declarations should not be enclosed in parentheses [MISRACPP2023-6_0_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parameter names in function declarations should not be enclosed in parentheses [MISRACPP2023-6_0_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The ambiguity arising from the similarity between a function-style cast and
+a declaration . . . can also occur in the context of a declaration.
+In that context, the choice is between a function declaration with a redundant
+set of parentheses around a parameter name and an object declaration with 
+a function-style cast as the initializer." [ISO/IEC 14882:2017, 11.2]
+
+This rule detects parameter names that are enclosed in parentheses in function
+declarations.
+
+See also: FORMAT-49, PB-79
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule may trigger when a function-like macro call is used in a function
+declaration.
+
+#define DECL(var) int var
+void f( DECL(i) );                            // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A function declaration with the parameter name enclosed in parentheses is
+similar to an object declaration. This rule helps you improve code readability
+and prevent confusing function declarations with object declarations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+  C(int(i));                                   // Violation
+};
+
+const int one = 1;
+
+void bar()
+{
+  C foo(int(one));                             // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by removing the unnecessary parenthesis from
+the declaration.
+
+class C
+{
+public:
+  C(int i);                                    // OK
+};
+
+const int one = 1;
+
+void bar()
+{
+  C foo(int one);                              // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   11.2 Ambiguity resolution
+
+2. ISO/IEC 14882:2017 Programming languages - C++
+   9.8 Ambiguity resolution
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.0.1 Block scope declarations shall not be visually ambiguous
+
+4. SEI CERT C++ Coding Standard
+   DCL53-CPP. Do not write syntactically ambiguous declarations
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL53-CPP.+Do+not+write+syntactically+ambiguous+declarations">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL53-CPP.+Do+not+write+syntactically+ambiguous+declarations</A>
+
+</PRE>
+</BODY>
+</HTML>

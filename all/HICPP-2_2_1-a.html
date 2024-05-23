@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the following digraphs: &lt;%, %&gt;, &lt;:, :&gt;, %:, %:%: [HICPP-2_2_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the following digraphs: &lt;%, %&gt;, &lt;:, :&gt;, %:, %:%: [HICPP-2_2_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Be aware of trigraph and digraph character sequences and avoid them. It is
+possible to avoid such sequences arising accidentally by using spaces."
+[High Integrity C++]
+
+This rule detects when digraphs are used in code. The rule assumes that
+digraphs are the following two-character sequences: &lt;%, %&gt;, &lt;:, :&gt;, %:.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule doesn't report digraphs in comments and strings.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"In most modern environments there is no longer a need for trigraphs or
+digraphs, and their use will either result in hard to diagnose compiler errors
+or code that is difficult to maintain." [High Integrity C++]
+
+This rule helps you improve code readability, maintainability, and portability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int tab &lt;: 2 :&gt; = &lt;%0,1%&gt;;                            // Violation
+
+%:define FOO(a, b) a %:%: b                           // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, replace the digraphs with their one-character equivalents.
+
+int tab[2] = {0,1};                                   // OK
+
+#define FOO(a, b) a ## b                              // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-5-2. Digraphs shall not be used
+
+2. High Integrity C++ Coding Standard
+   2.2.1. Do not use digraphs or trigraphs
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.4 Environment, AV Rule 12
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-5-1
+
+</PRE>
+</BODY>
+</HTML>

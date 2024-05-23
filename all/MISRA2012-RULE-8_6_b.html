@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An identifier with external linkage shall have exactly one external definition [MISRA2012-RULE-8_6_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An identifier with external linkage shall have exactly one external definition [MISRA2012-RULE-8_6_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+An identifier with external linkage shall have external definition [GLOBAL-NOEXTERNDEF]
+
+
+DESCRIPTION
+
+
+"The behaviour is undefined if an identifier is used for which multiple
+definitions exist (in different files) or no definition exists at all."
+[MISRA C:2012 Rule 8.6]
+
+This rule detects when identifiers with external linkage (objects or functions)
+do not have any external definition.
+
+See also: GLOBAL-ONEEXTERNDEF
+
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not check template functions and members of template
+classes.
+The rule does not report violations on objects and functions that are declared
+in unnamed namespaces.
+
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents undefined behaviors.
+
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test.c' and 'test.h'.
+
+// test.h
+extern int x1;                // Violation - there is no definition of 'x1'
+                              // in testing scope
+extern void foo1(void);       // Violation - there is no definition of 'foo1()'
+                              // in testing scope
+extern void foo2(void);       // Violation - there is no definition of 'foo2()'
+                              // in testing scope
+// test.c
+#include "test.h"
+
+void foo2(void);              // Violation - there is no definition of 'foo2()'
+                              // in testing scope
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by adding a definition or removing an unnecessary declaration
+
+// test.h
+extern int x1;                // OK
+extern void foo2(void);       // OK
+
+// test.c
+#include "test.h"
+int x1 = 0;                   // OK
+void foo2(void)               // OK
+{
+   // ...
+}
+
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.6
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 3, Rule 3-2-4
+
+3. AUTOSAR C++14 Coding Guidelines
+   M3-2-4. An identifier with external linkage shall have exactly one definition
+
+</PRE>
+</BODY>
+</HTML>

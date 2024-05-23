@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The Standard Library function memcmp shall not be used to compare null terminated strings [BD-PB-MCCSTR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The Standard Library function memcmp shall not be used to compare null terminated strings [BD-PB-MCCSTR-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the Standard Library function 'memcmp' is used
+to compare null terminated strings.
+This rule assumes that "null terminated strings" are:
+- string literals,
+- arrays of char type that contain a null character.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"If memcmp is used to compare two strings and the length of either is less 
+than n, then they may compare as different even when they are logically the same 
+(i.e. each has the same sequence of characters before the null terminator) as the 
+characters after a null terminator will be included in the comparison even though 
+they do not form part of the string." [MISRA C:2012 Amendment 1 Rule 21.14]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid unexpected failures at runtime caused by passing 
+an unexpected parameter to the memcmp function. Such violation could cause
+runtime errors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+#include &lt;string.h&gt;
+
+extern char buffer1[ 12 ];
+extern char buffer2[ 12 ];
+
+void f1 ( void )
+{
+    ( void ) strcpy ( buffer1, "abc" );
+    ( void ) strcpy ( buffer2, "abc" );
+    if ( memcmp ( buffer1, buffer2, sizeof ( buffer1 ) ) != 0 )        // VIOLATION
+    {}
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+You can use function "strncmp" instead of memcmp
+
+#include &lt;string.h&gt;
+
+extern char buffer1[ 12 ];
+extern char buffer2[ 12 ];
+
+void f1 ( void )
+{
+    ( void ) strcpy ( buffer1, "abc" );
+    ( void ) strcpy ( buffer2, "abc" );
+    if ( strncmp  ( buffer1, buffer2, sizeof ( buffer1 ) ) != 0 )        // NO VIOLATION
+    {}
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 2: New rules, Rule 21.14
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The character sequence /* shall not be used within a C++-style comment [MISRA2012-RULE-3_1_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The character sequence /* shall not be used within a C++-style comment [MISRA2012-RULE-3_1_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation if "/*" is embedded in "//" comment.
+
+MISRA C:2012 standard says:
+   If a C-style comment starting sequence occurs within a // comment, it is
+   probably because a region of code has been commented-out using //.
+
+See also: MISRA2004-2_3, COMMENT-11
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+MISRA C:2012 standard does not allow commenting out sections of code:
+   Where it is required for sections of source code not to be compiled then
+   this should be achieved by use of conditional compilation (e.g. #if or
+   #ifdef constructs with a comment). Using start and end comment markers for
+   this purpose is dangerous because C does not support nested comments, and
+   any comments already existing in the section of code would change the effect.
+
+C99 added "//" comments.
+
+To check other combinations of embedded comments see MISRA2004-2_3 and
+COMMENT-11 rules.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Detects possible cases of commented out sections of code
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// /* Violation - C-style comment embedded in C++-style comment */
+// some_code();
+
+void foo ( int a, int b, int c )
+{
+  // Following code executes "a = b + c", but it would be "a = b" if there was
+  // no "//" comments:
+  a = b // /* Violation - C-style comment embedded in C++-style comment
+  + c;
+  // */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Use conditional compilation to "comment out" sections of code
+#if 0
+/* OK */
+some_code();
+#endif
+
+// Alternatively, you could also use C++-style comments if your compiler
+// and coding standard allows:
+// // OK
+// some_code();
+
+void foo ( int a, int b, int c )
+{
+  a = b; /* OK - comments not embedded
+  + c
+  */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 3.1
+
+2. SEI CERT C Coding Standard
+   MSC04-C. Use comments consistently and in a readable fashion
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion">https://wiki.sei.cmu.edu/confluence/display/c/MSC04-C.+Use+comments+consistently+and+in+a+readable+fashion</A>
+
+</PRE>
+</BODY>
+</HTML>

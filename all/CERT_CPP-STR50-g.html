@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the 'char' buffer to store input from 'std::cin' [CERT_CPP-STR50-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the 'char' buffer to store input from 'std::cin' [CERT_CPP-STR50-g-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is required that an underlying buffer for a C-style string needs to be
+of sufficient size to hold character data and a null terminator. In addition,
+a C-style string implies all other disadvantages of built-in arrays."
+[AUTOSAR-A27-0-4]
+
+'std::string' should be preferred over 'char' to store input from 'std::cin'.
+The 'char' buffer may not be of sufficient size to store the input and lacks
+advantages of 'std::string' (see BENEFITS).
+
+This rule detects when input read from 'std::cin' or 'std::wcin' is stored in
+the 'char' or 'wchar_t' buffer, respectively.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using std::string provides correct memory allocation, copying, gradual
+expansion and iteration. It is self-explanatory in terms of ownership
+and offers more readable interface."
+[AUTOSAR-A27-0-4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+
+void foo()
+{
+    char name[20];
+    std::cout &lt;&lt; "Enter your name: ";
+    std::cin &gt;&gt; name;                                       // Violation
+    std::cout &lt;&lt; "You entered: " &lt;&lt; name &lt;&lt; '\n';
+}
+
+void bar()
+{
+    wchar_t name[20];
+    std::cout &lt;&lt; "Enter your name: ";
+    std::wcin &gt;&gt; name;                                      // Violation
+    std::cout &lt;&lt; "You entered: " &lt;&lt; name &lt;&lt; '\n';
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by storing the input from 'std::cin' and 'std::wcin'
+in a string buffer.
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+void foo()
+{
+    std::string name;
+    std::cout &lt;&lt; "Enter your name: ";
+    std::cin &gt;&gt; name;                                       // OK
+    std::cout &lt;&lt; "You entered: " &lt;&lt; name &lt;&lt; '\n';
+}
+
+void bar()
+{
+    std::wstring name;
+    std::cout &lt;&lt; "Enter your name: ";
+    std::wcin &gt;&gt; name;                                      // OK
+    std::cout &lt;&lt; "You entered: " &lt;&lt; name &lt;&lt; '\n';
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A27-0-4. C-style strings shall not be used.
+
+2. AUTOSAR C++14 Coding Guidelines
+   A27-0-2. A C-style string shall guarantee sufficient space for data and the
+   null terminator
+
+3. SEI CERT C++ Coding Standard
+   STR50-CPP. Guarantee that storage for strings has sufficient space for
+   character data and the null terminator
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR50-CPP.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator">https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR50-CPP.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator</A>
+
+</PRE>
+</BODY>
+</HTML>

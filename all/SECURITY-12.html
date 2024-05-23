@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using unsafe string functions which may cause buffer overflows [SECURITY-12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using unsafe string functions which may cause buffer overflows [SECURITY-12-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects code that uses unsafe string functions from C library:
+strcpy, strcat, sprintf, vsprintf, gets
+According to David A. Wheeler (see reference below), 
+"C functions users must avoid using dangerous functions 
+that do not check bounds unless they've ensured 
+that the bounds will never get exceed. 
+Functions to avoid in most cases (or ensure protection) include the functions 
+strcpy(), strcat(), sprintf() (with cousin vsprintf()), and gets(). 
+These should be replaced with functions such as
+strncpy(), strncat(), snprintf(), fgets(), respectively."
+See also; SECURITY-12,SECURITY-13, SECURITY-16
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents the use of functions which may cause buffer overflows. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void test()
+{
+    char buffer[16];
+    strcpy(buffer, "To be ");              // Violation
+    strcat(buffer, "or not to be");        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void test()
+{
+    char buffer[16];
+    strncpy(buffer, "To be ", 7);          // OK
+    strncat(buffer, "or not to be", 6);    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/dangers-c.html">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/dangers-c.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. SEI CERT C Coding Standard
+   API01-C. Avoid laying out strings in memory directly before sensitive data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/API01-C.+Avoid+laying+out+strings+in+memory+directly+before+sensitive+data">https://wiki.sei.cmu.edu/confluence/display/c/API01-C.+Avoid+laying+out+strings+in+memory+directly+before+sensitive+data</A>
+
+4. SEI CERT C Coding Standard
+   API02-C. Functions that read or write to or from an array should take an
+   argument to specify the source or target size
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/API02-C.+Functions+that+read+or+write+to+or+from+an+array+should+take+an+argument+to+specify+the+source+or+target+size">https://wiki.sei.cmu.edu/confluence/display/c/API02-C.+Functions+that+read+or+write+to+or+from+an+array+should+take+an+argument+to+specify+the+source+or+target+size</A>
+
+5. SEI CERT C Coding Standard
+   ENV01-C. Do not make assumptions about the size of an environment variable
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ENV01-C.+Do+not+make+assumptions+about+the+size+of+an+environment+variable">https://wiki.sei.cmu.edu/confluence/display/c/ENV01-C.+Do+not+make+assumptions+about+the+size+of+an+environment+variable</A>
+
+6. SEI CERT C Coding Standard
+   MSC24-C. Do not use deprecated or obsolescent functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions">https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions</A>
+
+7. SEI CERT C Coding Standard
+   STR31-C. Guarantee that storage for strings has sufficient space for
+   character data and the null terminator
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR31-C.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator">https://wiki.sei.cmu.edu/confluence/display/c/STR31-C.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+#error directive shall not be used [HICPP-16_1_1-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+#error directive shall not be used [HICPP-16_1_1-g-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using the pre-processor #error directive may lead to code that is complicated
+and not clear for developers. The #error directive can not be applied
+to templates as it will not be evaluated as a per-instance template deduction."
+[AUTOSAR A16-6-1]
+
+This rule detects '#error' pre-processor directives.
+
+See also: PREPROC-11, PREPROC-23
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Static assertion, similarly to #error directive, provides a compile-time error
+checking. However, static_assert behaves correctly in all C++ concepts and makes
+the code more readable and does not rely on pre-processor directives."
+[AUTOSAR-16-6-1]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int i;
+// ...
+#if i &gt; 0
+#error "ERROR MESSAGE"                                  // Violation
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+constexpr int i = 0;
+// ...
+static_assert(i == 0, "ERROR MESSAGE");                 // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A16-6-1. #error directive shall not be used
+
+2. AUTOSAR C++14 Coding Guidelines
+   A16-0-1. The pre-processor shall only be used for unconditional and
+   conditional file inclusion and include guards, and using the following
+   directives: (1) #ifndef, (2) #ifdef, (3) #if, (4) #if defined, (5) #elif,
+   (6) #else, (7) #define, (8) #endif, (9) #include
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.6 Pre-Processing Directives, AV Rule 26
+
+4. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-2-1
+
+5. High Integrity C++ Coding Standard
+   16.1.1. Use the preprocessor only for implementing include guards, and
+   including header files with include guards
+
+6. The Power of Ten - Rules for Developing Safety Critical Code.
+   Rule 8
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parser remark [PARSER-REMARK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parser remark [PARSER-REMARK-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports "remark" severity level parser diagnostics.
+
+Remarks indicate that something is valid and probably intended,
+but a careful programmer may want to check it.
+
+See also PARSER-WARNING
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+This rule reports various kinds of violations. Each kind is identified
+with a numeric ID.
+
+For example:
+  const static int x = 0; // Violation R-84: storage class is not first
+  void foo(int i) {
+    if (i); // Violation R-1815: empty dependent statement in if-statement
+  }
+
+The rule can be customized to disable or enable only some violations. 
+
+By default all possible violations are enabled.
+
+To disable violations with ID 84 and 225 use following properties file entry:
+PARSER-REMARK-config=-84,225
+
+The minus "-" at the beginning means "disable". Violation IDs are separated by
+a comma ",".
+
+To disable all violations except violation 225 and 1815 use following
+properties file entry:
+PARSER-REMARK-config=-*;+225,1815
+
+The asterisk "*" means "all IDs". The semicolon ";" is used to separate the
+"disable" group of IDs (the first group prefixed with a "-", consisting of "*")
+and the "enable" group of IDs (consisting of IDs 226 and 1815). So the above 
+can be read as "disable all; then enable 225, 1815".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Parse remarks can detect possible bugs. Writing code without parser remarks
+leads to a better and safer code.  
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Here is an example that will trigger a violation:
+
+const static int x = 0; // Violation R-84: storage class is not first
+void foo(int i) {
+    if (i); // Violation R-1815: empty dependent statement in if-statement
+}
+void bar() {
+    // Compilable in C mode:
+    undeclaredFunction(); // Violation R-225: function "undeclaredFunction" declared implicitly
+}
+
+</PRE>
+</BODY>
+</HTML>

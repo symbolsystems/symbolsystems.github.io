@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Function address should not be compared to zero [PB-63]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Function address should not be compared to zero [PB-63-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Comparing an address of a function to '0' typically indicates programmer
+error and can result in unexpected behavior.
+The address of a function should never be '0', so such a comparison
+always has a fixed result.
+
+This rule reports a violation if an address of a function is explicitly
+(in the equality or relational operator) or implicitly (used directly
+in the condition of a conditional operator) compared to '0' or 'NULL'
+(if 'NULL' is defined as '0' or '(cast)0'). 
+
+See also: MISRA2004-16_9
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The standard CERT allows to compare a function pointer to a null function
+pointer of the same type, but this rule does not have this exception.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents programming mistakes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define NULL (void*)0
+
+int f1();
+
+void foo() {
+    if ( f1 != 0 ) {     // Violation
+        //...
+    }
+
+    if ( f1 != NULL ) {  // Violation
+        //...
+    }
+    
+    if ( f1 ) {          // Violation
+        //...
+    }   
+
+    while (f1 &gt; 0) {     // Violation
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1();
+
+void foo() {
+    if ( f1() != 0 ) {     // OK
+        //...
+    } 
+
+    while (f1() &gt; 0) {     // OK
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   EXP16-C. Do not compare function pointers to constant values
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP16-C.+Do+not+compare+function+pointers+to+constant+values">https://wiki.sei.cmu.edu/confluence/display/c/EXP16-C.+Do+not+compare+function+pointers+to+constant+values</A>
+
+</PRE>
+</BODY>
+</HTML>

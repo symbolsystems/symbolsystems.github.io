@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An explicit or implicit enumerator value shall not be the result of a narrowing conversion [CODSTA-CPP-203]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An explicit or implicit enumerator value shall not be the result of a narrowing conversion [CODSTA-CPP-203-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+An explicit or implicit enumerator value shall not be the result of
+a narrowing conversion.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The C++ Standard states that any program that violates this requirement is
+ill-formed. However, it is known that some compilers do not issue
+a diagnostic.
+
+The rule does not detect cases in which the value is provided as expression:
+// unsigned char is assumed to be an 8-bit type here:
+enum class Enum : unsigned char
+{
+    // Value 256 is larger than the maximum value representable in
+    // unsigned char (255), but because it is specified as an expression
+    // the rule will not detect this case:
+    E1 = 255 + 1,
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// This code assumes char is 8 bit, and int is 32 bit
+enum class Enum1 : unsigned char
+{
+    E0,
+    E1 = 255,
+    E2                     // Violation
+};
+enum class Enum2 : int 
+{
+    E1 = 3333333333       // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// This code assumes short is 16 bits or more,
+// and long long is 64 bits or more
+enum class Enum1 : unsigned short
+{
+    E0,
+    E1 = 255,
+    E2                    // OK
+};
+
+enum class Enum2 : long long
+{
+    E1 = 3333333333       // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.2.1 An enumeration shall be defined with an explicit underlying type
+
+</PRE>
+</BODY>
+</HTML>

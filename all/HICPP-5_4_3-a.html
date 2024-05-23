@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Down casting (casting from base to derived class) shall not be allowed [HICPP-5_4_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Down casting (casting from base to derived class) shall not be allowed [HICPP-5_4_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Down casting (casting from base to derived class) shall only be allowed
+through one of the following mechanism:
+- Virtual functions that act like dynamic casts (most likely useful
+  in relatively simple cases)
+- Use of the visitor (or similar) pattern (most likely useful
+  in complicated cases)"
+Casting from a base class to a derived class is unsafe unless some mechanism
+is provided to ensure that the cast is legitimate."
+
+See also: OOP-28, OOP-29, OOP-49, OOP-50
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents illegal casts and ensures that abstraction layer is not bypassed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+    int foo( ) const;
+};
+
+class D : public B
+{
+public:
+    int foo( ) const;
+};
+ 
+void use(B const &amp; b){
+    D const *d = (D*) &amp;b;  // Violation	
+    d-&gt;foo();
+}
+
+int main( )
+{
+    D d;
+    use(d);
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+    virtual int foo( ) const = 0;
+};
+
+class D : public B
+{
+public:
+    virtual int foo( ) const;
+};
+ 
+void use(B const &amp; b){
+    b.foo();               // OK - virtual function is used
+}
+
+int main( )
+{
+    D d;
+    use(d);
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   5.4.3. Do not convert from a base class to a derived class
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 178
+
+</PRE>
+</BODY>
+</HTML>

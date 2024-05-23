@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All switch statements that do not intend to test for every enumeration value shall contain a final default clause [JSF-194]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All switch statements that do not intend to test for every enumeration value shall contain a final default clause [JSF-194-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All switch statements that do not intend to test for every enumeration value
+shall contain a final default clause." [JSF]
+
+This rule detects when the 'switch' statement does not contain the final
+'default' clause.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If the final default does not take appropriate action it's recommended
+to add a comment which explains why the final default can be empty.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"If the condition of a switch statement is of type enum, and all
+the enumerators are listed in case labels, then the default-clause
+is not required as the rules associated with enums are intended to
+ensure that the enum cannot be assigned values outside of its set
+of enumerators. Note that it may still be appropriate to include
+a default-clause for the purpose of defensive programming." [MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This Rule helps you to improve readability and maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Colours { RED, BLUE, GREEN } colour;
+
+void foo(int i)
+{
+    switch( i )              // Violation
+    {
+        case 0:
+            break;
+        case 1:
+        case 2:
+            break;
+    }
+
+    switch( colour )         // Violation
+    {
+        case RED:
+            break;
+        case GREEN:
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Colours { RED, BLUE, GREEN } colour;
+
+void foo(int i)
+{
+    switch( i )              // OK
+    {
+        case 0:
+            break;
+        case 1:
+        case 2:
+            break;
+        default:
+            // Suitable comment
+    }
+
+    switch( colour )         // OK
+    {
+        case RED:
+            break;
+        case BLUE:
+            break;
+        case GREEN:
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-4-3. A switch statement shall be a well-formed switch statement
+
+2. AUTOSAR C++14 Coding Guidelines
+   M6-4-6. The final clause of a switch statement shall be the default-clause
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 194
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 6, Rule 6-4-3
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 6, Rule 6-4-6
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A condition variable shall be associated with at most one mutex variable [MISRA2012-RULE-22_19]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A condition variable shall be associated with at most one mutex variable [MISRA2012-RULE-22_19-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"pthread_cond_wait() and pthread_cond_timedwait() take a condition variable
+and locked mutex as arguments. These functions unlock the mutex until
+the condition variable is signaled and then relock the mutex before returning.
+While a thread is waiting on a particular condition variable and mutex,
+other threads may only wait on the same condition variable if they also pass
+the same mutex as an argument." [CERT-POS53-C]
+
+The rule detects when different calls to:
+- cnd_wait() and/or cnd_timedwait(), or to
+- pthread_cond_wait() and/or pthread_cond_timedwait()
+take the same condition variable, but different mutexes as arguments.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyses calls to the cnd_wait(), cnd_timedwait(), pthread_cond_wait()
+and pthread_cond_timedwait() functions in files in a testing scope.
+As a result, the set of violations reported for the same file may vary,
+depending on the scope of analysis.
+
+The rule operates on all files in a testing scope. For this reason, it is
+important to use a testing scope that reflects the system architecture
+(e.g. it may be appropriate to define a testing scope that corresponds
+to a single complete linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behaviors when more than one mutex
+is used for concurrent operations of the following functions on the same
+condition variable:
+- cnd_wait() and/or cnd_timedwait(), or
+- pthread_cond_wait() and/or pthread_cond_timedwait().
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule checks only the calls to the cnd_wait(), cnd_timedwait(), 
+pthread_cond_wait() or pthread_cond_timedwait() function that take addresses
+of parameters, local variables or global variables as arguments.
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t m_mutex1;
+pthread_mutex_t m_mutex2;
+
+struct S {
+    pthread_cond_t m_cv1;
+}so;
+
+void foo1() {
+    pthread_cond_wait(&amp;so.m_cv1, &amp;m_mutex1);  // Violation not reported
+}
+
+void foo2() {
+    pthread_cond_wait(&amp;so.m_cv1, &amp;m_mutex2);  // Violation not reported
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t mutex1;
+pthread_mutex_t mutex2;
+
+pthread_cond_t cv;
+
+void foo1() {
+    pthread_cond_wait(&amp;cv, &amp;mutex1);  // Violation
+}
+
+void foo2() {
+    pthread_cond_wait(&amp;cv, &amp;mutex2);  // Violation - the same variable 'cv'
+}                                     // and different mutex 'mutex2'
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t mutex1;
+pthread_mutex_t mutex2;
+
+pthread_cond_t cv;
+
+void foo1() {
+    pthread_cond_wait(&amp;cv, &amp;mutex1);  // OK
+}
+
+void foo2() {
+    pthread_cond_wait(&amp;cv, &amp;mutex1);  // OK - the same variable 'cv'
+}                                     // and the same mutex 'mutex1'
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.14 Rule 22.19
+
+2. SEI CERT C Coding Standard
+   POS53-C. Do not use more than one mutex for concurrent waiting operations
+   on a condition variable
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS53-C.+Do+not+use+more+than+one+mutex+for+concurrent+waiting+operations+on+a+condition+variable">https://wiki.sei.cmu.edu/confluence/display/c/POS53-C.+Do+not+use+more+than+one+mutex+for+concurrent+waiting+operations+on+a+condition+variable</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Suspicious argument to malloc [PB-60]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Suspicious argument to malloc [PB-60-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if the following pattern was detected:
+    malloc( strlen(e + 1) )
+
+where 'e' is some expression. This code adds 1 to the string pointer and thus
+allocates one byte less than the string length. It is suspicious because it
+closely resembles the commonly used pattern:
+    malloc( strlen(e) + 1 )
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If you really intended to use the first pattern then an equivalent expression
+(assuming e is not a zero-length string) that will not cause this violation is:
+   malloc( strlen(e) - 1 )
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents memory problems caused by allocating not enough memory.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void foo(const char a[], int i){
+    int* ptr1 = (int*)malloc(strlen(a + 1));     // Violation
+    int* ptr2 = (int*)malloc(strlen("str" + 1)); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void foo(const char a[], int i){
+    int* ptr1 = (int*)(malloc(strlen(a) - 1));     // OK
+    int* ptr2 = (int*)malloc(strlen("str") + 1);  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

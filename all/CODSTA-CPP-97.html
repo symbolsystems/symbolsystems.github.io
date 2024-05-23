@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Never qualify a reference type with 'const' or 'volatile' [CODSTA-CPP-97]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Never qualify a reference type with 'const' or 'volatile' [CODSTA-CPP-97-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C++ prohibits or ignores the cv-qualification of a reference type.
+Only a value of non-reference type may be cv-qualified.
+C++ does not allow you to change the value of a reference type, effectively
+treating all references as being const qualified." [CERT-DCL52-CPP]
+
+"Cv-qualified references are ill-formed except when the cv-qualifiers
+are introduced through the use of a typedef-name or decltype-specifier,
+in which case the cv-qualifiers are ignored." [ISO/IEC 14882:2014]
+
+This rule detects when a reference type is qualified with 'const'
+or 'volatile'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+"A const or volatile reference type may result in undefined behavior instead
+of a fatal diagnostic, causing unexpected values to be stored and leading
+to possible data integrity violations." [CERT-DCL52-CPP]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(char c) {
+  char &amp;const p = c;          // Violation
+  // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(char c) {
+  char &amp;p = c;                // OK
+  // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Programming languages -- C++ ISO/IEC 14882:2014
+   8.3.2 References
+
+2. SEI CERT C++ Coding Standard
+   DCL52-CPP. Never qualify a reference type with const or volatile
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL52-CPP.+Never+qualify+a+reference+type+with+const+or+volatile">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL52-CPP.+Never+qualify+a+reference+type+with+const+or+volatile</A>
+
+</PRE>
+</BODY>
+</HTML>

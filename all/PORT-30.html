@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not throw an exception across execution boundaries [PORT-30]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not throw an exception across execution boundaries [PORT-30-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Throw an exception across an execution boundary only when both sides of
+the execution boundary use the same ABI for exception handling."
+[CERT-ERR59-CPP]
+
+"An execution boundary is the delimitation between code compiled by differing
+compilers. . . For instance, a function may be declared in a header file but
+defined in a library that is loaded at runtime. The execution boundary exists
+between the call site in the executable and the function implementation in
+the library. Such boundaries are also called ABI." [CERT-ERR59-CPP]
+
+If your application calls a function that is defined in an external library,
+the library and the application may be compiled with different compilers.
+
+This rule detects when the 'try' block contains a call to a function that can
+throw exceptions and is defined in an external library.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a function is defined in a library that can be
+compiled with a different compiler than the application is compiled with
+when a) the function is declared in a header outside of the testing project
+and b) the definition of the function is not available in the translation unit
+that contains a call to this function.
+
+This rule should only be applied when both sides of the execution boundary
+use different ABI for exception handling.
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent abnormal program execution when the library
+and the application adhere to different ABIs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// lib.h
+void foo() throw(int);
+
+// file.cpp
+#include "lib.h"
+
+void goo() {
+    try {
+        foo();                       // Violation
+    } catch (int &amp;e) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// lib.h
+int foo() throw();
+
+// file.cpp
+#include "lib.h"
+
+void goo() {
+    int ret = foo();                 // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-1-5. Exceptions shall not be thrown across execution boundaries
+
+2. SEI CERT C++ Coding Standard
+   Do not throw an exception across execution boundaries
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR59-CPP.+Do+not+throw+an+exception+across+execution+boundaries">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR59-CPP.+Do+not+throw+an+exception+across+execution+boundaries</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare the type of a parameter as an rvalue reference to 'std::shared_ptr' or 'std::unique_ptr' [AUTOSAR-A8_4_13-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare the type of a parameter as an rvalue reference to 'std::shared_ptr' or 'std::unique_ptr' [AUTOSAR-A8_4_13-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A std::unique_ptr shall be passed to a function as:
+ (1) a copy to express the function assumes ownership
+ (2) an lvalue reference to express that the function replaces the managed
+     object." [AUTOSAR A8-4-12]
+
+"A std::shared_ptr shall be passed to a function as:
+ (1) a copy to express the function shares ownership
+ (2) an lvalue reference to express that the function replaces the managed
+     object
+ (3) a const lvalue reference to express that the function retains
+     a reference count." [AUTOSAR A8-4-13]
+
+This rule detects when the type of a function parameter is an rvalue reference
+to the 'std::unique_ptr' or 'std::shared_ptr' type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"It is allowed to transfer ownership by passing a 'std::unique_ptr' by an rvalue
+reference in case this reference is moved into a 'std::unique_ptr' object inside
+the called function." [AUTOSAR A8-4-12]
+
+The rule does not trigger when the argument whose type is an rvalue reference to
+'std::unique_ptr' is used as an argument in a call to the 'std::move' function.
+
+#include &lt;memory&gt;
+
+void foo(std::unique_ptr&lt;int&gt;&amp;&amp; rval) {             // OK - Exception
+    std::unique_ptr&lt;int&gt; v(std::move(rval));
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve clarity and readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the function parameters types are an rvalue reference
+to 'std::unique_ptr' and an rvalue reference to 'std::shared_ptr'.
+
+#include &lt;memory&gt;
+
+void foo(std::shared_ptr&lt;int&gt;&amp;&amp; rval) {             // Violation
+};
+
+void bar(std::unique_ptr&lt;int&gt;&amp;&amp; rval) {             // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by replacing the rvalue references to smart pointers
+with raw pointers.
+
+void foo(int* p) {                                 // OK
+};
+
+void bar(int* p) {                                 // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-12 A std::unique_ptr shall be passed to a function as:
+   (1) a copy to express the function assumes ownership
+   (2) an lvalue reference to express that the function replaces the managed object.
+
+2. AUTOSAR C++14 Coding Guidelines
+   A8-4-13 A std::shared_ptr shall be passed to a function as:
+   (1) a copy to express the function shares ownership
+   (2) an lvalue reference to express that the function replaces the managed object
+   (3) a const lvalue reference to express that the function retains a reference count.
+
+</PRE>
+</BODY>
+</HTML>

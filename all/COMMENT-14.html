@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All declarations of types, data members, and functions should be preceded by a comment annotated with the '@brief' tag [COMMENT-14]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All declarations of types, data members, and functions should be preceded by a comment annotated with the '@brief' tag [COMMENT-14-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All declarations of 'user-defined' types, static and non-static data members,
+functions and methods shall be preceded by documentation." [AUTOSAR-A2-7-3]
+
+"Every declaration needs to provide a proper documentation. This is compatible
+with the C++ standard library documentation. This forces a programmer to
+provide a clarification for defined types and its data members
+responsibilities, methods and functions usage. . . " [AUTOSAR-A2-7-3]
+
+The rule detects when a user-defined type, a data member, or a function is not
+preceded by a comment that contains the '@brief' tag.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C                          // Violation
+{
+public:
+    int member;                  // Violation
+};
+
+void foo(int arg);               // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding a comment that contains the '@brief' tag before
+the declarations.
+
+// @brief description of class C
+class C                          // OK
+{
+public:
+    // @brief description of variable m
+    int m;                       // OK
+};
+
+// @brief description of a function foo
+void foo(int arg);               // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-7-3 All declarations of "user-defined" types, static and non-static data
+   members, functions and methods shall be preceded by documentation.
+
+</PRE>
+</BODY>
+</HTML>

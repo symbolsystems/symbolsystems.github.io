@@ -1,0 +1,254 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always close transactions [BD-MISC-TRANS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always close transactions [BD-MISC-TRANS-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when a transaction associated with a given transaction
+object is not closed.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+This rule must be parameterized before it is used. Complete the 'Functions that start a transaction'
+and 'Functions that terminate a transaction' tables.
+
+The following columns allow you to define different aspects of functions:
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard) or namespace (wildcard)' should be used to provide the fully qualified name of the type or namespace
+  where the function is declared. Use '*' if you want to describe a function declared in any type or namespace,
+  or a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' column should contain the name of the described function.
+
+* The '+ definitions in subclasses' column is used to indicate whether the current entry will apply
+  to functions with the given name defined in subclasses of the given class.
+  Note that this applies to both instance and non-instance functions.
+
+* The ''this' object is a transaction object' column is used to specify that the function opens a transaction
+  on the object it is called on. For example, after the call transaction-&gt;open(); the 'transaction' is an open
+  transaction that has to be properly closed.
+
+* The 'Returns transaction object' column is used to specify that the function returns a transaction object.
+
+* The 'Transaction parameters' should be completed with numbers that identify
+  the function parameters (1-based) that are transaction objects.
+  For example, this should be set to "2" if the function designates its second parameter as a transaction object.
+  Use '*' to specify that all parameters are transaction objects.
+
+A step-by-step example of how to correctly perform parameterization is provided in
+the 'EXAMPLE' section of this help page.
+
+SPECIFYING THE APPROACH TO REPORTING VIOLATIONS AT APPLICATION TERMINATION
+
+The "Assume third-party functions could store transaction objects" parameter
+allows you to specify that third-party functions are assumed to be able to store
+transation objects.
+
+The "Do not report unclosed transactions at application termination" parameter
+specifies whether violations will be reported on unclosed transaction when
+application terminates. If you select this checkbox, unclosed transactions
+will no be reported at application termination.
+This parameter is disabled by default, because because it is generally recommended
+to close the transaction manually.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives being reported. In this mode, Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+enabled.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Transactions that are not closed may cause undefined and unpredictable behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Example#1(C-style parameterization):
+Consider the following parameterization of the rule:
+- Functions that start a transaction:
+
+	'Enabled' = true
+	'Fully qualified type name or namespace (wildcard)' = *
+	'Function name (wildcard)' = start
+	'+ definitions in subclasses' = false
+	''this' object is a transaction object' = false
+	'Returns transaction object' =  true
+	'Transaction parameters' = 
+
+- Functions that terminate a transaction:
+
+	'Enabled' = true
+	'Fully qualified type name or namespace (wildcard)' = *
+	'Function name (wildcard)' = terminate
+	'+ definitions in subclasses' = false
+	''this' object is a transaction object' = false
+	'Transaction parameters' = 1
+	
+If the rule is parametrized as above, if detects a violation on the following
+sample code:
+
+void* start();
+
+void terminate(void* a);
+
+static void notClosedTransaction() {
+    void* transaction;
+    transaction = start();
+} // VIOLATION
+
+
+Example#2(C++-style parameterization):
+Consider the following parameterization of the rule:
+- Functions that start a transaction:
+
+	'Enabled' = true
+	'Fully qualified type name or namespace (wildcard)' = mySpace::MyTransaction
+	'Function name (wildcard)' = start
+	'+ definitions in subclasses' = false
+	''this' object is a transaction object' = true
+	'Returns transaction object' =  false
+	'Transaction parameters' = 
+
+- Functions that terminate a transaction:
+
+	'Enabled' = true
+	'Fully qualified type name or namespace (wildcard)' = mySpace::MyTransaction
+	'Function name (wildcard)' = terminate
+	'+ definitions in subclasses' = false
+	''this' object is a transaction object' = true
+	'Transaction parameters' = 
+
+	'Enabled' = true
+	'Fully qualified type name or namespace (wildcard)' = mySpace::MyTransaction
+	'Function name (wildcard)' = terminateTransaction
+	'+ definitions in subclasses' = false
+	''this' object is a transaction object' = false
+	'Transaction parameters' = 1
+
+Consider the following sample code:
+
+namespace mySpace {
+    class MyTransaction
+    {
+        public:
+            void start();
+            void terminate();
+            static void terminateTransaction(MyTransaction* p)
+            {
+            };
+    };
+}
+
+static void transactionUse()
+{
+    mySpace::MyTransaction* t = new mySpace::MyTransaction();
+    t-&gt;start();
+} // 't' is not terminated
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+For Example#1:
+By adding a call of a terminating function, we repair the code so that
+it does not trigger a violation:
+
+void* start();
+
+void terminate(void* a);
+
+static void notClosedTransaction() {
+    void* transaction;
+    transaction = start();
+    terminate(transaction);
+} // NO VIOLATION
+
+
+For  Example#2:
+By adding a call of a terminating function, we repair the code so that
+it does not trigger a violation:
+
+namespace mySpace {
+    class MyTransaction
+    {
+        public:
+            void start();
+            void terminate();
+            static void terminateTransaction(MyTransaction* p)
+            {
+            };
+    };
+}
+
+static void transactionUse()
+{
+    mySpace::MyTransaction* t = new mySpace::MyTransaction();
+    t-&gt;start();
+    t-&gt;terminate(); // mySpace::MyTransaction::terminateTransaction(t); may be used as well
+}
+
+</PRE>
+</BODY>
+</HTML>

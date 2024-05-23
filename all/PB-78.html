@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use intmax_t or uintmax_t for formatted IO on programmer-defined integer types [PB-78]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use intmax_t or uintmax_t for formatted IO on programmer-defined integer types [PB-78-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A programmer-defined integer type might be any type supported
+by the implementation, even a type larger than unsigned long long . . . 
+Furthermore, the definition of programmer-defined types may change,
+which creates a problem when these types are used with formatted
+output functions, such as printf(), and formatted input functions,
+such as scanf().
+
+The C intmax_t and uintmax_t types can represent any value representable
+by any other integer types of the same signedness. This capability allows
+conversion between programmer-defined integer types of the same signedness
+and intmax_t and uintmax_t.
+Formatted I/O functions can be used to input and output greatest-width
+integer typed values. The 'j' length modifier in a format string indicates
+that the following 'd', 'i', 'o', 'u', 'x', 'X', or 'n' conversion specifier
+will apply to an argument with type intmax_t or uintmax_t." [CERT INT15-C]
+
+This rule detects when a programmer-defined integer type that is not based
+on the standard types (signed or unsigned) char, short, int, long, and
+long long is passed to the printf() or scanf() family of functions as
+an argument to the '%i', '%d', and '%u' specifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+When a programmer-defined type is cast to 'intmax_t' or 'uintmax_t'
+in an I/O function call, this rule does not check if signedness is valid,
+but requires that the 'j' length modifier be used for the appropriate
+specifier.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent failures in use of an appropriate conversion
+specifier when inputting or outputting programmer-defined integer types
+which can result in buffer overflow and lost or misinterpreted data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+typedef __int128_t type_int_128;
+
+type_int_128 gi128;
+
+void foo()
+{
+    printf("Value of gi128=%lli.", gi128);                  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by adding a cast to the 'intmax_t' or 'uintmax_t' type
+and the 'j' length modifier for the appropriate specifier.
+
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+typedef __int128_t type_int_128;
+
+type_int_128 gi128;
+
+void foo()
+{
+    printf("Value of gi128=%ji.", (intmax_t) gi128);        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   INT15-C. Use intmax_t or uintmax_t for formatted IO on programmer-defined
+   integer types
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT15-C.+Use+intmax_t+or+uintmax_t+for+formatted+IO+on+programmer-defined+integer+types">https://wiki.sei.cmu.edu/confluence/display/c/INT15-C.+Use+intmax_t+or+uintmax_t+for+formatted+IO+on+programmer-defined+integer+types</A>
+
+</PRE>
+</BODY>
+</HTML>

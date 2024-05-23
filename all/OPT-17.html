@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid inline constructors and destructors [OPT-17]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid inline constructors and destructors [OPT-17-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Functions which invoke other inline functions often become too complex for the
+compiler to be able to make them inline despite their apparent smallness.
+This problem is especially common with constructors and destructors.
+A constructor always invokes the constructors of its base classes and member 
+data before executing its own code."
+Rule disallows inlining for constructors and destructors.
+See also: OPT-16, OPT-18
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Inline destructors defined in interfaces are allowed.
+By interface class is meant class which has no member variables
+and all member functions (except for destructor) are pure virtual.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"This facilitates debugging and binary upgradeability, minimizes potential
+code bloat, and maximizes the chances of greater program speed."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class MyClass1 {
+public:
+    inline MyClass1( );    // Violation
+    inline ~MyClass1( );   // Violation
+private:
+    int i;
+};
+
+class MyClass2 {
+public:
+    MyClass2( ) {};        // Violation
+    ~MyClass2( ) {};       // Violation
+private:
+    int i;
+};
+
+class MyClass3 {
+public:
+    MyClass3( );           // Violation
+    ~MyClass3( );          // Violation
+private:
+    int i;
+};
+
+inline MyClass3::MyClass3(){}
+inline MyClass3::~MyClass3(){}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class MyClass1 {
+public:
+    MyClass1( );    // OK
+    ~MyClass1( );   // OK
+private:
+    int i;
+};
+
+MyClass1::MyClass1(){}
+MyClass1::~MyClass1(){}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc., Chapter 5, Item 30
+
+2. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison Wesley,
+   (C) 2005 Pearson Education, Inc.,
+   Chapter: "Classes and Functions: Implementation", Item 33
+
+3. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 7 Classes - 7.2 Inline Functions - Rec. 31
+
+</PRE>
+</BODY>
+</HTML>

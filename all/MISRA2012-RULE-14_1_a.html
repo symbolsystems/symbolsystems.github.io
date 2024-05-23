@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A loop counter in a 'for' loop shall not have essentially floating type [MISRA2012-RULE-14_1_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A loop counter in a 'for' loop shall not have essentially floating type [MISRA2012-RULE-14_1_a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A loop counter shall not have essentially floating type."
+[MISRA C:2012 Rule 14.1]
+
+"A loop counter is defined as an object, array element or member of 
+a structure or union which satisfies the following:
+
+1. It has a scalar type;
+
+2. Its value varies monotonically on each iteration of a given instance of 
+   a loop; and
+
+3. It is involved in a decision to exit the loop." [MISRA C:2012 Section 8.14]
+
+This rule detects cases when a floating point loop counter is used in a 'for'
+loop.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a loop counter is an object, an array element or a member
+of a structure that is used in a condition and modified inside the third clause 
+of a 'for' statement. 
+
+The rule assumes that an object is modified if:
+- it is used as the left hand operand of the assignment operators
+- it is used as the operand of the increment or decrement operators
+- it is passed to the function as a reference to a non-const object
+- its address is passed to the function as a pointer to a non-const object
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"When using a floating-point loop counter, accumulation of rounding errors may
+result in a mismatch between the expected and actual number of iterations. 
+This can happen when a loop step that is not a power of the floating-point
+radix is rounded to a value that can be represented." [MISRA C:2012 Rule 14.1]
+
+"Even if a loop with a floating-point loop counter appears to behave correctly
+on one implementation, it may give a different number of iterations on another
+implementation." [MISRA C:2012 Rule 14.1]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void canModifyObject(double* pf);
+
+void foo()
+{
+    float vf;
+    for (vf = 0.0f; vf &lt; 1.0f; vf += 0.01f);       /* Violation */
+
+    double vd = 10.0f;
+    /* 'vd' can be modified in the function 'canModifyObject' */
+    for(; vd &gt; 1.0f; canModifyObject( &amp;vd )) { }   /* Violation */
+
+    float farr[] = { 0.1f, 0.2f, 0.3f };
+    for(farr[0] = 0; farr[0] &lt; 1; farr[0]++);      /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Do not use loop counters with essentially floating type */
+
+/* Examples of correct code */
+void foo()
+{
+    float f = 0.0f; 
+    int counter;
+    for (counter = 0;  counter &lt; 128; counter++)    /* OK */
+    {
+        f = (float)counter + f;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 14.1
+   Section 8: Rules, 8.14: Control statement expressions
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Type casting from any type to or from pointers shall not be used [CODSTA-135]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Type casting from any type to or from pointers shall not be used [CODSTA-135-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Type casting from any type to or from pointers shall not be used.
+This type of casting can lead to undefined or implementation-defined behavior
+(e.g. certain aspects of memory alignments are implementation-defined).
+Furthermore, converting a pointer to an integral type can result in the loss
+of information if the pointer can represent values larger than the integral
+type to which it is converted." [JOINT STRIKE FIGHTER, Rule 182]
+
+See also: CODSTA-CPP-09, CODSTA-CPP-34, MISRA2004-11_3, OPT-29, OOP-20
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. "Exception 1: Casting from void* to T* is permissible. In this case,
+   static_cast should be used, but only if it is known that the object really
+   is a T. Furthermore, such code should only occur in low level memory
+   management routines." [JOINT STRIKE FIGHTER, Rule 182]
+
+The rule does not report a violation if static_cast from void* to "T*" is used.
+Any such cast is allowed, rule does not check if the object really is a T.
+
+2. "Exception 2: Conversion of literals (i.e. hardware addresses) to pointers."
+   [JOINT STRIKE FIGHTER, Rule 182]
+
+The rule does not report violation if integer literal is cast to a pointer type.
+
+3. The rule does not report violation on a dynamic_cast. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined and implementation-defined behaviors
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int* PINT;
+void foo1(int i1, char* cp1) {
+    int* pi1 = (int*)i1;                         // Violation
+    PINT pi2 = reinterpret_cast&lt;PINT&gt;(cp1);      // Violation
+    int i2 = reinterpret_cast&lt;int&gt;(cp1);         // Violation
+    void* vptr = static_cast&lt;void*&gt;(pi1);        // Violation
+}
+
+struct P { virtual ~P(); };
+struct C : public P {};
+void foo2(void* vptr, P* p) {
+    int* p1 = static_cast&lt;int*&gt;(vptr);        // OK - Exception 1
+    int* p2 = reinterpret_cast&lt;int*&gt;(0xA34);  // OK - Exception 2
+    C* c = dynamic_cast&lt;C*&gt;(p);               // OK - Exception 3
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not cast from any type to or from pointers.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 182
+
+</PRE>
+</BODY>
+</HTML>

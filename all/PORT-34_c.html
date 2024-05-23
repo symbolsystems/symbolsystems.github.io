@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-specified C++ internal identifiers declared in the same scope should differ in the first 64 characters [PORT-34_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-specified C++ internal identifiers declared in the same scope should differ in the first 64 characters [PORT-34_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"User-specified identifiers (internal and external) will not rely
+on significance of more than 64 characters." [JSF]
+
+This rule detects when two internal identifiers have the same first 64
+characters in their names and are declared or defined in the same scope
+(class, struct, union, or function).
+
+The rule checks the following internal identifiers:
+- variables and functions with no linkage
+- function parameters
+- labels
+- classes, structures, unions, typedefs, enums, and enumeration constants
+  that are defined in a local scope
+- template parameters and template parameter constants
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report identifiers with identical names.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1(int NE_4567890123456789012345678901234567890123456789012345678901234_v1) {
+    int NE_4567890123456789012345678901234567890123456789012345678901234_v2;       // Violation
+}
+
+struct S1 {
+    int NS_4567890123456789012345678901234567890123456789012345678901234_v1;
+    int NS_4567890123456789012345678901234567890123456789012345678901234_v2;       // Violation
+};
+
+struct S2 {
+    int NM_4567890123456789012345678901234567890123456789012345678901234_v1;
+    void f1();
+};
+
+void S2::f1() {
+    int NM_4567890123456789012345678901234567890123456789012345678901234_v2;        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by modifying the names of identifiers.
+
+void f1(int NE_4567890123456789012345678901234567890123456789012345678901234_v1) {
+    int NE_456789012345678901234567890123456789012345678901234567890123_v2;         // OK
+}
+
+struct S1 {
+    int NS_4567890123456789012345678901234567890123456789012345678901234_v1;
+    int NS_456789012345678901234567890123456789012345678901234567890123;            // OK
+};
+
+struct S2 {
+    int NM_4567890123456789012345678901234567890123456789012345678901234_v1;
+    void f1();
+};
+
+void S2::f1() {
+    int NL_4567890123456789012345678901234567890123456789012345678901234_v2;        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 46
+
+</PRE>
+</BODY>
+</HTML>

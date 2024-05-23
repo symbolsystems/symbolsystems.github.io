@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Destructor shall have a non-empty body [MISRACPP2023-15_0_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Destructor shall have a non-empty body [MISRACPP2023-15_0_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a user destructor is defined, then it should contain any statements
+that will allow for managing resources. If a resource management in
+a class is not required, then the destructor should be declared as default.
+
+This rule detects when the user-defined destructor does not contain
+any statements other than compound statements and null statements.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+  ~C()                       // Violation
+  {
+  }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of correct code
+
+class C1
+{
+public:
+  ~C1() = default;           // OK
+};
+
+class C2
+{
+public:
+  ~C2() = delete;            // OK
+};
+
+class C3
+{
+public:
+  ~C3()                      // OK
+  {
+    if (ptr) delete ptr;
+  }
+private:
+  int *ptr;
+};
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.0.1 Special member functions shall be provided appropriately
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make class members' initialization explicit by providing user-defined constructor [INIT-07]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make class members' initialization explicit by providing user-defined constructor [INIT-07-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule verifies that class type variables are properly initialized 
+by checking if user-defined constructor is provided. If you do not write 
+at least one constructor in a class, the compiler will write a public 
+constructor for you by default. 
+This rule detects if you do not define at least one constructor.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks only classes containing at least one non-static member 
+variable that is not initialized directly.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If you follow this rule, you will make class initialization explicit and 
+prevent the compiler from initializing members improperly, especially 
+pointer members.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+    public:
+        static int s;
+        int a;
+};
+int main() 
+{
+    A a;     // Violation
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+    public:
+        A() : a(0) { }
+    private:
+        static int s;
+        int a;
+};
+
+// Examples not reported by the rule
+class B
+{
+    private:
+        static int s;
+        int b = 0;          // C++11
+};
+
+int main() 
+{
+    A a;   // OK
+    B b;   // OK
+    return 0;
+} 
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

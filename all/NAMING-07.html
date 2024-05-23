@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Begin member variable names with a lowercase letters [NAMING-07]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Begin member variable names with a lowercase letters [NAMING-07-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Member variable names shall be in proper lowercase.
+This rule checks only first character of the identifier and reports a violation
+if the character is not a lowercase letter (a-z).
+ 
+By standardizing the appearance of variables, 
+the programmer will be able to more easily differentiate 
+user-defined variables from constants.
+
+See also: NAMING-05, NAMING-06, NAMING-34, NAMING-35
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Joint Strike Fighter coding standard allows uppercase letters in acronyms.
+For example:
+  int RGB_value;   // OK if "RGB" is an acronym
+  int UTF8;        // OK if "UTF8" is an acronym
+The acronym should be separated from the rest of the identifier with
+an underscore. For example:
+  int RGBvalue;    // Violation even if RGB is an acronym
+
+To support this exception set CPPTEST_JSF_ACRONYMS environment variable to the
+path to a text file containing whitespace-separated list of words. Each word
+is recognized as an acronym. Example content of the file:
+   RGB
+   UTF8
+
+If the CPPTEST_JSF_ACRONYMS is not set or the file could not be opened, the rule
+works as if there were no acronyms at all. Opening file errors are silently
+ignored.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+    int Count;    // Violation
+    int _number;  // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {
+    int count;     // OK
+    int aNumber;   // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 5 Assigning Names - Rule 13
+
+</PRE>
+</BODY>
+</HTML>

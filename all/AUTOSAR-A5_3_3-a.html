@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not delete objects with incomplete class at the point of deletion [AUTOSAR-A5_3_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not delete objects with incomplete class at the point of deletion [AUTOSAR-A5_3_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If the object being deleted has incomplete class type at the point of deletion
+and the complete class has a non-trivial destructor or a deallocation function,
+the behavior is undefined.
+
+For example in some implementations neither the destructor nor the
+class-specific operator delete will be called, even if they are declared when
+the class is defined.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule reports violation even if class has no non-trivial destructor or a
+deallocation function.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+For templates rule checks only if type is complete at the end of translation
+unit - a violation is reported if only forward declaration is provided.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class X;
+struct Y;
+void foo(X *x, Y* y) {
+    delete x; // Violation - incomplete class at point of deletion
+    delete y; // Violation - incomplete class at point of deletion
+}
+struct Y {};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Make sure that deleted objects have complete class before the deletion
+class X {};
+struct Y {};
+void foo(X *x, Y* y) {
+    delete x; // OK
+    delete y; // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-3-3. Pointers to incomplete class types shall not be deleted
+
+2. C++ standard (ISO/IEC 14882:2003)
+   Section 5.3.5 Delete, point 5
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.5 A pointer to an incomplete class type shall not be deleted
+
+4. SEI CERT C++ Coding Standard
+   EXP57-CPP. Do not cast or delete pointers to incomplete classes
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP57-CPP.+Do+not+cast+or+delete+pointers+to+incomplete+classes">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP57-CPP.+Do+not+cast+or+delete+pointers+to+incomplete+classes</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast pointers into more strictly aligned pointer types [CODSTA-230]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast pointers into more strictly aligned pointer types [CODSTA-230-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to an object or incomplete type may be converted to a pointer to
+a different object or incomplete type. If the resulting pointer is not
+correctly aligned for the referenced type, the behavior is undefined."
+[ISO/IEC 9899:2011]
+
+This rule detects when a pointer to an object type is cast to a pointer to
+an object type which can be more strictly aligned.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule allows the following casts:
+- from or to pointers to the 'void' type,
+- to pointers to the 'char' type,
+- between pointers to compatible types,
+- between pointers to 'signed' and 'unsigned' versions of compatible
+  types,
+- between pointers to qualified or unqualified versions of compatible
+  types.
+It assumes that the above cases do not cause conversions to more strictly
+aligned types.
+
+This rule takes into account the 'alignas' attribute when the address of
+an object is cast to the pointer type, for example:
+
+void func() {
+    alignas(int) char c = 'x';
+    int *ip = (int *)&amp;c;        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If the misaligned pointer is dereferenced, the program may terminate
+abnormally. On some architectures, the cast alone may cause a loss of
+information even if the value is not dereferenced if the types involved have
+differing alignment requirements." [CERT-EXP36-C]
+
+This rule helps you avoid undefined and implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void func()
+{
+    char c = 'x';
+    int *ip = (int *)&amp;c;        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void func()
+{
+    char c = 'x';
+    int i = c;
+    int *ip = &amp;i;               // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   EXP36-C. Do not cast pointers into more strictly aligned pointer types
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP36-C.+Do+not+cast+pointers+into+more+strictly+aligned+pointer+types">https://wiki.sei.cmu.edu/confluence/display/c/EXP36-C.+Do+not+cast+pointers+into+more+strictly+aligned+pointer+types</A>
+
+2. ISO/IEC 9899:2011
+   6.3.2.3, "Pointers"
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The increment (++) and decrement (--) operators should not be mixed with arithmetic operators in an expression [CODSTA-232]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The increment (++) and decrement (--) operators should not be mixed with arithmetic operators in an expression [CODSTA-232-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of increment and decrement operators in combination with other
+arithmetic operators is not recommended, because:
+ - It can significantly impair the readability of the code.
+ - It introduces additional side effects into a statement, with the potential
+   for undefined behaviour." [MISRA C++:2008]
+
+This rule detects when an increment or decrement operator is used as the operand
+of another arithmetic operator.
+
+The following built-in and user-defined operators are detected as arithmetic
+operators:
+- unary +, -, ~,
+- binary +, -, *, /, %, &amp;, |, ^ and their compound versions
+- binary &lt;&lt; and &gt;&gt; except stream insertion and stream extraction overloads
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(int x, int y)
+{
+    x = 1 + y++;           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(int x, int y)
+{
+    y++;                  // OK
+    x = 1 + y;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-2-10. The increment (++) and decrement (--) operators shall not be mixed
+   with other operators in an expression
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-2-10
+
+</PRE>
+</BODY>
+</HTML>

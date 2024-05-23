@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no unused named parameters in virtual functions [OPT-42]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no unused named parameters in virtual functions [OPT-42-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Unused named parameters are often a result of a design changes
+and can lead to mismatched parameter lists." [AUTOSAR A0-1-5]
+
+For this reason, it is recommended that you remove unused parameters
+from a virtual function or leave them unnamed.
+
+This rule detects when a named parameter of a virtual member function
+is never used inside the body of that function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report parameters captured by lambda expressions.
+It assumes that lambdas use every parameter they capture.
+The rule does not report parameters from template functions that
+contain assembler code.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and increase code efficiency.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+    virtual int f1(int x, int y) = 0;
+    virtual int f2(int x, int y) = 0;
+};
+
+class C2 : public C1 {
+public:
+    virtual int f1(int x, int y) {  // Violation
+        return x;
+    }
+    virtual int f2(int x, int y) {  // Violation
+        return y;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, remove the unused parameter or skip the name of the unused
+parameter.
+
+class C1 {
+public:
+    virtual int f1(int x) = 0;
+    virtual int f2(int x, int y) = 0;
+};
+
+class C2 : public C1 {
+public:
+    virtual int f1(int x) {               // OK
+        return x;
+    }
+    virtual int f2(int /* x */, int y) {  // OK
+        return y;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A0-1-5. There shall be no unused named parameters in the set of parameters
+   for a virtual function and all the functions that override it.
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 0.2.2 A named function parameter shall be used at least once
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Integral promotion and the usual arithmetic conversions shall not change the signedness or the type category of an operand [CODSTA-310]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Integral promotion and the usual arithmetic conversions shall not change the signedness or the type category of an operand [CODSTA-310-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when integral promotion or the usual arithmetic
+conversions change the signedness or the type category of an operand.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule can be applied both to C and C++, but it is primarily meant for C++
+and the violations reported by it on the C code, while correct, might be
+considered unreasonably strict.
+As discussed by MISRA C++:2023, section 4.7.0.1, this rule is stricter
+than the related guidelines in MISRA C, because:
+"1. C++ allows function overloading, and knowing which overload is selected
+by overload resolution requires a clear understanding of a sub-expression’s
+type.
+2. C++ allows the definition of user-defined types that wrap and mimic numeric
+types. In addition to the benefits of strong typing, such types can be written
+in a way that prevents dangerous, implicit conversions. These types can be
+used when arithmetic with small types is required in a program, meaning that
+the built-in type rules can be very strict without harming the expressivity
+of the developer." [MISRA C++:2023]
+
+The rule uses the term 'type category' as defined by MISRA C++:2023,
+section 4.7.0.2. For example, an unscoped enumeration with a fixed underlying
+type is considered equivalent to the underlying type of the enumeration.
+
+The rule applies to all expressions (including sub-expressions) of numeric
+(integral or floating) types.
+
+A mismatch between the source type and the target type of an assignment
+(as defined by MISRA C++:2023, section 4.7.0.2) is not considered a conversion
+by this rule; these cases are checked by CODSTA-312 instead.
+
+For the usual arithmetic conversions, only the final type of an operand
+is considered. For example, when adding an unsigned char and an unsigned int,
+the unsigned char operand is first converted to signed int and then to
+unsigned int; it is the final unsigned int that is considered by this rule
+and therefore such an operation is not a violation.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+* This rule does not apply to the integral promotion of the operand to the
+increment or decrement operators.
+* Integral promotions are not reported on the operands to the relational
+operators if both operands have the same type, as no risk is associated
+with such constructs.
+* A compile-time constant with signed integral type that has a non-negative
+value may be converted to an unsigned type through the usual arithmetic
+conversions.
+* A compile-time constant with integral type may be converted to a floating
+type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected behavior caused by the converted type
+having potentially different signedness than the operands.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+uint8_t u8a, u8b;
+uint32_t u32;
+int32_t s32;
+float f32;
+
+void f() {
+  u8a + u8b;   // Violation - u8a and u8b are converted to signed int
+  u8a += u8b;  // Violation - same as u8a + u8b
+  s32 &gt; u32;   // Violation - s32 is converted to unsigned int
+  f32 += u32;  // Violation - u32 is converted to float
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+uint8_t u8a, u8b;
+uint32_t u32;
+int32_t s32;
+float f32;
+
+void f() {
+  static_cast&lt;uint32_t&gt;( u8a ) + u8b;  // OK - u8b is converted to unsigned int
+  u8a += static_cast&lt;uint32_t&gt;( u8b ); // OK
+  static_cast&lt;int64_t&gt;( s32 ) &gt; static_cast&lt;int64_t&gt;( u32 ); // OK
+  f32 += static_cast&lt;float&gt;( u32 );    // OK
+  
+  // These examples are compliant with CODSTA-310, but violate other rules:
+  u32 &gt; 'a';    // Not in the scope of this rule
+  s32 == false; // Not in the scope of this rule
+  u32 = s32;    // Not in the scope of this rule
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.5 Integral promotion and the usual arithmetic conversions shall not change the signedness or the type category of an operand
+
+</PRE>
+</BODY>
+</HTML>

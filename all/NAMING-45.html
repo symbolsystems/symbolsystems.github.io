@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers will not differ by mixture of case, the underscore character, interchange of the similarly looking letters and numbers [NAMING-45]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers will not differ by mixture of case, the underscore character, interchange of the similarly looking letters and numbers [NAMING-45-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if two identifiers differ only in:
+- a mixture of case, or
+- the presence/absence of the underscore character, or
+- the interchange of the letter 'O', with the number '0' or the letter 'D', or
+- the interchange of the letter 'I', with the number '1' or the letter 'l', or
+- the interchange of the letter 'S' with the number '5', or
+- the interchange of the letter 'Z' with the number '2', or
+- the interchange of the letter 'n' with the letter 'h'.
+
+Identifiers are compared if:
+- they are declared in nested scopes
+- both are visible in the same scope
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violation is reported only if the difference between identifiers is related
+to only one category of differences specified in Description. For example:
+
+   // difference in one category: mixture of case
+   FOO, foo     // Violation
+
+   // difference in two categories: mixture of case and presence/absence
+   // of underscore character
+   BAR, bar_    // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves the readability of code.
+
+
+Drawbacks
+
+1. "using" directive is not supported. For example:
+  namespace N {
+    void foo();
+  }
+  namespace M {
+    // no violation is reported even though both FOO and foo are visible here
+    void FOO();
+    using N::foo; // "using" not supported
+  }
+
+2. Identifiers declared in template functions are not checked
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void FOO();     // Violation - similar to 'foo'
+int foo;        // Violation - similar to 'FOO' and 'foo_'
+namespace N {
+    void foo_();// Violation - similar to 'foo'
+}
+
+class A {
+public:
+    void mf();
+private:
+    int mem1;   // Violation - similar to 'meml' declared in member function
+};
+
+void A::mf() {
+    int meml;   // Violation - similar to 'mem1' declared in class
+}
+
+// We treat members of derived classes as declared in a scope "nested" in scope
+// of base class:
+class Base {
+    void IdZ();  // Violation - similar to 'Id2'
+};
+class Derived : public Base {
+    void Id2();  // Violation - similar to 'IdZ'
+};
+
+// Because identifiers from base class are visible in derived classes, they
+// are treated as implicitly declared in scope of derived class:
+struct AnotherBase {
+    int x;       // Violation - similar to 'x_'
+};
+namespace M {
+    int x_;      // Violation - similar to 'x'
+    struct AnotherDerived : public AnotherBase {
+        void method() {
+            // x can be used here
+        }
+    };
+}
+
+// Order of declarations is not checked - here 'Y' is declared in "outer" scope
+// and 'y' is declared in "nested" scope:
+void N2fun() {
+    int y;           // Violation
+}
+int Y;               // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void FOO2();     // OK - difference in more than one category with 'fooZ'
+int fooZ;        // OK - difference in more than one category 'FOO2'
+
+class A {
+public:
+    void mf1();
+    void mf2();
+};
+
+void A::mf1() {
+    int mem1;    // OK - 'meml' is declared in separated scope (not nested)
+}
+
+void A::mf2() {
+    int meml;    // OK - 'mem1' is declared in separated scope (not nested)
+}
+
+void fun() {
+    int VAR;
+    {
+        int VAR; // OK - identifiers are the same, one hides the other
+    }
+}
+
+namespace N1 {
+    class Id2{}; // OK - 'IdZ' is declared in separated scope
+}
+
+namespace N2 {   // OK - 'Id2' is declared in separated scope
+    int IdZ;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 48
+
+</PRE>
+</BODY>
+</HTML>

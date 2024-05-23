@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A typedef should be used in place of the plain char type [CODSTA-223_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A typedef should be used in place of the plain char type [CODSTA-223_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the plain 'char' (not explicitly declared as
+'signed' or 'unsigned') type is used in the code.
+
+The signedness of the plain 'char' type is implementation-defined.
+The 'char' type declared explicitly as 'signed' or 'unsigned' should
+be used for numeric data and plain 'char' should be used for character data.
+
+Using defined typedefs for 'char' types allows the user to determine exactly
+what the type's meaning is.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule allows:
+- the use of plain 'char' as a parameter type of the 'main' function
+- to declare typedefs for the 'plain' char types
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability of the code and prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static char a;                      // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef char char_t;                // OK
+static char_t a;                    // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A3-9-1. Fixed width integer types from &lt;cstdint&gt;, indicating the size and
+   signedness, shall be used in place of the basic numerical types
+
+</PRE>
+</BODY>
+</HTML>

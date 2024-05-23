@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid function calls with incorrect argument order [PB-62]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid function calls with incorrect argument order [PB-62-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects function calls that pass arguments in the incorrect order.
+The rule reports a violation if the names of two arguments and their
+corresponding parameters are reversed. This case is suspicious and may be
+caused by incorrect order of arguments in a function call. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents mistakes. If an argument in a function call
+is passed to the wrong parameter, then it may lead to incorrect behavior.
+This problem typically occurs when the programmer makes a typo or a copy/paste
+error.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(int* first, int* second) {}
+
+void foo_use(){
+    int* first;
+    int* second;
+
+    // The names of parameters and arguments suggest the reverse
+    // order of arguments in the function call
+    foo1(second, first); // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(int* first, int* second) {}
+
+void foo_use(){
+    int* first;
+    int* second;
+    
+    foo1(first, second);  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-683: Function Call With Incorrect Order of Arguments
+   <A HREF="http://cwe.mitre.org/data/definitions/683.html">http://cwe.mitre.org/data/definitions/683.html</A>
+
+</PRE>
+</BODY>
+</HTML>

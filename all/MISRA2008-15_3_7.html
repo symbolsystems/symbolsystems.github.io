@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Where multiple handlers are provided in a single try-catch statement or function-try-block, any ellipsis (catch-all) handler shall occur last [MISRA2008-15_3_7]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Where multiple handlers are provided in a single try-catch statement or function-try-block, any ellipsis (catch-all) handler shall occur last [MISRA2008-15_3_7-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the catch-all handler is found before any other handler, that behaviour
+will be performed. Any handlers after the catch-all are unreachable code
+and can never be executed." [MISRA C++:2008, Rule 15-3-7]
+
+The catch-all clause 'catch (...)' matches exceptions of any type. If present,
+it has to be the last catch clause in a sequence of handlers.
+If the 'catch (...)' clause is not the last exception handler, most compilers
+report an error.
+
+This rule detects when a catch-all handler is not the last handler in a handler
+sequence used in a 'try-catch' statement or a 'function-try-block'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you identify unreachable code and ensure that all handlers are
+executed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'catch (...)' clause is not the last
+handler in the 'try-catch' statement.
+
+void foo() {
+    try {
+    } catch (...) {                        // Violation
+    } catch (int e) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by moving the catch-all handler to the last position
+in the sequence of handlers.
+
+void foo() {
+    try {
+    } catch (int e) {
+    } catch (...) {                        // OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M15-3-7 Where multiple handlers are provided in a single try-catch statement
+   or function-try-block, any ellipsis (catch-all) handler shall occur last.
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-3-7
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 0.0.1 A function shall not contain unreachable statements
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers declared in the same block scope and name space shall be distinct (c90) [CODSTA-179_b_c90]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers declared in the same block scope and name space shall be distinct (c90) [CODSTA-179_b_c90-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Identifiers declared in the same scope and name space shall be distinct.
+The definition of distinct depends on the implementation and on the version
+of the C language that is being used. In C90 the minimum requirement is that
+the first 31 characters are significant." [MISRA C:2012 Rule 5.2]
+
+This rule detects cases when identifiers declared in the same block scope
+and name space have the same first 31 characters of their names.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Long identifiers may impair the readability of code. While many automatic code
+generation systems produce long identifiers, there is a good argument for
+keeping identifier lengths well below this limit." [MISRA C:2012 Rule 5.2]
+
+"There are separate name spaces for various categories of identifiers,
+ as follows:
+- label names (disambiguated by the syntax of the label declaration and use);
+- the tags of structures, unions, and enumerations (disambiguated by following
+  any) of the keywords struct, union, or enum);
+- the members of structures or unions; each structure or union has a separate
+  name space for its members (disambiguated by the type of the expression used
+  to access the member via the . or -&gt; operator);
+- all other identifiers, called ordinary identifiers (declared in ordinary
+  declarators or as enumeration constants)." [ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"This rule does not apply if both identifiers are external identifiers
+because this case is covered by Rule 5.1.
+This rule does not apply if either identifier is a macro identifier because
+this case is covered by Rule 5.4 and Rule 5.5." [MISRA C:2012 Rule 5.2]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If two identifiers differ only in non-significant characters, the behaviour is
+undefined. If portability is a concern, it would be prudent to apply this rule
+using the minimum limits specified in The Standard." [MISRA C:2012 Rule 5.2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( int ID1________identifier_number_01_0 )
+{
+    int ID1________identifier_number_01_1;          /* Violation */
+    int ID1________identifier_number_01_2;          /* Violation */
+
+    struct ID2________identifier_number_01_1
+    {
+        int m1;
+    };
+
+    union ID2________identifier_number_01_2         /* Violation */
+    {
+        int  ID3________identifier_number_01_1;
+        char ID3________identifier_number_01_2;     /* Violation */
+    };
+
+    enum
+    {
+        ID4________identifier_number_01_1
+    }ID4________identifier_number_01_2;             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by this rule */
+
+void foo( void )
+{
+    /* Identifiers differ in the first 31 characters */
+    int ID1________identifier_number_01_1;          /* OK */
+    int ID2________identifier_number_01_1;          /* OK */
+
+    /* Identifiers are in different name spaces */
+    struct ID3________identifier_number_01_1        /* OK */
+    {
+        int ID3________identifier_number_01_2;      /* OK */
+    } ID3________identifier_number_01_3;            /* OK */
+
+    /* Identifiers are in different scopes */
+    int ID4________identifier_number_01_1;          /* OK */
+    {
+        int ID4________identifier_number_01_2;      /* OK */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.2
+
+</PRE>
+</BODY>
+</HTML>

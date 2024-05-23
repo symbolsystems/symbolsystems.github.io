@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no white spaces between the 'return' statement or the 'sizeof' operator and the following opening parenthesis [FORMAT-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no white spaces between the 'return' statement or the 'sizeof' operator and the following opening parenthesis [FORMAT-23-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects white spaces between the 'return' statement or the 'sizeof'
+operator and its operand enclosed in parentheses. For the 'return' statement,
+this is checked only if the whole operand is in parentheses.
+
+See also: FORMAT-24, FORMAT-25
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following white spaces are detected: spaces, tabs, new-line characters,
+and comments.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int f1(int x)
+{
+   sizeof (int);    // Violation
+   return (x + 1);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1(int x)
+{
+   sizeof(int);     // OK
+   return(x + 1);   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

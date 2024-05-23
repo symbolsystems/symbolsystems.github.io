@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The pointers returned by the Standard Library functions 'localeconv', 'getenv', 'setlocale' or, 'strerror' shall only be used as if they have pointer to const-qualified type [MISRACPP2023-25_5_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The pointers returned by the Standard Library functions 'localeconv', 'getenv', 'setlocale' or, 'strerror' shall only be used as if they have pointer to const-qualified type [MISRACPP2023-25_5_2-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'localeconv' function returns a pointer of type 'struct lconv*'. This
+pointer shall be regarded as if it had type 'const struct lconv*'.
+A 'struct lconv' object includes pointers of type 'char*' and the 'getenv', 
+'setlocale', and 'strerror' functions each return a pointer of type 'char*'.
+These pointers are used to access strings (null terminated arrays of type char).
+For the purpose of this rule, these pointers shall be regarded as if they had
+type 'const char*'
+
+The Standard states that undefined behaviour occurs if a program modifies:
+- The structure pointed to by the value returned by 'localeconv';
+- The strings returned by 'getenv', 'setlocale' or 'strerror'.
+
+The Standard does not specify the behaviour that results if the strings
+referenced by the structure pointed to by the value returned by 'localeconv'
+are modified. This rule prohibits any changes to these strings as they are 
+considered to be undesirable." [MISRA C:2012 Amendment 1 Rule 21.19]
+
+This rule detects the following cases:
+- the pointers returned by the functions 'localeconv', 'getenv', 'setlocale'
+or 'strerror' are assigned to pointers to non-const-qualified types,
+- the members of the structure 'lconv' referenced by the function 'localeconv'
+are assigned to pointers to non-const-qualified types. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"If a modified version is required, a program should make and modify a copy
+of any value covered by this rule." [MISRA C:2012 Amendment 1 Rule 21.19]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Treating the pointers returned by the various functions as if they were 
+const-qualified allows an analysis tool to detect any attempt to modify an
+object through one of the pointers. Additionally, assigning the return values
+of the functions to const-qualified pointers will result in the compiler 
+issuing a diagnostic if an attempt is made to modify an object."
+[MISRA C:2012 Amendment 1 Rule 21.19]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;locale.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;stdlib.h&gt;
+
+void getString(char* c1);
+
+char* foo(char* s1) {
+    struct lconv* conv = localeconv();     /* Violation */
+    char* c = localeconv()-&gt;decimal_point; /* Violation */
+    s1 = setlocale(LC_ALL, 0);             /* Violation */
+    getString(getenv("PATH"));             /* Violation */
+    return strerror(1);                    /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;locale.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;stdlib.h&gt;
+
+void getString(const char* c1);
+
+const char* foo(const char* s1) {
+    const struct lconv* conv = localeconv();     /* OK */
+    const char* c = localeconv()-&gt;decimal_point; /* OK */
+    s1 = setlocale(LC_ALL, 0);                   /* OK */
+    getString(getenv("PATH"));                   /* OK */
+    return strerror(1);                          /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 25.5.2 The pointers returned by the C++ Standard Library functions localeconv, getenv, setlocale or strerror must only be used as if they have pointer to const-qualified type
+
+2. MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+   Section 2: New rules, Rule 21.19
+
+3. SEI CERT C Coding Standard
+   ENV30-C. Do not modify the object referenced by the return value of certain
+   functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ENV30-C.+Do+not+modify+the+object+referenced+by+the+return+value+of+certain+functions">https://wiki.sei.cmu.edu/confluence/display/c/ENV30-C.+Do+not+modify+the+object+referenced+by+the+return+value+of+certain+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

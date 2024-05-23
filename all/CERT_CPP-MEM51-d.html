@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Properly deallocate dynamically allocated resources [CERT_CPP-MEM51-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Properly deallocate dynamically allocated resources [CERT_CPP-MEM51-d-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Plain and array forms of new and delete expressions must not be mixed.
+If an array was allocated using a new expression, then an array delete
+expression must be used to deallocate it and vice versa."
+[AUTOSAR A18-5-3]
+
+Resources should be deallocated with a corresponding deallocation
+function.
+This rule detects when a dynamically allocated resource is improperly
+deallocated. 
+
+The following list includes allocators and their corresponding dellocation
+functions the rule assumes to be correct:
+    * operator new() / new - operator delete() / delete
+    * operator new[]() / new[] - operator delete[]() / delete[]
+    * std::malloc() - std::free()
+    * std::calloc() - std::free()
+    * std::realloc() - std::free()
+    * std::aligned_alloc() - std::free()
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Passing a pointer value to an inappropriate deallocation function can result
+in undefined behavior". [CERT-MEM51-CPP]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+#include &lt;iostream&gt;
+
+void example() {
+    int *array = new int[10];
+    delete array;             // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+#include &lt;iostream&gt;
+
+void example() {
+    int *array = new int[10];
+    delete[] array;           // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+MEM51-CPP. Properly deallocate dynamically allocated resources
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM51-CPP.+Properly+deallocate+dynamically+allocated+resources">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM51-CPP.+Properly+deallocate+dynamically+allocated+resources</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A18-5-3 The form of the delete expression shall match the form of the new expression used to allocate the memory.
+
+High Integrity C++ Coding Standard
+5.3.3 Ensure that the form of delete matches the form of new used to allocate the memory
+
+</PRE>
+</BODY>
+</HTML>

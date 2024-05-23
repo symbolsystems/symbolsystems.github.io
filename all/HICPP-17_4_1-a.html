@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use const container calls when the result is immediately converted to a const iterator [HICPP-17_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use const container calls when the result is immediately converted to a const iterator [HICPP-17_4_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The Standard Template Library introduced methods for returning const iterators
+to containers. Making a call to these methods and immediately assigning
+the value they return to a const_iterator, removes implicit conversions."
+[AUTOSAR A23-0-1]
+
+The rule detects when a begin(), end(), rbegin(), or rend() method is called
+on an STL container and returns a non-const iterator which is immediately
+converted to a const_iterator. A call to cbegin(), cend(), crbegin(), or cend()
+method should be used instead.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not trigger if the conversion is performed by explicitly calling
+a cast operator.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The 2011 C++ Language Standard introduced named accessors for returning const
+iterators. Using these members removes an implicit conversion from 'iterator'
+to 'const iterator'.
+
+Another benefit is that the declaration of the iterator object can then
+be changed to use 'auto' without the danger of affecting program semantics."
+[High Integrity C++ Coding Standard]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;vector&gt;
+
+void f(std::vector&lt;int32_t&gt; &amp;v) {
+    // Non-Compliant
+    for (std::vector&lt;int32_t&gt;::const_iterator iter = v.begin(), // Violation
+         end = v.end();                                         // Violation
+         iter != end; ++iter) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, call the cbegin() and cend() methods instead of begin() and
+end(), respectively.
+
+#include &lt;cstdint&gt;
+#include &lt;vector&gt;
+
+void f(std::vector&lt;int32_t&gt; &amp;v) {
+    for (std::vector&lt;int32_t&gt;::const_iterator iter = v.cbegin(), // OK
+         end = v.cend();                                         // OK
+         iter != end; ++iter) {
+    }
+
+    for (auto iter = v.cbegin(), end = v.cend(); // OK and arguably better
+         iter != end; ++iter) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A23-0-1. An iterator shall not be implicitly converted to const_iterator
+
+2. High Integrity C++ Coding Standard
+   17.4.1. Use const container calls when result is immediately converted to a
+   const iterator
+
+</PRE>
+</BODY>
+</HTML>

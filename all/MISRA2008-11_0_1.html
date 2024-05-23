@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Member data in non-POD class types shall be private [MISRA2008-11_0_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Member data in non-POD class types shall be private [MISRA2008-11_0_1-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"By implementing class interfaces with member functions, the implementation
+retains more control over how the object state can be modified, and helps
+to allow a class to be maintained without affecting clients." [MISRA C++:2008]
+
+This rule detects public and protected data members that are declared
+in non-POD classes, structures or unions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+POD is an abbreviation for Plain Old Data.
+
+A class, struct, or union is a non-POD type if it meets at least one of the 
+following conditions:
+- it is not an aggregate,
+- it has a non-static member with a non-POD type (or an array of non-POD
+  elements),
+- it has a non-static member with type reference,
+- it has a user-declared copy assignment operator,
+- it has a user-declared destructor.
+
+A class, struct, or union is an aggregate if it meets all the following conditions:
+- it has no user-declared constructors,
+- it has no private or protected non-static data members,
+- it has no base classes,
+- it has no virtual functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unauthorized access and modifications of data
+members.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    int m1;        // Violation
+protected:
+    int m2;        // Violation
+};
+
+struct S
+{
+    S();
+    int m1;        // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    C();
+    int accessM1();
+    int accessM2();
+private:
+    int m1;        // OK
+    int m2;        // OK
+};
+
+struct S           // S is POD type
+{
+    int m1;        // OK
+    int m2;        // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M11-0-1. Member data in non-POD class types shall be private
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 11, Rule 11-0-1
+
+</PRE>
+</BODY>
+</HTML>

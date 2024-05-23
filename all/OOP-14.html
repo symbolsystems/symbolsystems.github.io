@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Consider use composition instead of private inheritance [OOP-14]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Consider use composition instead of private inheritance [OOP-14-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Use composition whenever you can, and use private inheritance whenever
+you must."
+
+"Private inheritance is most likely to be a legitimate design strategy when
+you're dealing with two classes not related by is-a where one either needs
+access to the protected members of another or needs to redefine one or more
+of its virtual functions. Even in that case, we've seen that a mixture
+of public inheritance and containment can often yield the behavior you want,
+albeit with greater design complexity. Using private inheritance judiciously
+means employing it when, having considered all the alternatives, it's the best
+way to express the relationship between two classes in your software."
+
+The rule reports a violation on a private inheritance. The user should decide
+himself whether to use a composition instead of private inheritance.
+
+See also: OOP-37
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Unlike composition, private inheritance can enable the empty base optimization.
+This can be important for library developers who strive to minimize object sizes."
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report a violation on a private inheritance from class that
+has no data in it. Such class has no non-static data members, no virtual
+functions and no virtual base classes
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"There are two reasons why you might prefer public inheritance plus
+composition over private inheritance. First, you might want to design class
+to allow for derived classes, but you might also want to prevent derived
+classes from redefining virtual functions. Second, you might want to minimize
+class's compilation dependencies."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    Base();
+    virtual void f1();
+};
+
+class Derived : private Base {  // Violation
+private:
+    virtual void f1();
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    Base();
+    virtual void f1();
+};
+
+class Derived{                   // OK
+private:
+    class DBase : public Base {  // OK
+        virtual void f1();
+    };
+
+    DBase db;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+Your Programs and Design", Third Edition, Addison-Wesley, 
+(C) 2005 Pearson Education, Inc., Chapter 6, Item 39
+
+</PRE>
+</BODY>
+</HTML>

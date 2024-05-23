@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Wrap functions that can fail spuriously in a loop [CERT_C-CON41-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Wrap functions that can fail spuriously in a loop [CERT_C-CON41-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A weak compare-and-exchange operation may fail spuriously. That is, even when
+the contents of memory referred to by 'expected' and 'object' are equal, it may
+return false and store back to 'expected' the same memory contents that were
+originally there. Note: This spurious failure enables implementation of
+compare-and-exchange on a broader class of machines, e.g., load-locked
+store-conditional machines. A consequence of spurious failure is that nearly
+all uses of weak compare-and-exchange will be in a loop." [ISO/IEC 9899:2011]
+
+This rule detects when one of the following functions is called outside of any
+loop (while, do-while, for): atomic_compare_exchange_weak(),
+atomic_compare_exchange_weak_explicit().
+
+The rule does not verify if a loop contains a correct condition.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"When a compare-and-exchange is in a loop, the weak version will yield better
+performance on some platforms. When a weak compare-and-exchange would require
+a loop and a strong one would not, the strong one is preferable."
+[ISO/IEC 9899:2011]
+
+#include &lt;stdatomic.h&gt;
+#include &lt;stdbool.h&gt;
+
+struct data {
+  struct data *next;
+  // ...
+};
+
+extern void cleanup(struct data *head);
+
+int foo(void *p_thread) {
+  struct data *_Atomic *p_head = p_thread;
+  struct data *old = atomic_load(p_head);
+  struct data *new;
+  bool status;
+
+  status = atomic_compare_exchange_strong(p_head, &amp;old, new);      // OK
+  if (!status) {
+    cleanup(new);
+  }
+  return status;
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Failing to wrap the atomic_compare_exchange_weak()
+and atomic_compare_exchange_weak_explicit() functions
+in a loop can result in incorrect values and control flow." [CERT-CON41-C]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+#include &lt;stdbool.h&gt;
+
+struct data {
+  struct data *next;
+  // ...
+};
+
+extern void cleanup(struct data *head);
+
+int foo(void *p_thread) {
+  struct data *_Atomic *p_head = p_thread;
+  struct data *old = atomic_load(p_head);
+  struct data *new;
+  bool status;
+
+  status = atomic_compare_exchange_weak(p_head, &amp;old, new);        // Violation
+  if (!status) {
+    cleanup(new);
+  }
+  return status;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+#include &lt;stdbool.h&gt;
+
+struct data {
+  struct data *next;
+  // ...
+};
+
+extern void cleanup(struct data *head);
+
+int foo(void *p_thread) {
+  struct data *_Atomic *p_head = p_thread;
+  struct data *old = atomic_load(p_head);
+  struct data *new;
+  bool status;
+
+  do {
+    cleanup(new);
+    status = atomic_compare_exchange_weak(p_head, &amp;old, new);      // OK
+  } while (!status);
+  return status;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   CON41-C. Wrap functions that can fail spuriously in a loop
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON41-C.+Wrap+functions+that+can+fail+spuriously+in+a+loop">https://wiki.sei.cmu.edu/confluence/display/c/CON41-C.+Wrap+functions+that+can+fail+spuriously+in+a+loop</A>
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.17.7.4 The atomic_compare_exchange generic functions
+
+</PRE>
+</BODY>
+</HTML>

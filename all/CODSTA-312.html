@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assignment between numeric types shall be appropriate [CODSTA-312]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assignment between numeric types shall be appropriate [CODSTA-312-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when an assignment between numeric types does not implement
+any of the following requirements:
+* Its source and target have the same type category, signedness and size; or
+* Its source and target have the same type category and signedness, the size
+  of the source type is smaller than the size of the target type, and the source
+  is an id-expression; or
+* Its source is a floating-point constant expression and the target is
+  a floating-point type larger than the source type; or
+* Its source is an integer constant expression and the target is either:
+  * Any numeric type with a range large enough to represent the value,
+    even if the value is not exactly representable (e.g. when assigning an int
+    to a float, the value might be representable with precision loss); or
+  * A bit-field whose value representation width and signedness are capable
+    of representing the value.
+
+"The following constructs are treated as assignments:
+* Assigning a value using the assignment operator; and
+* Initializing a variable, including within a lambda capture; and
+* Passing a function parameter by value, including passing a default value
+  for a function argument and passing a parameter to a function that is called
+  implicitly (such as the call to a constructor, to overloaded operators,
+  to operator() of closure types, ...); and
+* Returning a value from a function by value; and
+* Using a value in a switch statement’s case label (source expression), where
+  the target type is given by the adjusted type of the condition.
+Compound assignments are not 'assignments'."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule uses the term 'type category' as defined by MISRA C++:2023,
+section 4.7.0.2. For example, an unscoped enumeration with a fixed underlying
+type is considered equivalent to the underlying type of the enumeration.
+
+The rule applies to all assignments where both the source type and the target type
+are numeric (integral or floating) types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected information loss, change of signedness,
+implementation-defined behaviour or undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+uint8_t u8;
+uint32_t u32;
+int32_t s32;
+float flt;
+
+int32_t f(int32_t arg) {
+  u8 = u32;             // Violation - assignment from larger to smaller type
+  u32 = s32;            // Violation - assignment changes signedness
+  flt = s32;            // Violation - assignment changes type category
+  u8 = 1000000000;      // Violation - assignment of a value that does not fit
+  float flt = s32;      // Violation - initialization is considered as assignment
+  f(u8);                // Violation - function call is considered as assignment
+  return u8;            // Violation - return by value is considered as assignment
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+uint8_t u8;
+uint32_t u32;
+int32_t s32;
+float flt;
+
+int32_t f(int32_t arg) {
+  u32 = u8;             // OK - assignment from smaller to larger type and source
+                        // is an id-expression
+  long double ld = 1.0; // OK - assignment from a floating-point constant to a larger
+                        // floating-point type
+  flt = 1;              // OK - assignment from an integral constant to a numeric 
+                        // type large enough to represent the value
+  u8 = 255;             // OK - assignment from an integral constant to a numeric 
+                        // type large enough to represent the value
+  return 255 * 255;     // OK - assignment from an integral constant expression to
+                        // a numeric type large enough to represent the value
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.6 Assignment between numeric types shall be appropriate 
+
+</PRE>
+</BODY>
+</HTML>

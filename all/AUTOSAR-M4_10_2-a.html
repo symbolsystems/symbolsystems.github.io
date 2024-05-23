@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Literal zero (0) shall not be used as the null-pointer-constant [AUTOSAR-M4_10_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Literal zero (0) shall not be used as the null-pointer-constant [AUTOSAR-M4_10_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The literal 0 is both an integer type and the null-pointer-constant.
+To meet developer expectations, NULL should be used as the
+null-pointer-constant, and 0 for the integer zero." [MISRA C++:2008 Rule 4-10-2]
+
+"An integer constant expression with the value 0 shall be derived from expansion
+of the macro NULL if it appears in any of the following contexts:
+  - As the value being assigned to a pointer;
+  - As an operand of an == or != operator whose other operand is a pointer;
+  - As the second operand of a ?: operator whose third operand is a pointer;
+  - As the third operand of a ?: operator whose second operand is a pointer."
+[MISRA C:2012 Rule 11.9]
+
+This rule reports a violation if a literal 0 is used as null pointer constant
+directly, instead of using NULL or "(void*)0". Please see Notes section for 
+details.
+
+See also: CODSTA-131
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The rule detects non-compliant code by comparing preprocessed code with
+original source code. It compares locations of all literal 0 appearing in
+preprocessed code with locations of literal 0 and "NULL" tokens found in
+original source code. For example:
+    #define NULL 0
+    void foo( int *, int, int * ) {
+      foo( NULL, NULL, 0 ); /* Violation - line 3 */
+      foo( NULL, 0, NULL ); /* OK        - line 4 */
+    }
+By parsing preprocessed code the rule detects that literal 0 is used in line 3
+and that 1st and 3rd occurrence is passed to a pointer. By checking the
+original source code it notices that in line 3 there is following pattern:
+(NULL, NULL, 0). First element on this list is NULL which is correct, but the
+3rd is literal 0 which is invalid and a violation is reported.
+
+The use of macros can limit precision of the results. See Drawbacks section for
+details.
+
+2. "A null pointer constant of the form (void *)0 is permitted, whether or not
+it was expanded from NULL.
+The use of the macro NULL provided by the implementation is always permitted,
+even if it expands to an integer constant expression with value 0."
+[MISRA C:2012 Rule 11.9]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using NULL rather than 0 makes it clear that a null pointer constant
+was intended." [MISRA C:2012 Rule 11.9]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The use of macros can limit precision of results:
+    #define CALL_ZERO(x) x(0)
+    void foo ( int * ) {
+        /* No violation is reported because the in preprocessed code this line
+         * contains one 0 and in original source code it does not */
+        CALL_ZERO(foo);
+    }
+
+2. Integer constants expressions are not supported - no violation will be
+reported. For example:
+    void f1 ( int * p ) {
+        p = 1 - 1;  /* No violation reported */
+    }
+
+3. Object initialization is not supported - no violation will be reported.
+For example:
+    struct S {
+        int *p;
+    };
+    void f1 ( void ) {
+        struct S p = { 0 }; /* Not reported */
+    }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define MY_NULL 0
+#define CALL_FUNC(x) ( getptr( ( x ) ) )
+void getptr ( int * );
+
+int* foo ( int* p1 )
+{
+  int* v1 = 0;                      /* Violation */
+  if ( 0 == v1 );                   /* Violation */
+  CALL_FUNC( 0 );                   /* Violation */
+
+  /* Literal 0 is used as 2nd or 3rd operand of "?:" and the other operand
+   * has pointer type */
+  p1 ? 0 : p1;                      /* Violation */
+
+  return 0;                         /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define NULL 0
+#define CALL_FUNC(x) ( getptr( ( x ) ))
+void getptr ( int* );
+
+int* foo1 ( int* p1 )
+{
+  int* v1 = NULL;                   /* Compliant */
+  if ( ( void* ) 0 == v1 );         /* Compliant */
+  CALL_FUNC( NULL );                /* Compliant */
+  p1 ? ( void* ) 0 : p1;            /* Compliant */
+  return NULL;                      /* Compliant */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M4-10-2. Literal zero (0) shall not be used as the null-pointer-constant
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 4, Rule 4-10-2
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.9
+
+</PRE>
+</BODY>
+</HTML>

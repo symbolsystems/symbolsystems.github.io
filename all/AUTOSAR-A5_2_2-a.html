@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+C-style casts should not be used [AUTOSAR-A5_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+C-style casts should not be used [AUTOSAR-A5_2_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C-style casts are more dangerous than the C++ named conversion operators.
+The C-style casts are difficult to locate in large programs and the intent of
+the conversion is not explicit. Thus, C++ introduces casts (const_cast,
+dynamic_cast, reinterpret_cast, and static_cast) that address these problems.
+These casts are not only easy to identify, but they also explicitly communicate
+the developer’s intent for applying a cast." [AUTOSAR A5-2-2]
+
+This rule detects explicit C-style casts using cast notation or functional
+notation (except constructor calls).
+
+See also: CODSTA-CPP-66
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you to replace C-style casts with new C++ casts, which can be
+used for more restricted purposes and are easier for automatic tools and for
+humans to locate.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(){
+    int i, j;
+    double d = (double)i/j;            // Violation
+}
+
+class Base {
+    Base( );
+    virtual ~Base( );
+};
+class Derived : public Base {};
+
+void foo2(){
+    Base* b;
+    Derived* d;
+    d = (Derived*)b;                   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(){
+    int i, j;
+    double d = static_cast&lt;double&gt;(i)/j;     // OK
+}
+
+class Base {
+    Base( );
+    virtual ~Base( );
+};
+class Derived : public Base {};
+
+void foo2(){
+    Base* b;
+    Derived* d;
+    d = dynamic_cast&lt;Derived*&gt;(b);           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-2-2. Traditional C-style casts shall not be used
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Type Safety", Rule 95
+
+3. High Integrity C++ Coding Standard
+   5.4.1. Only use casting forms: static cast (excl. void*), dynamic cast or
+   explicit constructor call
+
+4. Scott Meyers, "More Effective C++: 35 New Ways to Improve
+   Your Programs and Designs", Addison-Wesley, Copyright 1996,
+   Chapter: "Basics", Item 2
+
+</PRE>
+</BODY>
+</HTML>

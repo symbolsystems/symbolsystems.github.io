@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Objects shall be defined at block scope if they are only accessed from within a single function [MISRA2004-8_7]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Objects shall be defined at block scope if they are only accessed from within a single function [MISRA2004-8_7-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Declaring an object at block scope reduces the possibility that the object
+might be accessed inadvertently and makes clear the intention that it should
+not be accessed elsewhere.
+Within a function, whether objects are declared at the outermost or innermost
+block is largely a matter of style." [MISRA C:2012 Rule 8.9 with Amendment 4]
+
+This rule detects when a global variable with internal linkage is only used
+inside a single function in a translation unit.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not apply to const variables of POD-type declared in header
+files.
+This rule does not detect variables that are not used at all.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule might report false positive violations when a const or constexpr
+variable is used as a template argument.
+
+template &lt;int C&gt; class AT { };
+
+static constexpr int LOC1 = 10U;  // false positive
+
+void f1()
+{
+    int x1 = LOC1;
+}
+
+void f2()
+{
+    AT&lt;LOC1&gt; var1;
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static int max = 10;        // Violation
+void foo( ) {
+    while(max &gt;= 0) {
+        max--;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( ) {
+    int max = 10;           // OK
+    while(max &gt;= 0) {
+        max--;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 136
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.9
+
+3. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 3.1.5 Rule 8.9
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8
+
+</PRE>
+</BODY>
+</HTML>

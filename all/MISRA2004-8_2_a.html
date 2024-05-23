@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Whenever a function is declared or defined, its type shall be explicitly stated [MISRA2004-8_2_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Whenever a function is declared or defined, its type shall be explicitly stated [MISRA2004-8_2_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If return types are not explicitly declared, functions will implicitly receive 
+int as the return type. However, the compiler will still generate a warning
+for a missing return type. To avoid confusion, functions that do not return
+a value should specify void as the return type. This rule detects if you do not
+explicitly declare return types in functions. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+foo1( void );        /* Violation */
+static foo2( void ); /* Violation */
+const foo3( void );  /* Violation */
+
+foo4(int i){         /* Violation */
+    return i;
+}
+
+foo5(int i){         /* Violation */
+    return;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo1( void );        /* OK */
+static int foo2( void ); /* OK */
+const int foo3( void );  /* OK */
+
+int foo4(int i){         /* OK */
+    return i;
+}
+
+void foo5(int i){        /* OK */
+    return;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8
+
+2. Misra Guidelines - Rule 75
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.1
+
+4. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 6 Style - 6.2 Functions - Rec. 20
+   From: 9 Functions - 9.4 Return types and Values - Rule. 33
+
+</PRE>
+</BODY>
+</HTML>

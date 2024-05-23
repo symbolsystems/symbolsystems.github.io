@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate potentially tainted data before it is used in the controlling expression of a loop [BD-SECURITY-TDLOOP]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate potentially tainted data before it is used in the controlling expression of a loop [BD-SECURITY-TDLOOP-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when potentially tainted data is used in a loop condition.
+
+The rule must be parameterized to specify the sources of potentially tainted
+data and the methods that validate the data (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2022.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Using unvalidated data in a loop condition can lead to denial of service or other
+consequences of excessive looping. 
+ 
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+
+The "Validating functions" parameter allows you to specify functions that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating functions is called. 
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the validating function. If disabled, the rule
+    does not consider the function to be a validating function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to function with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance functions.
+- "'this' object is validated" - if enabled,  the function cleans the object it
+    is called on.
+- 'Returns validated data' - if enabled, the function cleans its return value.
+- 'Validated parameters' - specifies which function parameters are cleaned by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are cleaned.
+
+The "Do not consider numerical data tainted" parameter allows you to specify
+how the rule treats numerical data. If enabled, the rule assumes that numerical
+data (both primitive data types and objects) is never tainted, even if it
+comes from an untrusted source.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid consequences of excessive looping. 
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In the following example, potentially tainted data is used in a loop condition.
+
+#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+
+#define BUFFER_SIZE 64
+FILE *f;
+
+int getLength()
+{
+  char buffer[BUFFER_SIZE];
+  fread(buffer, sizeof(char), BUFFER_SIZE, f);
+  return atol(buffer);
+}
+
+void test1()
+{
+  int i = getLength();
+  for (int j = 0; j &lt; i; j++) { // VIOLATION
+    /// ...
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To fix the code, use a validating method to validate the potentially tainted
+data.
+
+#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+
+#define BUFFER_SIZE 64
+FILE *f;
+
+char* validate(char* p);
+
+int getLength()
+{
+  char buffer[BUFFER_SIZE];
+  fread(buffer, sizeof(char), BUFFER_SIZE, f);
+  return atol(validate(buffer));
+}
+
+void test1()
+{
+  int i = getLength();
+  for (int j = 0; j &lt; i; j++) { // NO VIOLATION
+    /// ...
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-606: Unchecked Input for Loop Condition
+<A HREF="http://cwe.mitre.org/data/definitions/606.html">http://cwe.mitre.org/data/definitions/606.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A lambda shall not be an operand to typeid [CODSTA-MCPP-28]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A lambda shall not be an operand to typeid [CODSTA-MCPP-28-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each lambda expression has a different unique underlying type,
+and therefore the type is not to be used as a decltype or typeid argument."
+[AUTOSAR A5-1-7]
+
+The rule detects when an expression of lambda type is used as an operand
+of the 'typeid' operator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you obtaining unpredictable results and to comply with some
+coding standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, a lambda is used as an operand of typeid.
+
+#include &lt;typeinfo&gt;
+
+void foo() {
+    auto lmdb = []() -&gt; int { return 0; };
+    typeid(lmdb);                              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not pass a lambda as an operand of typeid.
+
+#include &lt;functional&gt;
+
+void foo() {
+    std::function&lt;int()&gt; f = []() { return 0; };
+    typeid(f);                                 // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-7. A lambda shall not be an operand to decltype or typeid
+
+</PRE>
+</BODY>
+</HTML>

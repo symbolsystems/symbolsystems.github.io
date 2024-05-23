@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assertions should not contain assignments, increment, or decrement operators [CODSTA-150]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assertions should not contain assignments, increment, or decrement operators [CODSTA-150-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Expressions used as arguments to the standard assert() macro should not have
+side effects. The behavior of the assert() macro depends on the definition
+of the object-like macro NDEBUG. If the macro NDEBUG is undefined, the assert()
+macro is defined to evaluate its expression argument and, if the result of the
+expression compares equal to 0, call the abort() function. If NDEBUG is defined,
+assert is defined to expand to ((void)0). Consequently, the expression in the
+assertion is not evaluated, and no side effects it may have had otherwise take
+place in non-debugging executions of the code." [CERT C: PRE31-C]
+
+The rule reports a violation when it detects function-like macros that have
+names ending with 'assert', and when the macros' arguments contain an
+assignment, increment, or decrement operator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves maintainability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The rule detects calls of macros and functions. A violation is reported
+   if the assignment, increment, or decrement operator is used in the arguments
+   of a function with a name ending with 'assert'.
+
+   void fassert(int);
+
+   void foo(){
+      int x;
+      fassert(x++);        // Violation reported
+   }
+
+2. The rule does not report a violation if the assignment, increment
+   or decrement operator is used in another macro.
+
+   #include &lt;assert.h&gt;
+   #define INC(x) x++
+
+   void foo3(){
+      int x;
+      assert(INC(x));      // Violation not reported
+   }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;assert.h&gt;
+
+#define user_assert(p) assert(p)
+int f(int);
+
+void foo(int x){
+    assert(x++ == 0);                // Violation
+    user_assert((x = f(0)) == 0);    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;assert.h&gt;
+
+#define user_assert(p) assert(p)
+int f(int);
+
+void foo(int x){
+    assert(x == 0);         // OK
+    ++x;
+    x = f(0);
+    user_assert(x == 0);    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   PRE31-C. Avoid side effects in arguments to unsafe macros
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE31-C.+Avoid+side+effects+in+arguments+to+unsafe+macros">https://wiki.sei.cmu.edu/confluence/display/c/PRE31-C.+Avoid+side+effects+in+arguments+to+unsafe+macros</A>
+
+</PRE>
+</BODY>
+</HTML>

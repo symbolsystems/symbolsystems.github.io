@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assignment operator should have operands of compatible types [PB-06]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assignment operator should have operands of compatible types [PB-06-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports violations on assignments where types of operands are not
+compatible.
+As compatible type is recognized:
+- the same type
+- typedef to type
+- reference to type
+- type differs only by const or volatile qualifier
+
+The rule does not report violation if object or reference/pointer to object
+from derived class is assigned to reference/pointer to object from base class.
+
+See also: PORT-14, MISRA2004-10_1_a, MISRA2004-10_1_d, PB-05, PB-11
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents data loss and improves readability
+and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(signed int a, int&amp; ref, int* ptr){
+    const short cs = 10;
+    unsigned int b;
+    float f;
+    void* pvoid;
+
+    b = a;        // Violation
+    b = ref;      // Violation
+    a = f;        // Violation
+    pvoid = ptr;  // Violation
+    b = cs + 10;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef unsigned int u_int;
+
+void foo1(u_int a, u_int&amp; ref, int* ptr){
+    short s;
+    unsigned int b;
+    float f;
+    void* pvoid;
+
+    b = a;                // OK
+    b = ref;              // OK
+    a = (unsigned int)f;  // OK
+    pvoid = (void*)ptr;   // OK
+    s = 10;               // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

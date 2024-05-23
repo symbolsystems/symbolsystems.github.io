@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The values returned by functions 'read' and 'readlink' shall be used [CODSTA-144]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The values returned by functions 'read' and 'readlink' shall be used [CODSTA-144-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Traditionally, strings are represented as a region of memory containing 
+data terminated with a NULL character. Older string-handling methods frequently
+rely on this NULL character to determine the length of the string. If a buffer
+that does not contain a NULL terminator is passed to one of these functions,
+the function will read past the end of the buffer." [CWE-170]
+
+Functions 'read', 'readlink' read data and place it into a buffer, but do not
+append the null character at the end. Thus, the content of the buffer might not
+be properly null-terminated. Passed such buffer to a function which assumes
+a null-terminated string (for example strlen, strcpy) might cause application
+crashes or other serious problems.
+
+Functions 'read', 'readlink' upon successful completion return the count
+of bytes placed in the buffer. This value can be used to check if the length
+of string read into buffer is correct.
+
+This rule reports a violation if 'read' or 'readlink' are called, but the return
+value is not used in any way. The return value should be, for example, assigned
+to a variable, returned from a function, checked in selection or iteration
+statement, passed to a function etc. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The function return value can be explicitly ignored by casting the function call
+to void. In such case violation is not reported.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule detects code which ignores 'read' or 'readlink' return value, which
+could result in a string buffer being not null-terminated.
+
+"If a null character is omitted from a string, then most string-copying functions
+will read data until they locate a null character, even outside of the intended
+boundaries of the string. This could:
+ - cause a crash due to a segmentation fault
+ - cause sensitive adjacent memory to be copied and sent to an outsider
+ - trigger a buffer overflow when the copy is being written to a fixed-size
+   buffer" [CWE-170]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+void foo1 ( const char *path )
+{
+  char buf[ 256 ];
+
+  // The value returned from 'readlink' is not used
+  readlink ( path, buf, sizeof buf / sizeof buf[ 0 ] );    // Violation
+
+  // readlink does not append null to 'buf'
+
+  // length = strlen(buf);      // strlen expects null-terminated strings
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+// Examples of code which do not produce violations
+
+void doSth ( ssize_t );
+ssize_t foo0 ( const char *path )
+{
+  char buf[ 256 ];
+  ssize_t len;
+
+  // Examples of "using" readlink return value:
+  len = readlink ( path, buf, sizeof buf / sizeof buf[ 0 ] );     // OK
+  if ( readlink ( path, buf, sizeof buf / sizeof buf[ 0 ] ) );    // OK
+  doSth ( readlink ( path, buf, sizeof buf / sizeof buf[ 0 ] ) ); // OK
+  return readlink ( path, buf, sizeof buf / sizeof buf[ 0 ] );    // OK
+}
+
+void foo1 ( const char *path )
+{
+  char buf[ 256 ];
+  size_t buflen = sizeof buf / sizeof buf[ 0 ];
+  int len = readlink ( path, buf, buflen );    // OK
+
+  if ( len == -1 ) {
+    // some error
+  } else if ( len &gt;= buflen ) {
+    // content might be truncated
+  } else {
+    buf[ len ] = '\0';
+    // Can use 'buf' in functions requiring null-terminated strings
+    // strlen ( buf );
+  }
+}
+
+void foo3 (const char *path)
+{
+  char buf[ 256 ];
+
+  // readlink value can be ignored by casting the call to null
+  // (violation will not be reported)
+
+  ( void ) readlink ( path, buf, sizeof buf / sizeof buf[ 0 ] ); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-170: Improper Null Termination
+   cwe.mitre.org/data/definitions/170.html
+
+2. SEI CERT C Coding Standard
+   POS30-C. Use the readlink() function properly
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS30-C.+Use+the+readlink%28%29+function+properly">https://wiki.sei.cmu.edu/confluence/display/c/POS30-C.+Use+the+readlink%28%29+function+properly</A>
+
+3. 'readlink' specification
+   <A HREF="http://pubs.opengroup.org/onlinepubs/009695399/functions/readlink.html">http://pubs.opengroup.org/onlinepubs/009695399/functions/readlink.html</A>
+
+4. 'read' specification
+   <A HREF="http://pubs.opengroup.org/onlinepubs/009695399/functions/read.html">http://pubs.opengroup.org/onlinepubs/009695399/functions/read.html</A>
+
+</PRE>
+</BODY>
+</HTML>

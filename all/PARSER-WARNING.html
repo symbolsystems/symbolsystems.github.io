@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Parser warning [PARSER-WARNING]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Parser warning [PARSER-WARNING-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports "warning" severity level parser diagnostics.
+
+Warnings indicate that the code is valid but the parser detected something
+questionable.
+ 
+See also PARSER-REMARK
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+This rule reports various kinds of violations. Each kind is identified
+with a numeric ID.
+
+For example:
+  void bar(int i) // Violation W-552: parameter "i" was set but never used
+  {
+    if (i = 10); // Violation W-189: use of "=" where "==" may have been intended
+  }
+
+The rule can be customized to disable or enable only some violations. 
+
+By default all possible violations are enabled.
+
+To disable violations with ID 71, 551, 552 use following properties file entry:
+PARSER-WARNING-config=-71,551,552
+
+The minus "-" at the beginning means "disable". Violation IDs are separated by
+a comma ",".
+
+To disable all violations except violation 179 and 189 use following properties
+file entry:
+PARSER-WARNING-config=-*;+179,189
+
+The asterisk "*" means "all IDs". The semicolon ";" is used to separate the
+"disable" group of IDs (the first group prefixed with a "-", consisting of "*")
+and the "enable" group of IDs (consisting of IDs 179 and 189). So the above 
+can be read as "disable all; then enable 179, 189".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Parse warnings can detect possible bugs. Writing warning-free code leads to
+a better and safer code.  
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Here is an example that will trigger a violation:
+
+int foo()
+{
+    int z;
+
+    // W-71: integer conversion resulted in truncation
+    // W-179: variable "c" was declared but never referenced
+    char c = 1024;      // Violation
+
+    // W-551: variable "z" is used before its value is set
+    return z;           // Violation
+}
+
+</PRE>
+</BODY>
+</HTML>

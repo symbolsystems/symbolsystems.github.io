@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that privilege relinquishment is successful [SECURITY-45]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that privilege relinquishment is successful [SECURITY-45-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The POSIX setuid() function has complex semantics and platform-specific
+behavior. Because of this complex behavior, desired privilege drops sometimes
+may fail. This may be dangerous depending on the sequence of the preceding
+privilege changes." [CERT-POS37-C]
+This rule triggers when privilege relinquishment is not explicitly checked
+after superuser privileges are dropped.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects only the specific pattern when the 'if' statement (1)
+that contains a call to setuid(getuid()) is not directly followed by the 'if'
+statement (2) that contains a call to setuid(0) compared with -1.
+
+/* Permanently drop privileges */
+if (setuid(getuid()) != 0) {                         // (1)
+  /* Handle error */
+}
+
+if (setuid(0) != -1) {                               // (2)
+  /* Privileges can't be restored, handle error */
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If privilege relinquishment conditions are left unchecked, any flaw
+in the program may lead to unintended system compromise corresponding
+to the more privileged user or group account." [CERT-POS37-C]
+
+This rule helps you ensure that privilege relinquishment is successful, which
+prevents security issues that may be caused by incorrect assigning/releasing
+root privileges.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+
+void foo1()
+{
+    /* ... */
+    /* Permanently drop privileges */
+    if (setuid(getuid()) != 0) {                  /* Violation */
+    	/* Handle error */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+
+void foo1()
+{
+    /* ... */
+    /* Permanently drop privileges */
+    if (setuid(getuid()) != 0) {                  /* OK */
+    	/* Handle error */
+    }
+
+    /* If the setuid(0) call succeeds after (supposedly) dropping privileges
+     * permanently, then the privileges were not dropped as intended. */
+    if (setuid(0) != -1) {
+    	/* Handle error */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   POS37-C. Ensure that privilege relinquishment is successful
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS37-C.+Ensure+that+privilege+relinquishment+is+successful">https://wiki.sei.cmu.edu/confluence/display/c/POS37-C.+Ensure+that+privilege+relinquishment+is+successful</A>
+
+2. OWASP Top 10 2017
+   A5-Broken Access Control
+   <A HREF="https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html">https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html</A>
+
+3. OWASP Top 10-2021
+   A01:2021 - Broken Access Control
+   <A HREF="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">https://owasp.org/Top10/A01_2021-Broken_Access_Control/</A>
+
+4. 2022 CWE Weaknesses On the Cusp
+   2019 CWE Top 25 Most Dangerous Software Errors
+   CWE-269: Improper Privilege Management
+   <A HREF="https://cwe.mitre.org/data/definitions/269.html">https://cwe.mitre.org/data/definitions/269.html</A>
+
+</PRE>
+</BODY>
+</HTML>

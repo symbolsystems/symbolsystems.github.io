@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions to a type of narrower size [PORT-27]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions to a type of narrower size [PORT-27-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if parameter/variable/expression of integral
+type is implicitly converted to a narrower integral type
+or parameter/variable/expression of floating type is implicitly converted
+to a narrower floating type.
+See also: MISRA-043, MISRA2004-10_1_b, MISRA2004-10_1_d, MISRA2004-10_2_a,
+MISRA2004-10_2_b, PORT-28
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check:
+- conversions of constant expressions.
+- conversions of bit fields
+- conversions between integral and floating types
+
+Enumeration types are treated in the same way as integral types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents possible loss of data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E1_int{
+    E1_int = 0xFFFF,
+    E2_int
+}e1;
+
+void foo(unsigned int i){
+    unsigned char c1 = e1;  // Violation
+    unsigned char c2 = i;   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum E1_int{
+    E1_int = 0xFFFF,
+    E2_int
+}e1;
+
+void foo(unsigned int i){
+    unsigned int c = e1;                 // OK
+    unsigned char c2 = (unsigned char)i; // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

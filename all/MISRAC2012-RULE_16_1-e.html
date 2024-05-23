@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Always provide a default branch for switch statements [MISRAC2012-RULE_16_1-e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Always provide a default branch for switch statements [MISRAC2012-RULE_16_1-e-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Every switch statement shall have a default label.
+The requirement for a default label is defensive programming.
+Any statements following the default label are intended to take
+some appropriate action. " [MISRA C:2012 Rule 16.4]
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only checks if 'default' is present. It does not impose any
+requirements on location of the 'default' nor the content of the 'default'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule implements defensive programming standards which limit possibility of
+erroneous code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E {
+  E1, E2
+};
+void foo ( int x, enum E e )
+{
+  switch ( x )  /* Violation: missing 'default' */
+  {
+    case 0:
+      // ...
+      break;
+  }
+  switch ( e )  /* Violation: missing 'default' */
+  {
+    case E1:
+      // ...
+      break;
+    case E2:
+      // ...
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum E {
+  E1, E2
+};
+void foo ( int x, enum E e )
+{
+  switch ( x )  /* OK: 'default' present */
+  {
+    case 0:
+      // ...
+      break;
+    default:
+      // ...
+      break;
+  }
+  switch ( e )  /* OK: 'default' present */
+  {
+    case E1:
+      // ...
+      break;
+    case E2:
+      // ...
+      break;
+    default:
+      // ...
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.4, Rule 16.1
+
+2. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 14 Flow Control Structures - Rule 48
+
+</PRE>
+</BODY>
+</HTML>

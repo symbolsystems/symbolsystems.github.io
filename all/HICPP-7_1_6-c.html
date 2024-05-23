@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use class types or typedefs to abstract scalar quantities and standard integer types [HICPP-7_1_6-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use class types or typedefs to abstract scalar quantities and standard integer types [HICPP-7_1_6-c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where the auto type specifier is used in a declaration, and the initializer is
+a constant expression, the declaration should not be allowed to resolve to a
+standard integer type.  The type should be fixed by casting the initializer to
+a size specific type." [HIC++ v4.0, Rule 7.1.6]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves readability and prevents the compiler from resolving an integer to the
+wrong type.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+void foo() {
+    auto a(0);  // violation: int
+    auto b(0L); // violation: long
+    auto c(0U); // violation: unsigned int
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+void foo() {
+    auto a(static_cast&lt;int32_t&gt;(0)); // OK
+    auto b(static_cast&lt;int64_t&gt;(0)); // OK
+    auto d(static_cast&lt;int32_t&gt;(0)); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.6. Use class types or typedefs to abstract scalar quantities and
+   standard integer types
+
+</PRE>
+</BODY>
+</HTML>

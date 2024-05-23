@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Template specialization shall be declared in the same file as the primary template or a user-defined type, for which the specialization is declared [AUTOSAR-A14_7_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Template specialization shall be declared in the same file as the primary template or a user-defined type, for which the specialization is declared [AUTOSAR-A14_7_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Template specialization shall be declared in the same file (1) as the primary
+template (2) as a user-defined type, for which the specialization is declared.
+
+It is undefined behavior, when a compiler sees the (partial or explicit)
+template specialization after it already has instantiated the primary or less
+specialized template. Moreover, the case (2) allows compile-time interfaces
+to be extensible, as developers can safely provide custom specializations
+e.g. for traits classes or 'std::hash'." [AUTOSAR A14-7-2]
+
+This rule detects definitions of template specializations when:
+- the primary template is not declared or defined in the same file as
+  the template specialization
+- the template arguments do not have any user-defined type that is defined
+  in the same file as the template specialization
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior and comply with some coding
+standards. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// file.h
+template &lt;typename T&gt; void f1(T t){}
+struct S { int m1; };
+
+// file.cpp
+#include "file.h"
+
+template &lt;&gt; void f1&lt;&gt;(S t){}     // Violation - 'S' is defined in a header file
+template &lt;&gt; void f1&lt;S*&gt;(S* t){}  // Violation - 'S' is defined in a header file
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by defining the template specializations in the header
+file that contains the primary template and the user-defined type for which
+the specialization is declared.
+
+// file.h
+template &lt;typename T&gt; void f1(T t){}
+struct S { int m1; };
+
+template &lt;&gt; void f1&lt;&gt;(S t){}     // OK
+template &lt;&gt; void f1&lt;S*&gt;(S* t){}  // OK
+
+// file.cpp
+#include "file.h"
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A14-7-2. Template specialization shall be declared in the same file (1) as
+   the primary template (2) as a user-defined type, for which the
+   specialization is declared.
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.2.3 The source code used to implement an entity shall appear only once
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All user-provided move constructors and move assignment operators shall not exit with an exception [EXCEPT-21]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All user-provided move constructors and move assignment operators shall not exit with an exception [EXCEPT-21-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Move constructors and move assignment operators are usually expected to be non-
+throwing. If they throw exceptions, strong exception safety cannot be
+guaranteed, because the original type values could be already modified or
+partially modified." [AUTOSAR A15-5-1]
+
+This rule requires you to add 'noexcept' or 'throw()' to all user defined move
+constructors and move assignment operators if one does not exist.
+
+See Also: EXCEPT-01
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"Generic move constructors, generic move assignment operators, and generic swap
+functions may have noexcept specifications which depend on type properties of
+the template parameters." [AUTOSAR A15-5-1]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Move constructors and assignment operators are expected to be non-throwing since
+that will help to guarantee strong exception safety.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+    C1(C1&amp;&amp; rhs) noexcept(false) // Violation
+    {
+    }
+    C1&amp; operator=(C1&amp;&amp; rhs) // Violation
+    {
+        return *this;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+    C1(C1&amp;&amp; rhs) noexcept(true)      // OK
+    {
+    }
+    C1&amp; operator=(C1&amp;&amp; rhs) noexcept // OK
+    {
+        return *this;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-1. All user-provided class destructors, deallocation functions, move
+   constructors, move assignment operators and swap functions shall not exit
+   with an exception. A noexcept exception specification shall be added to
+   these functions as appropriate
+
+2. High Integrity C++ Coding Standard
+   12.5.4. Declare noexcept the move constructor and move assignment operator
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Trivial accessor and mutator functions should be inlined [OPT-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Trivial accessor and mutator functions should be inlined [OPT-23-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects trivial accessor and mutator functions that are not defined
+as inline.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that:
+- an accessor function is a function that contains exactly one statement
+  in which it returns the value of a data member.
+- a mutator function is a function that contains exactly one argument
+  and one statement in which that argument is assigned to a class member.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not report virtual and template functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Inlining trivial accessors and mutators saves time and space, as it reduces
+multiple syntax elements that has to be repeated." [AUTOSAR A3-1-6]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A1 {
+public:
+    int getMember();
+    void setMember(int param);
+private:
+    int m1;
+};
+
+int A1::getMember() {              // Violation
+    return m1;
+}
+
+void A1::setMember(int param) {    // Violation
+    m1 = param;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, define the functions as inline.
+
+class A1 {
+public:
+    inline int getMember();
+    inline void setMember(int param);
+private:
+    int m1;
+};
+
+inline int A1::getMember() {              // OK
+    return m1;
+}
+
+inline void A1::setMember(int param) {    // OK
+    m1 = param;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A3-1-6. Trivial accessor and mutator functions should be inlined.
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.13 Functions, AV Rule 122
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

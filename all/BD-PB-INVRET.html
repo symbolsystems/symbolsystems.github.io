@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointers returned by certain Standard Library functions should not be used following a subsequent call to the same or related function [BD-PB-INVRET]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointers returned by certain Standard Library functions should not be used following a subsequent call to the same or related function [BD-PB-INVRET-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a pointer returned by one of the Standard Library functions listed below
+is used following a subsequent call to the same function.
+
+"The Standard Library functions asctime, ctime, gmtime, localtime, localeconv, getenv, setlocale
+and strerror return a pointer to an object within the Standard Library. Implementations are 
+permitted to use static buffers for any of these objects and a second call to the same function 
+may modify the contents of the buffer. The value accessed through a pointer held by the program 
+before a subsequent call to a function may therefore change unexpectedly".
+[MISRA C:2012 Amendment 1 Rule 21.20]
+
+&lt;time.h&gt;
+    char* asctime (const struct tm* timeptr)
+    char* ctime (const time_t* timer)
+    struct tm* gmtime (const time_t* timer)
+    struct tm* localtime (const time_t* timer)
+    
+&lt;locale.h&gt;
+    struct lconv* localeconv ()
+    char* setlocale (int category, const char* locale)
+    
+&lt;stdlib.h&gt;
+    char* getenv (const char* name)
+    
+&lt;string.h&gt;
+    char* strerror (int errnum)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The values returned by any of the functions listed above can be modified by a subsequent call to the same function.
+Additionally:
+- The value returned by "asctime" can be modified by a subsequent call to "ctime" (and vice versa).
+- The value returned by "gmtime" can be modified by any subsequent call to "localtime" (and vice versa).
+- The value returned by "localeconv" can be modified by any subsequent call to "setlocale" (but NOT vice versa).
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Subsequent calls to the same function may change the value referenced by the pointer that is returned
+by the first call. Relying on such a value following a subsequent call may cause unexpected results.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Following this rule helps you prevent changes of values that may be caused by subsequent calls
+the same function. This could result in incorrect application behavior. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;locale.h&gt;
+#include &lt;string.h&gt;
+
+void example() {
+    // save locale
+    char *savelocale = setlocale(LC_NUMERIC, 0);
+    setlocale(LC_NUMERIC, "");
+    // ...
+    // restore previous locale setting
+    setlocale(LC_NUMERIC, savelocale); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Copy the saved locale.
+
+#include &lt;locale.h&gt;
+#include &lt;string.h&gt;
+
+void repair() {
+    // save locale
+    char *savelocale = setlocale(LC_NUMERIC, 0);
+    char savelocalecopy[128];
+    strcpy(savelocalecopy, savelocale);
+    setlocale(LC_NUMERIC, "");
+    // ...
+    // restore previous locale setting
+    setlocale(LC_NUMERIC, savelocalecopy); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 2: New rules, Rule 21.20
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 25.5.3 The pointer returned by the C++ Standard Library functions asctime, ctime, gmtime, localtime, localeconv, getenv, setlocale or strerror must not be used following a subsequent call to the same function
+
+SEI CERT C Coding Standard
+ENV34-C. Do not store pointers returned by certain functions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ENV34-C.+Do+not+store+pointers+returned+by+certain+functions">https://wiki.sei.cmu.edu/confluence/display/c/ENV34-C.+Do+not+store+pointers+returned+by+certain+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

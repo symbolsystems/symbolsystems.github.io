@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The same code (after preprocessing) in both branches of if-else statement [PB-67]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The same code (after preprocessing) in both branches of if-else statement [PB-67-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If the same code is used in the body of an 'if' statement and in the body 
+of a corresponding 'else' statement, then it may be an implementation error
+or the 'if-else' construct is not needed.
+
+The rule reports a violation if both branches of 'if-else' construct
+after preprocessing are identical.
+
+See also: OPT-40_a, OPT-40_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The code is compared after preprocessing. In effect:
+- macros expanding to the same code are treated as identical
+- whitespaces, comments and preprocessor directives are ignored.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code and detects possible mistakes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo1(int i, int j) {
+    if(i &gt; 10) {            // Violation
+        return 10*i + j;
+    } else {
+        return 10*i + j;
+    }
+}
+
+#define NUMBER_1 32
+#define NUMBER_2 32
+
+int foo2(int i, int j) {
+    if(i &gt; 10) {            // Violation - the same code after preprocessing
+        return NUMBER_1;
+    } else {
+        return NUMBER_2;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo1a(int i, int j) {
+    if(i &gt; 10) {            // OK - different code in branches
+        return 10*i + j;
+    } else {
+        return 20*i + j;
+    }
+}
+
+int foo1b(int i, int j) {   // OK - unnecessary 'if-else' was removed
+    return 10*i + j;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

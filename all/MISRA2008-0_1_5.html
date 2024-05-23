@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A project shall not contain unused type declarations [MISRA2008-0_1_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A project shall not contain unused type declarations [MISRA2008-0_1_5-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects declarations of types that are not used in a project.
+Declarations of the following types are checked: classes, structures,
+unions, enumerations and typedefs.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule assumes that a type is used when it is referenced. However,
+if a type is referenced only inside its own definition, it is considered 
+to be unused. An example:
+
+struct S {   /* 'S' is an unused type */
+  S* s;
+  void f1();
+};
+
+void S::f1() {
+  S s;
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"If a type is declared but not used, then it is unclear to a reviewer if
+the type is redundant or it has been left unused by mistake." 
+[MISRA C++:2008 Rule 0-1-5]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. This rule does not detect forward declarations.
+2. This rule reports false positives when types are only used
+   in the following contexts:
+   - in 'using' declarations
+   - in local types defined inside template functions
+   - in declarations of pointers to members
+   - as arguments in calls to built-in macros (e.g. 'va_arg' or 'offsetof') 
+3. This rule may report false positives when typedefs are only used
+   in the following contexts:
+   - as scope prefixes when nested types, static objects or functions
+     are referenced
+   - as calls to class/struct constructors
+   - as template arguments (involves only local typedefs)
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int INT_T;    /* Violation - 'INT_T' is never used */
+
+class C1 {            /* Violation - 'C1' is never used */
+public:
+    int m1;
+};
+
+enum E {              /* Violation - 'E' is never used */
+    E1, E2
+};
+
+int f1(int i) {
+    return E1 + i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef int INT_T;    /* OK */
+
+/* The unused type declaration 'C1' has been removed */
+
+enum {                /* OK */
+    E1, E2
+};
+
+int f1(INT_T i) {
+    return E1 + i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-5
+
+2. AUTOSAR C++14 Coding Guidelines
+   A0-1-6. There should be no unused type declarations
+
+</PRE>
+</BODY>
+</HTML>

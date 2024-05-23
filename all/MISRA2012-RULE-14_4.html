@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The controlling expression of an if statement and the controlling expression of an iteration-statement shall have essentially Boolean type [MISRA2012-RULE-14_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The controlling expression of an if statement and the controlling expression of an iteration-statement shall have essentially Boolean type [MISRA2012-RULE-14_4-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where a data value is to be tested against zero then the test should be made 
+explicit. The exception to this rule is when data represents a Boolean value, 
+even though in C this will in practice be an integer."
+
+An 'effectively Boolean' expression which is either 'Boolean-by-construct'
+or 'Boolean-by-enforcement' as defined below.
+
+Boolean-by-construct values are produced by the following operators:
+- equality operators (== and !=)
+- logical operators (!, &amp;&amp; and ||)
+- relational operators (&lt;, &gt;, &lt;= and &gt;=)
+
+Boolean-by-enforcement values can be introduced by implementing a specific type
+enforcement mechanism using a tool. A Boolean type could be associated with
+a specific typedef, and would then be used for any objects that are Boolean."
+
+Rule does not report violation if as an operand of logical operator is used:
+- Boolean-by-construct values
+- boolean constant
+- integer or enum constant defined as '0' or '1' 
+- variable, parameter or expression of type:
+  - bool,
+  - typedef to bool,
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+  - reference to above types
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. Rule checks first operand of tenary operator "?:". MISRA C:2012 Rule 14.4
+   does not require checking of tenary operator. But MISRA C:2012 Rule 10.1 
+   requires first operand of tenary operator to have boolean type.
+   For example:
+    void foo (int i) {
+        i ? 1 : 0;  // Violation reported
+    }
+
+2. Rule does not report violations if the expression is a single constant.
+   For exmaple:
+    if (0)      // Single constant "0" - violation not reported
+    if (123)    // Single constant "123" - violation not reported
+    if (120+3)  // Violation reported
+
+3. Rule does not report violations if the expression denotes a function.
+   For example:
+    void foo1(void);
+    void foo2(void) {
+        if (foo1);   // Violation not reported
+        if (*foo1);  // Violation not reported
+    }
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"This rule is in the interests of clarity, and makes clear the distinction
+between integers and logical values."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int goo()
+{
+    return 1;
+}
+
+void foo( int x, int y )
+{
+  if (goo()) {}	// Violation
+  if (y) {}     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int goo()
+{
+    return 1;
+}
+
+void foo( int x, int y )
+{
+  if (goo() != 0) {}	// OK
+  if (y != 0) {}        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 14.4
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 13
+
+3. Misra Guidelines - Rule 49
+
+4. SEI CERT C Coding Standard
+   EXP20-C. Perform explicit tests to determine success, true and false, and
+   equality
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP20-C.+Perform+explicit+tests+to+determine+success%2C+true+and+false%2C+and+equality">https://wiki.sei.cmu.edu/confluence/display/c/EXP20-C.+Perform+explicit+tests+to+determine+success%2C+true+and+false%2C+and+equality</A>
+
+</PRE>
+</BODY>
+</HTML>

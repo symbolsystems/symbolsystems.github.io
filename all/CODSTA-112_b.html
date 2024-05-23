@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointers to variably-modified array types should not be used [CODSTA-112_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointers to variably-modified array types should not be used [CODSTA-112_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the two array types are used in a context which requires them to be
+compatible, it is undefined behavior if the two size specifiers evaluate
+to unequal values." [ISO/IEC 9899:2011]
+
+This rule detects when a declaration of a parameter or variable
+has a pointer to a variably-modified array type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule applies to function parameters that have an array-to-array type,
+since the topmost array type is treated as a pointer type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int n;
+void foo(int p[5][n]) // Violation
+{
+    int (*p1)[n];     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define SIZE 10
+void foo(int (*p)[SIZE]) // OK
+{
+    int (*p1)[SIZE];     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.11 Rule 18.10
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.5.2 Array declarators
+
+</PRE>
+</BODY>
+</HTML>

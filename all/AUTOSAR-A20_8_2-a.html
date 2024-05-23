@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use smart pointers when passing a pointer to an object in a thread [AUTOSAR-A20_8_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use smart pointers when passing a pointer to an object in a thread [AUTOSAR-A20_8_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"std::unique_ptr is a smart pointer that owns and manages another object
+and removes it when it goes out of scope. It has almost no overhead over
+a raw pointer and clearly states developers intentions and ownership status
+of the object." [AUTOSAR A20-8-2]
+
+"std::shared_ptr allows to retain shared ownership by keeping multiple
+std::shared_ptr instances pointing at the same object. The object is removed
+when the last std::shared_ptr instance goes out of scope." [AUTOSAR A20-8-3]
+
+Passing an argument of pointer type to a thread might cause problems if
+the pointed object outlives the thread or if the allocated memory is not
+correctly deallocated. For this reason, it is recommended to use smart
+pointers rather than raw pointers to ensure better management of thread
+objects.
+
+This rule detects when a raw pointer to an object or an address of an object
+is passed to a thread as an argument.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+You can use the unique smart pointer 'std::unique_ptr' or the shared smart
+pointer 'std::shared_ptr'. The choice depends on your project. As a rule,
+prefer 'std::unique_ptr' over 'std::shared_ptr', using the latter only if
+shared ownership is required.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid memory management problems and prevent threads from
+accessing invalid addresses.
+The rule helps you comply with some coding standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, a raw pointer to an object and an address of
+an object are passed to the threads as an argument.
+
+#include &lt;thread&gt;
+
+class C {
+public:
+   C() {}
+   void memC();
+};
+
+void Bar(C* o) {}
+
+void f1() {
+    C* pc = new C();
+    std::thread th(&amp;Bar, pc);                        // Violation
+    th.join();
+}
+
+void f2() {
+    C c;
+    std::thread th1(&amp;C::memC, &amp;c);                   // Violation
+    std::thread th2(&amp;C::memC, &amp;c);                   // Violation
+    th1.join();
+    th2.join();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using the smart pointers.
+
+#include &lt;thread&gt;
+
+class C {
+public:
+   C() {}
+   void memC();
+};
+
+void Bar(std::unique_ptr&lt;C&gt; o) {}
+
+void f1() {
+    std::unique_ptr&lt;C&gt; upC = std::make_unique&lt;C&gt;();
+    std::thread th(&amp;Bar, std::move(upC));               // OK
+}
+
+void f2() {
+    std::shared_ptr&lt;C&gt; spC = std::make_shared&lt;C&gt;();
+    std::thread th1(&amp;C::memC, spC);                     // OK
+    std::thread th2(&amp;C::memC, spC);                     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A20-8-2. A std::unique_ptr shall be used to represent exclusive ownership
+
+2. AUTOSAR C++14 Coding Guidelines
+   A20-8-3. A std::shared_ptr shall be used to represent shared ownership
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare local variable as const whenever possible [AUTOSAR-A7_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare local variable as const whenever possible [AUTOSAR-A7_1_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If data is declared to be const or constexpr then its value can not be changed
+by mistake. Also, such declaration can offer the compiler optimization
+opportunities." [AUTOSAR A7-1-1]
+
+The rule detects immutable local variables declared without the 'const'
+qualifier.
+
+See also: CODSTA-CPP-43, MISRA2004-16_7
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+For variables of pointer type the const qualifier should be applied to the
+pointer, not to the pointed object.
+
+The rule does not report violations on variables of array type.
+The 'const' qualifier added in array declaration causes only that array
+elements can not be changed.
+
+The rule does not trigger on variables captured by reference by lambda
+expressions.
+
+This rule does not report on local variables in template functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+It's safe, it's checked at compile time, and it's integrated
+with C++'s type system. It also prevents future revisions
+from unintentional changing the caller's data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo1(){
+    int var1 = 0;             // Violation
+    const int* var2 = 0;      // Violation - const is applied to the
+                              // pointed object, not to the pointer
+    return  1;
+}
+
+int foo2(){
+    int var1 = 0;             // OK - var1 is modified
+    const int* var2 = 0;      // OK - var2 is modified
+    var2++;
+    var1 = 1;
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Fixed violations - const added
+int foo1(){
+    const int var1 = 0;        // OK
+    const int* const var2 = 0; // OK
+    return  1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-1. Constexpr or const specifiers shall be used for immutable data
+   declaration
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc., Chapter: "Coding Style", Rule 15
+
+4. High Integrity C++ Coding Standard
+   7.1.2. Use const whenever possible
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 7, Rule 7-1-1
+
+6. SEI CERT C Coding Standard
+   DCL00-C. Const-qualify immutable objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL00-C.+Const-qualify+immutable+objects">https://wiki.sei.cmu.edu/confluence/display/c/DCL00-C.+Const-qualify+immutable+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

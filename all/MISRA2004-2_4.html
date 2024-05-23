@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Sections of code should not be "commented out" [MISRA2004-2_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Sections of code should not be "commented out" [MISRA2004-2_4-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where it is required for sections of source code not to be compiled then
+this should be achieved by use of conditional compilation (e.g. #if or #ifdef 
+constructs with a comment).
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule applies to both // and /* ... */ styles of comment.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Ideally, comments should only be used to explain aspects of the code that
+may not be clear from the source code itself. Code that is commented-out may
+become out of date, which may lead to confusion when maintaining the code.
+A more appropriate method of recording the history of changes in source code
+(e.g. a Source Control System) should be used instead of commenting-out."
+[MISRA C++:2008, Rule 2-7-3]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule can report false positives if the comment contains a text similar
+to the code. On the comment below violation will be reported, because 
+it contains the text that is similar to the function call.
+
+/* 
+ * The file contains functions(name1, name2); variables(name1, name2);
+ */
+
+The similarity between source code and comment text may cause that violation
+won't be reported on the comment contaning the code. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int x = 5;
+    /*  Section of code     // Violation
+        commented out
+    if (x==0){
+        x++;
+    }
+    */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int x = 5;
+/* Comment without          // OK
+   code within */
+#if 0                       
+    if (x==0){
+        x++;
+    }
+#endif
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-7-2. Sections of code shall not be "commented out"
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.14 Comments, AV Rule 127
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-7-2, Rule 2-7-3
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Dir 5.7.2 Sections of code should not be "commented out"
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.4
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 2, Rule 2.4
+
+7. Origin: Misra Guidelines - Rule 10
+
+</PRE>
+</BODY>
+</HTML>

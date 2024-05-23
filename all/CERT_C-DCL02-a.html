@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use visually distinct identifiers [CERT_C-DCL02-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use visually distinct identifiers [CERT_C-DCL02-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Use visually distinct identifiers with meaningful names to eliminate errors
+resulting from misreading the spelling of an identifier during the development
+and review of code. . . Depending on the fonts used, certain characters appear
+visually similar or even identical." [CERT-DCL02-C]
+
+The rule detects when two identifiers vary only with respect to one or more
+visually similar characters.
+
+The rule assumes that the following characters are visually similar:
+- the letter 'O' and the number '0'
+- the letter 'O' and the letter 'D'
+- the letter 'O' and the letter 'Q'
+- the letter 'D' and the number '0'
+- the letter 'D' and the letter 'Q'
+- the letter 'Q' and the number '0'
+- the letter 'I' and the number '1'
+- the letter 'I' and the letter 'l'
+- the letter 'l' and the number '1'
+- the letter 'Z' and the number '2'
+- the letter 'S' and the number '5'
+- the letter 'B' and the number '8'
+- the letter 'n' and the letter 'h'
+- the letter cluster 'rn' ('r' followed by 'n') and the letter 'm'
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule compares identifiers in the same scope. Identifiers that are declared
+in different structures or functions are not compared.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and avoid errors that may result
+from confusing identifiers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int g_O;
+int g_0;                        // Violation
+
+void foo()
+{
+    char locVar_ZZZ111;
+    char locVar_222III;         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use visually distinct identifiers
+
+int g_1;
+int g_2;                        // OK
+
+void foo()
+{
+    char locVar_ZZZ111_1;
+    char locVar_222III_2;       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   DCL02-C. Use visually distinct identifiers
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL02-C.+Use+visually+distinct+identifiers">https://wiki.sei.cmu.edu/confluence/display/c/DCL02-C.+Use+visually+distinct+identifiers</A>
+
+</PRE>
+</BODY>
+</HTML>

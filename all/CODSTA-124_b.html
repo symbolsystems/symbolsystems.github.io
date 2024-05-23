@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Conversions shall not be performed between non compatible pointer to a function types [CODSTA-124_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Conversions shall not be performed between non compatible pointer to a function types [CODSTA-124_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to a function shall only be converted into or from a pointer
+to a function with a compatible type. If a function is called by means
+of a pointer whose type is not compatible with the called function,
+the behaviour is undefined." [MISRA C:2012 Rule 11.1]
+
+This rule reports a violation if a pointer to function is converted
+(implicit or explicit) into a pointer to function of a non-compatible type.
+
+The implicit conversion of a pointer is detected in the following cases:
+- assignment expression
+- comparison expression
+- initialization (only simple variables)
+- passing argument to function call
+- returning value from function
+
+"For two function types to be compatible, both shall specify compatible
+return types. Moreover, the parameter type lists, if both are present,
+shall agree in the number of parameters and in use of the ellipsis
+terminator; corresponding parameters shall have compatible types."
+[ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language. Conversions of a function pointer
+in C++ are checked by rule CODSTA-62.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviors
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef void (*FP1)(int n);
+typedef void (*FP2)(short n);
+typedef int* (*FP3)(int n);
+typedef void (*FP4)(const int n);
+typedef void (*FP5)(int n, ...);
+
+/* Examples of incorrect code */ 
+void f (FP4 fp4);
+
+FP5 foo (void* vptr)
+{
+    FP1 fp1;
+    FP2 fp2;
+    FP3 fp3;
+    FP4 fp4 = fp1;       /* Violation */
+  
+    fp1 = fp2;           /* Violation */
+    fp3 = (FP3)fp2;      /* Violation */
+    f( fp1 );            /* Violation */
+    
+    return fp2;          /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef short SHORT;
+typedef void (*FP1)(short n);
+typedef void (*FP2)(short int n);
+typedef void (*FP3)(signed short n);
+typedef void (*FP4)(SHORT n);
+typedef void (*FP5)(int* n);
+typedef void (*FP6)(int a[]);
+
+/* Examples of correct code */ 
+void f (FP4 fp4);
+
+FP3 foo (void* vptr)
+{
+    FP1 fp1;
+    FP2 fp2;
+    FP3 fp3;
+    FP4 fp4 = fp1;       /* OK - compatible types */
+    FP5 fp5;
+    FP6 fp6 = fp5;       /* OK - compatible types */
+  
+    fp1 = fp2;           /* OK - compatible types */
+    fp3 = (FP3)fp2;      /* OK - compatible types */
+    f( fp1 );            /* OK - compatible types */
+    
+    return fp2;          /* OK - compatible types */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.1
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.4 Cast operators, 6.5.2 Type specifiers, 6.5.3 Type qualifiers
+   6.5.4 Declarators
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5.2.2 Function calls, 6.5.4 Cast operators
+   6.7.2 Type specifiers, 6.7.3 Type qualifiers, 6.7.5 Declarators
+
+4. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+5. SEI CERT C Coding Standard
+   EXP37-C. Call functions with the correct number and type of arguments
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments">https://wiki.sei.cmu.edu/confluence/display/c/EXP37-C.+Call+functions+with+the+correct+number+and+type+of+arguments</A>
+
+</PRE>
+</BODY>
+</HTML>

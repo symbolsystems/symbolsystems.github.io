@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use sizeof operator on pointer type to specify the size of the memory to be allocated via 'malloc', 'calloc' or 'realloc' function [MRM-45]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use sizeof operator on pointer type to specify the size of the memory to be allocated via 'malloc', 'calloc' or 'realloc' function [MRM-45-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports a violation message if any of the following functions:
+'malloc', 'calloc', or 'realloc' is used to allocate memory and the size
+of required memory is calculated using a sizeof operator with the pointer
+to the type instead of actual type. Using a pointer to the type instead of
+actual type as sizeof argument makes the sizeof operator return the size
+of pointer (which is 4 in a 32-bit platform).
+See also: PB-32
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not trigger if a memory block allocated by the 'malloc',
+'calloc', or 'realloc' function is assigned to a pointer with multiple
+levels of indirection. In such case, the rule assumes that sizeof
+is correctly used on a pointer type and the allocated memory will store
+pointers.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents incorrect memory allocation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+typedef struct Str
+{
+   int m1;
+   int m2;
+}*pS;
+   
+void foo(int n) 
+{
+   pS var = (pS) malloc(n * sizeof(pS));         // Violation
+   free(var);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+typedef struct Str
+{
+   int m1;
+   int m2;
+}*pS;
+
+void foo(int n)
+{
+   pS var = (pS) malloc(n * sizeof(Str));        // OK
+   free(var);
+}
+
+void goo(int n)
+{
+   int **var = (int**) malloc(n * sizeof(int*)); // OK - Exception
+   free(var);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. SEI CERT C Coding Standard
+   MEM35-C. Allocate sufficient memory for an object
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM35-C.+Allocate+sufficient+memory+for+an+object">https://wiki.sei.cmu.edu/confluence/display/c/MEM35-C.+Allocate+sufficient+memory+for+an+object</A>
+
+</PRE>
+</BODY>
+</HTML>

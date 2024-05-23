@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use &lt;&gt; brackets for system and standard library headers. Use quotes for all other headers [HICPP-16_1_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use &lt;&gt; brackets for system and standard library headers. Use quotes for all other headers [HICPP-16_1_4-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Use angle brackets for compiler-provided headers (i.e., #include &lt;. . .&gt;) and
+quotation marks for user-provided files (i.e., #include “. . .”). Adhering to
+this convention improves the clarity and maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule provides a strict delineation between compiler provided headers and
+user provided files. This provides an easy way to track down headers or other
+files should the need arise.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include "cstddef" // Violation
+#include &lt;types.h&gt; // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include "types.h" // OK
+#include &lt;cstddef&gt; // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   16.1.4. Use &lt;&gt; brackets for system and standard library headers. Use quotes
+   for all other headers
+
+</PRE>
+</BODY>
+</HTML>

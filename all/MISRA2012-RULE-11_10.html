@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The _Atomic qualifier shall not be applied to the incomplete type void [MISRA2012-RULE-11_10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The _Atomic qualifier shall not be applied to the incomplete type void [MISRA2012-RULE-11_10-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The presence of the _Atomic qualifier designates an atomic type. The size,
+representation, and alignment of an atomic type need not be the same as those
+of the corresponding unqualified type." [ISO/IEC 9899:2017]
+
+The size and alignment of a pointer to the incomplete _Atomic type 'void' can be
+different than the size and alignment of a pointer to a complete _Atomic type,
+so conversions between such types can result in undefined behavior.
+
+This rule detects when the 'void' type is declared with the '_Atomic' qualifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined and erroneous program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+_Atomic void func1();                   // Violation
+_Atomic void* func2();                  // Violation
+
+void f()
+{
+  _Atomic void* var;                    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void func1();                           // OK
+void* func2();                          // OK
+
+void f()
+{
+  void* var;                            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.7 Rule 11.10
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.2.5 Types
+
+</PRE>
+</BODY>
+</HTML>

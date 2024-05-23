@@ -1,0 +1,164 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A conversion should not be performed from pointer to void into pointer to object [MISRA2012-RULE-11_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A conversion should not be performed from pointer to void into pointer to object [MISRA2012-RULE-11_5-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversion of a pointer to void into a pointer to object may result
+in a pointer that is not correctly aligned, resulting in undefined behaviour."
+[MISRA C:2012 Rule 11.5]
+
+The rule reports a violation if a conversion (explicit or implicit) from 
+a pointer to void type to a pointer to object type is used.
+
+Implicit conversion of pointer is detected by rule in the following cases:
+- assignment expression
+- initialization (only simple variables and arrays)
+- passing argument to function call
+- returning value from function
+
+The rule checks only conversions to pointer to object type, so conversions
+to pointer to function type and to pointer to incomplete type are not reported.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Conversion of a pointer to void into a pointer to object should be avoided
+where possible but may be necessary, for example when dealing with memory 
+allocation functions. If conversion from a pointer to object into a pointer
+to void is used, care should be taken to ensure that any pointers produced
+do not give rise to the undefined behaviour" [MISRA C:2012 Rule 11.5]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An integer constant expression with the value 0, or such an expression
+cast to type void *, is called a null pointer constant." [ISO/IEC 9899:1999]
+"A null pointer constant that has type pointer to void may be converted
+into pointer to object." [MISRA C:2012 Rule 11.5]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrect code */ 
+void f1 (int*);
+
+char* foo (void* vptr)
+{
+    const void* cvptr;
+    signed int* ptr = vptr;  /* Violation - implicit conversion from pointer
+                                to void to pointer to signed int type 
+                                in initialization */
+  
+    ptr = (int*)cvptr;       /* Violation - explicit cast is not allowed */
+
+    f1(vptr);                /* Violation - implicit conversion from pointer
+                                to void to pointer to int type in function
+                                call */
+
+    return cvptr;            /* Violation - implicit conversion from pointer
+                                to void to pointer to char type in function
+                                return */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by the rule */ 
+#define NULL (void*)0
+
+typedef void (*FP)(int);
+typedef void* VOID_PTR;
+void f1 (VOID_PTR);
+
+FP foo (int* ptr1, void* vptr)
+{
+    int* ptr2 = NULL;   /* OK - exception for null pointer constant */
+
+    vptr = (void*)ptr2; /* OK - conversion to pointer to void type is allowed */
+    
+    f1(vptr);           /* OK - no conversion - the same types are used */
+    
+    if (ptr1 == vptr);  /* OK - conversion to pointer to void */
+
+    return vptr;        /* OK - conversion from pointer to void to pointer
+                           to function type - the rule checks only conversions
+                           to pointer to object type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.5
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5 Expressions
+
+4. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

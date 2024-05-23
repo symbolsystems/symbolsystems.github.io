@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When one of opposite operators (== and !=) is defined, the other should be defined too and one will be defined in terms of the other [JSF-085_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When one of opposite operators (== and !=) is defined, the other should be defined too and one will be defined in terms of the other [JSF-085_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If operator==() is supplied, then one could reasonable expect that operator!=()
+would be supplied as well." [JSF Rule 85]
+"Defining one operator in terms of the other simplifies maintenance and prevents
+from accidental errors during code development." [AUTOSAR A13-5-4]
+
+This rule detects when both equality operators ('==' and '!=') are defined
+in the same class, but one does not call the other.
+
+See also: CODSTA-CPP-16
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not trigger when the body of one or both of the analyzed
+equality operators is not accessible (for example, when it is
+a non-instantiated template).
+
+template &lt;typename T&gt;
+class A1
+{
+public:
+    bool operator==(const A1&amp; other) {    // No Violation - non-accessible body
+        return m_data == other.m_data;
+    }
+
+    bool operator!=(const A1&amp; other) {    // No Violation - non-accessible body
+        return !(m_data == other.m_data);
+    }
+private:
+    int m_data;
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule facilitates code maintenance and helps you prevent accidental errors
+during code development.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    bool operator == (A&amp; rhs);
+    bool operator != (A&amp; rhs);
+private:
+    int m;
+};
+
+bool A::operator == (A&amp; rhs){  // Violation
+    if(this-&gt;m == rhs.m)
+        return true;
+}
+
+bool A::operator != (A&amp; rhs){  // Violation
+    if(this-&gt;m != rhs.m)
+        return false;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by defining the 'operator!=' in terms
+of the 'operator=='.
+
+class A
+{
+public:
+    bool operator == (A&amp; rhs);
+    bool operator != (A&amp; rhs);
+private:
+    int m;
+};
+
+bool A::operator == (A&amp; rhs){  // OK
+    if(this-&gt;m == rhs.m)
+        return true;
+}
+
+bool A::operator != (A&amp; rhs){  // OK
+    return !(*this==rhs);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-5-4. If two opposite operators are defined, one shall be defined in
+   terms of the other.
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 85
+
+</PRE>
+</BODY>
+</HTML>

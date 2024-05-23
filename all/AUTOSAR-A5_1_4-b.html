@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Never capture local objects from an outer lambda by reference [AUTOSAR-A5_1_4-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Never capture local objects from an outer lambda by reference [AUTOSAR-A5_1_4-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When an object is captured by reference in a lambda, lifetime of the object
+is not tied to the lifetime of the lambda.
+If a lambda object leaves the scope of one of its reference-captured object,
+the execution of the lambda expression results in an undefined behavior once
+the reference-captured object is accessed." [AUTOSAR C++14]
+
+This rule detects when inner lambdas capture by reference local variables or
+parameters from outer lambdas that are defined in the function scope.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent dangling references that may lead to memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+auto f1(int p) {
+    auto out = [p](){
+        int i = p;
+	    auto inn = [&amp;i](){   // Violation
+            return i;
+        };
+	    return inn;
+    };
+    return out();
+}
+
+void f() {
+    auto fp1 = f1(12);
+
+    int j = fp1();               // undefined behavior
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+auto f1(int p) {
+    auto out = [p](){
+        int i = p;
+	    auto inn = [i](){    // OK
+            return i;
+        };
+	    return inn;
+    };
+    return out();
+}
+
+void f() {
+    auto fp1 = f1(12);
+    int j = fp1();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-4. A lambda expression object shall not outlive any of its reference-
+   captured objects
+
+2. SEI CERT C++ Coding Standard
+   EXP61-CPP. A lambda object must not outlive any of its reference captured
+   objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP61-CPP.+A+lambda+object+must+not+outlive+any+of+its+reference+captured+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP61-CPP.+A+lambda+object+must+not+outlive+any+of+its+reference+captured+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

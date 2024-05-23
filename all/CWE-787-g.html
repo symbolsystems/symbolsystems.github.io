@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure the output buffer is large enough when using path manipulation functions [CWE-787-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure the output buffer is large enough when using path manipulation functions [CWE-787-g-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects a potential buffer overflow that may occur when the path manipulating function
+that stores the calculated path in the pre-allocated buffer is called with the output buffer
+argument not large enough to fit the path with the maximum possible length.
+
+Specifically, a violation is reported if a buffer with size smaller than the maximum path length
+is passed as an output buffer to one of the following functions:
+
+&lt;stdlib.h&gt; (POSIX)
+    char *realpath(const char *, char * out_buf)
+
+&lt;unistd.h&gt; (POSIX)
+    char *getwd(char * out_buf)
+
+&lt;shlwapi.h&gt; (Windows)
+    PathAddBackslashA(LPSTR out_buf)
+    PathAddBackslashW(LPWSTR out_buf)
+    PathAddExtensionA(LPSTR out_buf, LPCSTR)
+    PathAddExtensionW(LPWSTR out_buf, LPCWSTR)
+    PathAppendA(LPSTR out_buf, LPCSTR)
+    PathAppendW(LPWSTR out_buf, LPCWSTR)
+    PathCanonicalizeA(LPSTR out_buf, LPCSTR)
+    PathCanonicalizeW(LPWSTR out_buf, LPCWSTR)
+    PathCombineA(LPSTR out_buf, LPCSTR, LPCSTR)
+    PathCombineW(LPWSTR out_buf, LPCWSTR, LPCWSTR)
+    PathCommonPrefixA(LPCSTR, LPCSTR, LPSTR out_buf)
+    PathCommonPrefixW(LPCWSTR, LPCWSTR, LPWSTR out_buf)
+    PathCompactPathA(HDC, LPSTR out_buf, UINT)
+    PathCompactPathW(HDC, LPWSTR out_buf, UINT)
+	
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2022.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not report violations when using functions that allow passing the size of the buffer
+together with the buffer itself, e.g. from &lt;unistd.h&gt; (POSIX):
+    ssize_t readlink(const char *, char * out_buf, size_t buf_size);
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The possibility of buffer overflow is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to
+execute arbitrary code and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Maximum path length" parameter determines the maximum path length for a given environment.
+The rule enforces using a buffer of at least this size as an output buffer in a call to
+a path manipulating function.
+When a negative value is specified as the value of this parameter (e.g. -1), it is interpreted
+as if the maximum path length was (2^31 - 1).
+The default value of this parameter is 4096.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid buffer overflow errors.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In the following POSIX example, the rule will trigger a violation, assuming the default value of the "Maximum path length" parameter (4096):
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* #include &lt;stdlib.h&gt; (POSIX) */
+char *realpath(const char * path, char * resolved_path);
+
+char* example(const char* path)
+{
+    char out[128];
+    realpath(path, out); // VIOLATION
+	return strdup(out);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* #include &lt;stdlib.h&gt; (POSIX) */
+char *realpath(const char * path, char * resolved_path);
+
+char* repair(const char* path)
+{
+    char out[4096];
+    realpath(path, out); // NO VIOLATION
+	return strdup(out);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="http://cwe.mitre.org/data/definitions/787.html">http://cwe.mitre.org/data/definitions/787.html</A>
+
+CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')
+<A HREF="http://cwe.mitre.org/data/definitions/120.html">http://cwe.mitre.org/data/definitions/120.html</A>
+
+CWE-785: Use of Path Manipulation Function without Maximum-sized Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/785.html">http://cwe.mitre.org/data/definitions/785.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+</PRE>
+</BODY>
+</HTML>

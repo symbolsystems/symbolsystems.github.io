@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Function-like macros shall not be defined [PREPROC-28]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Function-like macros shall not be defined [PREPROC-28-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In most cases it is possible to replace a function-like macro by a function.
+Functions have more advantages over function-like macros, for example their
+parameters and return types are type-checked.
+
+This rule detects definitions of function-like macros with exceptions
+described in the section below.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+In some cases it is not possible to replace a function-like macro
+by a function, so this rule allows function-like macros containing
+the __LINE__, __FILE__, and __func__ identifiers or #, and ## operators.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid errors and improve maintainability
+of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define SUM(A,B) ((A)+(B))     // Violation
+
+void foo( int x, int y ) {
+    /* ... */
+    SUM( x, y );
+    /* ... */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int sum( int a, int b ) {      // OK
+    return (a + b);
+}
+
+void foo( int x, int y ) {
+    /* ... */
+    sum( x, y );
+    /* ... */
+}
+
+#define NAME( name ) int name = #name        // OK - Exception
+
+#define LOGGING( msg ) log( __func__, msg ); // OK - Exception
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.0.2 Function-like macros shall not be defined
+
+</PRE>
+</BODY>
+</HTML>

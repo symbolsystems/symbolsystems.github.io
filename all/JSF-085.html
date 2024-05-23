@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When two operators are opposites (such as == and !=), both will be defined [JSF-085]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When two operators are opposites (such as == and !=), both will be defined [JSF-085-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When a client of a class is allowed to apply an operator against a class, 
+it also expects to be able to apply the negation of that operator against 
+a class. A good example is the operator==; its semantic opposite is the 
+operator!=, which should also be defined if operator== was defined."
+
+The rule by default checks the following operators:
+- '==' and '!='
+- '&lt;=' and '&gt;='
+- '&lt;' and '&gt;'
+- '++' and '--' (pre- and post- operators)
+- '+' and '-' (unary and binary)
+- '&lt;&lt;' and '&gt;&gt;'
+- '&amp;&amp;' and '||'
+
+See also: CODSTA-CPP-86
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The user can himself to define pairs of operators that need to be checked.
+
+The rule contains python method 'init' where is the list 'oppositeOperatorsList'
+containing currently checked operators. 
+
+oppositeOperatorsList = [
+                          ['+', '-', '1'],
+                          ['+', '-', '0'],
+                          ['&gt;', '&lt;', '1'],
+                          ['&gt;=', '&lt;=', '1'],
+                          ['==', '!=', '1'],
+                          ['&amp;&amp;', '||', '1'],
+                          ['&gt;&gt;', '&lt;&lt;', '1'],
+                          ['++', '--', '1'],
+                          ['++', '--', '0']
+                         ]
+
+If the user does not want to check some operators, then the position containing
+these operators should be removed from the list (e.g. if unary '+' and '-'
+should not be checked, then the position ['+', '-', '0'], should be removed).
+ 
+The user can himself add other operators to the list (e.g. if binary operators
+'*' and '/' should be checked, then position ['*', '/', '1'], should be added
+into list). The number ('1' or '0') means that defined operators have exactly
+one parameter ('1' - for binary operators) or does not have any parameters
+('0' - for unary operators). 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability of code and 
+prevents misunderstanding the meaning of an overloaded operator.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C { // Violation
+public:
+    bool operator&lt;=( C&amp; c );
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C { // OK
+public:
+    bool operator&lt;=( C&amp; c );
+    bool operator&gt;=( C&amp; c );
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 7 Classes - 7.7 Operator Overloading - Rec. 36
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 85
+
+</PRE>
+</BODY>
+</HTML>

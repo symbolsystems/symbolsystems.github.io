@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid integer overflows [BD-PB-INTOVERF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid integer overflows [BD-PB-INTOVERF-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+An integer overflow or wraparound occurs when an integer value is incremented to
+a value that is too large to store in the associated representation. When this
+occurs, the value may wrap to become a very small or negative number.
+For example: INT_MAX + 1
+
+A similar situation happens when an integer value is decremented to a value that
+is too small to store in the associated representation. When this occurs, the
+value may wrap to become a very large or a positive number.
+For example: INT_MIN - 1
+
+While this may be intended behavior in circumstances that rely on
+wrapping, it can have serious consequences if the wrap is unexpected.
+
+This rule reports violation whenever overflow occurs in the integer arithmetic
+operation or when casting integral value to a narrower type or between signed
+and unsigned types.
+
+See also PB-66_a, PB-66_b
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+DEPRECATED
+</STRONG>
+<PRE>
+This rule is deprecated and has been replaced by BD-PB-INTDL, BD-PB-INTUB, BD-PB-INTVC and BD-PB-INTWRAP.
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Unexpected integer overflow can sometimes trigger buffer overflows that can
+be used to execute arbitrary code, as well as lead to memory corruption. This
+is usually outside the scope of a program's implicit security policy.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+"Aggressive mode" - when enabled, violations will also be reported if the overflow
+occurs while the integer is being cast to a type that is at least the same size as 
+the operand type or when the value being cast is -1
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+By default, violations are not reported if the overflow occurs while the integer 
+is being cast to a type that is at least the same size as the operand type or when 
+the value being cast is -1.
+See also "Aggressive mode" parameter.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Unexpected integer overflow generally leads to undefined behavior that may
+result in crashes. In the case of overflows involving loop index variables,
+the likelihood of infinite loops is also high.
+
+Unexpected integer overflow can be very dangerous, as the computed (incorrect)
+value can be used in multiple sensitive areas, such as:
+- Integer operands of any pointer arithmetic, including array indexing
+- The assignment expression for the declaration of a variable length array
+- The postfix expression preceding square brackets [] or the expression in
+square brackets [] of a subscripted designation of an element of an array object
+- Function arguments of type size_t or rsize_t (for example, an argument to a
+memory allocation function)
+- In security-critical code
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here are examples that trigger violations:
+
+void test_arithmetic()
+{
+    signed char c = 100;
+    signed char d = 100;
+    signed char e = c + d; // VIOLATION (200 overflows SCHAR_MAX(128))
+}
+
+short test_cast_(int x)
+{
+    return x; // VIOLATION (123000 overflows SHRT_MAX(32767))
+}
+
+void test_cast()
+{
+    test_cast_(123000);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Make sure that overflow does not occur in the code either by checking the
+values before arithmetic operation / cast or by using wider types.
+
+</PRE>
+</BODY>
+</HTML>

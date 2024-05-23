@@ -1,0 +1,200 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The third clause of a 'for' statement shall be well-formed [MISRAC2012-RULE_14_2-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The third clause of a 'for' statement shall be well-formed [MISRAC2012-RULE_14_2-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A for loop shall be well-formed" [MISRA C:2012 Rule 14.2]
+
+"A loop counter is defined as an object, array element or member of a structure
+or union which satisfies the following:
+
+1. It has a scalar type;
+
+2. Its value varies monotonically on each iteration of a given instance of 
+   a loop; and
+
+3. It is involved in a decision to exit the loop." [MISRA C:2012 Section 8.14]
+
+This rule reports a violation if the third clause of a 'for' statement contains
+one from the following:
+- a comma operator (,)
+- an expression other than modification of a loop counter
+- an object modified inside a 'for' loop body
+- an expression that causes persistent side effect other than modification
+  of a loop counter
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a loop counter is an object, an array element
+or a member of a structure or union that is used in a condition and
+modified inside the third clause of a 'for' statement.
+
+The rule assumes that an object is modified if:
+- it is used as the left hand operand of the assignment operators
+- it is used as the operand of the increment or decrement operators
+- it is passed to the function as a reference to a non-const object
+  (except a universal reference)
+- its address is passed to the function as a pointer to a non-const object
+  (except functions which are called via function pointers).
+
+"A side effect is said to be persistent at a particular point in execution
+if it might have an effect on the execution state at that point. All of the
+following side effects are persistent at a given point in the program:
+- Modifying a file;
+- Modifying an object;
+- Accessing a volatile object.
+When a function is called, it may have side effects. Modifying a file
+or accessing a volatile object are persistent as viewed by the calling
+function. However any objects modified by the called function, whose lifetimes
+have ended by the time it returns, do not affect the caller's execution state.
+Any side effects arising from modifying such objects are not persistent
+as viewed by the caller." [MISRA C:2012 Appendix J; Glossary]
+
+For function calls, the rule checks only if a directly called function contains
+a persistent side effect.
+
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The 'for' statement provides a general-purpose looping facility. Using
+a restricted form of loop makes code easier to review and to analyse." 
+[MISRA C:2012 Rule 14.2]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule may not report violations if the array elements or members that are
+used in a condition of a 'for' statement differ from the objects modified in
+the third clause only in one of the following:
+- arithmetic or assignment operators,
+- boolean, floating or string constants,
+- function calls,
+- sizeof or conditional operators
+- casts.
+In such cases, the rule may incorrectly consider such objects to be loop
+counters.
+
+
+/* In the examples below the rule finds loop counters */
+int fooint1();
+int fooint2();
+
+void foo() {
+    int arr[3];
+    int i;
+
+    for(; arr[1 + 1]; arr[1 - 1]++);         /* should be Violation */
+    for(; arr[fooint1()]; arr[fooint2()]++); /* should be Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int i;
+    int j;
+
+    for(i = 0, j = 100; i &lt; 50 &amp;&amp; j &gt; 50; i++, j--){ /* Violation */
+        /* The third clause contains a comma operator */
+    }
+
+    for (i = 0; i &lt; 1024; i += j ) {                 /* Violation */
+        j = 2;  /* The third clause contains an object modified inside body */
+    }
+
+    for(i = 0; i &lt; 10; i = j++) {                    /* Violation */
+        /* The third clause contains an expression with persistent */
+        /* side effect other than modification of a loop counter */
+    }
+
+    for(i = 0; i &lt; 10; i + 5) {                      /* Violation */
+        /* The third clause contains an expression other than modification */
+        /* of a loop counter */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+    int i;
+    int j;
+
+    for (i = 0; i &lt; 1024; i += j ) {                /* OK */
+        /* 'j' is not modified inside a loop body */
+    }
+
+    for (i = 100;  i &lt; 1024; i++ ) {                /* OK */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   6.2.4. Only modify a for loop counter in the for expression
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 14.2
+   Section 8: Rules, 8.14: Control statement expressions
+   Appendix J; Glossary
+
+</PRE>
+</BODY>
+</HTML>

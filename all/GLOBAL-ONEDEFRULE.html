@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The One Definition Rule shall not be violated [GLOBAL-ONEDEFRULE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The One Definition Rule shall not be violated [GLOBAL-ONEDEFRULE-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Every program shall contain exactly one definition of every non-inline
+function or object that is used in that program; no diagnostic required.
+The definition can appear explicitly in the program, it can be found
+in the standard or a user-defined library, or (when appropriate) it is
+implicitly defined" [ISO/IEC 14882:1998].
+
+This rule detects when objects or non-inline functions with external linkage
+that are used in a program have more than one definition, or do not have any
+definition in the testing scope.
+The rule does not report violations on objects or functions that are declared
+in unnamed namespaces.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Violation of the 'One Definition Rule' leads to undefined behaviour"
+[MISRA C++:2008 Rule 3-2-2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test.h', 'test1.cpp' and 'test2.cpp'.
+
+/* test.h */
+extern int x1;
+extern int x2;              /* Violation - there is no definition of 'x2'
+                               in the testing scope */
+extern void foo1();
+extern void foo2();         /* Violation - there is no definition of 'foo2()'
+                               in the testing scope */
+
+/* test1.cpp */
+#include "test.h"
+int x1 = 0;                 /* Violation - the 'x1' object has another external
+                               definition in 'test2.cpp' */
+void foo1() { /*...*/ }     /* Violation - 'foo1()' has another external
+                               definition in 'test2.cpp' */
+static void bar()
+{
+    foo1();
+    foo2();
+}
+
+/* test2.cpp */
+#include "test.h"
+int x1;                     /* Violation - the 'x1' object has another external
+                               definition in 'test2.cpp' */
+void foo1() { /*...*/ }     /* Violation - 'foo1()' has another external
+                               definition in 'test2.cpp' */
+static int bar()
+{
+    return x1 + x2;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test.h', 'test1.cpp' and 'test2.cpp'.
+
+/* test.h */
+extern int x1;              /* OK */
+extern int x2;              /* OK */
+extern int x3;              /* OK - the 'x3' object is not used in the testing
+                               scope */
+extern void foo1(int);      /* OK */
+extern void foo1(int*);     /* OK */
+extern void foo2(int);      /* OK - the 'foo2' function is not used in the testing
+                               scope */
+
+/* test1.cpp */
+#include "test.h"
+int x1 = 1;                 /* OK - there is only one external definition in
+                               the testing scope */
+void foo1(int) { /*...*/ }  /* OK - there is only one external definition in
+                               the testing scope */
+static int s1;              /* OK - the identifier with internal linkage */
+const int c1 = 1;           /* OK - the identifier with internal linkage */
+namespace {
+    int n1;                 /* OK - the identifier is defined in an unnamed
+                               namespace */
+}
+
+/* test2.cpp */
+#include "test.h"
+int x2;                     /* OK - there is only one external definition in
+                               the testing scope */
+void foo1(int*) { /*...*/ } /* OK - there is only one external definition in
+                               the testing scope */
+static int s1;              /* OK - the identifier with internal linkage */
+const int c1 = 1;           /* OK - the identifier with internal linkage */
+namespace {
+    int n1;                 /* OK - the identifier is defined in an unnamed
+                               namespace */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+   
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Section 6: Rules, Rule 3-2-2
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.2.1 The one-definition rule shall not be violated
+
+3. ISO/IEC 14882:1998 Programming languages -- C++
+   3.2 One definition rule
+
+4. AUTOSAR C++14 Coding Guidelines
+   M3-2-2. The One Definition Rule shall not be violated
+
+5. SEI CERT C++ Coding Standard
+   DCL60-CPP. Obey the one-definition rule
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL60-CPP.+Obey+the+one-definition+rule">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL60-CPP.+Obey+the+one-definition+rule</A>
+
+</PRE>
+</BODY>
+</HTML>

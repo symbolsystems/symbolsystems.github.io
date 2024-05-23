@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent calling unsafe functions (custom rule) [BD-MISC-DC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent calling unsafe functions (custom rule) [BD-MISC-DC-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule allows you to specify functions that should not be used.
+It must be parametrized with the names of functions that are not allowed.
+The rule detects calls of the functions, as well as cases when the function addresses have
+been used.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Disallowed functions" parameter allows you to specify functions that should not be used
+and will be detected by the rule.
+
+The following columns allow you to define different aspects of functions in the functions table: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide the fully qualified name of the type or namespace
+  where the function is declared. Use '*' if you want to describe a function declared in any type or namespace,
+  or a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' should contain the name of the described function.
+
+* The '+ definitions in subclasses' is used to indicate whether the current entry will apply
+  to functions with the given name defined in subclasses of the given class.
+  Note that this applies to both instance and non-instance functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The use of unsafe functions may result in undefined and unpredictable behaviors.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Violations will be reported on the examples below if the "Disallowed functions" parameter
+has been set in the following way:
+	
+	'Enabled' = true
+	'Fully qualified type name' = *
+	'Method name' = foo
+	'+ definitions in subclasses' = false
+
+int foo();
+
+typedef int (*FP2)(void);
+
+void call()
+{
+    int z = foo();                  // VIOLATION
+    FP2 fpf = &amp;foo;                 // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use disallowed functions.
+
+</PRE>
+</BODY>
+</HTML>

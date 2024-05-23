@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use parenthesis to clarify expression order if operators with precedence lower than arithmetic are used [CERT_C-EXP00-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use parenthesis to clarify expression order if operators with precedence lower than arithmetic are used [CERT_C-EXP00-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"No dependence shall be placed on operator precedence rules,
+below arithmetic operators, in expressions. Parentheses should
+be used to clarify operator precedence rules to enhance readability
+and reduce mistakes. However, overuse of parentheses can clutter
+an expression thereby reducing readability. Requiring parenthesis below
+arithmetic operators strikes a reasonable balance between readability
+and clutter."
+
+Following operators have precedence lower than arithmetic operators:
+- shifts  "&gt;&gt;", "&gt;&gt;"
+- comparison "&lt;", "&lt;=", "&gt;", "&gt;=", "==", "!="
+- bitwise "&amp;", "^", "|"
+- logical "&amp;&amp;", "||"
+- conditional "?:"
+- assignment "=", "*=", "/=", "%=", "+=", "-=", "&lt;&lt;=", "&gt;&gt;=", "&amp;=", "|=", "^="
+- throw "throw"
+- comma ","
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. Violation is no reported for identical operators. We believe in this case
+there is no need for extra parenthesis. For example:
+   a &amp; b &amp; c; // OK - no need to write (a &amp; b) &amp; c;
+
+2. Violation is not reported for top expression in right hand side of
+assignment operators. The assignment operators have almost the
+lowest precedence level and we believe in this case there is no need
+for extra parenthesis. For example
+   a = b &amp; c; // OK - no need to write a = (b &amp; c);
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int bar(int);
+int foo(int a, int b, int c)
+{
+    int x;
+    // The expression is interpreted as a &gt;&gt; (1 + b)
+    x = a &gt;&gt; 1 + b;     // Violation - "+" is operand of "&gt;&gt;" operator
+    // The expression is interpreted as (a &amp; b) | c
+    x = a &amp; b | c;      // Violation - "&amp;" is operand of "|" operator
+    // The expression is interpreted as (x ^ b) || c
+    if (x ^ b || c);    // Violation - "^" is operand of "||" operator
+    // Interpreted as (x = a), (bar(a) ? b : (c == 10))
+    return x = a, bar(a) ? b : c == 10; // Violation 3x:
+        // "=" is the operand of "," operator
+        // "?:" is the operand of "," operator
+        // "==" is the third operand of "?:" operator
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int bar(int);
+int foo(int a, int b, int c)
+{
+    int x;
+    // Review the code to check if the evaluation order is correct.
+    // Clarify the order of operations by splitting more complicated
+    // expressions into several simpler expression or by adding
+    // parenthesis. For example:
+
+    // Original expression: x = a &gt;&gt; 1 + b;
+    x = a &gt;&gt; (1 + b);   // OK - order made clear by adding parenthesis
+    x = (a &gt;&gt; 1) + b;   // OK - a different order was imposed
+
+    x = (a &amp; b) | c;    // OK
+    if ((x ^ b) || c);  // OK
+
+    // Original expression: return x = a, bar(a) ? b : c == 10;
+    // was simplified by splitting complicated expression into
+    // two simpler expressions and using parenthesis
+    x = a;
+    return bar(a) ? b : (c == 10);  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.28 Portable Code, AV Rule 213
+
+2. SEI CERT C Coding Standard
+   EXP00-C. Use parentheses for precedence of operation
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP00-C.+Use+parentheses+for+precedence+of+operation">https://wiki.sei.cmu.edu/confluence/display/c/EXP00-C.+Use+parentheses+for+precedence+of+operation</A>
+
+</PRE>
+</BODY>
+</HTML>

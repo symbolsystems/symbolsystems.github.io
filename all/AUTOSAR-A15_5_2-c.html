@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'quick_exit()' and '_Exit()' functions from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-A15_5_2-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'quick_exit()' and '_Exit()' functions from the 'stdlib.h' or 'cstdlib' library shall not be used [AUTOSAR-A15_5_2-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'std::abort()', 'std::quick_exit()', and 'std::_Exit()' functions are used
+to terminate the program in an immediate fashion. They do so without calling
+exit handlers registered with 'std::atexit()' and without executing destructors
+for objects with automatic, thread, or static storage duration. Because these
+functions can leave external resources, such as files and network
+communications, in an indeterminate state, they should be called explicitly only
+in direct response to a critical error in the application." [CERT-ERR50-CPP]
+
+In C++code, this  rule detects calls to the 'std::quick_exit()' and
+'std::_Exit()' functions from the 'cstdlib' standard library.
+In C code, this rule detects calls to the 'quick_exit()', and '_Exit()'
+functions from the 'stdlib.h' standard library.
+
+See also: PB-75
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"It is acceptable to call a termination function that safely executes
+destructors and properly cleans up resources, such as 'std::exit()'."
+[CERT-ERR50-CPP]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior. It allows you
+to ensure that open streams with unwritten buffered data are flushed, open
+streams are closed, and temporary files are removed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdlib&gt;
+
+void f1() {
+    std::quick_exit(0);   // Violation
+    std::_Exit(0);        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the calls to the 'std::quick_exit' and
+'std::_Exit' functions.
+
+#include &lt;cstdlib&gt;
+
+void f1() {
+    std::exit(0);         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-2. Program shall not be abruptly terminated. In particular, an
+   implicit or explicit invocation of std::abort(), std::quick_exit(),
+   std::_Exit(), std::terminate() shall not be done
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 18.5.2 Program-terminating functions should not be used
+
+3. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.41 Rule 21.8
+
+4. SEI CERT C Coding Standard
+   ERR04-C. Choose an appropriate termination strategy
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR04-C.+Choose+an+appropriate+termination+strategy">https://wiki.sei.cmu.edu/confluence/display/c/ERR04-C.+Choose+an+appropriate+termination+strategy</A>
+
+5. SEI CERT C Coding Standard
+   ERR05-C. Application-independent code should provide error detection
+   without dictating error handling
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR05-C.+Application-independent+code+should+provide+error+detection+without+dictating+error+handling">https://wiki.sei.cmu.edu/confluence/display/c/ERR05-C.+Application-independent+code+should+provide+error+detection+without+dictating+error+handling</A>
+
+6. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+</PRE>
+</BODY>
+</HTML>

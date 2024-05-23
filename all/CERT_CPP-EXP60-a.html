@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass a nonstandard-layout type object across execution boundaries [CERT_CPP-EXP60-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass a nonstandard-layout type object across execution boundaries [CERT_CPP-EXP60-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Pass a nonstandard-layout type object across execution boundaries only when
+both sides of the execution boundary adhere to the same ABI." [CERT-EXP60-CPP]
+
+"An execution boundary is the delimitation between code compiled by differing
+compilers. . . For instance, a function may be declared in a header file but
+defined in a library that is loaded at runtime. The execution boundary exists
+between the call site in the executable and the function implementation in
+the library. Such boundaries are also called ABI." [CERT-EXP60-CPP]
+
+If your application calls a function that is defined in an external library,
+the library and the application may be compiled with different compilers.
+
+This rule detects when an object of a nonstandard-layout class type
+is passed as an argument to a function defined in an external library.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a function is defined in a library that can be
+compiled with a different compiler than the application is compiled with
+when a) the function is declared in a header outside of the testing project
+and b) the definition of the function is not available in the translation unit
+that contains a call to this function.
+
+This rule should only be applied when both sides of the execution boundary
+use different ABI for exception handling.
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+This rule refers to the standard-layout class as defined by the C++14 Standard.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent abnormal program execution when the library
+and the application adhere to different ABIs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// lib.h
+class C                // nonstandard-layout type
+{
+private:
+    int a;
+public:
+    int b;
+};
+
+void foo(C &amp;c);
+
+// file.cpp
+#include "lib.h"
+void goo() {
+    C c;
+    foo(c);            // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// lib.h
+class C                // standard-layout type
+{
+private:
+    int a;
+    int b;
+};
+
+void foo(C &amp;c);
+
+// file.cpp
+#include "lib.h"
+void goo() {
+    C c;
+    foo(c);           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   EXP60-CPP. Do not pass a nonstandard-layout type object across
+   execution boundaries
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP60-CPP.+Do+not+pass+a+nonstandard-layout+type+object+across+execution+boundaries">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP60-CPP.+Do+not+pass+a+nonstandard-layout+type+object+across+execution+boundaries</A>
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   9 Classes
+
+</PRE>
+</BODY>
+</HTML>

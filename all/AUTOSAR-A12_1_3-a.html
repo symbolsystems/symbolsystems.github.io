@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-defined constructors that initialize data members with the same constant values across all constructors should initialize using NSDMI instead [AUTOSAR-A12_1_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-defined constructors that initialize data members with the same constant values across all constructors should initialize using NSDMI instead [AUTOSAR-A12_1_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If all user-defined constructors of a class initialize data members with
+constant values that are the same across all constructors, then data members
+shall be initialized using NSDMI instead." [AUTOSAR A12-1-3]
+
+This rule detects when all non-static data members in a class are initialized
+to the same constant values in all user-defined constructors.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a constant value is a literal or a string constant.
+
+This rule does not check classes containing a constructor:
+- that initializes variables of other than primitive or string types, or
+- whose body is not accessible in the current translation unit, or
+- that performs an action other than the assignment of a member variable in the
+body.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using NSDMI lets the compiler to generate the function that can be more
+efficient than a user-defined constructor that initializes data member
+variables with pre-defined constant values." [AUTOSAR A12-1-3]
+
+This rule helps you improve code efficiency.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {                               // Violation
+public:
+    A()     : a_(1), b_(2) {}
+    A(int)  { a_ = 1; b_ = 2; }
+private:
+    int a_;
+    int b_;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {                               // OK
+public:
+    A() {}
+    A(int) {}
+private:
+    int a_ = 1;
+    int b_ = 2;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-1-3. If all user-defined constructors of a class initialize data
+   members with constant values that are the same across all constructors,
+   then data members shall be initialized using NSDMI instead
+
+</PRE>
+</BODY>
+</HTML>

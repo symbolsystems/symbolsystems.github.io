@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast from or to essentially Boolean type [MISRA2012-RULE-10_5_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast from or to essentially Boolean type [MISRA2012-RULE-10_5_b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An explicit cast may be introduced for legitimate functional reasons.
+However, some explicit casts are considered inappropriate:
+- In C99, the result of a cast or assignment to _Bool is always 0 or 1.
+  This is not necessarily the case when casting to another type which
+  is defined as essentially Boolean;
+- A cast from essentially Boolean to any other type is unlikely
+  to be meaningful" [MISRA C:2012 Rule 10.5]
+
+This rule detect cases when: 
+- an expression of an essential type other than Boolean is explicitly cast
+  to essentially Boolean type
+- an expression of essentially Boolean type is explicitly cast
+  to an essential type other than Boolean
+ 
+The term "essential type" is defined by the MISRA C:2012 standard, 
+but tools may also provide additional ways of identifying "essentially 
+Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+Examples:
+
+typedef enum {false, true} bool;    /* essentially boolean type */
+typedef enum { e1, e2  }   etype;   /* essentially enum type */
+
+void foo()
+{
+    bool            b;
+    etype           e;
+    char            ch;
+    unsigned int    ui;
+    double          d;
+
+    (bool)2;        /* Violation - "signed constant"   to "boolean" */
+    (bool)ch;       /* Violation - "character"         to "boolean" */
+    (bool)e;        /* Violation - "enum"              to "boolean" */
+    (bool)ui;       /* Violation - "unsigned"          to "boolean" */
+    (bool)d;        /* Violation - "floating"          to "boolean" */
+    (int)b;         /* Violation - "boolean"           to "signed" */
+    (float)false;   /* Violation - "boolean constant"  to "floating" */
+    (char)b;        /* Violation - "boolean"           to "character" */
+    (etype)b;       /* Violation - "boolean"           to "enum" */
+}
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+Integer constants with values '0' and '1' are considered to be constants of
+"essentially Boolean" type.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An integer constant expression with the value 0 or 1 of either signedness may 
+be cast to a type which is defined as essentially Boolean. This allows the 
+implementation of non-C99 Boolean models." [MISRA C:2012 Rule 10.5]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents confusion and helps avoid unnecessary explicit casts.
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by rule */
+typedef enum {false, true} bool;    /* essentially boolean type */
+
+void foo()
+{
+    bool            b;
+
+    (bool)1;        /* OK - exception */
+    (bool)0;        /* OK - exception */
+    (bool)true;     /* OK - "boolean constant" to "boolean" */
+    (int)1;         /* OK - "signed constant"  to "signed" */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.5
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.10 Rule 10.5
+
+</PRE>
+</BODY>
+</HTML>

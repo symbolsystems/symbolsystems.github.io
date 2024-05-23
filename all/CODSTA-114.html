@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assembly language shall be encapsulated and isolated in C/C++ functions [CODSTA-114]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assembly language shall be encapsulated and isolated in C/C++ functions [CODSTA-114-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where assambly language instructions are needed, they shall be 
+encapsulated and isolated in either assembler functions or C/C++ functions."
+
+The rule reports a violation if in one function is used assembly language 
+instruction and C/C++ code. 
+
+See also: MISRA2004-2_1
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not allow to use macros containing assembly language instructions
+and C/C++ code in one function. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Ensuring that assembly language code is encapsulated and isolated aids
+portability"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define ASM_NOP asm ( "NOP" )
+#define ASM_MOV asm ( "mov eax, 01h" )
+
+void fn1 (int i)             /* Violation */
+{
+    if(i &gt; 0)
+    {
+        asm ( "NOP" );      
+    }
+    else
+    {
+        asm ( "mov eax, 01h" );
+    }
+}
+
+void fn2 (int i)            /* Violation */
+{
+    if(i &gt; 0)
+    {
+        ASM_NOP;            /* assembler code in macro */
+    }
+    else
+    {
+        ASM_MOV;            /* assembler code in macro */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+inline void asm_nop()       /* OK - no other code than assembler in function */
+{
+    asm ( "NOP" );
+}
+
+void asm_mov()              /* OK - no other code than assembler in function */
+{
+    asm ( "mov eax, 01h" );
+}
+
+void fn2 (int i)            /* OK */
+{
+    if(i &gt; 0)
+    {
+        asm_nop();          /* assembler code in inline function - recommended */
+    }
+    else
+    {
+        asm_mov();          /* assembler code in function */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M7-4-3. Assembly language shall be encapsulated and isolated
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 7, Rule 7-4-3
+
+</PRE>
+</BODY>
+</HTML>

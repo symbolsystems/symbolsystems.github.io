@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer 'auto' to explicit type names for function return types [CODSTA-MCPP-08_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer 'auto' to explicit type names for function return types [CODSTA-MCPP-08_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The auto and decltype(auto) type-specifiers designate a placeholder type that
+will be replaced later, either by deduction from an initializer or by explicit
+specification with a trailing-return-type. If the declared return type of the
+function contains a placeholder type, the return type of the function is deduced
+from return statements in the body of the function, if any."[ISO/IEC 14882:2014]
+
+It is recommended that you use the 'auto' specifier instead of explicit return
+type names in function definitions.
+
+This rule detects the following cases:
+1. The function does not have any declaration in the current translation unit.
+
+2. The function is non-template, non-virtual and has an accessible body.
+
+3. The declared return type of a function and all types of return statements
+   in the body of the function are the same.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you avoid mistakes and prevents unnecessary type
+conversions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    int m;
+};
+
+S func_i( S s)                    // Violation
+{
+    return s;
+}
+static double func_d( double i)   // Violation
+{
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+    int m;
+};
+
+decltype(auto) func_i( S s)       // OK
+{
+    return s;
+}
+auto func_d( double i)            // OK
+{
+    return i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 2: "auto", Item 5: "Prefer auto to explicit type declarations"
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   7.1.6.4 auto specifier
+
+</PRE>
+</BODY>
+</HTML>

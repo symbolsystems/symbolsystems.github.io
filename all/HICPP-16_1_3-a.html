@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Match the filename in a #include directive to the one on the filesystem [HICPP-16_1_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Match the filename in a #include directive to the one on the filesystem [HICPP-16_1_3-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Some operating systems have case insensitive filesystems. Code initially
+developed on such a system may not compile successfully when ported
+to a case sensitive filesystem." [HIC++ Coding Standard]
+
+This rule detects inconsistency in the letter case between the header file used
+in the '#include' directive and the real name of this header in a filesystem.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a translation unit contains two or more identical '#include' directives, and
+at least one of them is inconsistent with the letter case of the file it
+includes, then rule violation is reported on each of the directives (including
+the correctly cased ones).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve portability and readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// file.h
+int i;
+
+// file.cpp
+#include "File.h"      // Violation
+
+#include &lt;CStdDef&gt;     // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// file.h
+int i;
+
+// file.cpp
+#include "file.h"      // OK
+
+#include &lt;cstddef&gt;     // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   16.1.3. Match the filename in a #include directive to the one on the
+   filesystem
+
+</PRE>
+</BODY>
+</HTML>

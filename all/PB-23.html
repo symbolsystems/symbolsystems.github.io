@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The class object should be passed by reference if the class has non-static pointers and has no declared copy constructor [PB-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The class object should be passed by reference if the class has non-static pointers and has no declared copy constructor [PB-23-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Passing an object that contains pointer member fields may cause problems if
+the object is passed by value using a compiler-generated copy constructor.
+Such objects should be passed by reference or copied using an appropriate
+user-defined copy constructor to avoid problems that may result from bitwise
+copying of member pointers.
+
+This rule triggers when an object of type class or struct that has non-static
+pointer member fields and does not declare a copy constructor is passed
+by value to a function call.
+
+See also: OPT-14, PB-20
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not check objects of type class/struct whose names:
+- are 'initializer_list'.
+- end with 'iterator' (for example, 'iterator', 'const_iterator',
+  'normal_iterator').
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid potential problems that may be caused by improper
+copying of member pointers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the object is passed by value.
+
+class A
+{
+    int *p;
+};
+
+void bar(A val_a);
+
+void foo(void)
+{
+    A a;
+    bar(a);                         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, pass the object by reference.
+
+class A
+{
+    int *p;
+};
+
+void bar(A &amp;ref_a);
+
+void foo(void)
+{
+    A a;
+    bar(a);                         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.13 Functions, AV Rule 117
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

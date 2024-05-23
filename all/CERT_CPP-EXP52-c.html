@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The function call that causes the side effect shall not be the operand of the sizeof operator [CERT_CPP-EXP52-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The function call that causes the side effect shall not be the operand of the sizeof operator [CERT_CPP-EXP52-c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A possible programming error in C is to apply the sizeof operator
+to an expression and expect the expression to be evaluated. 
+However the expression is not evaluated: sizeof only acts on the type
+of the expression. To avoid this error, sizeof shall not be used
+on expressions that contain side effects, as the side effects
+will not occur." [MISRA C:2004 Rule 12.3]
+
+"Accessing a volatile object, modifying an object, modifying a file,
+or calling a function that does any of those operations are all side
+effects, which are changes in the state of the execution environment."
+[ISO/IEC 9899:1999]
+
+"When a function is called, it may have side effects. Modifying a file
+or accessing a volatile object are persistent as viewed by the calling
+function. However any objects modified by the called function, whose 
+lifetimes have ended by the time it returns, do not affect the caller's
+execution state. Any side effects arising from modifying such objects
+are not persistent as viewed by the caller." [MISRA C:2012 Appendix J]
+
+The rule reports a violation if in the operand of the sizeof operator
+is called the function that has a persistent side effect.
+
+See also: CODSTA-137
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule checks only three nested level of function calls.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves maintainability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+int glob;
+
+int foo1() {            // Function 'foo1' causes side effect
+    glob = 100;
+    return glob;
+}
+
+int foo2() {            // Function 'foo2' causes side effect
+    static int st_loc;
+    st_loc = 100;
+    return st_loc;
+}
+
+int foo3(int* ptr) {    // Function 'foo3' causes side effect
+    *ptr = 100;
+    return ptr;
+}
+
+void foo_s(int p) {
+    unsigned int ui;
+    ui = sizeof(foo1());             // Violation
+    ui = sizeof(foo2());             // Violation
+    ui = sizeof(foo3(&amp;p));           // Violation
+    ui = sizeof(printf("message"));  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+int foo1();          // Function 'foo1' may cause side effect or not
+
+int foo2(int x) {    // Function 'foo2' does not cause side effect
+    return x*x;
+}
+
+int foo3() {         // Function 'foo3' does not cause side effect
+    int x;
+    x = 100 * x;
+    return x;
+}
+
+void foo_s(int p) {
+    unsigned int ui;
+    ui = sizeof(foo1());    // OK
+    ui = sizeof(foo2(p));   // OK
+    ui = sizeof(foo3());    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    M5-3-4. Evaluation of the operand to the sizeof operator shall not contain
+    side effects
+
+2.  High Integrity C++ Coding Standard
+    5.1.6. Do not code side effects into the right-hand operands of: &amp;&amp;, ||,
+    sizeof, typeid or a function passed to condition variable::wait
+
+3.  ISO/IEC 14882:1998 Programming languages -- C++
+    5.3.3 Sizeof
+    1.9 Program execution
+
+4.  ISO/IEC 9899:1990 Programming languages -- C
+    6.3.3.4 The sizeof operator
+    5.1.2.3 Program execution
+
+5.  ISO/IEC 9899:1999 Programming languages -- C
+    6.5.3.4 The sizeof operator
+    5.1.2.3 Program execution
+
+6.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.21 Operators, AV Rule 166
+
+7.  MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 5, Rule 5-3-4
+
+8.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Appendix J Glossary
+
+9.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 12, Rule 12.3
+
+10. Origin: Misra Guidelines - Rule 40
+
+11. SEI CERT C Coding Standard
+    EXP44-C. Do not rely on side effects in operands to sizeof, _Alignof, or
+    _Generic
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP44-C.+Do+not+rely+on+side+effects+in+operands+to+sizeof%2C+_Alignof%2C+or+_Generic">https://wiki.sei.cmu.edu/confluence/display/c/EXP44-C.+Do+not+rely+on+side+effects+in+operands+to+sizeof%2C+_Alignof%2C+or+_Generic</A>
+
+12. SEI CERT C++ Coding Standard
+    EXP52-CPP. Do not rely on side effects in unevaluated operands
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands</A>
+
+</PRE>
+</BODY>
+</HTML>

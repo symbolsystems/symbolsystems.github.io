@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A class shall only define an initializer-list constructor when it is the only constructor [MISRACPP2023-15_1_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A class shall only define an initializer-list constructor when it is the only constructor [MISRACPP2023-15_1_5-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+According to the C++ standard, std::initializer_list is the preferred method
+for matching arguments, especially when braced-initialization is used. This
+is true even if an implicit conversion is necessary.
+
+This rule reports a violation when it detects an overloading constructor with
+at least one constructor taking an std::initializer_list and at least one
+constructor taking another parameter type. A violation is not reported,
+though, if the non-std::initializer_list constructor is one of the special
+constructors, i.e., default, copy, or move constructors.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves clarity, prevents programmer confusion, and enforces better
+conformance with the C++ standard.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;initializer_list&gt;
+
+class C                           // Violation
+{
+public:
+  C(int);
+  C(std::initializer_list&lt;int&gt;);
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;initializer_list&gt;
+
+class C                           // OK
+{
+public:
+  C(std::initializer_list&lt;int&gt;);
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.1.5 A class shall only define an initializer-list constructor when it is the only constructor
+
+</PRE>
+</BODY>
+</HTML>

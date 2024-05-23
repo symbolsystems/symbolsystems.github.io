@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using catch-all exception handlers [AUTOSAR-A15_3_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using catch-all exception handlers [AUTOSAR-A15_3_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Catch-all (ellipsis and std::exception) handlers shall be used only in
+  (a) main,
+  (b) task main functions,
+  (c) in functions that are supposed to isolate independent components, and
+  (d) when calling third-party code that uses exceptions not according to
+      AUTOSAR C++14 guidelines."
+[AUTOSAR A15-3-4]
+
+This rule detects when a catch handler with an ellipsis (...) or std::exception
+is used in a function other than main().
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Catching an exception through catch-all handlers does not provide any detailed
+information about caught exception. This does not allow to take meaningful
+actions to recover from an exception other than to re-throw it. This is
+inefficient and results in code that is difficult to maintain."
+[AUTOSAR A15-3-4]
+
+This rule helps you apply catch handlers that provide meaningful information
+about caught exceptions to enable you to take appropriate action.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;exception&gt;
+#include &lt;new&gt;
+
+void f1() {
+    throw std::bad_alloc();
+}
+
+void f2()
+{
+    try {
+        f1();
+    } catch (std::exception&amp; e) {  // Violation -- too general
+        throw;
+    }
+}
+
+class Exception{};
+
+void f3()
+{
+    try {
+        throw Exception();
+    }
+    catch (...) {                  // Violation -- catch all
+        throw;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, replace the catch-all handlers with handlers that
+provide specific information about the caught exceptions.
+
+#include &lt;exception&gt;
+#include &lt;new&gt;
+
+void f1() {
+    throw std::bad_alloc();
+}
+
+void f2()
+{
+    try {
+        f1();
+    } catch (std::bad_alloc&amp; e) {  // OK
+        throw;
+    }
+}
+
+class Exception{};
+
+void f3()
+{
+    try {
+        throw Exception();
+    }
+    catch (Exception e) {         // OK
+        throw;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-3-4. Catch-all (ellipsis and std::exception) handlers shall be used
+   only in (a) main, (b) task main functions, (c) in functions that are
+   supposed to isolate independent components and (d) when calling third-
+   party code that uses exceptions not according to AUTOSAR C++14 guidelines.
+
+</PRE>
+</BODY>
+</HTML>

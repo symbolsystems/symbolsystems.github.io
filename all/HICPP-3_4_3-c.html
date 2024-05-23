@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use RAII to prevent resource leaks [HICPP-3_4_3-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use RAII to prevent resource leaks [HICPP-3_4_3-c-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Whenever you deal with a resource that needs paired acquire/release function
+calls, encapsulate that resource in an object that enforces pairing for you
+and performs the resource release in its destructor." [C++ Coding Standards]
+
+When a resource is acquired (a file is opened), it is necessary to guarantee
+that the code that releases the resource (closes the file) is run.
+
+This rule detects when the functions 'fopen' or 'freopen' from the Standard
+Library are used. It is recommended to use objects of input/output stream class
+instead, which operate on files using RAII.
+
+RAII (Resource Acquisition Is Initialization) is a C++ programming technique
+which binds the life cycle of a resource that must be acquired before use to
+the lifetime of an object. RAII guarantees that all resources are released
+when the lifetime of their controlling object ends, in reverse order
+of acquisition.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using RAII greatly simplifies resource management, reduces overall code size,
+and helps you ensure program correctness.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+int main ()
+{
+    FILE * pFile;
+    pFile = fopen ("example.txt", "w");           // Violation
+    if ( pFile != NULL ) {
+        fputs ("hello world", pFile);
+        fclose (pFile);
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;fstream&gt;
+using namespace std;
+
+int main ()
+{
+    ofstream myfile ("example.txt");              // OK
+    if ( myfile.is_open() )
+    {
+        myfile &lt;&lt; "hello world";
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards" Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter: "Design Style", Rule 13
+
+2. High Integrity C++ Coding Standard
+   3.4.3. Use RAII for resources
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The same type aliases shall be used in all declarations of the same entity [CODSTA-67_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The same type aliases shall be used in all declarations of the same entity [CODSTA-67_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If in a re-declaration type aliases are different from those in previous
+declarations, then it may not be clear whether the declarations refer
+to the same entity.
+
+This rule detects when different aliases are used in declarations
+of the same entity in a translation unit.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule checks only type aliases and ignores other differences
+in declarations i.e. the 'const' and 'volatile' qualifiers used
+for of function parameters.
+
+extern void foo(const int i);
+       void foo(      int i){}  // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintainability of your code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The rule does not detect when a member variable with the constexpr
+   specifier has a different type in the declaration than in the definition.
+
+typedef int INT;
+
+struct S
+{
+    static constexpr INT i = 1;   // no Violation
+};
+
+constexpr int S::i;
+
+2. The rule does not check types in template functions.
+
+template&lt;typename T&gt; int ft1();
+template&lt;typename T&gt; INT ft1()   // no Violation
+{
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+using INT = int;
+
+INT i;
+extern int i;                   // Violation
+
+void f1(INT p1);
+void f1(int p1){}               // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+using INT = int;
+
+INT i;
+extern INT i;                   // OK
+
+void f1(int p1);
+void f1(int p1){}               // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.9.1 The same type aliases shall be used in all declarations of the same entity
+
+</PRE>
+</BODY>
+</HTML>

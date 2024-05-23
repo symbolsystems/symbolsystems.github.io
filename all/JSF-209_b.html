@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Typedefs that indicate size and signedness shall be used in place of the basic types [JSF-209_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Typedefs that indicate size and signedness shall be used in place of the basic types [JSF-209_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The basic numerical types of signed and unsigned variants of char, int,
+short, long, and float, double should not be used, but specific-length
+typedefs should be used." [MISRA C:2004 Rule 6.3]
+
+This rule reports a violation if any of following types is used directly:
+        float, double, long double
+        float complex, double complex, long double complex
+        short, int, long, long long
+        signed char, unsigned char
+For "char" type, only explicitly signed or explicitly unsigned char type are
+checked (plain char is not checked).
+
+See also: MISRA2004-6_3, CODSTA-155
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule does not report a violation for:
+- "main" function return type and parameters
+- "extern" declaration
+- bit-fields
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Clarifies the size of the storage.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+A false positive may be reported if macro is used to declare typedef. Example:
+    #define DEFINE_TYPE(name, type, bitsize) typedef type name ## bitsize
+    DEFINE_TYPE(uint, unsigned int, 32); /* False Positive reported */
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Example */
+static signed char a;      /* Violation - no typedef */
+
+short int foo(             /* Violation (for return type) */
+        short* v_short,    /* Violation */
+        float&amp; r_float)    /* Violation */
+{
+    double h;              /* Violation */
+    const int z = 1;       /* Violation */
+    return 1;
+}
+
+typedef short int * ptr;          /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+typedef short int s16_t;        
+typedef double float64;         
+typedef const int cs32_t;       
+
+s16_t foo(                      /* OK */
+        s16_t* p_char,          /* OK */
+        float64 r_float)        /* OK */
+{
+    float64 h;                  /* OK */
+    cs32_t z = 1;               /* OK */
+    return 1;
+}
+
+typedef s16_t * ptr;            /* OK */
+
+struct STRUCT {
+        unsigned int i:2;       /* OK (bit-field) */
+};
+char ch;                        /* OK (plain char) */
+bool b;                         /* OK (boolean type) */
+extern signed char a;           /* OK (extern) */
+int main(int argc, char *argv[])/* OK ("main" return type and parameters) */
+{ 
+    return 0;
+} 
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 18 Portable Code - 18.1 Data Abstraction - Port. Rec. 1
+
+2. High Integrity C++ Coding Standard
+   3.5.1. Do not make any assumptions about the internal representation of a
+   value or object
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.28 Portable Code, AV Rule 209
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.6
+
+6. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.2 Section 7 - Directives, 2.2.1 Directive 4.6
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A variable of type auto shall not be initialized using '{}' or '={}' braced-initialization [CODSTA-MCPP-39]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A variable of type auto shall not be initialized using '{}' or '={}' braced-initialization [CODSTA-MCPP-39-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an initializer of a variable of type auto is enclosed in braces, then
+the result of type deduction may lead to developer confusion, as the variable
+initialized using {} or ={} will always be of std::initializer_list type."
+[AUTOSAR A8-5-3]
+
+The rule detects variables of type auto that are initialized using braces.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not trigger when the braced initializer contains a list of
+elements.
+
+#include &lt;initializer_list&gt;
+
+auto e = { 1, 2, 3 };         // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability and prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;initializer_list&gt;
+
+auto i{1};                    // Violation
+auto j = {2};                 // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, initialize the variables without using braces.
+
+auto i = 1;                   // OK
+auto j = 2;                   // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-5-3 A variable of type auto shall not be initialized
+   using {} or ={} braced-initialization.
+
+</PRE>
+</BODY>
+</HTML>

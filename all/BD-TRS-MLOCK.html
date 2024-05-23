@@ -1,0 +1,232 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use global variable with different locks set [BD-TRS-MLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use global variable with different locks set [BD-TRS-MLOCK-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+Rule checks how many times global variables are used in critical sections. Global 
+variables are regularly used in critical sections that hold some set of mutexes. 
+When the variables are used in this way and subsequently used outside of a critical 
+section or with a different set of locking objects then its possible that that 
+variable can be accessed without synchronization, putting the application in an 
+incorrect state.
+ 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Variable usage is counted per method, so if a variable is used multiple times in one
+method in a critical section then it counts as one usage.
+
+int index;
+pthread_mutex_t* mutex;
+
+void Foo()
+{
+    index = 12;
+    lock(mutex);
+    index++;
+    //...
+    if(index &gt; 12){
+        //...
+    }
+    unlock(mutex);
+    
+    index = 0;
+}
+
+In the above example, the rule will recognize two uses of the variable 'index'. The first
+usage is outside of a critical section. The second is within a critical section that holds
+the 'mutex' object.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+"Disallowed usages ratio in critical section" defines the usage threshold for reporting violations.
+The default value is 30%. For example, a variable is used 10 times in a method: 7 times in a critical
+section with the same locking objects set, and 3 times outside of critical sections or when a different
+set of locking objects is used. A violation will be reported because there is one common pattern of
+variable usage (it is used 70% of the time in that way). But there are also cases when the variable is
+used in different way and it is not higher than 30%.
+    
+"Compare usages in critical sections and outside of them regardless the lock object being used" turns off 
+checking locking objects. The rule will count usages in all critical sections and compare it to usages 
+without critical section.    
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents unsynchronized access to global variables.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+
+int variable;
+
+void foo()
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 0) {
+        variable = 1;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+void Bar()
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 1) {
+        variable = 2;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+void Baz() 
+{
+    if (variable == 2) { // VIOLATION
+        variable = 3;    // VIOLATION
+    }
+}
+
+void Qux()
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 3) {
+        variable = 0;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The example can be repaired by critical section in method 'Baz':
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+
+int variable;
+
+void foo()
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 0) {
+        variable = 1;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+void Bar()
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 1) {
+        variable = 2;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+void Baz() 
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 2) {
+        variable = 3;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+void Qux()
+{
+    pthread_mutex_lock(mutex);
+    if (variable == 3) {
+        variable = 0;
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Weaknesses On the Cusp
+CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')
+<A HREF="http://cwe.mitre.org/data/definitions/362.html">http://cwe.mitre.org/data/definitions/362.html</A>
+
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.1 Section 7 - Directives, Dir 5.1
+
+High Integrity C++ Coding Standard
+18.2.2 Synchronize access to data shared between threads using a single lock
+
+SEI CERT C Coding Standard
+CON43-C. Do not allow data races in multithreaded code 
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON43-C.+Do+not+allow+data+races+in+multithreaded+code">https://wiki.sei.cmu.edu/confluence/display/c/CON43-C.+Do+not+allow+data+races+in+multithreaded+code</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001995: The application must not be vulnerable to race conditions.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use meaningful symbolic constants to represent literal values [CERT_C-DCL06-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use meaningful symbolic constants to represent literal values [CERT_C-DCL06-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When used in program logic, literals can reduce the readability of source code.
+As a result, literals, in general, and integer constants, in particular,
+are frequently called magic numbers because their purpose is often obscured.
+Magic numbers can be constant values that represent either an arbitrary value
+(such as a determined appropriate buffer size) or a malleable concept
+(such as the age at which a person is considered an adult, which can change
+between geopolitical boundaries). Rather than embed literals in program logic,
+use appropriately named symbolic constants to clarify the intent of the code.
+The C programming language has several mechanisms for creating named, symbolic
+constants: const-qualified objects, enumeration constants, and object-like macro
+definitions." [CERT DCL06-C]
+
+This rule detects integer and floating constants with the following exceptions:
+- Constants with '0' and '1' values are not detected independently from their
+  representations.
+- Constants used in initializers of enumeration constants or global variables
+  are not detected.
+- Constants used in macro and pragma definitions are not detected.
+
+See also: CODSTA-26
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is enabled for C code only.
+
+"Although replacing numeric constants with a symbolic constant is often a good
+practice, it can be taken too far. Remember that the goal is to improve
+readability. Exceptions can be made for constants that are themselves
+the abstraction you want to represent" [CERT DCL06-C]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using numeric literals makes code more difficult to read and understand.
+Buffer overruns are frequently a consequence of a magic number being changed
+in one place (such as in an array declaration) but not elsewhere (such as in
+a loop through an array)." [CERT DCL06-C]
+
+This rule helps you improve readability and maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int array[255];       // Violation
+
+void f(int i)
+{
+  if ( i &gt; 20 ) {     // Violation
+    // ...
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define SIZE 255      // OK - exception
+
+int array[SIZE] = {   // OK
+    10, 20, 30        // OK - exception
+};
+
+const int limit = 20; // OK - exception
+
+void f(int i)
+{
+  if ( i &gt; limit ) {  // OK
+    // ...
+  }
+
+  for (i = 0; i &lt; limit; i++) { // OK - exception
+    //...
+  }
+
+  if ( i &gt; -1 &amp;&amp; i &lt; 1 ) {      // OK - exception
+    // ...
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   DCL06-C. Use meaningful symbolic constants to represent literal values
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL06-C.+Use+meaningful+symbolic+constants+to+represent+literal+values">https://wiki.sei.cmu.edu/confluence/display/c/DCL06-C.+Use+meaningful+symbolic+constants+to+represent+literal+values</A>
+
+2. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 10 Constants - Rule 37
+
+</PRE>
+</BODY>
+</HTML>

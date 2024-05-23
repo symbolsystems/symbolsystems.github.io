@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A full expression containing an increment (++) or decrement (--) operator should have no other potential side effects [CODSTA-123]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A full expression containing an increment (++) or decrement (--) operator should have no other potential side effects [CODSTA-123-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The use of increment and decrement operators in combination
+with other operators is not recommended because:
+  - It can significantly impair the readability of the code;
+  - It introduces additional side effects into a statement
+    with the potential for undefined behaviour
+It is clearer to use these operations in isolation from any
+other operators." [MISRA C:2012]
+
+"Accessing a volatile object, modifying an object, modifying
+a file, or calling a function that does any of those operations
+are all side effects, which are changes in the state of the
+execution environment." [ISO/IEC 9899:1999]
+
+The rule reports a violation if in a full expression ++ or -- operators
+are used and at least one more other operation with side effect is present.
+The rule assumes that each function call (implicit or explicit) causes
+a side effect.
+
+See also: MISRA2004-12_13
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"A function call is considered to be a side effect for the purposes of this
+rule. All sub-expressions of the full expression are treated as if they were
+evaluated for the purposes of this rule, even if specified as not being
+evaluated by The Standard." [MISRA C:2012]
+
+In C++ code the rule does not report violations on calls of operator++
+and operator-- functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours and improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int fooint(int);
+
+void foo(){
+    int a, b, c;
+    a = ++b + c--;             /* Violation */
+    
+    if (a++ &gt; fooint(2))       /* Violation */
+    {
+        //...
+    }
+    
+    c = fooint(--b);           /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int fooint(int);
+
+void foo(){
+    int a, b, c;
+    ++b;                       /* OK */
+    a = b + c;
+    c--;                       /* OK */
+    
+    ++a;                       /* OK */
+    if (a &gt; fooint(2))         /* OK */
+    {
+        //...
+    }
+    
+    b--;                       /* OK */
+    c = fooint(b);             /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 13.3
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3 Expressions
+   5.1.2.3 Program execution
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.5 Expressions
+   5.1.2.3 Program execution
+
+</PRE>
+</BODY>
+</HTML>

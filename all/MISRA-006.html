@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Values of character types shall be restricted to a defined and documented subset of ISO 10646-1 [MISRA-006]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Values of character types shall be restricted to a defined and documented subset of ISO 10646-1 [MISRA-006-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"ISO 10646-1 defines an international standard for mapping character sets 
+to numeric values. The chosen implementation of C shall conform to a subset
+of ISO 10646-1, and the chosen subset shall be documented."
+
+Users should define and document the subset of ISO 10646-1 to be used in their
+project.
+
+The rule checks character constants and string literals. Violations are
+reported on characters that are not allowed to use by user. The user can define
+allowed/disallowed values of characters in python method 'check'.
+
+The rule by default allows to use all values of characters in a range from
+0x0000 to 0xFFFF.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Documenting the character sets that are used increases developer awareness,
+preventing issues arising due to the use of incompatible character sets.".
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule correctly detects only characters in a range from 0x0000 to 0xFFFF
+in UTF-8 encoding.
+
+Escape sequences are not checked by this rule, so for example even if
+0x3C value is disallowed then following will not result in violation:
+ '\x3C'; // OK - escape sequences not checked
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* This example shows how to define allowed and disallowed character sets.
+ *
+ * For simplicity we'll assumes that customer wants to use characters restricted
+ * to subsets of ISO 10646-1: 
+ *    'Basic Latin' (0x20-0x7E), 'Latin-1 Supplement' (0xA0-0xFF) 
+ * and doesn't want to use characters from 0x3C-0x40 range (&lt;, =, &gt;, ?, @).
+ * 
+ * To achieve this the Python method 'check' should be modified in the following
+ * way:
+ * 
+ *  # the list containing allowed values
+ *  allowedRanges = [[0x20, 0x7E], [0xA0, 0xFF]]
+ * 
+ *  # the list containing not allowed values
+ *  disallowedRanges = [[0x3C, 0x40]]
+ *  # ...
+ * 
+ * The rule modified in this way reports violations on the following code:
+ */
+void foo(){
+    '?';        // Violation - '?' (0x3F) is in disallowed range
+    "ę";        // Violation - 'ę' (0x119 "latin small letter e with ogonek")
+                // is not in allowed range
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Only values of character types restricted to defined and documented
+subset of ISO 10646-1 are allowed.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 006
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.4 Environment, AV Rule 10
+
+</PRE>
+</BODY>
+</HTML>

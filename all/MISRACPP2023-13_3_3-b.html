@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The parameters in all overrides of a function should either be unnamed or have identical names [MISRACPP2023-13_3_3-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The parameters in all overrides of a function should either be unnamed or have identical names [MISRACPP2023-13_3_3-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The name given to a parameter helps document the purpose of the parameter.
+If a function parameter is renamed in a subsequent declaration, then having
+different names for the same object may lead to developer confusion."
+[MISRA C++:2023]
+
+This rule detects when a member function in a derived class and an overridden
+member function in a base class have different corresponding parameters
+names.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rules does not apply to template functions.
+This rule only checks declarations in a single translation unit.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+  virtual void f1(int a);
+};
+
+class Derived : public Base
+{
+public:
+  void f1(int b) override;   // Violation - using 'b' instead of 'a'
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+  virtual void f1(int a);
+  virtual void f2(int a);
+};
+
+class Derived : public Base
+{
+public:
+  void f1(int a) override;   // OK
+  void f2(int) override;     // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 13.3.3 The parameters in all declarations or overrides of a function shall either be unnamed or have identical names
+
+</PRE>
+</BODY>
+</HTML>

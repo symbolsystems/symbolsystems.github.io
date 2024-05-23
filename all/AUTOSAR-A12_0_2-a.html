@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not compare objects of a class that may contain padding bits with C standard library functions [AUTOSAR-A12_0_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not compare objects of a class that may contain padding bits with C standard library functions [AUTOSAR-A12_0_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The object representation of an object of type T is the sequence of N unsigned
+char objects taken up by the object of type T, where N equals sizeof(T).
+The value representation of an object is the set of bits that hold the value
+of type T." [ISO/IEC 14882-2014]
+
+"[C]lasses may have bit-field data members, padding inserted between data
+members, a vtable to support virtual method dispatch, or data members declared
+with different access privileges. For such types, accessing bits of the object
+representation that are not part of the object's value representation may
+result in undefined behavior depending on how those bits are accessed."
+[CERT-CPP-EXP62]
+
+This rule detects when a pointer to a class that may contain padding bits
+is passed as an argument to the 'memcmp' and 'strcmp' standard library
+functions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a class contains padding bits when:
+-its size is greater than the size of all of its non-static member variables
+-it contains a non-static member variable that is a bit-field
+-it contains a non-static member variable of bool or enum type
+-it has a base class of size greater than zero
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined or abnormal program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstring&gt;
+
+struct S {
+    char c;
+    long l;
+};
+
+void foo(S &amp;s1, S &amp;s2) {
+    std::memcmp(&amp;s1, &amp;s2, sizeof(S));        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstring&gt;
+
+struct S1 {
+    long l1;
+    long l2;
+};
+
+void foo1(S1 &amp;s11, S1 &amp;s12) {
+    std::memcmp(&amp;s11, &amp;s12, sizeof(S1));     // OK
+}
+
+struct S2 {
+    char c;
+    long l;
+    friend int operator==(const S2 &amp;al, const S2 &amp;ar) {
+        return al.c == ar.c &amp;&amp; al.l == ar.l;
+    }
+};
+
+void foo2(S2 &amp;s21, S2 &amp;s22) {
+    s21 == s22;                              // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-0-2. Bitwise operations and operations that assume data representation
+   in memory shall not be performed on objects
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   3.9 Types
+
+3. SEI CERT C++ Coding Standard
+   EXP62-CPP. Do not access the bits of an object representation that are not part of the object's value representation
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP62-CPP.+Do+not+access+the+bits+of+an+object+representation+that+are+not+part+of+the+object%27s+value+representation">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP62-CPP.+Do+not+access+the+bits+of+an+object+representation+that+are+not+part+of+the+object%27s+value+representation</A>
+
+</PRE>
+</BODY>
+</HTML>

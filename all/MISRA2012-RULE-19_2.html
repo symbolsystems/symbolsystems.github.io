@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The union keyword should not be used [MISRA2012-RULE-19_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The union keyword should not be used [MISRA2012-RULE-19_2-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A union member can be written and the same member can then be read back
+in a well-defined manner.
+However, if a union member is written and then a different union member
+is read back, the behaviour depends on the relative sizes of the members:
+- If the member read is wider than the member written then the value
+  is unspecified;
+- Otherwise, the value is implementation-defined.
+The Standard permits the bytes of a union member to be accessed by means
+of another member whose type is array of unsigned char. However, since it is
+possible to access bytes with unspecified values, unions should not be used."
+
+The rule reports a violation on each 'union' keyword used in code.
+
+See also: MISRA-110, MISRA2004-18_4
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined, unspecified and implementation-defined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define UNION union   // Violation
+
+typedef union {       // Violation
+    int i;
+    int j;
+}U;
+
+void foo(union U* pu) // Violation
+{
+    union U u;        // Violation
+    union             // Violation
+    {
+        char c;
+        short s;
+    };
+
+    UNION             // reported on macro definition
+    {
+        /*...*/
+    };       
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'union' keyword
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 12.3.1 The union keyword shall not be used
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 19.2
+
+</PRE>
+</BODY>
+</HTML>

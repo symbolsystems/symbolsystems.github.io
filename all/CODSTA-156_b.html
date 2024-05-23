@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If a composite expression is used as one (second or third) operand of a conditional operator then the other operand shall not have wider essential type [CODSTA-156_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If a composite expression is used as one (second or third) operand of a conditional operator then the other operand shall not have wider essential type [CODSTA-156_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Restricting implicit conversions on composite expressions means that sequences
+of arithmetic operations within an expression must be conducted in the same
+essential type, with the exception that essentially real floating and
+essentially complex floating operations may coexist. This reduces possible
+developer confusion." [MISRA C:2012 Rule 10.4 with Amendment 3]
+
+The rule reports a violation on a conditional operator if a composite
+expression is used as one (second or third) operand and the other
+(second or third) operand has a wider essential type.
+
+The terms "composite expression" and "essential type" are defined
+by the MISRA C:2012 standard.
+
+See also: CODSTA-156_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule reduces possible developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(int x) {
+    unsigned short u16a,u16b;
+    unsigned int u32a, u32b;
+
+    u32a = (x &gt; 0) ? u16b + u16a : u32b;                      /* Violation */
+    u32a = (x &gt; 0) ? u32b : (u16a + u16b);                    /* Violation */
+}
+
+void foo2(int x) {
+    float f32a, f32b;
+    double f64a, f64b;
+
+    f64a = (x &gt; 0) ? f32a + f32b : 10.0;                      /* Violation */
+    f64a = (x &gt; 0) ? f64a : ((x &gt; 0) ? f32a + f32b : 0.1f);   /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1ok(int x) {
+    unsigned short u16a,u16b;
+    unsigned int u32a, u32b;
+
+    u32a = (x &gt; 0) ? (unsigned int) u16b + u16a : u32b;              /* OK */
+    u32a = (x &gt; 0) ? u32b : ((unsigned int)u16a + u16b);             /* OK */
+}
+
+void foo2ok(int x) {
+    float f32a, f32b;
+    double f64a, f64b;
+
+    f64a = (x &gt; 0) ? (double)f32a + f32b : 10.0;                     /* OK */
+    f64a = (x &gt; 0) ? f64a : ((x &gt; 0) ? (double)f32a + f32b : 0.1f);  /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.7, 8.10 The essential type model
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.11 Rule 10.7
+
+3. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

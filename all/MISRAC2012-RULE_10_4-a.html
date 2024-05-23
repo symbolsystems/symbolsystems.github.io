@@ -1,0 +1,210 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Both operands of an operator in which the usual arithmetic conversions are performed shall have the same essential type category [MISRAC2012-RULE_10_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Both operands of an operator in which the usual arithmetic conversions are performed shall have the same essential type category [MISRAC2012-RULE_10_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C language allows the programmer considerable freedom and will permit
+conversions between different arithmetic types to be performed automatically.
+However, the use of these implicit conversions can lead to unintended results,
+with the potential for loss of value, sign or precision."
+
+"Both operands of an operator in which the usual arithmetic conversions
+are performed shall have the same essential type category. This rule applies
+to operators that are described in usual arithmetic conversions. This includes
+all the binary operators, excluding the shift, logical &amp;&amp;, logical || and comma
+operators. The increment and decrement operators are not covered by this rule."
+[MISRA C:2012 Rule 10.4]
+
+This rule detects cases when the operands of the following operators have
+different essential types:
++(binary), -(binary), *, /, %, &lt;, &gt;, &lt;=, &gt;=, !=, ==, &amp;(binary), |, ^, +=, -=,
+/=, *=, ^=, |=, &amp;=, %=
+
+The term "essential type" is defined by the MISRA C:2012 standard,
+but tools may also provide additional ways of identifying "essentially
+Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+Integer constants with values '0' and '1' are considered to be constants of
+"essentially Boolean" type.
+
+typedef enum {false, true}  bool;   /* essentially Boolean type */
+void foo(void) {
+    bool b;
+    signed int i;
+    if(b != 0);  /* OK */
+    if(i != 0);  /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The following are permitted to allow a common form of character manipulation
+to be used:
+1. The binary + and += operators may have one operand with essentially character
+   type and the other operand with an essentially signed or essentially unsigned
+   type;
+2. The binary - and -= operators may have a left-hand operand with essentially
+   character type and a right-hand operand with an essentially signed or
+   essentially unsigned type.
+3. The operators covered by this rule may have one operand with essentially
+   real floating type and the other operand with essentially complex floating
+   type. In the case of the conditional operator, this exception applies to the
+   second and third operands."
+[MISRA C:2012 Rule 10.4 with Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The use of stronger typing, as enforced by the MISRA essential type model,
+allows implicit conversions to be restricted to those that should then produce
+the answer expected by the developer." [MISRA C:2012 Rule 10.4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef enum {EN1, EN2} TE1;        /* essentially enum type */
+enum EN{ EN11, EN12 };              /* essentially enum type */
+enum {E1, E2};                      /* essentially signed type */
+typedef unsigned short      ushort; /* essentially unsigned type */
+typedef enum {false, true}  bool;   /* essentially Boolean type */
+
+void foo()
+{
+    TE1 te1;
+    enum EN e1;
+    float fl;
+    ushort us;
+    bool b;
+    long l;
+    _Complex float cf;
+
+    us + 1;          /* Violation - "unsigned" + "signed" */
+    10 - '1';        /* Violation - "signed"   - "character" */
+    1u + E2;         /* Violation - "unsigned" + "signed" */
+    fl += 1;         /* Violation - "floating" += "signed" */
+    b * te1;         /* Violation - "boolean"  * "enum" */
+    us / 'a';        /* Violation - "unsigned" / "character" */
+    b &amp; 2;           /* Violation - "boolean"  &amp; "signed" */
+    l - 2u;          /* Violation - "signed"   - "unsigned" */
+    if(b == E1);     /* Violation - "boolean"  == "enum" */
+    if(EN2 &lt; EN11);  /* Violation - "enum&lt;TE1&gt;" &lt; "enum&lt;EN&gt;" */
+    cf + us;         /* Violation - "complex float" + "unsigned" */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+typedef enum {EN1, EN2} TE1;        /* essentially enum type */
+enum {E1, E2};                      /* essentially signed type */
+typedef enum {false, true}  bool;   /* essentially Boolean type */
+
+void foo()
+{
+    TE1 te1;
+    float fl;
+    double d;
+    bool   b;
+    unsigned short ush;
+    _Complex float cf;
+
+    '1' - '0';      /* OK - "character" - "character" */
+    10  + '1';      /* OK - "signed"    + "character" - Exception */
+    E1  + E2;       /* OK - "signed"    + "signed" */
+    fl  += d;       /* OK - "floating"  + "floating" */
+    ush / 2u;       /* OK - "unsigned"  / "unsigned" */
+    if(b == true);  /* OK - "boolean" ==  "boolean" */
+    if(EN2 &lt; te1);  /* OK - "enum&lt;TE1&gt;" * "enum&lt;TE1&gt;" */
+    cf  + fl;       /* OK - "complex floating"  + "real floating" - Exception */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.4
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.9 Rule 10.4
+
+3. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

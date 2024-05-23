@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not add or subtract a scaled integer to a pointer [CODSTA-189]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not add or subtract a scaled integer to a pointer [CODSTA-189-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Adding or subtracting a scaled integer value to or from a pointer automatically
+scales the size of the value to the size of the type of the referenced object.
+This may yield a pointer that points to an invalid memory block.
+
+This rule detects when an expression with the sizeof() operator is added or
+subtracted to or from a pointer or array of a type other than character, except:
+- the A + sizeof(B) / sizeof(C) idiom, where B is an array and the types A, B
+  and C are the same types.
+- expressions where sizeof is a divider.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid using pointers that point to an invalid memory block.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int buf[10];
+void func(void)
+{
+    int *buf_ptr = buf;
+
+    if((buf + sizeof(buf)) &gt; buf_ptr){                      /* Violation */
+    	buf_ptr += sizeof(buf);                             /* Violation */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int buf[10];
+void func(void)
+{
+    int *buf_ptr = buf;
+
+    if((buf + sizeof(buf)/sizeof(buf[0])) &gt; buf_ptr){       /* OK */
+    	buf_ptr += sizeof(buf)/sizeof(buf[0]);              /* OK */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   ARR39-C. Do not add or subtract a scaled integer to a pointer
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer">https://wiki.sei.cmu.edu/confluence/display/c/ARR39-C.+Do+not+add+or+subtract+a+scaled+integer+to+a+pointer</A>
+
+</PRE>
+</BODY>
+</HTML>

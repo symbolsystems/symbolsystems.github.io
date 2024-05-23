@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An inline function shall be declared with the static storage class [MISRA2012-RULE-8_10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An inline function shall be declared with the static storage class [MISRA2012-RULE-8_10-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an inline function is declared with external linkage but not defined
+in the same translation unit, the behaviour is undefined. A call to an inline
+function declared with external linkage may call the external definition
+of the function, or it may use the inline definition. Although this should
+not affect the behaviour of the called function, it might affect execution
+timing and therefore have an impact on a real-time program." [MISRA C:2012]
+
+"Any function with internal linkage can be an inline function. For a function
+with external linkage, the following restrictions apply: If a function
+is declared with an inline function specifier, then it shall also be defined
+in the same translation unit." [ISO/IEC 9899:1999]
+
+The rule reports a violation if a function is declared as inline and is not
+declared as static. 
+
+The rule is enabled only for C language (In C++ the same restrictions apply 
+to inline functions with internal and external linkage).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"An inline function can be made available to several translation units
+by placing its definition in a header file."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* The code is compilable with compilers which support
+   the 'inline' function specifier */
+inline int fn1();                 /* Violation - non-static inline function */
+inline int fn1(){ return 0; }     /* Violation - non-static inline function */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* The code is compilable with compilers which support
+   the 'inline' function specifier */
+static inline int fn1();             /* OK */
+static inline int fn1(){ return 0; } /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.10
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.4 Function specifiers
+
+</PRE>
+</BODY>
+</HTML>

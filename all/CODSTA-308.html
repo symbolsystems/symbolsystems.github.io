@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Operands of shift operators shall have an unsigned type [CODSTA-308]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Operands of shift operators shall have an unsigned type [CODSTA-308-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when operands of shift operators (&lt;&lt;, &gt;&gt;) and
+their compound assignment versions (&lt;&lt;=, &gt;&gt;=) do not have an unsigned
+type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report on the signed left-hand-side operand if:
+* it is a non-negative constant of type T (before integral promotion), and
+* the right-hand-side operand is also a constant in the range
+  [0, sizeof(T) * CHAR_BIT - 1], and
+* the shift operation does not result in "overflow".
+
+The rule does not report on the signed right-hand-side operand
+if it is a constant in the range [0, sizeof(T) * CHAR_BIT - 1],
+where T is the type of the left-hand-side operand
+(before integral promotion).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected or undefined behavior.
+The result of shift operations is only guaranteed to be defined
+if the sign bit is not affected.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(signed char sc, unsigned char uc)
+{
+    sc &gt;&gt; 2U;       // Violation - left-hand-side operand is not unsigned
+    1U &gt;&gt; sc;       // Violation - right-hand-side operand is not unsigned
+    sc &gt;&gt;= (int)uc; // Violation x2 - neither of the operands is unsigned
+
+    1 &lt;&lt; 2; // Exception - both operands are constants matching the exception
+            // requirements
+}
+
+enum E : signed long
+{
+    U,
+    V,
+    W
+};
+
+void bar(E e)
+{
+    e &lt;&lt; 1u; // Violation - left-hand-side operand is not unsigned
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(signed char sc, unsigned char uc)
+{
+    (unsigned)sc &gt;&gt; 2U;  // OK - both operands are unsigned
+    1U &gt;&gt; uc;            // OK - both operands are unsigned
+    uc &gt;&gt;= (unsigned)sc; // OK - both operands are unsigned
+}
+
+enum E : unsigned long
+{
+    U,
+    V,
+    W
+};
+
+void bar(E e)
+{
+    e &lt;&lt; 1u; // OK - both operands are unsigned
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.4 The operands of bitwise operators and shift operators shall be appropriate
+
+</PRE>
+</BODY>
+</HTML>

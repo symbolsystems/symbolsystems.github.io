@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A source file should not contain unused tag declarations [CODSTA-176_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A source file should not contain unused tag declarations [CODSTA-176_b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a tag is declared but not used, then it is unclear to a reviewer if the tag 
+is redundant or it has been left unused by mistake."[MISRA C:2012 Rule 2.4]
+
+This rule detects cases when a source file contains unused
+tag declarations. The rule does not report violations
+for unused tag declarations in header files.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check tags declared inside functions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves legibility and increases efficiency of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct S1    /* Violation */
+{
+    int i;
+} TS1;
+
+union U1             /* Violation */
+{
+    int i;
+};
+
+enum E1              /* Violation */
+{
+    E11, E12
+};
+
+void foo( void )
+{
+    TS1 ts1;
+    ts1.i = E11 + E12;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef struct       /* OK */
+{
+    int i;
+} TS1;
+
+union U1             /* OK */
+{
+    int i;
+};
+
+enum                 /* OK */
+{
+    E11, E12
+};
+    
+void foo( void )
+{
+    union U1 u1;
+    TS1 ts1;
+    ts1.i = E11 + E12;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 2.4
+
+</PRE>
+</BODY>
+</HTML>

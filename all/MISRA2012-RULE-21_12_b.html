@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The standard header file &lt;fenv.h&gt; shall not be used [MISRA2012-RULE-21_12_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The standard header file &lt;fenv.h&gt; shall not be used [MISRA2012-RULE-21_12_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;fenv.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;fenv.h&gt; shall be used."
+[MISRA C:2012 Rule 21.12 with Amendment 3]
+
+The rule detects when a file includes the 'fenv.h' or 'cfenv' header.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;fenv.h&gt;                                  // Violation
+
+void foo ( float x, float y )
+{
+    float z;
+
+    feclearexcept ( FE_DIVBYZERO );
+
+    z = x / y;
+
+    if ( fetestexcept ( FE_DIVBYZERO ) )
+    {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not include the &lt;fenv.h&gt; header file.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.12
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.18 Rule 21.12
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   7.6 Floating-point environment &lt;fenv.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

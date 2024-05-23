@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Reset strings on fgets() or fgetws() failure [CERT_C-FIO40-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Reset strings on fgets() or fgetws() failure [CERT_C-FIO40-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"If either of the C Standard fgets() or fgetws() functions fail, the contents of the array being written 
+is indeterminate. It is necessary to reset the string to a known value to avoid errors on subsequent string 
+manipulation functions".
+[SEI CERT C Coding Standard, FIO40-C. Reset strings on fgets() or fgetws() failure]
+
+This rule detects when arrays are used that were not reset after fgets() or fgetws() failed.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Making invalid assumptions about the contents of an array modified by fgets() or fgetws() can result in 
+undefined behavior and abnormal program termination".
+[SEI CERT C Coding Standard, FIO40-C. Reset strings on fgets() or fgetws() failure]
+  
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+#include &lt;stdio.h&gt;
+  
+enum { BUFFER_SIZE = 1024 };
+
+void test(FILE *file) {
+
+    char buf[BUFFER_SIZE];
+ 
+    if (fgets(buf, sizeof(buf), file) == NULL) {
+        
+    }                        
+    printf ("%s", buf);        // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+#include &lt;stdio.h&gt;
+  
+enum { BUFFER_SIZE = 1024 };
+ 
+void test(FILE *file) {
+    char buf[BUFFER_SIZE];
+ 
+    if (fgets(buf, sizeof(buf), file) == NULL) {
+        *buf = '\0';
+    }
+    printf ("%s", buf);        // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+FIO40-C. Reset strings on fgets() or fgetws() failure
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO40-C.+Reset+strings+on+fgets()++or+fgetws()+failure">https://wiki.sei.cmu.edu/confluence/display/c/FIO40-C.+Reset+strings+on+fgets()++or+fgetws()+failure</A>
+
+</PRE>
+</BODY>
+</HTML>

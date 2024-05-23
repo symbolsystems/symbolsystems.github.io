@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Function parameters and return type should be documented in a comment that precedes the function declaration [COMMENT-14_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Function parameters and return type should be documented in a comment that precedes the function declaration [COMMENT-14_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Every declaration needs to provide a proper documentation. This is compatible
+with the C++ standard library documentation. This forces a programmer to provide
+a clarification for defined types and its data members responsibilities, methods
+and functions usage, their inputs and outputs specification..." [AUTOSAR-A2-7-3]
+
+The rule detects when:
+- the declaration of a function with non-void return type is not preceded by
+  a comment that contains the '@return' tag.
+- the declaration of a function with named parameters is not preceded by
+  a comment that contains the '@param' tag for every parameter. The '@param'
+  tag should be followed by a space character and the name of the appropriate
+  parameter.
+- the comment before the declaration of a void function contains the '@return'
+  tag.
+- the comment before the declaration of a function contains the '@param' tag
+  that is not followed by the correct parameter name.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The '@return' tag is not required for constuctors, destructors, and operators.
+
+The '@param' tag may by followed by optional attribute ['dir'] that specify 
+the direction ("in", "out" or "in,out") of parameter. 
+
+// @param [in] inArg description1
+// @param [out] outArg description2
+// @param [in,out] inOutArg description3
+void foo(int inArg, int* outArg, int* inOutArg);  // OK
+
+The '@param' tag may document multiple parameters with a comma separated list.
+
+// @param x,y,z description
+void foo(int x, int y, int z);                    // OK
+
+For virtual functions, it is acceptable to use the '@see' tag instead of
+the '@return' or '@param' tag as a reference to the documentation in the base
+class.
+
+class C
+{
+public:
+    // @param arg description
+    // @return description
+    virtual int foo(int arg);                     // OK
+};
+
+class D : public C
+{
+public:
+    // @see C::foo(int)
+    int foo(int arg);                             // OK
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int arg);                             // Violation
+
+int bar();                                     // Violation
+
+class C
+{
+public:
+    virtual int foo(int arg);                  // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding a comment that contains the '@param' or '@return'
+tag before the declarations.
+
+// @param arg description
+void foo(int arg);                             // OK
+
+// @return description
+int bar();                                     // OK
+
+class C
+{
+public:
+    // @return description
+    // @param arg description
+    virtual int foo(int arg);                  // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-7-3 All declarations of 'user-defined' types, static and non-static data
+   members, functions and methods shall be preceded by documentation.
+
+</PRE>
+</BODY>
+</HTML>

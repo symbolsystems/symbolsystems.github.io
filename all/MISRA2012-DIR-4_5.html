@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers in the same name space with overlapping visibility should be typographically unambiguous [MISRA2012-DIR-4_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers in the same name space with overlapping visibility should be typographically unambiguous [MISRA2012-DIR-4_5-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The definition of the term 'unambiguous' should be determined for a project
+taking into account the alphabet and language in which the source code is being
+written.
+
+For the Latin alphabet as used in English words, it is advised as a minimum
+that identifiers should not differ by any combination of:
+- The interchange of a lowercase character with its uppercase equivalent;
+- The presence or absence of the underscore character;
+- The interchange of the letter 'O', and the digit '0';
+- The interchange of the letter 'I', and the digit '1';
+- The interchange of the letter 'I', and the letter 'l' (el);
+- The interchange of the letter 'l' (el), and the digit '1';
+- The interchange of the letter 'S', and the digit '5';
+- The interchange of the letter 'Z', and the digit '2';
+- The interchange of the letter 'n', and the letter 'h';
+- The interchange of the letter 'B', and the digit '8';
+- The interchange of the letter sequence 'rn' ('r' followed by 'n'),
+  and the letter 'm'." [MISRA C:2012 Dir 4.5]
+
+This rule reports violations if two identifiers declared in the same name space
+with overlapping visibility differ only by one from the following:
+- the interchange of a lowercase character with its uppercase equivalent
+- the presence or absence of the underscore characters
+- the interchange of letters mentioned by MISRA2012 standard
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"There are separate name spaces for various categories of identifiers,
+ as follows:
+- label names (disambiguated by the syntax of the label declaration and use);
+- the tags of structures, unions, and enumerations (disambiguated by following
+  any) of the keywords struct, union, or enum);
+- the members of structures or unions; each structure or union has a separate
+  name space for its members (disambiguated by the type of the expression used
+  to access the member via the . or -&gt; operator);
+- all other identifiers, called ordinary identifiers (declared in ordinary
+  declarators or as enumeration constants)." [ISO/IEC 9899:1999]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Depending upon the font used to display the character set, it is possible
+for certain glyphs to appear the same, even though the characters are different.
+This may lead to the developer confusing an identifier with another one."
+[MISRA C:2012 Dir 4.5]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule reports false positives if similar identifiers are declared
+in different blocks (there is no overlapping visibility), an example:
+
+void foo()
+{
+    {
+        int ID01__X;
+    }
+    {
+        int ID01_X;   /* Violation reported */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int id1_a_b_c;
+int id1_abc;         /* Violation */
+
+int id2_abc;
+int id2_ABC;         /* Violation */
+
+int id3_I;
+int id3_1;           /* Violation */
+
+int id4_ZOI;
+int id4_201;         /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int id1_a_b_c_1;
+int id1_abc_2;       /* OK */
+
+int id2_abc_1;
+int id2_ABC_2;       /* OK */
+
+int id3_I_1;
+int id3_1_2;         /* OK */
+
+int id4_ZOI_1;
+int id4_201_2;       /* OK */
+
+int id5_i__1;        /* OK - differ by interchange of letters ('i' and 'I') */
+int id5_I_1;         /*      and absence of the underscore character        */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.5
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.1.2.3 Name spaces of identifiers
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.2.3 Name spaces of identifiers
+
+</PRE>
+</BODY>
+</HTML>

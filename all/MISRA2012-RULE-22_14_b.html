@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The second argument passed to the 'mtx_init()' function call should be either 'mtx_plain', 'mtx_timed', 'mtx_plain | mtx_recursive', or 'mtx_timed | mtx_recursive' [MISRA2012-RULE-22_14_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The second argument passed to the 'mtx_init()' function call should be either 'mtx_plain', 'mtx_timed', 'mtx_plain | mtx_recursive', or 'mtx_timed | mtx_recursive' [MISRA2012-RULE-22_14_b-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'mtx_init' function creates a mutex object with properties indicated
+by type, which must have one of the six values:
+- 'mtx_plain' for a simple non-recursive mutex,
+- 'mtx_timed' for a non-recursive mutex that supports timeout,
+- 'mtx_plain | mtx_recursive' for a simple recursive mutex, or
+- 'mtx_timed | mtx_recursive' for a recursive mutex that supports timeout."
+[ISO/IEC 9899:2011]
+
+If the 'mtx_init' function is called with the second argument with a value
+different than listed above, then behavior is undefined.
+
+This rule detects when the 'mtx_init' function is called with the second
+argument different than 'mtx_plain', 'mtx_timed', 'mtx_plain | mtx_recursive'
+or 'mtx_timed | mtx_recursive'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+void foo(mtx_t* m){
+    mtx_init(m, 0x01);                        // Violation
+    mtx_init(m, mtx_recursive);               // Violation
+    mtx_init(m, mtx_plain | mtx_timed);       // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+void foo(mtx_t* m){
+    mtx_init(m, mtx_plain);                   // OK
+    mtx_init(m, mtx_timed);                   // OK
+    mtx_init(m, mtx_plain | mtx_recursive);   // OK
+    mtx_init(m, mtx_recursive | mtx_timed);   // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.14 Rule 22.14
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.26.4.2 The mtx_init function
+
+</PRE>
+</BODY>
+</HTML>

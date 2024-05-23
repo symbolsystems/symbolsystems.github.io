@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not join or detach a thread that was previously joined or detached [BD-TRS-JOINDETACH]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not join or detach a thread that was previously joined or detached [BD-TRS-JOINDETACH-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"The C Standard, 7.26.5.6 [ISO/IEC 9899:2011], states that a thread shall not be joined 
+once it was previously joined or detached. Similarly, subclause 7.26.5.3 states that a thread 
+shall not be detached once it was previously joined or detached".
+[SEI CERT C Coding Standard, CON39-C. Do not join or detach a thread that was previously joined or detached]
+
+This rule detects code flow paths where a thread object that is joined or detached was previously
+joined or detached.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Joining or detaching a previously joined or detached thread is undefined behavior".
+[SEI CERT C Coding Standard, CON39-C. Do not join or detach a thread that was previously joined or detached]
+  
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+  
+void* thread_func(void *arg) {
+	/* Do work */  
+  	return 0;
+}
+
+void test() {
+	 
+	pthread_t thread_id;
+
+	pthread_create (&amp;thread_id, NULL, &amp;thread_func, NULL);
+    pthread_join(thread_id, 0);
+    pthread_detach(thread_id);			// VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Do not detach the previously joined thread: 
+
+#include &lt;pthread.h&gt;
+   
+void* thread_func(void *arg) {
+	/* Do work */  
+  	return 0;
+}
+
+void test() {
+	 
+	pthread_t thread_id;
+
+	pthread_create (&amp;thread_id, NULL, &amp;thread_func, NULL);
+    pthread_join(thread_id, 0);     // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.11
+
+SEI CERT C Coding Standard
+CON39-C. Do not join or detach a thread that was previously joined or detached
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON39-C.+Do+not+join+or+detach+a+thread+that+was+previously+joined+or+detached">https://wiki.sei.cmu.edu/confluence/display/c/CON39-C.+Do+not+join+or+detach+a+thread+that+was+previously+joined+or+detached</A>
+
+</PRE>
+</BODY>
+</HTML>

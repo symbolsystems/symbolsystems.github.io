@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A source file should not contain unused macro definitions [MISRAC2012-RULE_2_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A source file should not contain unused macro definitions [MISRAC2012-RULE_2_5-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a macro is defined but not used, then it is unclear to a reviewer
+if the macro is redundant or it has been left unused by mistake."
+[MISRA C:2012 with Technical Corrigendum 2 Rule 2.5]
+
+This rule detects when a source file contains a definition of a macro
+that is not used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report:
+- macro definitions in header files.
+- macro definitions followed by the #include directive (because the macros may
+  be used in the included files).
+
+  #define M1 10       // Not reported - the macro may be used in file.h
+  #include "file.h"
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and efficiency.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule reports a false positive if a macro is only used in a definition
+of another macro that has been defined earlier.
+
+   #define M2 M1+1
+   #define M1 10    // A false positive is reported
+   void foo() {
+       int i = M2;
+   }
+
+This rule does not trigger if an identifier with the same name as a macro is
+used after this macro has been undefined.
+
+   #define M1 10  // Not reported although the macro is not used
+   #undef M1
+   int M1;
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M1 10           // Violation
+void foo( void ) {
+    /* M1 is not used */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define COND(x) x       // OK
+
+#ifdef COND
+  #define M1 10         // OK
+#endif
+
+void foo( void ) {
+    int i = M1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 2.5
+
+2. MISRA C:2012 Technical Corrigendum 2, Technical clarification of MISRA C:2012
+   Section 3: Clarification of rules, 3.2 Rule 2.5
+
+</PRE>
+</BODY>
+</HTML>

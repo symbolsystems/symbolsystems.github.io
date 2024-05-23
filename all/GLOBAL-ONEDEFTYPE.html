@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A type that is used in multiple translation units shall be defined in one and only one file [GLOBAL-ONEDEFTYPE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A type that is used in multiple translation units shall be defined in one and only one file [GLOBAL-ONEDEFTYPE-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"[A] user defined type that is intended for use in multiple translation units
+should be defined in a single header file, so that the definition will be
+processed in exactly the same way (the same sequence of tokens) in each
+translation unit." ["High Integrity C++ Coding Standards"]
+
+This rule detects when a user-defined type has more than one definition
+in the testing scope.
+The rule does not report violations on user-defined types that are defined
+in functions, unnamed namespaces, or anonymous unions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes definitions in files in the testing scope. For this reason,
+the set of findings reported for the same file may vary depending
+on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior, as well as improve
+the maintainability of your code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule detects declarations of scoped enum types, and reports a false positive
+violation when both the declaration and definition (or more than one declaration)
+of the same type is used in different files in testing scope.
+
+// test1.cpp and test2.cpp are in testing scope
+// test1.cpp
+enum class E;          // reported Violation
+// test2.cpp
+enum class E { E1 };   // reported Violation
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption:
+the testing scope contains only 'test1.cpp', and 'test2.cpp'.
+
+// test1.cpp
+class C {                               // Violation
+};
+
+void bar1() {
+    C my_c1;
+}
+
+// test2.cpp
+class C {                               // Violation
+};
+
+void bar2() {
+    C my_c2;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption:
+the testing scope contains only 'test.h', 'test1.cpp', and 'test2.cpp'.
+
+// test.h
+class C {                               // OK
+};
+
+// test1.cpp
+#include "test.h"
+void bar1() {
+    C my_c1;
+}
+
+// test2.cpp
+#include "test.h"
+void bar2() {
+    C my_c2;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+   
+1. High Integrity C++ Coding Standard
+   7.4.2. Ensure that an inline function, a function template, or a type used
+   from multiple translation units is defined in a single header file
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.2.3 The source code used to implement an entity shall appear only once
+
+</PRE>
+</BODY>
+</HTML>

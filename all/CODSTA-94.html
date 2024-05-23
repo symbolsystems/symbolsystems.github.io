@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare pointer or array type [CODSTA-94]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare pointer or array type [CODSTA-94-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Through pointer you can access the memory directly, but if you do not use
+pointers properly there is a possibility that your program might crash.
+Because pointers deal with memory dynamically, they come with certain
+dangers and disadvantages despite their necessity.
+
+Rule reports violation on any declarations of functions or variables that use
+pointers or arrays. It is not allowed to declare function that returns pointer 
+to any type, or takes pointer or array as a parameter, nor to declare global 
+or local variable with pointer or array type. 
+Function pointers are not allowed as well.
+See also: CODSTA-05, CODSTA-89, CODSTA-95, MISRA2004-17_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents memory leaks, dereferencing a null pointers,
+buffer overflows, memory corruptions and undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int* INT_P; /* OK - no violation on typedef */
+INT_P x;            /* Violation */
+int* foo();         /* Violation */
+void (*FP)();       /* Violation */
+void bar(int*)      /* Violation */
+{
+  int tab[10];      /* Violation */
+  int *tab1[10];    /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Pointers and arrays should not be used.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

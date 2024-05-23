@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Objects with external linkage should not be initialized in a header file [INIT-01]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Objects with external linkage should not be initialized in a header file [INIT-01-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a non static object is initialized in a header file and multiple source
+files including this header, then multiple definition error can be thrown
+by the linker. Instead of initialization in a header file declare objects
+as extern and initialize them in implementation files.
+
+See also: MISRA2004-8_5, PFO-01
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language.
+A header file is defined as any file that is included via #include directive
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and maintainability of code, and prevents linker
+errors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* header file - file.h */ 
+int i = 0;	             /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* header file - file.h */ 
+extern int i;	             /* OK */
+
+/* implementation file - file.c */ 
+#include "file.h"
+int i = 0;	             /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

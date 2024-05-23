@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Never return from functions that should not return [CERT_CPP-MSC53-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Never return from functions that should not return [CERT_CPP-MSC53-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects returns of functions that are declared with the "noreturn" attribute.
+
+A function that specifies the "noreturn" attribute can prohibit returning by throwing an exception, 
+entering an infinite loop, or calling another non-returning function.
+
+The standard functions declared with this attribute: 
+    * std::_Exit,
+    * std::abort,
+    * std::exit, 
+    * std::quick_exit,
+    * std::unexpected, 
+    * std::terminate, 
+    * std::rethrow_exception, 
+    * std::throw_with_nested,
+    * std::nested_exception::rethrow_nested.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Returning from an 'f' function that has been declared with the "noreturn" attribute
+results in undefined behavior that might be exploited.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps you avoid unexpected failures at runtime. The Standard does not define behavior
+if a function declared with the "noreturn" attribute returns, which may lead to
+unexpected behaviors.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation (the function returns when 0 is passed):
+ 
+#include &lt;cstdlib&gt;
+
+[[noreturn]] void example(int n) {
+    if (n &gt; 0) {
+        throw "Received positive input";
+    } else if (n &lt; 0) {
+        std::exit(0);
+    }
+} // VIOLATION
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+In this code, function doesn't return on any path:
+
+[[noreturn]] void repair(int i) {
+    if (i &gt; 0) {
+        throw "Received positive input";
+    }
+    std::exit(0);
+} // NO VIOLATION
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018 Phase 2 - New C11/C18 Features
+2.3 Section 8 - Rules, 2.3.13 Rule 17.9
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 9.6.4 A function declared with the [[noreturn]] attribute shall not return
+
+AUTOSAR C++14 Coding Guidelines
+Rule A7-6-1 Functions declared with the [[noreturn]] attribute shall not return
+
+SEI CERT C++ Coding Standard
+MSC53-CPP. Do not return from a function declared [[noreturn]]
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88046346">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88046346</A>
+
+C reference
+_Noreturn function specifier 
+<A HREF="https://en.cppreference.com/w/c/language/_Noreturn">https://en.cppreference.com/w/c/language/_Noreturn</A>
+
+C++ reference
+Attribute specifier sequence(since C++11), 
+<A HREF="http://en.cppreference.com/w/cpp/language/attributes">http://en.cppreference.com/w/cpp/language/attributes</A>
+
+</PRE>
+</BODY>
+</HTML>

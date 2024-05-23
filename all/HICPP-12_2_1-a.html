@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make destructors virtual in base classes [HICPP-12_2_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make destructors virtual in base classes [HICPP-12_2_1-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule verifies that destructors in base classes are virtual.
+Declaring the destructor virtual tells the compiler that it must examine
+the object being deleted to see where to start calling destructors.
+See also: OOP-22, OOP-23, OOP-31
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using non-virtual destructor in base classes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class BaseB
+{
+    public:
+        BaseB() {}
+        ~BaseB() {}  // Violation
+};
+
+class Derived : public BaseB
+{
+    public:
+        Derived() {};
+        ~Derived() {};
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class BaseA 
+{
+    public:
+        BaseA() {}
+        virtual ~BaseA() {}    // OK
+};
+
+class Derived : public BaseA 
+{
+    public:
+        Derived() {};
+        ~Derived() {};
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. High Integrity C++ Coding Standard
+   12.2.1. Declare virtual, private or protected the destructor of a type used
+   as a base class
+
+3. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.,
+   Chapter: "Constructors, Destructors, and Assignment Operators", Item 14
+
+4. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 7
+
+</PRE>
+</BODY>
+</HTML>

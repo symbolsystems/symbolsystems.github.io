@@ -1,0 +1,230 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid passing sensitive data to functions that write to log files [BD-SECURITY-SENSLOG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid passing sensitive data to functions that write to log files [BD-SECURITY-SENSLOG-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Information written to log files can be of a sensitive nature and give
+valuable guidance to an attacker or expose sensitive user information".
+[CWE-532] 
+
+This rule detects when sensitive data is written to log files.
+The rule must be parameterized to define sensitive data and specify logging
+functions; see PARAMETERS.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"While logging all information may be helpful during development stages, it is
+important that logging levels be set appropriately before a product ships so 
+that sensitive user data and system information are not accidentally exposed 
+to potential attackers". [CWE-532] 
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The 'Secure data processing functions' parameter allows you to specify
+functions that can convert sensitive data to safe values.
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the securing function. If disabled, the rule
+    does not consider the data processed by the function to be secure.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to function with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- 'Returns secured data' - if enabled, the function secures its return value.
+- 'Secured parameters' - specifies which function parameters are secured by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are secured.
+By default, the following function is considered to secure the data it processes:
+ - '[Ss]ecure*'
+
+The 'Logging functions' parameter allows you to specify functions that write
+information to log files. The rule triggers when sensitive data is passed as
+a parameter to one of the listed functions.
+
+Fill in the following columns to configure additional logging functions.
+- 'Enabled' - enables or disables the logging function. If disabled, the rule
+    does not consider the functions to be a logging function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to function with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- 'Logged parameters' - specifies which function parameters should be checked
+    for being sensitive. List 1-based indexes of parameters separated by a comma
+    or use "*" to specify that all function parameters should be checked.
+By default, the rule checks the parameters of the following functions:
+- the "*Log*" function of "*[Ll]og*" type
+- the "*log*" function of "*[Ll]og*" type
+- the "*[Ii]nfo*" function of "*[Ll]og*" type
+- the "*[Ww]arn*" function of "*[Ll]og*" type
+- the "*[Ee]rror*" function of "*[Ll]og*" type
+
+The 'Sensitive variables' parameter allows you to specify the names of
+variables that the rule considers to be sensitive.
+Fill in the following columns to configure a sensitive variable:
+- 'Enabled' - enables or disables the sensitive variable. If disabled, the rule
+    does not consider the variable to be sensitive.
+- 'Fully qualified variable name (wildcard)' - specifies the fully qualified
+name of the variable. You can use "*" to specify that all variables are
+considered to be sensitive.
+By default, the following variable names are considered to be sensitive:
+- '*[Pp]assword*'
+- '*[Pp]asswd*'
+ 
+The 'Sensitive functions' parameter allows you to specify functions the rule
+considers to be sensitive.
+- 'Enabled' - enables or disables the sensitive function. If disabled, the rule
+    does not consider the function to be a sensitive function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies the fully qualified name
+    of the type that declares the function. You can use "*" for a function
+    declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to functions with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- ''this' object is sensitive' - if enabled, the function makes the object it is
+    called on sensitive.
+- 'Returns sensitive data' - if enabled, the function makes its return value
+    sensitive.
+- 'Sensitive parameters' - specifies which function parameters are made
+    sensitive by the function. List 1-based indexes of parameters separated by
+    a comma or use "*" to specify that all function parameters are affected.
+By default, the following function is considered to be sensitive:
+- '*[Pp]assword*'
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent the exposure of sensitive data to potential
+attackers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, sensitive data is passed to the 'error' function,
+which writes data to a file.
+
+class Logger {
+public:
+    void error(const char * msg) {}
+};
+
+const char* getPassword();
+
+void test01(Logger log){
+    const char* password = getPassword();
+    log.error(password);            // VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by securing the password with the secure data processing
+function 'secure' before writing the data to a file.
+
+class Logger {
+public:
+    void error(const char * msg) {}
+};
+
+const char* getPassword();
+const char* secure(const char*);
+
+void test01(Logger log){
+    const char* password = getPassword();
+    log.error(secure(password));    // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+OWASP Top 10-2021
+A04:2021 - Insecure Design
+<A HREF="https://owasp.org/Top10/A04_2021-Insecure_Design/">https://owasp.org/Top10/A04_2021-Insecure_Design/</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+2022 CWE Weaknesses On the Cusp
+CWE-312: Cleartext Storage of Sensitive Information
+<A HREF="https://cwe.mitre.org/data/definitions/312.html">https://cwe.mitre.org/data/definitions/312.html</A>
+
+2019 CWE Weaknesses On the Cusp
+CWE-532: Inclusion of Sensitive Information in Log Files
+<A HREF="https://cwe.mitre.org/data/definitions/532.html">https://cwe.mitre.org/data/definitions/532.html</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001740: The application must only store cryptographic representations of passwords.
+APSC-DV-001750: The application must transmit only cryptographically-protected passwords.
+APSC-DV-001850: The application must not display passwords/PINs as clear text.
+APSC-DV-002440: The application must protect the confidentiality and integrity of transmitted information.
+APSC-DV-002460: The application must maintain the confidentiality and integrity of information during preparation for transmission.
+APSC-DV-002470: The application must maintain the confidentiality and integrity of information during reception.
+APSC-DV-002570: The application must generate error messages that provide information necessary for corrective actions without revealing information that could be exploited by adversaries.
+APSC-DV-003235: The application must not be subject to error handling vulnerabilities.
+
+</PRE>
+</BODY>
+</HTML>

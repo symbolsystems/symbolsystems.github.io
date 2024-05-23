@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Exception objects must be nothrow copy constructible [EXCEPT-19]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Exception objects must be nothrow copy constructible [EXCEPT-19-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Throwing an exception copy-initializes a temporary object, called
+the exception object. The temporary is an lvalue and is used to initialize
+the variable declared in the matching handler." [ISO/IEC 14882-2014]
+
+"The copy constructor for an object thrown as an exception must be declared
+noexcept, including any implicitly-defined copy constructors." [CERT-ERR60-CPP]
+
+This rule detects when a class that inherits from the 'std::exception' class
+contains a declaration of a member variable of 'std::string' type.
+If the copy constructor for such a class is implicitly defined, then it is not
+declared 'noexcept', because the copy constructor for 'std::string'
+is not declared 'noexcept'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not trigger when the class has an explicitly defined copy
+constructor with a non-throwing exception specification.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+"If the copy constructor for the exception object type throws during the copy
+initialization, std::terminate() is called, which can result in undefined
+behavior." [CERT-ERR60-CPP]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;exception&gt;
+#include &lt;string&gt;
+
+class E : public std::exception {                            // Violation
+    std::string msg;
+public:
+    E(const char *m) : msg(m) {}
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdexcept&gt;
+#include &lt;string&gt;
+
+class E : public std::exception {                            // OK
+    std::string msg;
+public:
+    E(const char *m) : msg(m) {}
+    E(const E &amp; _e) noexcept;
+};
+
+class E2 : public std::exception {                           // OK
+    std::runtime_error msg;
+public:
+    E2(const char *m) : msg(m) {}
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   ERR60-CPP. Exception objects must be nothrow copy constructible
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR60-CPP.+Exception+objects+must+be+nothrow+copy+constructible">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR60-CPP.+Exception+objects+must+be+nothrow+copy+constructible</A>
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   15.1 Throwing an exception
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The facilities that are specified as being provided by &lt;tgmath.h&gt; should not be used [CODSTA-108_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The facilities that are specified as being provided by &lt;tgmath.h&gt; should not be used [CODSTA-108_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The header &lt;tgmath.h&gt; includes the headers &lt;math.h&gt; and &lt;complex.h&gt; and
+defines several type-generic macros.
+Use of the macro invokes a function whose corresponding real type and type
+domain are determined by the arguments for the generic parameters.
+If the type of the argument is not compatible with the type of the parameter
+for the selected function, the behavior is undefined." [ISO/IEC 9899:1999]
+
+This rule detects identifiers with names of macros defined in the &lt;tgmath.h&gt;
+header file and checks if the file is included in a translation unit.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+A false positive will be reported when identifiers have same names as macros
+defined in the &lt;tgmath.h&gt; header file, but are not macros from this file,
+for example:
+
+// file1.h
+#include &lt;math.h&gt;
+float i;
+void f(void)
+{
+    fabs(i);  // Reported, but 'fabs' is not a macro from &lt;tgmath.h&gt;
+}
+
+// file2.h
+#include &lt;tgmath.h&gt;
+//...
+
+// file.c
+#include "file1.h"
+#include "file2.h"
+//...
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;tgmath.h&gt;
+
+double d;
+
+void f(void)
+{
+    sqrt(d);     // Violation - generic sqrt is used
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;math.h&gt;
+
+double d;
+
+void f(void)
+{
+    sqrt(d);     // OK - math.h version is used
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1999 Programming languages -- C
+   7.22 Type-generic math &lt;tgmath.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

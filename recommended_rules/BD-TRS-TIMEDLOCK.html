@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The Standard Library function mtx_timedlock() shall not be invoked on a mutex that does not support timeout [BD-TRS-TIMEDLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The Standard Library function mtx_timedlock() shall not be invoked on a mutex that does not support timeout [BD-TRS-TIMEDLOCK-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases when the mtx_timedlock() function is called on a mutex 
+variable that does not support timeout.
+
+This rule recognizes global mutexes of type mtx_t or mtx_t*.
+
+The first argument of the mtx_timedlock() function shall be a mutex variable
+which supports timeout. To ensure this, the mtx_timed value should be used for
+mutex initialization. Usually it is achieved by calling:
+
+mtx_init(&amp;mtx, mtx_timed)
+
+or
+
+mtx_init(&amp;mtx, mtx_timed | mtx_recursive)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Calling the function mtx_timedlock() on a mutex variable that does not 
+support timeout is undefined behavior. 
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+When the "Report if both timed and non-timed mutex initializations are visible" 
+parameter is enabled, the rule will report a violation if it finds at least one
+non-timed mutex initialization, even if timed initialization also can be found.
+
+This option is enabled by default.
+
+When the "Report if no mutex initialization is visible" parameter is enabled, 
+the rule will report a violation if it cannot find any mutex initialization and
+such mutex is used in the mtx_timedlock() function.
+
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+mtx_t Ra;
+struct timespec *ts;
+
+void init()
+{
+  mtx_init(&amp;Ra, mtx_plain);
+}
+
+void foo()
+{
+  mtx_timedlock(&amp;Ra, ts); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+mtx_t Ra;
+struct timespec *ts;
+
+void init()
+{
+  mtx_init(&amp;Ra, mtx_timed);
+}
+
+void foo()
+{
+  mtx_timedlock(&amp;Ra, ts); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 21.26
+
+</PRE>
+</BODY>
+</HTML>

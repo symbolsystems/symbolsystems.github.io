@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use explicit ref-qualifiers on auto declarations in range-based 'for' loops [CODSTA-MCPP-22]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use explicit ref-qualifiers on auto declarations in range-based 'for' loops [CODSTA-MCPP-22-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Declaring a variable as part of a range-based 'for' loop may make it harder
+to notice when copy-initialization is used. This makes you prone to confusing
+original objects with their copies and may result in performing operations
+on copies instead of the original object. In addition, it may lead to creating
+redundant copies of container members, which  makes your code inefficient.
+
+This rule detects when the induction variables of range-based 'for' loops
+are declared with the 'auto' specifier and without an explicit ref-qualifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code efficiency and ensure that operations are
+performed on original objects rather than their copies.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+class S {
+    int m;
+public:
+    S(int i) : m(i) {}
+    void modify(int p) { m = p; }
+};
+
+void f() {
+    std::vector&lt;S&gt; Sv{S(1), S(2), S(3)};
+    for (auto i : Sv) {                       // Violation
+        i.modify(10);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+class S {
+    int m;
+public:
+    S(int i) : m(i) {}
+    void modify(int p) { m = p; }
+};
+
+void f() {
+    std::vector&lt;S&gt; Sv{S(1), S(2), S(3)};
+    for (auto&amp; i : Sv) {                       // OK
+        i.modify(10);
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

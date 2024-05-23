@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Memory and Resource Management [MRM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+MRM
+</STRONG>
+<PRE>
+Memory and Resource Management
+</PRE>
+<STRONG>
+RULES
+</STRONG>
+<p>
+<code><a href="MRM-08.html">Do not invoke malloc/realloc for objects having constructors [MRM-08-1]</a></code><br>
+<code><a href="MRM-35.html">Never provide brackets ([]) for delete when deallocating non-arrays [MRM-35-3]</a></code><br>
+<code><a href="MRM-36.html">Always provide empty brackets ([]) for delete when deallocating arrays [MRM-36-3]</a></code><br>
+<code><a href="MRM-37.html">Declare a copy assignment operator for classes with dynamically allocated memory [MRM-37-1]</a></code><br>
+<code><a href="MRM-38.html">Declare a copy constructor for classes with dynamically allocated memory [MRM-38-1]</a></code><br>
+<code><a href="MRM-51.html">Do not use 'delete' on pointers to a void type [MRM-51-3]</a></code><br>
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The library functions atof, atoi and atol from library stdlib.h shall not be used [CERT_C-MSC24-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The library functions atof, atoi and atol from library stdlib.h shall not be used [CERT_C-MSC24-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'atof', 'atoi', 'atol' and, for C99 only 'atoll' functions
+of &lt;stdlib.h&gt; have undefined behaviour associated with them
+when the string cannot be converted."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void foo( void ) {
+    int i;
+    double d;
+    long l;
+    long long ll;
+  
+    d = atof( "123.5" );           /* Violation */
+    i = atoi( "12345" );           /* Violation */
+    l = atol( "12345" );           /* Violation */
+    ll = atoll( "12345" );         /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'atof', 'atoi', 'atol' and 'atoll' functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A18-0-2. The error state of a conversion from string to a numeric value
+    shall be checked
+
+2.  ISO/IEC 9899:1990 Programming languages -- C
+    7.10.1 String conversion functions
+
+3.  ISO/IEC 9899:1999 Programming languages -- C
+    7.20.1 Numeric conversion functions
+
+4.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.5 Libraries, AV Rule 23
+
+5.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 18, Rule 18-0-2
+
+6.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 21.2.1 The library functions atof, atoi, atol and atoll from &lt;cstdlib&gt; shall not be used
+
+7.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 21.7
+
+8.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 20, Rule 20.10
+
+9.  Origin: Misra Guidelines - Rule 125
+
+10. SEI CERT C Coding Standard
+    ERR07-C. Prefer functions that support error checking over equivalent
+    functions that don't
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR07-C.+Prefer+functions+that+support+error+checking+over+equivalent+functions+that+don%27t">https://wiki.sei.cmu.edu/confluence/display/c/ERR07-C.+Prefer+functions+that+support+error+checking+over+equivalent+functions+that+don%27t</A>
+
+11. SEI CERT C Coding Standard
+    ERR34-C. Detect errors when converting a string to a number
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number">https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number</A>
+
+12. SEI CERT C Coding Standard
+    MSC24-C. Do not use deprecated or obsolescent functions
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions">https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions</A>
+
+13. SEI CERT C++ Coding Standard
+    ERR62-CPP. Detect errors when converting a string to a number
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR62-CPP.+Detect+errors+when+converting+a+string+to+a+number">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR62-CPP.+Detect+errors+when+converting+a+string+to+a+number</A>
+
+</PRE>
+</BODY>
+</HTML>

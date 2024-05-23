@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A cast shall not remove any '_Atomic' qualification from the type of a pointer [CODSTA-MC-18]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A cast shall not remove any '_Atomic' qualification from the type of a pointer [CODSTA-MC-18-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The presence of the _Atomic qualifier designates an atomic type. The size,
+representation, and alignment of an atomic type need not be the same as those
+of the corresponding unqualified type." [ISO/IEC 9899:2017]
+
+This rule detects when an _Atomic qualification is explicitly cast away on
+an object of pointer type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks only three levels of pointer nesting.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Removing an _Atomic qualifier might circumvent the lock status of an object
+and potentially result in memory corruption." [MISRA C:2012 Amendment 4]
+
+This rule helps you prevent undefined and erroneous program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( _Atomic int* ap )
+{
+    _Atomic int** app = 0;
+    int* ip1 = (int*)ap;                 /* Violation */
+    int** ip2 = (int**)app;              /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f1( _Atomic int* cp )
+{
+    _Atomic int** app = 0;
+    _Atomic int* ip1 = (int*)ap;         /* OK */
+    _Atomic int** ip2 = (int**)app;      /* OK */
+}
+
+/* Removing _Atomic qualifier from the pointer is allowed */
+void f2( int* _Atomic ap )
+{
+    int* ip1 = (int*)ap;       /* OK - _Atomic removed from the pointer,
+                                       not the pointed type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:2017 Programming languages -- C
+   6.2.5 Types
+
+</PRE>
+</BODY>
+</HTML>

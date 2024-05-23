@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not treat arrays polymorphically [BD-PB-POLARR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not treat arrays polymorphically [BD-PB-POLARR-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Do not delete an array object through a static pointer type that differs from
+the dynamic pointer type of the object. Deleting an array through a pointer to
+the incorrect type results in undefined behavior." 
+[SEI CERT C++ Coding Standard, EXP51-CPP]
+
+"Pointer arithmetic does not account for polymorphic object sizes, and
+attempting to perform pointer arithmetic on a polymorphic object value
+results in undefined behavior." 
+[SEI CERT C++ Coding Standard, CTR56-CPP]
+
+This rule detects when a pointer to an array of derived class objects is
+first cast to a pointer to a base class, and then passed as an operand
+to the delete[] operator, or used in the pointer arithmetic operations
+(for example, "ptr + x", "ptr - x", "ptr[i]").
+ 
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Attempting to destroy an array of polymorphic objects through the incorrect
+static type is undefined behavior. In practice, potential consequences include
+abnormal program execution and memory leaks." 
+[SEI CERT C++ Coding Standard, EXP51-CPP]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+In this noncompliant code example, an array of Derived objects is created
+and the pointer is stored in 'Base *'.
+
+struct Base {
+  virtual ~Base() = default;
+};
+
+struct Derived final : Base {};
+
+void f() {
+   Base *b = new Derived[10];
+   // ...
+   delete [] b;	// VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the above code example, change the type of the pointer
+to 'Derived *'.
+
+struct Base {
+  virtual ~Base() = default;
+};
+
+struct Derived final : Base {};
+
+void f() {
+   Derived *b = new Derived[10];
+   // ...
+   delete [] b;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+EXP51-CPP. Do not delete an array through a pointer of the incorrect type
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP51-CPP.+Do+not+delete+an+array+through+a+pointer+of+the+incorrect+type">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP51-CPP.+Do+not+delete+an+array+through+a+pointer+of+the+incorrect+type</A>
+
+SEI CERT C++ Coding Standard
+CTR56-CPP. Do not use pointer arithmetic on polymorphic objects
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR56-CPP.+Do+not+use+pointer+arithmetic+on+polymorphic+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR56-CPP.+Do+not+use+pointer+arithmetic+on+polymorphic+objects</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-0-4 Pointer arithmetic shall not be used with pointers to non-final classes
+
+</PRE>
+</BODY>
+</HTML>

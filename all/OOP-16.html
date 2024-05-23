@@ -1,0 +1,177 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calling virtual functions from constructors [OOP-16]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calling virtual functions from constructors [OOP-16-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Inside constructors virtual functions do not behave "virtually." Called while
+executing a constructor, a virtual function will always be resolved to the type
+of the constructor. Further, a call from a constructor to a pure virtual
+function has undefined behavior.
+
+The same applies to destructors, but this rule checks only constructors.
+Enable OOP-16_b to check destructors.
+
+Hence, in general, using virtual functions in constructors is error prone, and
+may lead to defects ranging from memory leaks to program crashes.
+
+Alternatives to calling virtual functions in these circumstances most often
+include requirements to call a post-constructor function:
+- document the requirements for clients of the code
+- call post-constructor during the first call of a member function
+- use a factory that insures the proper initialization sequence
+
+This rule detects when you call virtual functions from constructors.
+
+See also: OOP-16_b, BD-PB-VCTOR, BD-PB-VDTOR
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports violations only if virtual functions are directly called
+from constructors. Indirect calls are not detected.
+
+class A {
+    A();
+    virtual void fVirt();
+    virtual void fNonVirt();
+};
+
+void A::fVirt(){}
+void A::fNonVirt(){ fVirt(); }
+A::A(){ A::fNonVirt(); }       // Violation not reported
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves code reliability and maintainability, may identify runtime bugs
+in the application.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    Base( ) {
+        init_Base( );          // Violation
+    }
+    virtual void init_Base( );
+};
+
+class Derived : public Base {
+        Derived* derived;
+public:
+    Derived( ) {
+        init_Base( );           // Violation
+        init_Derived1( );       // Violation
+        this-&gt;init_Derived2( ); // Violation
+    }
+    virtual void init_Derived1( );
+    virtual void init_Derived2( );
+};
+
+void Base::init_Base(){}
+void Derived::init_Derived1( ) {}
+void Derived::init_Derived2( ) {}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    Base( ) {
+        Base::init_Base( );        // OK
+    }
+    virtual void init_Base( );
+};
+
+class Derived : public Base {
+        Derived* derived;
+public:
+    Derived( ) {
+        Base::init_Base( );        // OK
+        Derived::init_Derived1( ); // OK
+        derived-&gt;init_Derived2( ); // OK
+    }
+    virtual void init_Derived1( );
+    virtual void init_Derived2( );
+};
+
+void Base::init_Base(){}
+void Derived::init_Derived1( ) {}
+void Derived::init_Derived2( ) {}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 49
+
+2. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 9
+
+3. Scott Meyers and Martin Klaus, "Examining C++ Program Analyzers", 
+   Dr. Dobbs' Journal, the February 1997,
+   Chapter: "Constructors/Destructors/Assignment", Item 13
+   <A HREF="http://www.aristeia.com/ddjpaper1_frames.html">http://www.aristeia.com/ddjpaper1_frames.html</A>
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 71.1
+
+5. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 71
+
+6. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+7. ISO/IEC 14882:2003 Programming languages -- C++
+   10.4 Abstract classes, point 6
+   12.7 Construction and destruction, point 3
+
+8. SEI CERT C++ Coding Standard
+   OOP50-CPP. Do not invoke virtual functions from constructors or destructors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP50-CPP.+Do+not+invoke+virtual+functions+from+constructors+or+destructors">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP50-CPP.+Do+not+invoke+virtual+functions+from+constructors+or+destructors</A>
+
+</PRE>
+</BODY>
+</HTML>

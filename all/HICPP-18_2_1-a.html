@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use high_integrity::thread in place of std::thread [HICPP-18_2_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use high_integrity::thread in place of std::thread [HICPP-18_2_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The std::thread class’s destructor will call the std::terminate class if the
+thread owned by the std::thread class is still joinable. The default behavior
+can be provided by using a wrapper class.
+
+For example:
+//high_integrity.h
+namespace high_integrity {
+	enum ThreadExec: int32_t
+	{
+		DETACH,
+		JOIN,
+	};
+	template&lt;ThreadExec thread_exec&gt;
+	class thread {
+	public:
+		template&lt;class F, class ... Args&gt;
+		thread(F&amp;&amp; f, Args &amp;&amp;... args )
+		: m_thread ( std :: forward &lt;F&gt; (f), std :: forward &lt;Args &gt;( args )...)
+		{}
+		thread ( thread const &amp;) = delete;
+		thread ( thread &amp;&amp;) = default;
+		~ thread ()
+		{
+			if( m_thread . joinable ())
+			{
+				join_or_detach ();
+			}
+		}
+		inline void join () {m_thread . join ();}
+	private :
+		inline void join_or_detach ();
+	private :
+		std::thread m_thread;
+	};
+	template&lt;&gt; void thread&lt;ThreadExec::DETACH&gt;::join_or_detach() {
+		m_thread.detach();
+	}
+	template&lt;&gt; void thread&lt;ThreadExec::JOIN&gt;::join_or_detach() {
+		m_thread.join();
+	}
+}
+
+This rule identifies cases where std::thread could call std::terminate.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule makes it easier to identify and fix potential issues.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;thread&gt;
+
+void f(int32_t);
+int32_t main() {
+    int32_t i;
+
+    std::thread t(f, i); // Violation - potentially calls std::terminate
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include "high_integrity.h"
+
+void f(int32_t);
+int32_t main() {
+    int32_t i;
+
+    high_integrity::thread t(f, i); // OK - will not call std::terminate
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   18.2.1. Use high integrity::thread in place of std::thread
+
+</PRE>
+</BODY>
+</HTML>

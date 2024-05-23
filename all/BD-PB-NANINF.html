@@ -1,0 +1,194 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use floating-point expressions which may result in NaN and infinity values [BD-PB-NANINF]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use floating-point expressions which may result in NaN and infinity values [BD-PB-NANINF-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies when floating-point expressions may lead to the undetected
+generation of infinities or NaNs in the following two cases:
+- arithmetic division by 0.0
+- calling a function from the math.h library with invalid arguments
+
+The following functions may return an infinity value:
+
+    Condition to return an infinity value: x==0
+        log  ( x );
+        logf  ( x );
+        logl  ( x );
+        log10  ( x );
+        log10f  ( x );
+        log10l  ( x );
+        log2  ( x );
+        log2f  ( x );
+        log2l  ( x );
+        logb  ( x );
+        logbf  ( x );
+        logbl  ( x );
+
+    Condition to return an infinity value: x==-1
+        log1p  ( x );
+        log1pf  ( x );
+        log1pl  ( x );
+
+    Condition to return an infinity value: x==-1 || x==1
+        atanh  ( x );
+        atanhf  ( x );
+        atanhl  ( x );
+
+
+The following functions may return a NaN value:
+
+    Condition to return a NaN value: x&lt;1
+        acosh  ( x );
+        acoshf  ( x );
+        acoshl  ( x );
+
+    Condition to return a NaN value: x&lt;0
+        sqrt  ( x );
+        sqrtf  ( x );
+        sqrtl  ( x );
+        log  ( x );
+        logf  ( x );
+        logl  ( x );
+        log10  ( x );
+        log10f  ( x );
+        log10l  ( x );
+        log2  ( x );
+        log2f  ( x );
+        log2l  ( x );
+
+    Condition to return a NaN value: x&lt;-1
+        log1p  ( x );
+        log1pf  ( x );
+        log1pl  ( x );
+
+    Condition to return a NaN value: x&lt;-1 || x&gt;1
+        acos  ( x );
+        acosf  ( x );
+        acosl  ( x );
+        asin  ( x );
+        asinf  ( x );
+        asinl  ( x );
+        atanh  ( x );
+        atanhf  ( x );
+        atanhl  ( x );
+
+    Condition to return a NaN value:  denom == 0
+        fmod  ( numer, denom );
+        fmodf  ( numer, denom );
+        fmodl  ( numer, denom );
+        remainder  ( numer, denom );
+        remainderf  ( numer, denom );
+        remainderl  ( numer, denom );
+        remquo  ( numer, denom, quot );
+        remquof  ( numer, denom, quot );
+        remquol  ( numer, denom, quot );
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2022.2
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The unintentional use of infinity or NaN values can lead to undefined behavior
+(e.g. they may be passed to code that was not designed to support them).
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+A function call that may return an infinity value.
+
+#include &lt;math.h&gt;
+
+double returnZero(){
+    return 0.0;
+}
+
+void example() {
+    double someValue = returnZero();
+    double result = log(someValue); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Make sure the function is not called with an inappropriate argument.
+
+#include &lt;math.h&gt;
+
+double returnZero(){
+    return 0.0;
+}
+
+void repair() {
+    double someValue = returnZero();
+    if (someValue &gt; 0.0){
+        double result = log(someValue); // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018 Phase 2 - New C11/C18 Features
+2.2 Section 7 - Directives, 2.2.4 Directive 4.15
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Dir 0.3.1 Floating-point arithmetic should be used appropriately
+
+</PRE>
+</BODY>
+</HTML>

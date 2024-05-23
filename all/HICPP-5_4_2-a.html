@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast an expression to an enumeration type [HICPP-5_4_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast an expression to an enumeration type [HICPP-5_4_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The result of casting an integer to an enumeration type is unspecified if the
+value is not within the range of the enumeration. This also applies when casting
+between different enumeration types. For this reason conversions to an
+enumeration type should be avoided." [HIC++ v4.0, Rule 5.4.2]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents unintentional modification of the data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Colors { RED, GREEN = 2, BLUE };
+void bar() {
+    Colors color = static_cast&lt;Colors&gt;(1000); // Violation
+    if (1000 == color)                        // may be false
+    {
+    }
+}
+void foo() {
+    Colors color = static_cast&lt;Colors&gt;(1); // Violation
+    switch (color)                         // the value is unspecified
+    {
+    case RED:
+    case GREEN:
+    case BLUE:
+        break;
+    default:
+        break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Colors { RED, GREEN = 2, BLUE };
+void bar() {
+    Colors color = RED; // Ok
+    if (RED == color) {
+    }
+}
+void foo() {
+    Colors color = BLUE; // Ok
+    switch (color) {
+    case RED:
+    case GREEN:
+    case BLUE:
+        break;
+    default:
+        break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   5.4.2. Do not cast an expression to an enumeration type
+
+</PRE>
+</BODY>
+</HTML>

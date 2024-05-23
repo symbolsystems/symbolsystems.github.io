@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+External objects should not be declared in implementation files [MISRA-027_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+External objects should not be declared in implementation files [MISRA-027_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Adherence to this rule will normally mean declaring external objects
+in header files which will then be included in all those files that
+use those objects (including the files which define the objects)."
+
+The rule reports a violation if an external object is declared
+in implementation file. Declaration should be placed in a header
+file to make sure the same declaration is used in different files.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule allows to avoid inconsistent declarations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// In File_1.cpp
+
+int a = 3;
+
+// In File_2.cpp
+
+extern int a;      // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// In File_1.h
+
+extern int a;      // OK
+
+// In File_1.cpp
+
+#include "File_1.h"
+
+int a = 3;
+
+// In File_2.cpp
+
+#include "File_1.h"
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 27
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 139
+
+</PRE>
+</BODY>
+</HTML>

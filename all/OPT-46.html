@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Types declared in an unnamed namespace scope should be used at least once [OPT-46]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Types declared in an unnamed namespace scope should be used at least once [OPT-46-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a type is declared but not used, it is unclear whether that type
+is redundant or whether its use has been mistakenly overlooked.
+
+This rule detects unused classes, structs, unions, enums, and typedefs
+declared in an unnamed namespace scope.
+
+See also: OPT-47
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule has the following assumptions:
+-  a type is considered used when it is referenced outside its own definition. 
+
+   struct S {         // 'S' is an unused type
+      S* s;
+      void f1();
+   };
+
+   void S::f1() {
+      S s;
+   }
+
+- a template type is considered used when its partial or explicit specialization
+  is used.
+- an enumeration type is considered used if any of its enumerators are used.
+- an anonymous union is considered used if any of its members are used.
+  
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not report a violation if a type has at least one declaration
+with the 'maybe_unused' attribute.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+namespace 
+{
+  typedef int unusedIntType;             // Violation
+  
+  class C                                // Violation
+  {
+  public:
+    C() : i(0) {}
+  private:
+    int i;
+    C* next;
+  };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix your code, remove unused types or correct the implementation if a type
+is unused by mistake.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 0.2.3 Types with limited visibility should be used at least once
+
+</PRE>
+</BODY>
+</HTML>

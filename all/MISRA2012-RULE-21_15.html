@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The pointer arguments to the Standard Library functions 'memcmp', 'memmove' and 'memcmp' shall be pointers to qualified or unqualified versions of compatible types [MISRA2012-RULE-21_15]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The pointer arguments to the Standard Library functions 'memcmp', 'memmove' and 'memcmp' shall be pointers to qualified or unqualified versions of compatible types [MISRA2012-RULE-21_15-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard Library functions 'memcpy, 'memmove' and memcmp perform a byte by
+byte copy, move or comparison of the first n bytes of the two objects pointed at
+by s1 and s2." (s1 and s2 are first and second parameter of these functions)
+[MISRA C:2012 Amendment 1 Rule 21.15]
+
+This rule detects cases when types of the first and the second argument passed
+to functions memcpy, memmove or memcmp are pointers to incompatible types
+(ignoring cv-qualifiers).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"For two pointer types to be compatible, both shall be identically qualified 
+and both shall be pointers to compatible types."
+[ISO/IEC 9899:1999, 6.7.5.1 Pointer declarators]
+
+"Two types have compatible type if their types are the same. Additional rules
+for determining whether two types are compatible are described in 6.7.2 for type
+specifiers, in 6.7.3 for type qualifiers, and in 6.7.5 for declarators.
+Two types need not be identical to be compatible."
+[ISO/IEC 9899:1999, 6.2.7 Compatible type and composite type]
+
+The rule assumes that the following types are compatible:
+- typedefs to the same types,
+- explicit signed short/int/long types and implicit signed short/int/long types,
+- pointers to arrays of the same types that have different dimensions.
+
+Examples of compatible types:
+- typedef int INT1; typedef int INT2; (int, INT1 and INT2 are compatible)
+- 'signed short' and 'short'
+- 'int*', 'int[]', 'int[4]','int[5]'
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents possible mistakes.
+"An attempt to call of these functions ('memcpy', 'memmove' or 'memcmp')
+with arguments which are pointers to different types may indicate a mistake"
+[MISRA C:2012 Amendment 1 Rule 21.15].
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void foo1(int* pi)
+{
+    unsigned int* pui;
+    memcpy(pi, pui, 8);          /* Violation */
+}
+
+void foo2(void)
+{
+    int iArr[8];
+    short sArr[8];
+    memcmp(iArr, sArr, 8);       /* Violation */ 
+}
+
+void foo3(void)
+{
+    int var1;
+    short var2;
+    memmove(&amp;var1, &amp;var2, 1);    /* Violation */  
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+#include &lt;string.h&gt;
+
+typedef unsigned char UCHAR;
+
+void foo1(int* pi)
+{
+    signed int* psi;
+    memcpy(pi, psi, 8);          /* OK */
+}
+
+void foo2(int* pi)
+{
+    int iArr[8];
+    memcmp(pi, iArr, 8);        /* OK */
+}
+
+void foo3(unsigned char* puc)
+{
+    UCHAR uc;
+    memcpy(puc, &amp;uc, 8);         /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+   Section 2: New rules, Rule 21.15
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.2.7 Compatible type and composite type
+   6.7.5.1 Pointer declarators
+
+</PRE>
+</BODY>
+</HTML>

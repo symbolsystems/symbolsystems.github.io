@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A loop-control-variable other than the loop-counter which is modified in statement shall have type bool [CODSTA-CPP-73]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A loop-control-variable other than the loop-counter which is modified in statement shall have type bool [CODSTA-CPP-73-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A loop-control-variable other than the loop-counter which is modified
+in statement shall have type bool.
+A loop-control-variable is any variable occurring in for-init-statement,
+condition or expression.
+A loop-counter is a loop-control-variable that is:
+  - Initialized in, or prior to, for-init-statement; and
+  - an operand to a relational operator in condition; and
+  - modified in expression.
+loop-control-variables are typically used to terminate a for loop early.
+The code is easier to understand if this is done with the use
+of Boolean values"
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that an object is modified if it is passed to the function
+as a reference to a non-const object (except a universal reference) or its
+address is passed to the function as a pointer to a non-const object 
+(except functions which are called via function pointers).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int x, unsigned int u8a, bool flag)
+{
+    for ( x = 0; ( x &lt; 10 ) &amp;&amp; ( u8a != 3U ); ++x )
+    {
+        u8a = 5;                         // Violation
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int x, unsigned int u8a, bool flag)
+{
+    for ( x = 0; ( x &lt; 10 ) &amp;&amp; flag; ++x )
+    {
+        u8a = 5;                         // OK
+        flag = u8a != 3U;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-5-6. A loop-control-variable other than the loop-counter which is
+   modified in statement shall have type bool
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 6, Rule 6-5-6
+
+</PRE>
+</BODY>
+</HTML>

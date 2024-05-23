@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-specified C++ external identifiers should differ in the first 64 characters [PORT-34_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-specified C++ external identifiers should differ in the first 64 characters [PORT-34_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"User-specified identifiers (internal and external) will not rely
+on significance of more than 64 characters." [JSF]
+
+This rule detects when two external identifiers that are declared or defined
+in the same translation unit have the same first 64 characters in their names.
+
+The rule checks the names of the following identifiers:
+- variables and functions with internal or external linkage
+- classes, structures, unions, typedefs, enumerations, and enumeration
+  constants that are defined in a namespace or class scope
+- namespaces
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule compares identifiers across all namespaces.
+The rule does not report identifiers with identical names.
+
+This rule does not the check names of conversion operators.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+extern void NG_4567890123456789012345678901234567890123456789012345678901234_v1();
+static void NG_4567890123456789012345678901234567890123456789012345678901234_v2();  // Violation
+
+namespace N1 {
+    void  NA_4567890123456789012345678901234567890123456789012345678901234_v1();
+}
+namespace N2 {
+    class NA_4567890123456789012345678901234567890123456789012345678901234_v2{};    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by modifying the names of identifiers.
+
+extern void V1_4567890123456789012345678901234567890123456789012345678901234_v1();
+static void V2_4567890123456789012345678901234567890123456789012345678901234_v2();  // OK
+
+namespace N1 {
+    void  N1_4567890123456789012345678901234567890123456789012345678901234_v1();
+}
+namespace N2 {
+    class N2_4567890123456789012345678901234567890123456789012345678901234_v2{};    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 46
+
+</PRE>
+</BODY>
+</HTML>

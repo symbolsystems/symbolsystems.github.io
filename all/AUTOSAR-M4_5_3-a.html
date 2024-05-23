@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Expressions with type (plain) char and wchar_t shall not be used as operands to built-in operators other than  =,  ==, != and the unary &amp; operator [AUTOSAR-M4_5_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Expressions with type (plain) char and wchar_t shall not be used as operands to built-in operators other than  =,  ==, != and the unary &amp; operator [AUTOSAR-M4_5_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Expressions with type (plain) char and wchar_t shall not be used as operands
+to built-in operators other than the assignment operator =, the equality
+operators == and !=, and the unary &amp; operator."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Exceptionally, the following operators may be used if the associated
+restriction is observed:
+- The binary '+' operator may be used to add an integral
+  value in the range 0 to 9 to '0';
+- The binary '-' operator may be used to subtract character '0';
+- The relational operators &lt;, &lt;=, &gt;, &gt;= may be used to determine
+  if a character (or wide character) represents a digit.
+  (Rule does not report a violation if a character constant is compared
+   with a variable of type plain char)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Manipulation of character data may generate results that are contrary
+to developer expectations."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+    char ch = 't';                        // OK
+    if ( ( ch &gt;= 'a' ) &amp;&amp; ( ch &lt;= 'z' ) ) // Violation
+    {  
+    	//...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+    char ch = 't';   // OK
+    if ( ch == 't' ) // OK
+    {  
+    	//...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M4-5-3. Expressions with type (plain) char and wchar_t shall not be used as
+   operands to built-in operators other than the assignment operator =, the
+   equality operators == and !=, and the unary &amp; operator
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 4, Rule 4-5-3
+
+3. SEI CERT C Coding Standard
+   STR09-C. Don't assume numeric values for expressions with type plain
+   character
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR09-C.+Don%27t+assume+numeric+values+for+expressions+with+type+plain+character">https://wiki.sei.cmu.edu/confluence/display/c/STR09-C.+Don%27t+assume+numeric+values+for+expressions+with+type+plain+character</A>
+
+</PRE>
+</BODY>
+</HTML>

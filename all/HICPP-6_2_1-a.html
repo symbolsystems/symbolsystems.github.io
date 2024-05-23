@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A for-loop that loops through all elements of the container and does not use its loop-counter shall not be used [HICPP-6_2_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A for-loop that loops through all elements of the container and does not use its loop-counter shall not be used [HICPP-6_2_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A for-loop that simply loops through all elements of the container and does
+not use its loop-counter is equivalent to a range-based for statement
+that reduces the amount of code to maintain correct loop semantics."
+[AUTOSAR-A6-5-1]
+
+This rule detects regular 'for' loops that can be replaced by range-based 'for'
+loops.
+
+The rule assumes that a 'for' loop can be replaced by a range-based 'for' loop
+when the following conditions are met:
+- The 'for' loop contains a loop counter that can only be used in the loop body to
+  directly access an element of the container.
+- The loop counter is initialized by the begin() method for a pointer or iterator 
+  or, in all other cases, by zero in a 'for-init' statement.
+- The condition of the 'for' loop contains one of the following comparisons:
+  - The loop counter is compared with a constant variable that was previously
+    used as the size in an array declaration.
+  - The loop counter is compared with an integer or enumeration constant whose
+    value is the same as the value of the size of the previously declared array.
+    In this case, it is additionally required that an element of this array be
+	accessed by the loop counter in the body of the 'for' loop.
+  - The loop counter is compared with the result of the call to the 'end()'
+    method. In this case, it is additionally required that the 'begin()'
+    method be used in a 'for-init' statement.
+- The iteration statement of the 'for' loop contains an expression that increases
+  the value of the loop counter by one.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check 'for' loops that iterate over elements of the second
+(or higher) level of multidimensional arrays.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"A range-based for statement reduces the amount of boilerplate code required
+to maintain correct loop semantics." [HIC++ v4.0, Rule 6.2.1]
+
+This rule helps you improve code maintainability by using a less error-prone
+method of iterating over the elements of an entire container.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;iterator&gt;
+
+void f1() {
+    const int arrsize = 6;
+    int arr[arrsize] = {0, 1, 2, 3, 4, 5};
+    int sum = 0;
+    for (int i = 0; i &lt; arrsize; ++i)                              // Violation
+    {
+        sum += arr[i];
+    }
+    for (int * p = std::begin(arr); p != std::end(arr); ++p)       // Violation
+    {
+        sum += *p;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by replacing the 'for' loop by a range-based 'for' loop.
+
+void f1() {
+    int arr[] = {0, 1, 2, 3, 4, 5};
+    int sum = 0;
+    for (auto v : arr)                                             // OK
+    {
+        sum += v;
+    }
+}
+
+Examples of compliant code:
+
+void bar()
+{
+    const int arrsize = 6;
+    int arr[arrsize] = {0, 1, 2, 3, 4, 5};
+    int even_sum;
+
+    // iteration over path of a container
+    for (int i = 0; i &lt; 3; ++i)                                    // OK
+    {
+        arr[i] = arr[i] + 1;
+    }
+    
+    for (int i = 0; i &lt; arrsize; i += 2)                           // OK
+    {
+        even_sum += arr[i];
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-5-1. A for-loop that loops through all elements of the container and
+   does not use its loop-counter shall not be used
+
+2. High Integrity C++ Coding Standard
+   6.2.1. Implement a loop that only uses element values as a range-based loop
+
+</PRE>
+</BODY>
+</HTML>

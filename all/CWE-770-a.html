@@ -1,0 +1,193 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Validate potentially tainted data before it is used to determine the size of memory allocation [CWE-770-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Validate potentially tainted data before it is used to determine the size of memory allocation [CWE-770-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when potentially tainted data is used to determine the size
+of memory allocation.
+
+The rule triggers when:
+- potentially tainted data is used without validation to determine the size
+  of an array.
+- potentially tainted data is passed without validation to one of the following
+  methods as a constructor parameter that specifies the initial container size:
+  std::vector
+  std::deque
+  std::forward_list
+  std::list
+  std::unordered_set
+  std::unordered_multiset
+  std::unordered_map
+  std::unordered_multimap
+
+The rule must be parameterized to specify the sources of potentially tainted
+data and the methods that validate the data (see PARAMETERS).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+"When allocating resources without limits, an attacker could prevent other
+systems, applications, or processes from accessing the same type of resource".
+[CWE-770]
+
+"Not controlling memory allocation can result in a request for too much system
+memory, possibly leading to a crash of the application due to out-of-memory
+conditions, or the consumption of a large amount of memory on the system".
+[CWE-789]
+ 
+ 
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+
+The "Validating functions" parameter allows you to specify functions that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating functions is called. 
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the validating function. If disabled, the rule
+    does not consider the function to be a validating function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to function with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance functions.
+- "'this' object is validated" - if enabled,  the function cleans the object it
+    is called on.
+- 'Returns validated data' - if enabled, the function cleans its return value.
+- 'Validated parameters' - specifies which function parameters are cleaned by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are cleaned.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure safe memory allocation to prevent excess memory
+consumption and security attacks (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, potentially tainted data is used to determine
+the size of the array.
+
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+ 
+void example(FILE* f) {
+	char arr[50];
+	fread(arr, sizeof(char), 50, f); /* Reading size of the array from a file */
+	int size = atoi(arr);
+	int* array = new int[size];	// VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use a validating method to validate the potentially tainted
+data.
+
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+char* validate(char*);
+ 
+void repair(FILE* f) {
+	char arr[50];
+	fread(arr, sizeof(char), 50, f); /* Reading size of the array from a file */
+	int size = atoi(validate(arr));
+	int* array = new int[size];		// NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+2019 CWE Weaknesses On the Cusp
+CWE-770: Allocation of Resources Without Limits or Throttling
+<A HREF="https://cwe.mitre.org/data/definitions/770.html">https://cwe.mitre.org/data/definitions/770.html</A>
+
+CWE-789: Memory Allocation with Excessive Size Value
+<A HREF="https://cwe.mitre.org/data/definitions/789.html">https://cwe.mitre.org/data/definitions/789.html</A>
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+</PRE>
+</BODY>
+</HTML>

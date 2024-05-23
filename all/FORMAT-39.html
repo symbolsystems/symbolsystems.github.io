@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Sort #include directives in alphabetical order [FORMAT-39]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Sort #include directives in alphabetical order [FORMAT-39-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule checks if #include directives are sorted. A violation is reported
+if #include in previous line has name which sorts after #include in 
+current line.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+&lt;header&gt; includes are not compared with "header" includes.
+Two includes are compared only if they are in consequent lines.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include "zheader2.h"
+#include "zheader1.h" // Violation
+// this line have no #include
+#include "zheader0.h" // ok - previous include not in previous line
+#include &lt;iostream&gt; // ok - &lt;header&gt; not compared with "header" 
+#include &lt;algorithm&gt; // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include "zheader0.h"
+#include "zheader1.h"
+#include "zheader2.h"
+#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An operand of essentially signed or enum type should not be used as the right hand operand to the bitwise shifting operator [CODSTA-161_f]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An operand of essentially signed or enum type should not be used as the right hand operand to the bitwise shifting operator [CODSTA-161_f-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The right hand operand of a shift operator should be of essentially unsigned 
+type to ensure that undefined behaviour does not result from a negative shift."
+[MISRA C:2012 Rule 10.1]
+
+This rule detects cases when the right hand operand of a bitwise shift
+operator (&lt;&lt;, &gt;&gt;, &lt;&lt;=, &gt;&gt;=) has essentially signed or essentially enum type.
+
+This rule assumes that the enumeration type defined as "essentially Boolean"
+type is not essentially enum type.
+
+This rule assumes that the signed type defined as "essentially Boolean" type
+is not essentially signed type.
+
+The term "essential type" is defined by the MISRA C:2012 standard, 
+but tools may also provide additional ways of identifying "essentially 
+Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A non-negative integer constant expression of essentially signed type
+may be used as the right hand operand to a bitwise shift operator."
+[MISRA C:2012 Rule 10.1]
+
+This rule does not report a violation if an integer constant expression
+of essentially signed type is used as the right hand operand of a bitwise
+shift operator. For complex expressions, the rule does not check if the
+value of a constant expression is positive or negative.
+
+void foo(int i) {
+    i &lt;&lt; 1;        /* OK */
+    i &lt;&lt; -1;       /* Violation */
+    i &lt;&lt; 1+2;      /* Not reported */
+    i &lt;&lt; 1-2;      /* Not reported */
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+signed int ret_int(void);
+
+void foo ( void )
+{
+    signed char c1, c2;
+    int i1;
+    
+    i1 &lt;&lt; c1;                /* Violation */
+    c1 &gt;&gt; c2;                /* Violation */
+    i1 &lt;&lt;= (c1 + c2);        /* Violation */
+ 
+    i1 &gt;&gt;= ret_int();        /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+signed int ret_int(void);
+
+void foo ( void )
+{
+    signed char c1;
+    unsigned char c2;
+    int i1;
+
+    i1 &lt;&lt; (unsigned char)c1;            /* OK */
+    c1 &gt;&gt; c2;                           /* OK */
+    i1 &lt;&lt;= (unsigned char)(c1 + c2);    /* OK */
+    i1 &gt;&gt;= (unsigned int)ret_int();     /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.1
+
+2. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

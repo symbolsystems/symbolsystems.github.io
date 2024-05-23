@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit type conversions in comparisons involving enum types [PB-33_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit type conversions in comparisons involving enum types [PB-33_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports violation if enumerators of different enum types are compared 
+or if enumerator is compared with non enumerator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents depending on the value of enum constant which can change.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Day {
+    Mon, Tue, Wen, Thu, Fri
+};
+
+enum WeekDay {
+    Sat, Sun
+};
+
+int foo() {
+    enum Day a_day;
+    if ( a_day == Sun ) return 1;   // Violation
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Day {
+    Mon, Tue, Wen, Thu, Fri, Sat, Sun
+};
+
+int foo() {
+    enum Day a_day;
+    if ( a_day == Sun ) return 1;   // OK
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

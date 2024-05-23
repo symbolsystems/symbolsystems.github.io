@@ -1,0 +1,186 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Special member functions shall be provided appropriately [CODSTA-MCPP-105]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Special member functions shall be provided appropriately [CODSTA-MCPP-105-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when a class does not implement the following
+requirements:
+
+"A class shall belong to exactly one of the following categories
+(other combinations are not permitted):
+* Unmovable - it is not copy-constructible, not move-constructible,
+  not copy-assignable and not move-assignable; or
+* Move-only - it is move-constructible (and optionally move-assignable)
+  but neither copy-constructible nor copy-assignable; or
+* Copy-enabled — it is copy-constructible and move-constructible and
+  can optionally also be both copy-assignable and move-assignable.
+   
+If a class has customized copy or move operations, it shall have a
+customized destructor.
+
+A class with a customized destructor [...]:
+* If the class is move-only, it shall have a customized move constructor.
+  If it is move-assignable, it shall also have a customized move
+  assignment operator. [...]
+* If the class is copy-enabled, it shall have a customized copy
+  constructor and its move constructor shall either be customized or
+  not declared. If it is copy-assignable, it shall also have a customized
+  copy-assignment operator and the move operations shall either both
+  be customized or both not be declared. [...]
+   
+A class that is used as a public base class shall either:
+1. Be an unmovable class that has a (possibly inherited) public virtual
+   destructor; or
+2. Have a protected non-virtual destructor.
+Note: these destructors shall either be defined as =default or customized."
+[MISRA C++:2023]
+   
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"For the purposes of this rule, a special member function is said to be
+customized if it is user-provided and not defaulted."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An aggregate, which cannot have a user-declared destructor, may be
+used as a public base class." [MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid confusion about the semantics of the
+implicitly generated special member functions. It also ensures
+consistency in providing customized functions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C { // Violation - neither unmovable, move-only, nor copy-enabled
+public:
+    C&amp; operator=(const C&amp;) = default;
+    C&amp; operator=(C&amp;&amp;) = default;
+    C(const C&amp;) = delete;
+    C(C&amp;&amp;) = delete;
+};
+
+class B { // Violation - base class without customized destructor
+public:
+    B();
+private:
+    int* ptr;
+};
+
+class D: public B
+{
+public:
+    D();
+};
+
+struct S { // Violation - move-only class with destructor and without
+           //             customized move constructor
+    S(S&amp;&amp;) = default;
+    S&amp; operator=(S&amp;&amp;) = delete;
+    S(const S&amp;) = delete;
+    S&amp; operator=(const S&amp;) = delete;
+    ~S();
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C { // OK - copy-enabled
+public:
+    C&amp; operator=(const C&amp;) = default;
+    C&amp; operator=(C&amp;&amp;) = default;
+    C(const C&amp;) = default;
+    C(C&amp;&amp;) = default;
+};
+
+class B { // OK - base class with protected non-virtual destructor
+public:
+    B();
+protected:
+    ~B() = default;
+private:
+    int* ptr;
+};
+
+class D: public B {
+public:
+    D();
+};
+
+struct S { // OK - move-only class with destructor and with
+           //      customized move constructor
+    S(S&amp;&amp;);
+    S&amp; operator=(S&amp;&amp;) = delete;
+    S(const S&amp;) = delete;
+    S&amp; operator=(const S&amp;) = delete;
+    ~S();
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 15.0.1 Special member functions shall be provided appropriately
+
+</PRE>
+</BODY>
+</HTML>

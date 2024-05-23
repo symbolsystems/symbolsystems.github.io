@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A file should directly include only the headers that contain declarations and definitions required to compile that file [AUTOSAR-A16_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A file should directly include only the headers that contain declarations and definitions required to compile that file [AUTOSAR-A16_2_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Header (include) files should include only those header files that are
+required for them to successfully compile. Files that are only used by
+the associated .cpp file should be placed in the .cpp file-not the .h file."
+[JOINT STRIKE FIGHTER]
+
+This rule detects when headers directly included in a file do not contain
+any declarations and definitions that are required to compile that file.
+
+The rule compares declaration names in the directly included headers with
+identifier names that are used in the current file. When an included header
+does not contain any declaration that can be matched with identifiers from
+the current file, consider removing or replacing redundant #include directives.
+
+IMPORTANT: Before modifying the file, ensure that removing or replacing
+the includes is safe and will not cause unexpected program behavior.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule only detects includes of headers that are used in the current
+testing scope. Especially, includes of headers from external libraries
+are not reported.
+  #include &lt;stdlib.h&gt;  // No Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The #include statements in a header file define the dependencies
+of the file. Fewer dependencies imply looser couplings and hence
+a smaller ripple-effect when the header file is required to change."
+[JOINT STRIKE FIGHTER]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule fails to detects potentially redundant headers if:
+- a header contains a declaration of a global operator function
+- a header contains a definition of a class that has a forward declaration
+- there is another header with the same name that contains identifiers used
+  in the current file
+- a header contains a declaration whose name is the same as the name of
+  another identifier in the current file
+- the name of the header is different than the name used in #include directive
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// file1.h
+struct S1
+{
+    int m1;
+};
+
+// file2.h
+struct S2
+{
+    int m2;
+};
+
+// file3.h
+#include "file2.h"  // Violation
+struct S3
+{
+    int m3;
+};
+
+// file.cpp
+#include "file1.h"  // Violation
+#include "file3.h"  // Violation
+void f1() {
+    S2 s2;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// file1.h
+struct S1
+{
+    int m1;
+};
+
+// file2.h
+struct S2
+{
+    int m2;
+};
+
+// file3.h
+// #include "file2.h" was removed
+struct S3
+{
+    int m3;
+};
+
+// file.cpp
+// #include "file1.h" was removed
+#include "file2.h"  // OK
+void f1() {
+    S2 s2;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A16-2-2. There shall be no unused include directives
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE C++ CODING STANDARDS
+   Chapter 4.7 Header Files, AV Rule 37
+
+</PRE>
+</BODY>
+</HTML>

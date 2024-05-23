@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A constexpr static data member should not be declared outside the class definition [OPT-44]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A constexpr static data member should not be declared outside the class definition [OPT-44-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For compatibility with prior C++ International Standards, a constexpr
+static data member may be redundantly redeclared outside the class with
+no initializer. This usage is deprecated." [ISO/IEC 14882:2017]
+
+This rule detects static constexpr data members declared outside of
+their class definitions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not apply to data members of template classes.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and remove
+unnecessary code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    static constexpr int n = 5;
+};
+constexpr int S::n;              // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix your code, remove the declaration outside of the class.
+
+struct S {
+    static constexpr int n = 5;  // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   Annex D Compatibility features
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 4.1.2 Deprecated features should not be used
+
+</PRE>
+</BODY>
+</HTML>

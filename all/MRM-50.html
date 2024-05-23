@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare both private copy constructor and copy assignment operator at the same time [MRM-50]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare both private copy constructor and copy assignment operator at the same time [MRM-50-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A private copy constructor or copy assignment operator means you don't want
+others to make copies of your class objects. If the method is not defined
+(only declared) no copies can be made. If it's defined then only this class
+methods and class friends can make copies.
+
+If you declare only one of the copy methods private it's still possible to
+make copies. It's possible this was not intentional.
+
+This rule reports a violation if there is a private copy constructor and no
+private copy assignment operator, or a private assignment copy assignment
+operator and no private copy constructor.
+
+See also: MRM-04, MRM-05, MRM-37, MRM-38, MRM-40, MRM-47, MRM-48, MRM-49
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Ensures consistent behavior during copy and assignment operations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {   // Violation - only copy constructor declared
+    private:
+        C(const C&amp;);
+};
+
+struct D {  // Violation - only copy assignment operator declared
+    private:
+        D&amp; operator=(D&amp; other);
+};
+D&amp; D::operator=(D&amp; other) {
+    // It does not matter if the method is only declared or defined
+    return *this;
+}
+
+// Copy assignment operator is private and there is no private copy constructor
+class E {   // Violation
+    public:
+        E(const E&amp;);
+    private:
+        E&amp; operator=(const E&amp;);
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C {   // OK - both declared
+    private:
+        C(const C&amp;);
+        C&amp; operator=(const C&amp;);
+};
+
+struct D {  // OK - both declared
+    private:
+        D(D&amp; other);
+        D&amp; operator=(D&amp; other);
+};
+D::D(D&amp; other) {
+    // ...
+}
+D&amp; D::operator=(D&amp; other) {
+    // It does not matter if the method is only declared or defined
+    return *this;
+}
+
+// Review if this is intentional and change your code appropriately or
+// suppress the violation
+class E {   // OK
+    public:
+        E(const E&amp;);
+        // Rule does not check if both copy constructor and copy assignment
+        // operator are declared
+        // E&amp; operator=(const E&amp;);
+};
+
+class F {   // OK - no copy constructor nor copy assignment operator declared
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10.3 Member Functions, AV Rule 68
+
+</PRE>
+</BODY>
+</HTML>

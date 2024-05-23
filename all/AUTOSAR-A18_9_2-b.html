@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'std::move' function should be used to forward rvalue references [AUTOSAR-A18_9_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'std::move' function should be used to forward rvalue references [AUTOSAR-A18_9_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'std::move' function unconditionally casts an rvalue reference to rvalue,
+while the 'std::forward' function does the same if and only if the argument was
+initialized with an rvalue.(...)
+'std::move' should be used for forwarding rvalue references to other functions,
+as rvalue reference always bounds to rvalue" [AUTOSAR A18-9-2]
+
+This rule detects when an rvalue reference parameter that is not a forwarding
+reference is passed as an argument to a function other than 'std::move'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Forwarding references are checked by the CODSTA-MCPP-13_b rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code consistency and clarity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C { };
+
+void foo(C&amp; c){}
+void foo(C&amp;&amp; c){}
+
+void f1(C&amp;&amp; arg)
+{
+    foo(arg);                   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use the 'std::move' function to pass the rvalue reference.
+
+#include &lt;utility&gt;
+class C { };
+
+void foo(C&amp; c){}
+void foo(C&amp;&amp; c){}
+
+void f1(C&amp;&amp; arg)
+{
+    foo(std::move(arg));       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-9-2. Forwarding values to other functions shall be done via:
+   (1) std::move if the value is an rvalue reference,
+   (2) std::forward if the value is forwarding reference.
+
+2. High Integrity C++ Coding Standard
+   17.3.2. Use std::forward to forward universal references
+
+3. Scott Meyers, "Effective Modern C++: 42 Specific ways to improve your use
+   C++11 and C++14", O'Reilly, Copyright 2015,
+   Chapter 5: "Rvalue References, Move Semantics, and Perfect Forwarding",
+   Item 25
+
+</PRE>
+</BODY>
+</HTML>

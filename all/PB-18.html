@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid overloading class methods on a pointer and a numerical type [PB-18]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid overloading class methods on a pointer and a numerical type [PB-18-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a function with parameter of int type is overloaded by function with 
+parameter of pointer type, then calling this function with '0' (zero) argument
+always cause a call of function with parameter of int type. This behavior
+could be unexpected for the developer. If a parameter with other numerical
+type is overloaded by a pointer type, calling function with '0' will result
+in parse error as the call is ambiguous.
+
+If it is possible overloading on a numerical and pointer type should be avoided.
+
+The rule reports a violation if class method overloads on a pointer/numerical
+types and other parameters have same types.
+
+Following types are considered numerical: 
+- integral types: bool, char, wchar_t, short, int, long (signed and unsigned)
+- floating point types: float, double, long double
+
+This rule checks class methods only. See PB-52 and PB-53 for rules which check
+global and namespace functions.
+
+See also: PB-52, PB-53
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents behavior inconsistent with developer expectations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct Example {
+    void foo1(int);     // Violation
+    void foo1(int*);    // Violation
+
+    void foo2(bool, char*);     // Violation
+    void foo2(bool, float);     // Violation
+
+    void foo3(char*, int);      // OK - other parameters have different types
+    void foo3(float, char);     // OK - other parameters have different types
+
+    void call() {
+        foo1(0);            // foo(int) called
+        // foo2(false, 0);  // ambiguous call
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+There is no one correct solution. Each violation should be reviewed by
+a developer and either the code should be changed so that there is no 
+overloading on pointer/numerical types, or a violation should be suppressed.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+Your Programs and Design", Second Edition, Addison-Wesley,
+(C) 2005 Pearson Education, Inc., 
+Chapter: "Classes and Functions: Design and Declaration", Item 25
+
+</PRE>
+</BODY>
+</HTML>

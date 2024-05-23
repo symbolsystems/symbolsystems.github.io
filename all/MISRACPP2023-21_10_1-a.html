@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The identifiers va_list, va_arg, va_start, va_end, va_copy should not be used [MISRACPP2023-21_10_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The identifiers va_list, va_arg, va_start, va_end, va_copy should not be used [MISRACPP2023-21_10_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;stdarg.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;stdarg.h&gt; shall be used.
+
+The Standard lists many instances of undefined behaviour associated with
+the features of &lt;stdarg.h&gt;, including:
+- va_end not being used prior to end of a function in which va_start was used;
+- va_arg being used in different functions on the same va_list;
+- the type of an argument not being compatible with the type specified
+  to va_arg." [MISRA C:2012 Rule 17.1 with Amendment 3]
+
+The rule reports violations on identifiers named va_list, va_arg, va_start,
+va_end or va_copy. The rule does not check if these identifiers are macros
+from stdarg.h header, so violation will be reported even if &lt;stdarg.h&gt; is not
+included or the identifiers are defined by the user.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is designed for C99 standard, for code conforming to C90 standard
+please use CODSTA-136_b rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdarg.h&gt;
+
+void foo1(int i, ...){
+  va_list ap;          /* Violation */
+  
+  va_start(ap, i);     /* Violation */
+  
+  va_arg(ap, int);     /* Violation */
+  
+  va_end(ap);          /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use identifiers va_list, va_arg, va_start, va_end and va_copy.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1990 Programming languages -- C
+   7.8 Variable arguments &lt;stdarg.h&gt;
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   7.15 Variable arguments &lt;stdarg.h&gt;
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.10.1 The features of &lt;cstdarg&gt; shall not be used
+
+4. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   3 Consequential Amendments
+   3.1.2 Consistency of terminology regarding header file inclusion
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.1
+
+</PRE>
+</BODY>
+</HTML>

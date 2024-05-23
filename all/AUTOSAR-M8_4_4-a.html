@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A function identifier shall only be used with either a preceding '&amp;', or with a parenthesised parameter list, which may be empty [AUTOSAR-M8_4_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A function identifier shall only be used with either a preceding '&amp;', or with a parenthesised parameter list, which may be empty [AUTOSAR-M8_4_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the developer writes 'if( f )' then it is not clear whether the intent
+is to test if the address of the function is NULL or if a call to the
+function f() should be made and the brackets have been unintentionally omitted.
+The use of the &amp; (address-of) operator will resolve this ambiguity."
+[MISRA C++:2008]
+
+The rule detects when the function identifier is not preceded
+by the &amp; (address-of) operator and is not followed by parentheses.  
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"Passing the function by reference, or assigning it to a reference object
+is not a violation of this rule." [MISRA C++:2008]
+
+The rule does not report violations on the following identifiers representing
+functions from the standard C++ library defined in the 'std' namespace:
+boolalpha, noboolalpha, dec, hex, oct, endl, ends, fixed, scientific, flush,
+internal, left, right, noshowbase, showbase, noshowpoint, showpoint, noshowpos,
+showpos, noskipws, skipws, nounitbuf, nouppercase, uppercase, unitbuf, ws
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"A function identifier can implicitly convert to a pointer to a function.
+In certain contexts this may result in a well-formed program, but which
+is contrary to developer expectations." [MISRA C++:2008]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+extern void f ( void );
+
+void foo()
+{
+    if ( 0 == f )      // Violation
+    {
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+extern int f ( void );
+
+void foo()
+{
+    if ( 0 == &amp;f )    // OK
+    {
+        // ...
+    }
+
+    if ( 0 == f() )   // OK
+    {
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M8-4-4. A function identifier shall either be used to call the function or
+   it shall be preceded by &amp;
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 8, Rule 8-4-4
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 16
+
+4. Origin: Misra Guidelines - Rule 85
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.14 Rule 17.12
+
+</PRE>
+</BODY>
+</HTML>

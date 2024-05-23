@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Member variable names in derived classes should not be the same as member variable names in base classes [CODSTA-CPP-110]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Member variable names in derived classes should not be the same as member variable names in base classes [CODSTA-CPP-110-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a member variable uses the same name as a member variable from its base
+class, then it hides the member variable in the base class, which may cause
+confusion for developers.
+
+The rule detects when a member variable reuses a member variable name from its
+base class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid errors and confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    int base_member;
+};
+
+class Derived : public Base {
+public:
+    int base_member;                // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    int base_member;
+};
+
+class Derived : public Base {
+public:
+    int derived_member;             // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.4.1 A variable declared in an inner scope shall not hide a variable declared in an outer scope
+
+</PRE>
+</BODY>
+</HTML>

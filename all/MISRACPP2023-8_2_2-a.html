@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+C-style casts (other than void casts) and functional notation casts (other than explicit constructor calls) shall not be used [MISRACPP2023-8_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+C-style casts (other than void casts) and functional notation casts (other than explicit constructor calls) shall not be used [MISRACPP2023-8_2_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C-style (cast notation), and functional notation casts that do not invoke
+a converting constructor are capable of performing casts between unrelated
+types."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A C-style cast to void may be used to signify that the return value
+for a non-void function call is being ignored"
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+C++ casts are more specific than C casts and are much easier to locate
+and read.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    Base( );
+    virtual ~Base( );
+};
+
+class Derived : public Base {
+public:
+    Derived( );
+    ~Derived( );
+};
+
+void foo( ) {
+    Base *pB;
+    Derived *pD2 = (Derived *) pB;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+public:
+    Base( );
+    virtual ~Base( );
+};
+
+class Derived : public Base {
+public:
+    Derived( );
+    ~Derived( );
+};
+
+void foo( ) {
+    Base *pB;
+    Derived *pD1 = dynamic_cast&lt;Derived*&gt;( pB );   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 185
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 5, Rule 5-2-4
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.2 C-style casts and functional notation casts shall not be used
+
+</PRE>
+</BODY>
+</HTML>

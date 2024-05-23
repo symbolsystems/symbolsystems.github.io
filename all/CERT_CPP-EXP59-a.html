@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use offsetof() on valid types and members [CERT_CPP-EXP59-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use offsetof() on valid types and members [CERT_CPP-EXP59-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The macro offsetof(type, member-designator) accepts a restricted set of type
+arguments in this International Standard.
+If type is not a standard-layout class, the results are undefined.
+The expression offsetof(type, member-designator) is never type-dependent
+and it is value-dependent if and only if type is dependent.
+The result of applying the offsetof macro to a field that is a static data
+member or a function member is undefined." [ISO/IEC 14882-2014]
+
+This rule detects when:
+- a non-standard-layout class type is passed to the offsetof() macro
+- a bit-field data member, static data member, or function member
+  is passed to the offsetof() macro as a member-designator
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a standard-layout class is a class that:
+- has no non-static data members of non-standard-layout class type
+- has no virtual functions
+- has no virtual base classes
+- has the same access control for all non-static data members
+- has no non-standard-layout base classes
+- has non-static data members only declared in one class within the class
+  hierarchy
+- has no base classes of the same type as the first non-static data member
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule may report false positives on the type passed to the offsetof()
+macro if the translation unit contains more than one class with the same
+name in different namespaces.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstddef&gt;
+
+// non-standard-layout class
+struct C {
+    virtual void foo() {}
+    int i;
+};
+
+struct D {
+    static int j;
+};
+
+void foo() {
+    size_t off1 = offsetof(C, i);                         // Violation
+    size_t off2 = offsetof(D, j);                         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstddef&gt;
+
+struct C {
+    virtual void foo() {}
+    struct Inner {
+        int i;
+    } inner;
+};
+
+struct D {
+    int j;
+};
+
+void foo() {
+    size_t off1 = offsetof(C::Inner, i);                  // OK
+    size_t off2 = offsetof(D, j);                         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   EXP59-CPP. Use offsetof() on valid types and members
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP59-CPP.+Use+offsetof%28%29+on+valid+types+and+members">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP59-CPP.+Use+offsetof%28%29+on+valid+types+and+members</A>
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   18.2 Types
+
+</PRE>
+</BODY>
+</HTML>

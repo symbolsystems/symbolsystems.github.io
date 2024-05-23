@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer const iterators to iterators [CODSTA-MCPP-10_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer const iterators to iterators [CODSTA-MCPP-10_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+const_iterators are the STL equivalent of pointers to const. In C++98,
+const_iterators were available, their use was limited. The C++11 standard
+offers a full support for const_iterators.
+
+This rule detects when iterators for different STL containers are not declared
+as const iterators, and the pointed objects do not need to be modified.
+In such cases, the iterator declaration should be replaced with a const_iterator
+declaration.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using of const_iterators can prevent exploits that could lead to modifying data.
+Dereferencing const_iterators produces a const object, which results in better
+overload resolution and helps you avoid security concerns, as well as produce
+better optimized code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void foo()
+{
+    std::vector&lt;int&gt; values;
+    std::vector&lt;int&gt;::iterator it = values.begin(); /* Violation */
+    int i = *it;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void foo()
+{
+    std::vector&lt;int&gt; values;
+    std::vector&lt;int&gt;::const_iterator it = values.begin(); /* OK */
+    int i = *it;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use of
+C++11 and C++14", Item 13
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A non-POD type should be defined as class [AUTOSAR-A11_0_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A non-POD type should be defined as class [AUTOSAR-A11_0_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Types that are not POD types are supposed to be defined as class objects,
+as a class specifier forces the type to provide private access control for all
+its members by default. This is consistent with developer expectations, because
+it is expected that a class has its invariant, interface and could provide
+custom-defined constructors." [AUTOSAR A11-0-1]
+
+This rule detects non-POD structs and unions types.
+See also: OOP-48
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A non-POD type is a type that meets at least one of the following conditions:
+- It is a class (classes are always non-POD).
+- It is a struct/union that has one of the following:
+  + a user-declared constructor
+  + a private or protected non-static data member
+  + a base class
+  + a virtual function
+  + a non-static member with a non-POD type (or an array of non-POD elements)
+  + a non-static member with type reference
+  + a user-declared copy assignment operator
+  + a user-declared destructor
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and facilitates code
+comprehension.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S1 {                              // Violation
+private:
+    int i;
+};
+
+struct S2 {                              // Violation
+    S2();
+    int k;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {                               // OK
+    int i;
+};
+
+class C {                                // OK
+public:
+    C();
+private:
+    int k;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A11-0-1. A non-POD type should be defined as class
+
+</PRE>
+</BODY>
+</HTML>

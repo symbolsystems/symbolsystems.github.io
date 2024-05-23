@@ -1,0 +1,188 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The second and third operands of the ternary operator shall have the same essential type category [CERT_C-INT31-k]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The second and third operands of the ternary operator shall have the same essential type category [CERT_C-INT31-k-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C language allows the programmer considerable freedom and will permit
+conversions between different arithmetic types to be performed automatically.
+However, the use of these implicit conversions can lead to unintended results,
+with the potential for loss of value, sign or precision."
+
+"Both operands of an operator in which the usual arithmetic conversions
+are performed shall have the same essential type category. The second
+and third operands of the ternary operator are covered by this rule."
+[MISRA C:2012 Rule 10.4]
+
+This rule detects cases when the second and third operands of the ternary
+operator have different essential types.
+
+The term "essential type" is defined by the MISRA C:2012 standard,
+but tools may also provide additional ways of identifying "essentially
+Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+Integer constants with values '0' and '1' are considered to be constants of
+"essentially Boolean" type.
+
+typedef enum {false, true}  bool;   /* essentially Boolean type */
+void foo(unsigned int ui) {
+    bool b;
+    signed int i;
+    (ui &gt; 0) ? b : 0;   /* OK */
+    (ui &gt; 0) ? i : 0;   /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The operators covered by this rule may have one operand with essentially
+real floating type and the other operand with essentially complex floating type.
+In the case of the conditional operator, this exception applies to the second
+and third operands." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The use of stronger typing, as enforced by the MISRA essential type model,
+allows implicit conversions to be restricted to those that should then produce
+the answer expected by the developer." [MISRA C:2012 Rule 10.4]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule can report a false violation if a nested conditional operator (more
+than one level of nesting) is used as the operand. For example:
+
+void foo(int a, int b) {
+    !((a &gt; b) ? a &gt; b : (a &gt; b ? 0 : (a &gt; b ? 0 : 1))); /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+signed int ret_int(void);
+
+void foo ( float f )
+{
+    char ch;
+    unsigned int ui;
+
+    (ui &gt; 0) ? 'E' : 10;        /* Violation - "character" and "signed" */
+    (ui &gt; 0) ? ui : ret_int();  /* Violation - "unsigned" and "signed" */
+    (ui &gt; 0) ? f : ch;          /* Violation - "floating" and "character" */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+#include &lt;complex.h&gt;
+
+signed int ret_int(void);
+
+void foo ( float f )
+{
+    signed char sc;
+    unsigned int ui;
+    float complex cf;
+
+    (ui &gt; 0) ? ui : 10u;        /* OK */
+    (ui &gt; 0) ? sc : ret_int();  /* OK */
+    (ui &gt; 0) ? f : 10.0;        /* OK */
+    (ui &gt; 0) ? cf : f;          /* OK - Exception */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.4
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.9 Rule 10.4
+
+3. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

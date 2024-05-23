@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer smart pointer members over raw pointer members [CODSTA-MCPP-16_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer smart pointer members over raw pointer members [CODSTA-MCPP-16_a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a raw pointer is declared as a pointer data member and deleted in a class
+destructor, then a smart pointer should be used to avoid unintentional memory
+leaks an ensure that the memory is freed correctly in all cases.
+
+This rule reports violations on pointer data members that are deleted in
+a destructor or in a function directly called in a destructor, when the deletion
+is unconditional or subject to conditions specified in the Notes section below.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects that a pointer member is deleted conditionally in a destructor
+only in the following cases:
+- a pointer member is deleted inside the 'if' statement body and the 'if'
+  condition contains only simple expressions that check if that pointer is not
+  NULL:
+  if (!ptr), if(ptr != 0), if (ptr != nullptr)
+- a pointer member is deleted inside the 'else' statement body and the 'if'
+  condition contains only simple expressions that check if that pointer is NULL:
+  if (ptr), if(ptr == 0), if (ptr == nullptr)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Smart pointers can prevent most cases of memory leaks by making the memory
+deallocation automatic.
+
+This rule helps you simplify your code, as it is unnecessary to add any extra
+data member in a unique_ptr object, except for the pointer itself.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct
+{
+    int m1;
+    float m2;
+} S;
+
+class A1
+{
+    int *m1;                  // Violation
+    int* m2;                  // Violation
+    S*   m3;                  // Violation
+
+    void doDelete();
+
+    ~A1()
+    {
+        delete m1;
+        delete this-&gt;m2;
+        doDelete();
+    }
+};
+
+void A1::doDelete()
+{
+    if( m3 != nullptr )
+    {
+        delete m3;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+typedef struct
+{
+    int m1;
+    float m2;
+} S;
+
+class A1
+{
+    std::unique_ptr&lt;int&gt; m1;   // OK
+    std::unique_ptr&lt;int&gt; m2;   // OK
+    std::unique_ptr&lt;S&gt;   m3;   // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 4: Smart Pointers, Item 21: "Prefer std::make_unique and
+   std::make_shared to direct use of new"
+
+</PRE>
+</BODY>
+</HTML>

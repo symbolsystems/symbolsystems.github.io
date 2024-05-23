@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Check the return value of new [MRM-34]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Check the return value of new [MRM-34-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When operator 'new' can't satisfy a memory allocation request, it throws
+an exception. Long ago, it returned a null pointer, and some older compilers
+still do that." [Scott Meyers, Effective C++: Third Edition, Item 49]
+
+This rule warns you if you do not check the return value of new. 
+
+The rule requires the one from the following methods:
+- the use of operator 'new' is placed directly inside 'try-catch' block
+  (if only the call of function containing operator 'new' is placed inside 
+  'try-catch' block, then violation is still reported).
+- directly after assignment or initialization that uses operator 'new'
+  the assigned pointer is checked inside 'if' condition. If a control
+  statement contains in condition non-dereferenced pointer, then the rule
+  assumes that this pointer is checked (even if it is not really checked).
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report a violation if a result of operator 'new' is passed
+directly to function call or 'return' statement.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents access to null pointer when memory is not allocated.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define NULL 0
+class Exception {};
+
+struct A {
+    int* mA;
+};
+
+int foo()
+{
+    char *pc = new char;  // Violation - operator 'new' is not checked
+    A* ap;
+    ap = new A();         // Violation - pointer is not directly checked
+    ap-&gt;mA = new int;     // Violation - pointer is not directly checked
+    if(ap == NULL){
+        return 0;
+    }
+    if(ap-&gt;mA == NULL){
+        return 0;
+    }
+    return 1;
+}
+
+void use() {
+    try {
+        foo();            // operator 'new' used in 'foo' should be checked
+                          // directly in 'foo' function
+    } catch (Exception e) {
+      
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define NULL 0
+class Exception {};
+int use(int* p);
+
+struct A {
+    int* mA;
+};
+
+int foo()
+{
+    try {
+        char *pc = new char;  // OK - used inside 'try-catch' block
+    } catch (Exception e) {
+      
+    }
+    
+    A* ap;
+    ap = new A();             // OK - pointer checked directly after assignment
+    if(ap == NULL){
+        return 0;
+    }
+    
+    ap-&gt;mA = new int;         // OK - pointer used in 'if' condition
+    if(use(ap-&gt;mA) &lt; 10){
+        return 0;
+    }
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 8, Item 49
+
+2. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter: "Memory Management", Item 7
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+4. SEI CERT C++ Coding Standard
+   MEM52-CPP. Detect and handle memory allocation errors
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM52-CPP.+Detect+and+handle+memory+allocation+errors">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM52-CPP.+Detect+and+handle+memory+allocation+errors</A>
+
+</PRE>
+</BODY>
+</HTML>

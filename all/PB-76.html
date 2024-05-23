@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+C-style strings shall not be used [PB-76]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+C-style strings shall not be used [PB-76-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"It is required that an underlying buffer for a C-style string needs
+to be of sufficient size to hold character data and a null terminator.
+In addition, a C-style string implies all other disadvantages
+of built-in arrays." [AUTOSAR A27-0-4]
+
+The 'std::string' type should be preferred over the char pointer type
+to handle string literals.
+
+This rule detects when a string literal:
+- is assigned to an expression of char pointer type.
+- is compared with an expression of char pointer type.
+- initializes a variable of char pointer type.
+- is passed as an argument of char pointer type to a function call
+  (except calls to constructors and operator functions).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule can recognize both the char* and  wchar_t* types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using std::string provides correct memory allocation, copying, gradual
+expansion and iteration. It is self-explanatory in terms of ownership
+and offers more readable interface." [AUTOSAR A27-0-4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the string literals are treated as
+a char pointer type.
+
+void f(char* p1);
+
+void f1(char* p1) {
+    const char* cv1 = "str1";  // Violation
+    char cv2[] = "str2";       // Violation
+    char* cv3;
+    cv3 = "str3";              // Violation
+    f("str4");                 // Violation
+    if(p1 == "str5") { }       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by replacing the char pointer type
+by the 'std:string' type.
+
+#include &lt;iostream&gt;
+using namespace std;
+
+void f(string p1);
+
+void f1(string p1) {
+    const string cv1 = "str1";  // OK
+    string cv2 = "str2";        // OK
+    string cv3;
+    cv3 = "str3";               // OK
+    f("str4");                  // OK
+    if(p1 == "str5") { }        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A27-0-4 C-style strings shall not be used.
+
+</PRE>
+</BODY>
+</HTML>

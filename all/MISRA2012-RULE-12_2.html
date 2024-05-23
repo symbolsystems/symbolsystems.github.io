@@ -1,0 +1,155 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid incorrect shift operations [MISRA2012-RULE-12_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid incorrect shift operations [MISRA2012-RULE-12_2-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects incorrect shift operations. This rule is dependent on several parameterizable
+conditions.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+"Report violation when negative value is shifted": Setting this parameter to true forces a violation when the left
+operand of the shift operator is negative. By default, it is set to true.
+
+"Report violation when shifting by negative value": Setting this parameter to true forces a violation when the right
+operand of the shift operator is negative. By default, it is set to true.
+
+"Report violation when shifting by too big value": Setting this parameter to true forces a violation when the right
+operand of the shift operator is greater or equal to the number of bits in the left operand.
+By default it is set to true.
+
+"Number of bits of the left hand side operand calculated based on its": This parameter determines
+how Flow Analysis engine calculates the number of bits of the left operand. Possible options are:
+* "Standard type" (default)
+* "MISRA C essential type"
+* "MISRA C++ underlying type"
+
+"Report violation when shifting will result in overflow": Setting this parameter to true forces a violation 
+when the result of the shift operation will cause overflow. By default it is set to true.
+
+"Report violation when shifting an unsigned value will result in overflow": Setting this parameter to true 
+forces a violation when the result of the shift operation will cause overflow and the left operand is of unsigned type. 
+By default it is set to false.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;stdlib.h&gt;
+
+long long* getRandomNumbersBad()
+{
+    long long* res = new long long[8];
+    for (int i = 7; i &gt;= 0; i--) {
+        int nextRand = rand() % (1 &lt;&lt; 8);
+        res[i] = nextRand &lt;&lt; (8 * i); // VIOLATION
+    }
+    return res;
+}
+
+In the example above in the first four iterations we will get overflow because of shifting too many bits.
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+long long* getRandomNumbersOK()
+{
+    long long* res = new long long[8];
+    for (int i = 7; i &gt;= 0; i--) {
+        int nextRand = rand() % (1 &lt;&lt; 8);
+        res[i] = (long long)nextRand &lt;&lt; (8 * i); // OK
+    }
+    return res;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 12.2
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 4.1.3 There shall be no occurrence of undefined or critical unspecified behaviour
+
+SEI CERT C Coding Standard
+INT34-C. Do not shift an expression by a negative number of bits or by greater than or equal to the number of bits that exist in the operand
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT34-C.+Do+not+shift+an+expression+by+a+negative+number+of+bits+or+by+greater+than+or+equal+to+the+number+of+bits+that+exist+in+the+operand">https://wiki.sei.cmu.edu/confluence/display/c/INT34-C.+Do+not+shift+an+expression+by+a+negative+number+of+bits+or+by+greater+than+or+equal+to+the+number+of+bits+that+exist+in+the+operand</A>
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+Chapter 4.21 Operators, AV Rule 164
+
+High Integrity C++ Coding Standard
+4.2.2 Ensure that data loss does not demonstrably occur in an integral expression
+
+</PRE>
+</BODY>
+</HTML>

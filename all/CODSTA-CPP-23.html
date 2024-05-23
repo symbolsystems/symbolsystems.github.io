@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Whenever a global function  is  referenced, use the :: operator [CODSTA-CPP-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Whenever a global function  is  referenced, use the :: operator [CODSTA-CPP-23-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Global functions declared in a global namespace scope should be called use 
+the scope resolution operator '::'. The use of '::' allows a function declared
+in a global namespace to be referred to even if its identifier has been hidden.
+
+This rule detects if you do not use the '::' operator whenever a global
+function is used. As global functions are detected functions declared
+in global scope or in unnamed namespace scope. 
+
+See also: CODSTA-CPP-84
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and maintainability.
+Using the '::' operator will make it easier
+to determine which function is being used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(){}
+
+void bar(){
+    foo();            // Violation
+}
+
+namespace {
+    void foo1(){}
+  
+    class A {
+    public:
+        //....
+        void bar1(){
+            foo1();   // Violation
+        }
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(){}
+
+void bar(){
+    ::foo();           // OK - global function is called
+}
+
+namespace {
+    void foo1(){}
+  
+    class A {
+    public:
+        void foo1(){ } // member function hides global
+        //....
+      
+        void bar1(){
+            ::foo1();  // OK - global function is still called
+        }
+    };
+}
+
+namespace N {
+    void foo2(){}
+    
+    void bar2(){
+    	foo2();        // OK - global function from named namespace is called
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

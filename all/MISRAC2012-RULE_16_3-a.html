@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An unconditional break statement shall terminate every non-empty case clause [MISRAC2012-RULE_16_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An unconditional break statement shall terminate every non-empty case clause [MISRAC2012-RULE_16_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The last statement in every switch clause shall be a break statement, 
+or if the switch clause is a compound statement, then the last statement
+in the compound statement shall be a break statement."
+
+The rule reports a violation if a non-empty case clause is not terminated
+by break or return statement. 
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is recommended to add a break statement at the end of default clause.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Terminating a non-empty case clause in a switch statement with a break
+statement eliminates potentially confusing behavior by prohibiting control
+from falling through to subsequent statements."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( int i )
+{
+    switch( i )
+    {
+        case 0 :         // Violation
+            i = 4;
+            break;
+            i++;
+        case 1 :         // Violation
+            i = 7;
+            if (i &gt; 0)
+            {
+                i = 5;
+                break;
+            }
+        case 2 :         // Violation
+            {
+                i = 3;
+            }
+        default:
+            i = 8;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( int i )
+{
+    switch( i )
+    {
+        case 0 :         // OK
+            i = 4;
+            i++;
+            break;
+        case 1 :         // OK
+            i = 7;
+            if (i &gt; 0)
+            {
+                i = 5;
+            }
+            break;
+        case 2 :         // OK
+            {
+                i = 3;
+                break;
+            }
+        case 3 :         // OK
+            {
+                i = 3;
+            }
+            break;
+        case 4 :         // OK - empty case
+        default:
+            i = 8;
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 15, Rule 15.2
+
+2. Misra Guidelines - Rule 61
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.3, Rule 16.1
+
+4. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 14 Flow Control Structures - Rule 47
+
+5. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 193
+
+</PRE>
+</BODY>
+</HTML>

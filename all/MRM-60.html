@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The memory management functions from the &lt;new&gt; and &lt;memory&gt; headers should not be used [MRM-60]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The memory management functions from the &lt;new&gt; and &lt;memory&gt; headers should not be used [MRM-60-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects usage of following functions from the 'std' namespace:
+"destroy", "destroy_at", "destroy_n", "launder", 
+"uninitialized_default_construct", "uninitialized_default_construct_n",
+"uninitialized_value_construct", "uninitialized_value_construct_n",
+"uninitialized_copy", "uninitialized_copy_n", "uninitialized_move",
+"uninitialized_move_n", "uninitialized_fill", "uninitialized_fill_n".
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+#include &lt;new&gt;
+ 
+struct S
+{
+  int v;
+};
+ 
+int main()
+{
+  alignas(S) unsigned char buffer[sizeof(S) * 4];
+  for (int i = 0; i &lt; 4; ++i)
+  {
+    new(buffer + sizeof(S) * i) S{i};
+  }
+  auto ptr = std::launder(reinterpret_cast&lt;S*&gt;(buffer));          // Violation
+  std::destroy(ptr, ptr + 4);                                     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use memory management functions
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.3 Advanced memory management shall not be used
+
+</PRE>
+</BODY>
+</HTML>

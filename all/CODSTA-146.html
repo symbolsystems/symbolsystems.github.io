@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A value returned from a stdio character-oriented I/O function should not be implicitly converted to a type smaller than 'int' [CODSTA-146]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A value returned from a stdio character-oriented I/O function should not be implicitly converted to a type smaller than 'int' [CODSTA-146-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When a primitive is cast to a smaller primitive, the high order bits
+of the large value are lost in the conversion, potentially resulting
+in an unexpected value that is not equal to the original value." [CWE-197]
+
+The standard library character-oriented I/O functions return 'int' values
+such as EOF, so their results should not be converted to smaller types.
+
+The rule reports a violation if a value returned from the I/O function
+is implicitly converted to a smaller type.
+
+The rule checks values returned from:
+
+- global functions:
+    fgetc, getc, getchar, fputc, putc, putchar, ungetc
+
+- member functions from class basic_istream or from classes that inherit
+  from basic_istream:
+    get, peek
+
+- member functions from class basic_streambuf or from classes that inherit
+  from basic_streambuf:
+    snextc, sbumpc, sgetc, sputbackc, sungetc, sputc, underflow, uflow,
+    pbackfail, overflow
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents data loss.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+void foo1()
+{
+    FILE* pFile;
+    char c;
+
+    do {
+        c = getc (pFile);    // Violation - implicit conversion from 'int'
+                             // to 'char' type causes truncation
+    } while (c != EOF);
+}
+
+#ifdef __cplusplus
+#include &lt;fstream&gt;
+
+void foo2 ()
+{
+    char str[256];
+    std::ifstream is(str);
+    char c;
+
+    while (1)
+    {
+        c = is.get();        // Violation - implicit conversion from 'int'
+                             // to 'char' type causes truncation
+        if(c == -1)
+            break;
+    }
+    is.close();
+}
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+void foo1()
+{
+    FILE* pFile;
+    int c;
+
+    do {
+        c = getc (pFile);     // OK
+    } while (c != EOF);
+}
+
+#ifdef __cplusplus
+#include &lt;fstream&gt;
+
+void foo2 ()
+{
+    char str[256];
+    std::ifstream is(str);
+    char c;
+
+    while (1)
+    {
+        is.get(c);            // OK
+        if(!is.good() )
+            break;
+    }
+    is.close();
+}
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-197: Numeric Truncation Error
+   <A HREF="http://cwe.mitre.org/data/definitions/197.html">http://cwe.mitre.org/data/definitions/197.html</A>
+
+</PRE>
+</BODY>
+</HTML>

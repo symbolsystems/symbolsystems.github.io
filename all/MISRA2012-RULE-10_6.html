@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value of a composite expression shall not be assigned to an object with wider essential type [MISRA2012-RULE-10_6]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value of a composite expression shall not be assigned to an object with wider essential type [MISRA2012-RULE-10_6-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C language allows the programmer considerable freedom and will permit
+assignments between different arithmetic types to be performed automatically.
+However, the use of these implicit conversions can lead to unintended results,
+with the potential for loss of value, sign or precision." [MISRA C:2012]
+
+The rule reports a violation if the value of a composite expression is assigned
+to an object with wider essential type.
+
+The terms "composite expression", "essential type" and "assignment" are defined
+by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule reduces possible developer confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void goo(unsigned int u32p);
+
+double foo1( float f32p ) {
+    unsigned char u8a, u8b;
+    unsigned int u32a = u8a + u8b;               /* Violation */
+    u32a = u8a + 10u;;                           /* Violation */
+    goo(u8a &gt;&gt; 4);                               /* Violation */
+    return f32p * 10.1f;                         /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void goo(unsigned int u32p);
+
+double foo1( float f32p ) {
+    unsigned char u8a, u8b;
+    unsigned int u32a = (unsigned int)u8a + u8b;               /* OK */
+    u32a = (unsigned int)(u8a + 10u);                          /* OK */
+    goo((unsigned int)u8a &gt;&gt; 4);                               /* OK */
+    return f32p * 10.1;                                        /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.6, 8.10 The essential type model
+
+2. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The address of an object with automatic storage duration shall not be assigned to an object with a greater lifetime [CODSTA-311]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The address of an object with automatic storage duration shall not be assigned to an object with a greater lifetime [CODSTA-311-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when the address of a local variable with automatic
+storage duration is assigned to a pointer with a greater lifetime.
+
+The rule checks the assignment operators where the right-hand-side operand is:
+* taking the address of a variable using the addressof operator (unary &amp;),
+* taking the address of a variable using the addressof function,
+* taking the address of a variable using a user-defined operator&amp;, or
+* a variable of array type.
+
+A target pointer object is considered to have a greater lifetime when:
+* it is a variable with thread or static storage duration, or 
+* it is a local variable defined in the outer scope compared to the
+variable whose address is taken.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior caused by accessing
+an object outside of its lifetime.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int* gp;
+void test(int x)
+{
+    int a[10];
+    int* p;
+    if (x &gt; 0) {
+        int i = 42;
+        p = &amp;i;          // Violation
+    }
+    gp = a;              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int* gp;
+int a[10];
+void test(int x)
+{
+    int i = 0;
+    int* p;
+    if (x &gt; 0) {
+        i = 42;
+        p = &amp;i;          // OK
+    }
+    gp = a;              // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.8.3 An assignment operator shall not assign the address of an object with automatic storage duration to an object with a greater lifetime
+
+</PRE>
+</BODY>
+</HTML>

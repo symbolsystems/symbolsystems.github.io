@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An operand of essentially Boolean type should not be used where an operand is interpreted as a numeric value [MISRA2012-RULE-10_1_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An operand of essentially Boolean type should not be used where an operand is interpreted as a numeric value [MISRA2012-RULE-10_1_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when the operands of the following operators
+have "essentially Boolean" type:
+[], +, +=, ++, --, -, -=, *, *=, /, /=, %, %=, &lt;, &gt;, &lt;=, &gt;=, &gt;&gt;, &gt;&gt;=,
+&lt;&lt;, &lt;&lt;=, ~, &amp;, &amp;=, |, |=, ^, ^=
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The term "essential type" is defined by the MISRA C:2012 standard, 
+but tools may also provide additional ways of identifying "essentially 
+Boolean" types.
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef enum {false, true} bool; /* essentially Boolean type */
+void foo( int res )
+{
+    bool bb;
+    int arr[2];
+    int i1, i2;
+
+    arr[bb];          /* Violation */
+    res &amp; (i1 &gt; i2);  /* Violation */
+    --bb;             /* Violation */
+    false + 1;        /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+typedef enum {false, true} bool; /* essentially Boolean type */
+void foo( void )
+{
+    bool bb;
+    int arr[2];
+    int i1, i2;
+
+    !bb;              /* OK */
+    arr[1];           /* OK */
+    --i1;             /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.1
+
+2. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

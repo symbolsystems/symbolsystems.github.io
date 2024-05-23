@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Be wary about using multiple inheritance of classes that are not abstract interfaces [OOP-07]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Be wary about using multiple inheritance of classes that are not abstract interfaces [OOP-07-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A derived class should not inherit from more than one base class that
+is not an interface because this exposes the derived class to multiple
+implementations.
+
+This rule detects when a class inherits from more than one class that is not
+an interface.
+
+See also: OOP-03, OOP-04, OOP-05, OOP-06, OOP-07_a, OOP-07_b, OOP-07_c
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that the interface is a class that meets the following
+conditions:
+- it has no member variables (except for public static constexpr),
+- all of its member functions (except for destructors) are pure virtual,
+- it does not inherit from classes that are not interfaces,
+- it does not have any nested types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Designs that use multiple inheritance can be very expressive, but are harder
+to get right and easier to get wrong. In particular, state management
+is particularly hard in designs using multiple inheritance."
+[C++ Coding Standards - Rule 36]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class NonInterface1 {
+public:
+  void foo1( );
+};
+
+class NonInterface2 {
+public:
+  NonInterface2() {}
+  void foo2( );
+};
+
+class NonInterface3 {
+public:
+  int mbr;
+};
+
+class NonInterface4 {
+protected:
+  static constexpr int i = 0;
+};
+
+class D1: public NonInterface1, public NonInterface2 {      // Violation
+};
+
+class D2: public NonInterface3, public NonInterface4 {      // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class NonInterface1 {
+public:
+  void foo1( );
+};
+
+class Interface2 {
+public:
+  Interface2() =default;
+  virtual void foo2( ) = 0;
+};
+
+class NonInterface3 {
+public:
+  int mbr;
+};
+
+class Interface4 {
+public:
+  static constexpr int i = 0;
+};
+
+class D1: public NonInterface1, public Interface2 {         // OK
+};
+
+class D2: public NonInterface3, public Interface4 {         // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-1-1. Class shall not be derived from more than one base class which is
+   not an interface class
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu,
+   "C++ coding standards: 101 rules, guidelines, and best practices"
+   Chapter: "Class Design and Inheritance", Rule 36
+
+</PRE>
+</BODY>
+</HTML>

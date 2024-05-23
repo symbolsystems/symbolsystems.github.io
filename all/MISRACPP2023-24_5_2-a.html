@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The C++ Standard Library functions 'memcpy', 'memmove' and 'memcmp' from &lt;cstring&gt; should not be used [MISRACPP2023-24_5_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The C++ Standard Library functions 'memcpy', 'memmove' and 'memcmp' from &lt;cstring&gt; should not be used [MISRACPP2023-24_5_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'memcpy' and 'memcmp' semantics of the compare-and-exchange operations may
+result in failed comparisons for values that compare equal with operator== if
+the underlying type has padding bits, trap bits, or alternate representations
+of the same value." [ISO/IEC 14882:2017]
+
+When the 'memmove' and 'memcpy' functions are used with pointer arguments
+pointing to the blocks of memory that are potentially overlapping or not
+trivially copyable, then it can result in undefined behavior.
+
+This rule detects when functions with the names 'memmove', 'memcpy' or 'memcmp'
+that are defined with extern C linkage (in external library or locally by the
+user) are used (called or their addresses are taken).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstring&gt;
+
+void foo(char* dest, char* src) {
+    memcpy(dest, src, 8);              // Violation
+    memmove(dest, src, 8);             // Violation
+    memcmp(dest, src, 8);              // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use 'memcpy', 'memmove' and 'memcmp' functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   32.6.1 Operations on atomic types
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 24.5.2 The C++ Standard Library functions memcpy, memmove and memcmp from &lt;cstring&gt; shall not be used
+
+</PRE>
+</BODY>
+</HTML>

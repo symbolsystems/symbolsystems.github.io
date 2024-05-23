@@ -1,0 +1,261 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unreachable methods [HICPP-1_2_1-h]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unreachable methods [HICPP-1_2_1-h-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a function is unreachable or only reachable via
+unreachable functions.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Functions that are unreachable and cannot be executed are considered
+dead code, which may be an indication of poor quality or problems with
+the source code that need to be fixed.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+"Report on functions which are called only from unreachable functions". 
+Setting to true defines function unreachability as transitive. As a result,
+also functions that are called from unreachable functions will be reported.
+    It is set to false by default. 
+        
+"Report on non-member functions:" group defines rule behavior on non-member functions 
+
+"with external linkage"
+If set to true, the rule will trigger on unreachable external linkage functions.
+    It is set to false by default. 
+
+"with internal linkage"
+If set to true, the rule will trigger on unreachable internal linkage functions.
+    It is set to true by default. 
+
+"Report on member functions:" group defines rule behavior on member functions 
+
+"with public access"
+If set to true, the rule will trigger on unreachable public member functions.
+    It is set to false by default. 
+
+"with protected access"
+If set to true, the rule will trigger on unreachable protected member functions.
+    It is set to true by default. 
+    
+"with private access"
+If set to true, the rule will trigger on unreachable private member functions.
+    It is set to true by default. 
+   
+"Ignore methods from template classes".
+If set to true, the rule will not trigger on unreachable methods from template
+classes. Virtual methods of such classes are instantiated even if they are 
+not called.
+    It is set to false by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Unreachable functions indicate poor code quality or bugs in the program. 
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+In the following code, the developer copied and pasted code in the switch statement
+and forgot to change the method name.
+
+#include &lt;iostream&gt;
+using namespace std;
+
+class SimpleCalculatorBad {
+private:
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int substract(int a, int b) {
+        return a - b;
+    }
+
+    int multiply(int a, int b) {
+        return a * b;
+    }
+
+    int divide(int a, int b) { // VIOLATION: Unreachable method
+        return a / b;
+    }
+
+public:
+    void runCalculation() {
+        int a, b, result;
+        char operation;
+
+        cin &gt;&gt; a &gt;&gt; operation &gt;&gt; b;
+
+        switch (operation) {
+        case '+':
+            result = add(a, b);
+            break;
+        case '-':
+            result = substract(a, b);
+            break;
+
+        case '*':
+            result = multiply(a, b);
+            break;
+
+        case '/':
+            result = multiply(a, b);
+            break;
+        }
+
+        cout &lt;&lt; result &lt;&lt; endl;
+    }
+};
+
+int main() {
+    SimpleCalculatorBad * calculator = new SimpleCalculatorBad();
+    calculator-&gt;runCalculation();
+    delete calculator;
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+using namespace std;
+
+class SimpleCalculatorFixed {
+private:
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int substract(int a, int b) {
+        return a - b;
+    }
+
+    int multiply(int a, int b) {
+        return a * b;
+    }
+
+    int divide(int a, int b) { // NO VIOLATION
+        return a / b;
+    }
+
+public:
+    void runCalculation() {
+        int a, b, result;
+        char operation;
+
+        cin &gt;&gt; a &gt;&gt; operation &gt;&gt; b;
+
+        switch (operation) {
+        case '+':
+            result = add(a, b);
+            break;
+        case '-':
+            result = substract(a, b);
+            break;
+
+        case '*':
+            result = multiply(a, b);
+            break;
+
+        case '/':
+            result = divide(a, b); // FIXED
+            break;
+        }
+
+        cout &lt;&lt; result &lt;&lt; endl;
+    }
+};
+
+int main() {
+    SimpleCalculatorFixed * calculator = new SimpleCalculatorFixed();
+    calculator-&gt;runCalculation();
+    delete calculator;
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-561: Dead Code
+<A HREF="http://cwe.mitre.org/data/definitions/561.html">http://cwe.mitre.org/data/definitions/561.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 2.1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 0.2.4 Functions with limited visibility should be used at least once
+
+High Integrity C++ Coding Standard
+1.2.1 Ensure that all statements are reachable
+
+SEI CERT C Coding Standard
+MSC07-C. Detect and remove dead code
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC07-C.+Detect+and+remove+dead+code">https://wiki.sei.cmu.edu/confluence/display/c/MSC07-C.+Detect+and+remove+dead+code</A>
+
+SEI CERT C Coding Standard
+MSC12-C. Detect and remove code that has no effect or is never executed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed">https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer pointing to an element of an array of objects shall not be passed to a smart pointer of single object type [AUTOSAR-A18_1_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer pointing to an element of an array of objects shall not be passed to a smart pointer of single object type [AUTOSAR-A18_1_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Smart pointers of a single object type, e.g. std::unique_ptr&lt;T&gt; and
+std::shared_ptr&lt;T&gt;, by default have a deleter associated with them which is
+only capable of deleting a single object. Therefore, it is undefined behavior
+if a pointer pointing to an element of an array of objects is passed to such
+a smart pointer."[AUTOSAR A18-1-4]
+
+This rule detects when an array pointer is passed to a smart pointer
+of a single object type. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule also triggers when a smart pointer is used with a custom deleter
+that ensures correct memory deallocation.
+
+"Furthermore, note that it is possible to create a smart pointer of single
+object type with a custom deleter handling an array of objects. This is well
+behaving as long as this smart pointer is actually managing an array of
+objects. However, such a use is errorprone, since the smart pointer can be
+assigned a single object again in the reset function; it may no longer be
+possible in C++17 (moving a std::unique_ptr&lt;T[]&gt; into a std::shared_ptr&lt;T&gt; is
+no longer allowed); and it is superseded by better alternatives in C++17
+(availability of std:shared_ptr&lt;T[]&gt;). Therefore such usage is considered
+not compliant to this rule."[AUTOSAR A18-1-4]
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Passing an array pointer to a smart pointer of a single object type may cause
+memory leaks and lead to undefined behavior.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent memory leaks and undefined behavior (see SECURITY
+RELEVANCE).
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation.
+
+#include &lt;memory&gt;
+
+void foo() {
+    int* ptr = new int[100];
+    std::unique_ptr&lt;int&gt; s(ptr); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+You can fix the code by using a smart pointer of array type.
+
+#include &lt;memory&gt;
+
+void foo() {
+    int* ptr = new int[100];
+    std::unique_ptr&lt;int[]&gt; s(ptr); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+AUTOSAR C++14 Coding Guidelines
+Rule A18-1-4 A pointer pointing to an element of an array of objects shall not be passed to a smart pointer of single object type
+
+</PRE>
+</BODY>
+</HTML>

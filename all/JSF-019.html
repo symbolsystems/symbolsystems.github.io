@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+'setlocale' function shall not be used [JSF-019]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+'setlocale' function shall not be used [JSF-019-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A call to the setlocale function introduces a data race with
+other calls to setlocale function." [AUTOSAR A18-0-3]
+
+The rule detects when the global function with the name 'setlocale'
+is called or when its address is taken.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid data races.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;locale.h&gt;
+void foo(void)
+{
+    setlocale(LC_ALL, "C");  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'setlocale' function.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-0-3. The library &lt;clocale&gt; (locale.h) and the setlocale function shall
+   not be used
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.5 Libraries, AV Rule 19
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 25.5.1 The setlocale and std::locale::global functions shall not be called
+
+4. Origin: Misra Guidelines - Rule 121
+
+</PRE>
+</BODY>
+</HTML>

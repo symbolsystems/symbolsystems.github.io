@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no data races between threads [BD-TRS-THRDR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no data races between threads [BD-TRS-THRDR-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule reports a violation when the race condition can occur.
+
+Specifically, it analyzes thread entry point functions for:
+- access to global variables
+- calls to library functions which may access objects with static or thread
+  storage duration (listed below)
+  
+when no synchronization mechanism is used.
+
+List of checked functions:
+
+char* setlocale( int category, const char *locale );
+char* tmpnam( char *filename );
+int rand();
+void srand( unsigned seed );
+char* getenv( const char *env_var );
+errno_t getenv_s( size_t *restrict len, char *restrict value, rsize_t valuesz, const char *restrict name );
+char* strtok( char *str, const char *delim );
+char* strerror( int errnum );
+char* asctime( const struct tm *time_ptr );
+char* ctime( const time_t *time );
+tm* gmtime( const time_t *time );
+tm* localtime( const time_t *time );
+size_t mbrtoc16( char16_t *pc16, const char *s, size_t n, mbstate_t *ps );
+size_t c16rtomb( char *s, char16_t c16, mbstate_t *ps );
+size_t mbrtoc32( char32_t *pc32, const char *s, size_t n, mbstate_t *ps );
+size_t c32rtomb( char *s, char32_t c32, mbstate_t *ps );
+size_t mbrlen( const char *s, size_t n, mbstate_t *ps );
+size_t mbrtowc( wchar_t *pwc, const char *s, size_t n, mbstate_t *ps );
+size_t wcrtomb( char *s, wchar_t wc, mbstate_t *ps );
+size_t mbsrtowcs( wchar_t *dst, const char **src, size_t len, mbstate_t *ps );
+size_t wcsrtombs( char *dst, const wchar_t **src, size_t len, mbstate_t *ps );
+
+For a list of recognized thread-creating functions, see the rule BD-TRS-THRTHR.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+A data race can cause memory corruption and lead to unexpected, erroneous or erratic 
+behavior. Data races typically manifest sporadically and are very hard to reproduce.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Names of excluded global variables (wildcard)" text field allows to define 
+the name pattern for global variables that do not need to be checked.
+The default value is an empty string. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent data races between threads.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+
+int x;
+
+pthread_t thread1, thread2;
+
+void* t1( void *ignore ) /* Thread T1 entry */
+{
+  x = -1; // VIOLATION
+  return 0;
+}
+
+void* t2( void *ignore ) /* Thread T2 entry */
+{
+  x = 0; // VIOLATION
+  return 0;
+}
+
+int main()
+{
+  pthread_create(&amp;thread1, 0, &amp;t1, 0);
+  pthread_create(&amp;thread2, 0, &amp;t2, 0);
+  return 0;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+To repair the code, use synchronization when accessing the global variable.
+
+#include &lt;pthread.h&gt;
+
+int x;
+
+pthread_t thread1, thread2;
+
+pthread_mutex_t* mutex;
+
+void* t1( void *ignore ) /* Thread T1 entry */
+{
+  pthread_mutex_lock(mutex);
+  x = -1; // NO VIOLATION
+  pthread_mutex_unlock(mutex);
+  return 0;
+}
+
+void* t2( void *ignore ) /* Thread T2 entry */
+{
+  pthread_mutex_lock(mutex);
+  x = 0; // NO VIOLATION
+  pthread_mutex_unlock(mutex);
+  return 0;
+}
+
+int main()
+{
+  pthread_create(&amp;thread1, 0, &amp;t1, 0);
+  pthread_create(&amp;thread2, 0, &amp;t2, 0);
+  return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.1 Section 7 - Directives, Dir 5.1
+
+</PRE>
+</BODY>
+</HTML>

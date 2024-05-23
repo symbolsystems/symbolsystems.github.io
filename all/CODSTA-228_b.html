@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call 'getc()', 'putc()', 'getwc()', or 'putwc()' with a stream argument containing function calls or function-like macro calls [CODSTA-228_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call 'getc()', 'putc()', 'getwc()', or 'putwc()' with a stream argument containing function calls or function-like macro calls [CODSTA-228_b-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not invoke getc() or putc() or their wide-character analogues getwc()
+and putwc() with a stream argument that has side effects. The stream argument
+passed to these macros may be evaluated more than once if these functions are
+implemented as unsafe macros" [SEI CERT C Coding Standard]
+
+This rule detects when a stream argument passed to the call to the 'getc()',
+'putc()', 'getwc()', or 'putwc()' functions or function-like macros contains
+function calls or function-like macro calls. The use of such calls might
+cause unwanted side effects.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects every pattern containing 'identifier' followed by the
+opening parenthesis '(' as a call.
+
+"This rule does not apply to the character argument in 'putc()' or the
+wide-character argument in putwc(), which is guaranteed to be evaluated
+exactly once." [CERT-C-FIO41]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected and undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+#include &lt;wchar.h&gt;
+void func(const char *file_name)
+{
+    int c = getc(fopen(file_name, "r"));                    // Violation
+    putc(c++, fopen(file_name, "w"));                       // Violation
+
+    wint_t c2 = getwc(fopen(file_name, "r"));               // Violation
+    putwc(L'A', fopen(file_name, "w"));                     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+#include &lt;wchar.h&gt;
+void func(const char *file_name)
+{
+    FILE *fptr  = fopen(file_name, "r");
+    if (!fptr)
+    {
+        // Handle error
+    }
+
+    int c = getc(fptr);                                     // OK
+    fclose(fptr);
+
+    fptr = fopen(file_name, "w");
+    if (!fptr)
+    {
+        // Handle error
+    }
+    putc(c++, fptr);                                        // OK
+    fclose(fptr);
+
+    fptr = fopen(file_name, "r");
+    if (!fptr)
+    {
+        // Handle error
+    }
+    wint_t c2 = getwc(fptr);                                // OK
+    fclose(fptr);
+
+    fptr = fopen(file_name, "w");
+    if (!fptr)
+    {
+        // Handle error
+    }
+    wchar_t wc;
+    putwc(L'A', fptr);                                      // OK
+    fclose(fptr);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   FIO41-C. Do not call getc(), putc(), getwc(), or putwc() with a stream
+   argument that has side effects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO41-C.+Do+not+call+getc(),+putc(),+getwc(),+or+putwc()+with+a+stream+argument+that+has+side+effects">https://wiki.sei.cmu.edu/confluence/display/c/FIO41-C.+Do+not+call+getc(),+putc(),+getwc(),+or+putwc()+with+a+stream+argument+that+has+side+effects</A>
+
+</PRE>
+</BODY>
+</HTML>

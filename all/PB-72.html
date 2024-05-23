@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call va_arg with an argument of the incorrect type [PB-72]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call va_arg with an argument of the incorrect type [PB-72-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The variable arguments passed to a variadic function are accessed by calling
+the 'va_arg()' macro. This macro accepts the 'va_list' representing the variable
+arguments of the function invocation and the type denoting the expected argument
+type for the argument being retrieved. The macro is typically invoked within
+a loop, being called once for each expected argument. However, there are no type
+safety guarantees that the type passed to 'va_arg' matches the type passed by
+the caller" [CERT-EXP47-C]
+
+Incompatibility of the type passed to the 'va_arg()' macro and the type
+passed to the variadic function after default argument promotions have been
+applied results in undefined behavior.
+
+"Since the prototype doesn't specify types for optional arguments, in a call
+to a variadic function the default argument promotions are performed on the
+optional argument values. This means the objects of type 'char' or 'short int'
+(whether signed or not) are promoted to either 'int' or 'unsigned int',
+as appropriate; and that objects of type 'float' are promoted to type 'double'.
+So, if the caller passes a 'char' as an optional argument, it is promoted
+to an 'int'" [The GNU C Library]
+
+Due to default argument promotions, variadic functions will never receive
+arguments of types 'char, 'short' or 'float'. For this reason, passing the type
+names 'char', 'short', or 'float' as the second argument to the va_arg() macro
+is incorrect.
+
+This rule detects when the second argument passed to the 'va_arg()' macro
+is a type name 'char, 'short', or 'float', or a typedef name to these types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdarg.h&gt;
+
+void foo1(int n, ...) {
+    va_list ap;
+    va_start(ap, n);
+    short s = va_arg(ap, short);            // Violation
+}
+
+void foo2(int n, ...) {
+    va_list ap;
+    va_start(ap, n);
+    float s = va_arg(ap, float);            // Violation
+}
+
+void bar() {
+    short s = 1;
+    float f = 1.1f;
+    foo1(1, s);
+    foo2(1, f);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdarg.h&gt;
+
+void foo1(int n, ...) {
+    va_list ap;
+    va_start(ap, n);
+    short s = (short)va_arg(ap, int);       // OK
+}
+
+void foo2(int n, ...) {
+    va_list ap;
+    va_start(ap, n);
+    float s = (float)va_arg(ap, double);    // OK
+}
+
+void bar() {
+    short s = 1;
+    float f = 1.1;
+    foo1(1, s);
+    foo2(1, f);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:2011 Programming languages -- C
+   6.5.2.2 Function calls
+
+2. SEI CERT C Coding Standard
+   EXP47-C. Do not call va_arg with an argument of the incorrect type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP47-C.+Do+not+call+va_arg+with+an+argument+of+the+incorrect+type">https://wiki.sei.cmu.edu/confluence/display/c/EXP47-C.+Do+not+call+va_arg+with+an+argument+of+the+incorrect+type</A>
+
+3. The GNU C Library
+   A.2.2.4 Calling Variadic Functions
+
+</PRE>
+</BODY>
+</HTML>

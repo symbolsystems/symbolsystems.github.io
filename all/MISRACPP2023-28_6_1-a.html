@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use std::move on objects declared with the const or const &amp; type [MISRACPP2023-28_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use std::move on objects declared with the const or const &amp; type [MISRACPP2023-28_6_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An object declared with the 'const' or 'const &amp;' type will never actually be
+moved as a result of calling 'std::move'." [HIC++ Coding Standard]
+
+This rule detects when 'std::move' is called with an argument of 'const' or
+'const &amp;' type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected behavior and improve code clarity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, 'std::move' is called on an object of 'const' type.
+
+#include &lt;utility&gt;
+
+class C
+{
+};
+
+void foo()
+{
+  const C c{};
+  C c2 = std::move(c);                 // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;utility&gt;
+
+class C
+{
+};
+
+void foo()
+{
+  const C c{};
+  C c2 = c;                            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-9-3. The std::move shall not be used on objects declared const or
+   const&amp;
+
+2. High Integrity C++ Coding Standard
+   17.3.1. Do not use std::move on objects declared with const or const &amp; type
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 28.6.1 The argument to std::move shall be a non-const lvalue
+
+</PRE>
+</BODY>
+</HTML>

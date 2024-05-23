@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure strings are zero terminated [BD-PB-NZTS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure strings are zero terminated [BD-PB-NZTS-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+Using the standard library strncpy function with the maximum number of characters
+equal to the size of the destination buffer may result in the destination
+buffer not being zero-terminated. If such a buffer is later used in the 
+context that requires a zero-terminated string, this may result in a buffer
+overflow.
+
+This rule reports violations when strncpy is called with the maximum number of
+characters to be copied equal to the size of the destination buffer.   
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Missing null characters may result in any number of security problems. The
+biggest issue is potential buffer overflow.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+Violations are not reported if zero is explicitly inserted into the destination
+buffer after strncpy function is called. See also repair section below.
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void example(char* buf, char* input, int bufsize)
+{
+    strncpy(buf, input, bufsize); // Violation
+}
+
+void func(char* input)
+{
+    char buf[32];
+    example(buf, input, sizeof(buf));
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void repair_1(char* buf, char* input, int bufsize)
+{
+    memset(buf, 0, bufsize);
+    strncpy(buf, input, bufsize - 1); // OK
+}
+
+void func_1(char* input)
+{
+    char buf[32];
+    repair_1(buf, input, sizeof(buf));
+}
+
+void repair_2(char* buf, char* input, int bufsize)
+{
+    strncpy(buf, input, bufsize); // OK
+    buf[bufsize - 1] = '\0';
+}
+
+void func_2(char* input)
+{
+    char buf[32];
+    repair_2(buf, input, sizeof(buf));
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-170: Improper Null Termination
+<A HREF="http://cwe.mitre.org/data/definitions/170.html">http://cwe.mitre.org/data/definitions/170.html</A>
+
+</PRE>
+</BODY>
+</HTML>

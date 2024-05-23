@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every generic selection shall contain a default association [CODSTA-MC-05]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every generic selection shall contain a default association [CODSTA-MC-05-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a generic selection has no default generic association, its controlling
+expression shall have type compatible with exactly one of the types named
+in its generic association list." [ISO/IEC 9899:2011]
+
+This rule detects when a generic selection does not contain a default
+association.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability of the code and prevent unexpected
+constraint violations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Violation
+#define cbrt(X) _Generic((X),           \
+                    double: cbrt,       \
+                    long double: cbrtl, \
+                    float: cbrtf        \
+                )(X)}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix your code, indicate a default association in the generic selection.
+
+// OK
+#define cbrt(X) _Generic((X),           \
+                    default: cbrt,      \
+                    long double: cbrtl, \
+                    float: cbrtf        \
+                )(X)
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Programming languages -- C ISO/IEC 9899:2011
+   6.5.1.1 Generic selection
+
+</PRE>
+</BODY>
+</HTML>

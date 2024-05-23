@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions which are called with array argument shall not be declared with pointer parameter [JSF-097_e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions which are called with array argument shall not be declared with pointer parameter [JSF-097_e-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Arrays degenerate to pointers when passed as function parameters.
+
+This "array decay" problem has long been known to be a source of errors.
+
+For example sizeof() will not return the size of the array.
+
+This rule reports violation on function declaration, if it detects that given
+function was called, in current translation unit, with expression with array
+type passed to formal parameter with pointer type.
+
+See also: CODSTA-142, CODSTA-CPP-55, CODSTA-CPP-55_b, PB-41, PB-41_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Joint Strike Fighter coding standard requires the use of a special 'Array'
+class instead of plain arrays.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents giving impression that array passed to a function which receives it as
+a pointer behaves as an array.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of non-compliant code:
+void foo1(int *p);          // Violation (called with array)
+void foo2(int * const &amp; p); // Violation (called with array)
+void bar(int tab1[]) {
+  int tab2[10];
+  foo1(tab1);
+  foo2(tab2);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of code which do not cause violation from this rule:
+void foo0(int *p);        // OK (not called at all in current translation unit)
+void foo1(int *p);        // OK (called with pointer argument)
+// parameter type not pointer - not checked by this rule:
+void foo2(int (&amp;p)[10]);  // OK (parameter type not pointer)
+void foo3(int p[]);       // OK (parameter type not pointer)
+void bar(int * tab1) {
+  int tab2[10];
+  foo1(tab1);
+  foo2(tab2);
+  foo2(tab2);
+  foo3(tab1);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 97
+
+</PRE>
+</BODY>
+</HTML>

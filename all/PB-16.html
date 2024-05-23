@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid assigning out-of-range value to char type [PB-16]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid assigning out-of-range value to char type [PB-16-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports violation if to signed char type (declared explicitly
+or implicitly) is assigned the value that exceeds its range. The range
+of values of singed char type is from -128 to 127.
+The rule checks assignments and initializations.
+If to variable is assigned a constant expression with a value that
+is out-of-range then violation is not reported. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents loss of data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo()
+{
+  char c = 128;                       // Violation
+  signed char sc = -129;              // Violation
+  signed char sac[3] = {1, 2, 130};   // Violation
+
+  c = 170;                            // Violation
+  sc = -130;                          // Violation
+  sac[2] = 150;                       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo()
+{
+  short c = 128;                      // OK - the type of variable was changed
+  signed short sc = -129;             // OK - the type of variable was changed
+  unsigned char sac[3] = {1, 2, 130}; // OK - the type of variable was changed
+
+  c = 170;                            // OK
+  sc = -130;                          // OK
+  sac[2] = 150;                       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

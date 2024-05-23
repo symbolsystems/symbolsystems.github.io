@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A bit-field shall have an appropriate type [MISRACPP2023-12_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A bit-field shall have an appropriate type [MISRACPP2023-12_2_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when the bit-field has a type which is not:
+* a signed or unsigned integer type, or
+* an enum with a fixed underlying type of signed or unsigned integer type, or
+* bool.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks both named and unnamed bit-fields.
+
+The types char and wchar_t, for which it is implementation-defined whether
+they are signed or unsigned, as well as the types char16_t and char32_t,
+which are only intended to store character code points,
+are not considered to be signed or unsigned integer types.
+Their usage as a type of a bit-field is reported by the rule.
+
+The rule also reports bit-fields of enum types if the underlying type
+is not explicitly  specified, as it is implementation-defined
+whether their representation is signed or unsigned.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Enum1 : unsigned char
+{
+    Value1a,
+    Value1b,
+    Value1c
+};
+
+enum Enum2 : char
+{
+    Value2a,
+    Value2b,
+    Value2c
+};
+
+struct S
+{
+    int a : 2;           // OK
+    signed int b : 2;    // OK
+    int : 2;             // OK
+    char c : 2;          // Violation
+    signed char d : 2;   // OK
+    wchar_t e : 2;       // Violation
+    char32_t f : 2;      // Violation
+    bool g : 1;          // OK
+    Enum1 i : 1;         // OK
+    Enum1 j : 2;         // OK
+    Enum2 k : 1;         // Violation
+    Enum2 l : 2;         // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Enum1 : unsigned char
+{
+    Value1a,
+    Value1b,
+    Value1c
+};
+
+enum Enum2 : unsigned int
+{
+    Value2a,
+    Value2b,
+    Value2c
+};
+
+struct S
+{
+    int a : 2;          // OK
+    signed int b : 2;   // OK
+    int : 2;            // OK
+    signed char c : 2;  // OK
+    signed char d : 2;  // OK
+    bool g : 1;         // OK
+    Enum1 i : 1;        // OK
+    Enum1 j : 2;        // OK
+    Enum2 k : 1;        // OK
+    Enum2 l : 2;        // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 12.2.2 A bit-field shall have an appropriate type
+
+</PRE>
+</BODY>
+</HTML>

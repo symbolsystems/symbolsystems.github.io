@@ -1,0 +1,256 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Checked exceptions that could be thrown from a function shall be specified in the comment directly before the function declaration [EXCEPT-22]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Checked exceptions that could be thrown from a function shall be specified in the comment directly before the function declaration [EXCEPT-22-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In C++ language, all exceptions are unchecked, because the compiler does not
+force to either handle the exception or specify it. Because dynamic-exception
+specification is obsolete and error prone, an alternative mechanism
+of specifying checked exceptions using C++ comments along with function
+declarations is used. It is a concept that is based on Java exception handling
+mechanism.
+When analyzing a given function f, a static code analysis needs to analyze
+functions invoked by f and analyze if they throw any checked exceptions that
+are not caught by f and not listed by f in the function comment."
+[AUTOSAR-A15-4-5]
+
+This rule identifies when Checked Exceptions thrown from virtual or non-virtual
+functions are not documented or are incorrectly documented in a comment
+that precedes the function declarations.
+
+For non-virtual functions, the rule detects when:
+- the Checked Exception thrown from a function is not specified in a comment
+  before the function declaration.
+- the Checked Exception type specified in the comment before the function
+  declaration is not thrown from the function.
+
+For virtual functions, the rule detects when:
+- the Checked Exception thrown from a function is not specified in a comment
+  before the function declaration.
+- the Checked Exception thrown from an overridden function is specified in the
+  comment before the function declaration in the derived class, but it is not
+  specified in a comment before the function declaration in the base class.
+  Note: The comment in the base class can specify the Checked Exception type
+  that is a base type of the Checked Exception type specified in the comment
+  in the derived class.
+
+This rule assumes that a function throws a Checked Exception if one of the
+following conditions is met:
+- a function contains a 'throw' statement which throws an exception that is not
+  caught by any catch clause.
+- a function contains a dynamic exception specification.
+- a function calls another function whose declaration is preceded with a comment
+  that specifies the Checked Exception the called function throws.
+
+The rule assumes that the Checked Exception thrown from a function can be
+specified in a comment before function declaration with one of the following
+annotations:
+- @throw &lt;TYPE&gt;
+- @throws &lt;TYPE&gt;
+- @exception &lt;TYPE&gt;
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"- Checked Exceptions: Used to represent errors that are expected
+and reasonable to recover from, so they are supposed to be documented by
+functions using a dedicated tag (e.g. @throws) and have to be either handled
+or documented (in the same way) by caller functions. Exceptions are marked
+as Checked using a separate tag (e.g. @checkedException) that precedes
+an exception class declaration.
+- Unchecked Exceptions: Used to represent errors that a program typically can
+not recover from. However, unchecked exceptions can be documented by functions,
+i.e in cases when all preconditions of thrown exception are defined and known.
+It is context dependent where such an exception can be caught (e.g. is it
+done before main function) and what is the proper handling (e.g. other than
+program termination). However, it is not forced so that unchecked exceptions
+are documented by caller functions (even if they are documented by called
+functions). By default, all exceptions are unchecked (also from third-party 
+libraries used), unless their definition is preceded by the dedicated tag." 
+[AUTOSAR 6.15 Exception handling]
+
+The rule assumes that the 'Checked Exception' is an exception class
+whose declaration is preceded by a comment with the following tag:
+@checkedException
+
+The rule looks for '@checkedException', '@throw', '@throws' and '@exception'
+only in files in the testing scope. For this reason, the set of violations
+reported for the same file may vary, depending on the scope of analysis.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"Within generic code, it is not generally possible to know what types of
+exceptions may be thrown from operations on template arguments, so a precise
+exception specification cannot be written. Therefore, this rule does not apply
+for templates." [AUTOSAR-A15-4-5]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// @checkedException
+class Exception { };
+
+// @checkedException
+class DerivedException : public Exception { };
+
+// @throw Exception
+void f1()                              // Violation
+{
+    try {
+        throw Exception();
+    } catch (Exception e) {            // The 'Exception' exception is caught
+        // ...
+    }
+}
+
+// @throw exception
+void f2()                              // Violation
+{
+    throw Exception();
+}
+
+class Base
+{
+public:
+    virtual void fm1() = 0;            // Violation
+    virtual void fm2(){                // Violation
+        throw Exception();
+    }
+};
+
+class Derived : public Base
+{
+public:
+    // @throws Exception
+    virtual void fm1() {               // Violation
+        throw Exception();
+    }
+    // @throws Exception
+    virtual void fm2() {               // Violation
+        throw DerivedException();
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by specifying a Checked Exception of an appropriate type
+in the comment before the function declarations.
+
+// @checkedException
+class Exception { };
+
+// @checkedException
+class DerivedException : public Exception { };
+
+void f1()                               // OK
+{
+    try {
+        throw Exception();
+    } catch (...) {
+    }
+}
+
+// @throw Exception
+void f2()                               // OK
+{
+    throw Exception();
+}
+
+class Base
+{
+public:
+    // @throws Exception
+    virtual void fm1() = 0;             // OK
+
+    // @throws Exception
+    virtual void fm2(){                 // OK - 'Exception' is the base type
+                                        //       of the 'DerivedException' type
+        throw Exception();              // OK
+    }
+};
+
+class Derived : public Base
+{
+public:
+    // @throws Exception
+    virtual void fm1() {                // OK
+        throw Exception();
+    }
+
+    // @throws DerivedException
+    virtual void fm2() {                // OK
+        throw DerivedException();
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-4-5 Checked exceptions that could be thrown from a function shall
+   be specified together with the function declaration and they shall be
+   identical in all function declarations and for all its overriders.
+
+</PRE>
+</BODY>
+</HTML>

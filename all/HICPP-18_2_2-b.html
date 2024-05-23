@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Make const member functions thread-safe [HICPP-18_2_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Make const member functions thread-safe [HICPP-18_2_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when const member functions modify class members without holding a lock.
+As a rule, const member functions should not change the state of an object, so they
+can be called from multiple threads. If two or more threads perform the read operations,
+synchronization is not necessary for ensuring safety of these operations.
+However, synchronization is required when const member functions are not read operations;
+for example, when they change the value of mutable fields or cast const pointers to non-const
+and modify them.
+
+The rule triggers when the lock inside a const member function is not held, while the member field
+is modified or the non-const pointer to the member field (or the pointer to "this") is passed to 
+a third-party function.
+
+The rule does not trigger on fields of std::atomic type.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps you make const member functions thread-safe.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+class Roots {
+    // ...
+};
+
+class Polynomial {
+public:
+    Roots computeRoots() const;
+
+    Roots roots() const {
+        if (!rootsAreValid) {
+            rootVals = computeRoots(); // VIOLATION
+            rootsAreValid = true; // VIOLATION
+        }
+        return rootVals;
+    }
+private:
+    mutable bool rootsAreValid { false };
+    mutable Roots rootVals;
+};
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Use locking to ensure thread-safety of the const member function.
+
+#include &lt;mutex&gt;
+
+class Roots {
+    // ...
+};
+
+class Polynomial {
+public:
+    Roots computeRoots() const;
+
+    Roots roots() const {
+        std::lock_guard &lt; std::mutex &gt; g(m);
+        if (!rootsAreValid) {
+            rootVals = computeRoots();
+            rootsAreValid = true;
+        }
+        return rootVals;
+    }
+private:
+    mutable bool rootsAreValid { false };
+    mutable Roots rootVals;
+    mutable std::mutex m;
+};
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use of C++11 and C++14"
+Item 16: Make const member functions thread safe
+
+High Integrity C++ Coding Standard
+18.2.2 Synchronize access to data shared between threads using a single lock
+
+</PRE>
+</BODY>
+</HTML>

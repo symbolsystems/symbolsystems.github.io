@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use constexpr to declare functions whenever possible [CODSTA-MCPP-11_b_cpp11]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use constexpr to declare functions whenever possible [CODSTA-MCPP-11_b_cpp11-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'constexpr' specifier indicates that the function value can be calculated
+during compilation if the function arguments are known at compile time.
+Such functions can be used as compile-time constant expressions.
+
+This rule detects non-constexpr functions that should be declared 'constexpr'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is based on the C++11 standard, and applies to global functions,
+member functions, and constructors.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code security, because objects created and
+initialized through calls to 'constexpr' constructors, getters, and non-member
+functions can be created in read-only memory.
+Also, 'constexpr' functions can be used in a wider range of contexts than
+non-constexpr functions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not report a violation when a constructor correctly initializes
+all non-static data members, but some of them are of union type.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+inline bool isZero(int a){ return a==0; }               // Violation
+
+class Point
+{
+public:
+    constexpr Point(): x(0), y(0){}
+    Point(double xVal = 0, double yVal = 0) noexcept    // Violation
+    : x(xVal), y(yVal){}
+
+    double getX(){ return x;}                           // Violation
+    double getY(){ return y;}                           // Violation
+
+private:
+    double x, y;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+constexpr inline bool isZero(int a){ return a==0; }               // OK
+
+class Point
+{
+public:
+    constexpr Point(): x(0), y(0){}
+    constexpr Point(double xVal = 0, double yVal = 0) noexcept    // OK
+    : x(xVal), y(yVal){}
+
+    constexpr double getX(){ return x;}                           // OK
+    constexpr double getY(){ return y;}                           // OK
+
+private:
+    double x, y;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-2. The constexpr specifier shall be used for values that can be
+   determined at compile time
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   7.1.5 The constexpr specifier
+
+3. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 3: Moving to Modern C++, Item 15: "Use constexpr whenever possible"
+
+</PRE>
+</BODY>
+</HTML>

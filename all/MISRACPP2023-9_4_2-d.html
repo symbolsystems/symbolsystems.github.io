@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A switch statement shall only contain switch labels and switch clauses, and no other code [MISRACPP2023-9_4_2-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A switch statement shall only contain switch labels and switch clauses, and no other code [MISRACPP2023-9_4_2-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A switch statement shall only contain switch labels
+and switch clauses, and no other code.
+Switch label is either a case label or default label.
+Switch clause is either a case clause or a default clause.
+Case clause is the code between any two switch labels.
+Default clause is the code between the default label
+and the end of the switch statement."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule enforces a simple and consistent structure on to the switch statement.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int a, int b)
+{
+    switch(a)
+    {
+        int c = 0;  /* Violation */
+    case 1:
+        break;
+    case 2:
+        break;
+   
+    default:
+        break;
+    }
+    
+    switch(b)
+      a = 3;        /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int a,int b)
+{
+    int c = 0;    /* OK */
+    switch(a)
+    {
+    case 1:
+        break;
+    case 2:
+        break;
+   
+    default:
+        break;
+    }
+    
+    a = 3;        /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.1
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 15
+
+4. SEI CERT C Coding Standard
+   DCL41-C. Do not declare variables inside a switch statement before the
+   first case label
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL41-C.+Do+not+declare+variables+inside+a+switch+statement+before+the+first+case+label">https://wiki.sei.cmu.edu/confluence/display/c/DCL41-C.+Do+not+declare+variables+inside+a+switch+statement+before+the+first+case+label</A>
+
+</PRE>
+</BODY>
+</HTML>

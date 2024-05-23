@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Overloaded function templates shall not be explicitly specialized [HICPP-14_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Overloaded function templates shall not be explicitly specialized [HICPP-14_2_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Overloaded function templates shall not be explicitly specialized.
+Explicit specializations will be considered only after overload resolution
+has chosen a best match from the set of primary function templates."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Where a template is not overloaded with other templates, or is overloaded
+with non-template functions then it can be explicitly specialized, as it is
+consistent with developer expectation that the explicit specializations
+will only be considered if that primary template is chosen."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+template &lt;typename T&gt; void f ( T );
+template &lt;typename T&gt; void f ( T* );
+template &lt;&gt; void f&lt;int*&gt; ( int* ); // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+template &lt;typename T&gt; void f ( T );
+template &lt;&gt; void f&lt;int*&gt; ( int* );  // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A14-8-2. Explicit specializations of function templates shall not be used
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. High Integrity C++ Coding Standard
+   14.2.2. Do not explicitly specialize a function template that is overloaded
+   with other templates
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 14, Rule 14-8-1
+
+</PRE>
+</BODY>
+</HTML>

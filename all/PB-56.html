@@ -1,0 +1,182 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions from signed to unsigned type [PB-56]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions from signed to unsigned type [PB-56-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C and C++ perform many type conversions implicitly and silently,
+so as to harmonize types within an expression before evaluating it.
+Some of these conversions can result in loss of information. 
+Such implicit conversions shall not be used, but explicit casts
+should be used instead."
+
+The rule reports a violation if expression of signed type is assigned 
+to unsigned type without explicit cast. The type of expression
+is detected as signed if it contains at least one non constant operand
+(parameter, variable or function's call) of signed type.
+
+See also: CODSTA-99, CODSTA-100, CODSTA-101, MISRA-043, PORT-27, PORT-28,
+          MISRA2004-10_1_a, INIT-02, PB-08, PB-25
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The violation is not reported if assigned value is constant
+(contains only literals, enumerations or sizeof expressions).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicit casts should normally only be used in the case where a conversion 
+which could result in a loss of information is specifically required by the 
+programmer. If the static checking of implicit conversions is overridden by
+the use of explicit casts in this way, then the programmer should be aware
+of the issues of truncation and lost of precision associated with the operation,
+and should provide appropriate checking of values in the code"
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The type of expression can be recognized incorrectly if this expression
+contains ternary (?:) or shift (&lt;&lt;, &gt;&gt;) operator.
+
+void foo1()
+{
+    signed int si;
+    unsigned int ui;
+
+    ui = si ? ui : ui;  /* Violation (should be OK) */
+    ui = (ui &lt;&lt; si);    /* Violation (should be OK) */
+    ui = (ui &gt;&gt; si);    /* Violation (should be OK) */
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+signed int ret_int();
+void get_uint(unsigned int i);
+
+signed char sc;
+signed long sl;
+unsigned int foo(signed int si, unsigned int ui)
+{
+    signed short ss;
+    unsigned long ul;
+    unsigned short us = si + 1;  /* Violation: signed int assigned to unsigned type */
+    ui = sc;                     /* Violation: signed char assigned to unsigned type */
+    ui = ret_int() + ul;         /* Violation: signed int assigned to unsigned type */
+    get_uint(ss);                /* Violation: signed short assigned to unsigned type */
+    return sl;                   /* Violation: signed long assigned to unsigned type */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+signed int ret_int();
+void get_uint(unsigned int i);
+
+signed char sc;
+signed long sl;
+
+/* Return type changed as one possible way to handle type incompatibility */
+int foo(signed int si, unsigned int ui)
+{
+    unsigned long ul;
+
+    /* Some hints on how to handle conversions which may result
+     * in information loss: */
+
+    /* Consider changing type of variable / function return type etc. */
+    unsigned short ss;
+
+    /* Use explicit cast if you are sure no information loss is possible */
+    unsigned short us = (unsigned short)si + 1; /* OK (explicit cast) */
+
+    /* Check if value can be assigned without loss of information */
+    if (sc &gt;= 0) {
+        ui = (unsigned int)sc;      /* OK (explicit cast still needed) */
+    } else {
+       /* Probably some error handling is be required */
+    }
+
+    ui = (unsigned int)ret_int() + ul; /* OK (explicit cast) */
+    get_uint(ss);  /* OK (variable type changed to unsigned) */
+    return sl; /* OK (return type changed) */
+}
+
+/* More examples */
+void foo2()
+{
+    unsigned short us;
+    signed int si;
+    unsigned int ui;
+
+    us = us + us;  /* OK - integral promotion is not taken into account */
+    ui = 10 + 100; /* OK - assigned expression is constant */
+    us = (si &gt; 1); /* OK - the type of expression (si &gt; 1) is detected as boolean in C */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-7-1. An integer expression shall not lead to data loss
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 180
+
+</PRE>
+</BODY>
+</HTML>

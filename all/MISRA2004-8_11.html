@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The static storage class specifier shall be used in definitions and declarations of objects and functions that have internal linkage [MISRA2004-8_11]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The static storage class specifier shall be used in definitions and declarations of objects and functions that have internal linkage [MISRA2004-8_11-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The C standard specifies that if an identifier declared with the storage-class
+specifier 'extern' in a scope in which a prior declaration of that identifier
+is visible, the linkage of that identifier is the same as the linkage of the
+prior declaration.
+
+For example, if a function is first declared as 'static' and then defined with
+'extern' or without any specifier at all, the linkage will be internal. This
+can be confusing: if you see only the definition, you might wrongly assume
+that the function has external linkage.
+
+It is a good practice to apply the 'static' storage class specifier to all
+objects and functions with internal linkage.
+
+See also: CODSTA-81
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not trigger on:
+- definitions of const variables in C++ code.
+- declarations of objects and functions in a block scope that have internal
+  linkage.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Mitigates the risk of incorrectly interpreting linkage of objects and
+functions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static int x = 0;
+extern int x;        /* Violation */
+
+static int foo1();
+extern int foo1();   /* Violation */
+
+static void foo2();
+void foo2() {}       /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static int x = 0;
+static int x;          /* OK */
+
+extern int y;
+int y = 0;             /* OK */
+
+static int foo1();
+static int foo1();     /* OK */
+
+static void foo2();
+static void foo2() {}  /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8, Rule .11
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.8
+
+3. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 138
+
+5. ISO/IEC 9899:1990 Programming languages -- C
+   6.1.2.2 Linkages of identifiers
+
+6. ISO/IEC 9899:1999 Programming languages -- C
+   6.2.2 Linkages of identifiers
+
+7. Programming languages -- C ISO/IEC 9899:2011
+   6.11 Future language directions
+   6.11.2 Linkages of identifiers
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the ungetc function on a stream with the file position indicator zero [MISRAC2012-RULE_1_5-f]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the ungetc function on a stream with the file position indicator zero [MISRAC2012-RULE_1_5-f-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"The use of ungetc on a binary stream where the file position indicator is zero
+prior to the call is an obsolescent feature."
+[ISO/IEC 9899:2017]
+
+"Obsolescent language features shall not be used."
+[MISRA C:2012 Amendment 3]
+
+This rule detects when a stream that has been newly opened or whose file
+position indicator has been set to 0 is used as the parameter for the ungetc
+function call.
+
+The rule will report a violation on the following functions:
+    int ungetc( int ch, FILE *stream );
+    wint_t ungetwc( wint_t ch, FILE *stream );
+
+A list of functions that open a stream (with the position set to 0):
+    FILE *fopen( const char *filename, const char *mode );
+    errno_t fopen_s( FILE *restrict *restrict streamptr,
+                 const char *restrict filename,
+                 const char *restrict mode );
+    FILE *freopen( const char *filename, const char *mode, FILE *stream );
+    errno_t freopen_s( FILE *restrict *restrict newstreamptr,
+                   const char *restrict filename, const char *restrict mode,
+                   FILE *restrict stream );
+
+A list of functions that set the stream position to 0:
+    void rewind( FILE *stream );
+    
+Depending on the parameters, the fseek function may set the stream position to 0
+(if the offset parameter value is 0 and the origin parameter value is SEEK_SET)
+or to another value:
+    int fseek( FILE *stream, long offset, int origin );
+
+A violation will not be detected if any function is called between getting
+a stream with the position 0 and the ungetc function call (excluding calls to
+functions that do not change the stream position).
+
+A list of functions that do not change the stream position:
+    long ftell( FILE *stream );
+    void clearerr( FILE *stream );
+    int feof( FILE *stream );
+    int ferror( FILE *stream );
+    int fgetpos( FILE *stream, fpos_t *pos );
+    int fwide( FILE *stream, int mode );
+    void setbuf( FILE *stream, char *buffer );
+    int setvbuf( FILE * stream, char * buffer, int mode, size_t size );
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2022.2
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+The following non-compliant code calls the ungetc function for a stream where
+the file position indicator was just set to zero by the rewind function.
+
+#include &lt;stdio.h&gt;
+
+static void example(FILE *stream)
+{
+    FILE *fp;
+    fp = fopen("file.txt", "r");
+    int c = fgetc(fp);
+    rewind(fp);
+    ungetc('a', fp); // VIOLATION - position set to 0
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Do not call the ungetc function for a stream where the file position indicator
+is zero.
+
+#include &lt;stdio.h&gt;
+
+static void repair(FILE *stream)
+{
+    FILE *fp;
+    fp = fopen("file.txt", "r");
+    int c = fgetc(fp);
+    ungetc('a', fp); // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018 Phase 2 - New C11/C18 Features
+2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+ISO/IEC 9899:2017 Programming languages -- C
+7.31 Future library directions
+7.31.11 Input/output &lt;stdio.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

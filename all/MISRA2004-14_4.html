@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The goto statement shall not be used [MISRA2004-14_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The goto statement shall not be used [MISRA2004-14_4-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Unconstrained use of goto can lead to programs that are unstructured
+and extremely difficult to understand."
+
+The rule reports a violation on each use of 'goto' statement.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"In some cases a total ban on goto requires the introduction of flags to ensure
+correct control flow, and it is possible that these flags may themselves be less
+transparent than the goto they replace."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents confusions and improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo( int a )
+{
+    if (a &lt; 0)
+    {     
+        goto end;       /* Violation */
+    } 
+    a = foo(a-1);
+end:
+    return a+1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo( int a )
+{
+    /* Code was changed and does not use goto anymore */
+    if (a &gt;= 0)
+    {
+        a = foo(a-1);
+    }
+    return a+1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+    Ellemtel Telecommunication Systems Laboratories, Sweden.
+    From: 14 Flow Control Structures - Rule 49
+
+2.  AUTOSAR C++14 Coding Guidelines
+    A6-6-1. The goto statement shall not be used
+
+3.  HIS Source Code Metriken, version 1.3.1
+    Metrik "GOTO"
+
+4.  ISO/DIS 26262
+    point 8.4.4
+
+5.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.24 Flow Control Structures, AV Rule 189
+
+6.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 9.6.1 The goto statement should not be used
+
+7.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 15.1
+
+8.  Misra Guidelines - Rule 56
+
+9.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 14, Rule 14.4
+
+10. The Power of Ten - Rules for Developing Safety Critical Code.
+    Rule 1
+
+</PRE>
+</BODY>
+</HTML>

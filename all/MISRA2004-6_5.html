@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Named bit-fields with signed integer type shall have a length of more than one bit [MISRA2004-6_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Named bit-fields with signed integer type shall have a length of more than one bit [MISRA2004-6_5-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation if a named bit-field with signed type is declared
+with width smaller than 2 bits.
+
+With signed type one bit is used for the sign bit, which leaves 0 bits for the
+value, so it can not hold meaningful values.
+
+Such code is most likely an error.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Unnamed bit-fields are not a violation of this rule, as their values cannot
+be accessed. They are useful for example for padding to conform to
+externally-imposed layouts. As a special case, an unnamed bit-field with a
+width of zero specifies alignment of the next bit-field at an allocation unit
+boundary.
+
+A bit-field with width 0 must be unnamed, according to C/C++ standard.
+
+Bit-fields with following types are checked: char, short int, int, long int, 
+long long int, wchar_t. Please note that signedness of char and wchar_t is 
+compiler-dependant.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents the potential pitfalls and erroneous code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of "bad" code: */
+struct Bad
+{
+  int b1 : 1;            /* Violation - size too small */
+  signed short b2 : 1;   /* Violation - size too small */
+  signed char b3 : 1;    /* Violation - size too small */
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of "good" code: */
+struct Good
+{
+  int b1 : 2;            /* OK - correct size */
+
+  int : 0;               /* OK - unnamed */
+  int : 1;               /* OK - unnamed */
+  int : 2;               /* OK - unnamed */
+
+  unsigned int b2 : 2;   /* OK - not a signed type */
+  unsigned short b3 : 1; /* OK - not a signed type */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M9-6-4. Named bit-fields with signed integer type shall have a length of
+   more than one bit
+
+2. ISO/IEC 14882:2003 Programming languages -- C++
+   Section 9.6 Bit-fields
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   Section 6.7.2.1 Structure and union specifiers
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 9, Rule 9-6-4
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 12.2.3 A named bit-field with signed integer type shall not have a length of one bit
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 6.2
+
+7. MISRA Guidelines for the use of the C language in vehicle based software
+   Rule 112
+
+8. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 6, Rule 6.4
+
+</PRE>
+</BODY>
+</HTML>

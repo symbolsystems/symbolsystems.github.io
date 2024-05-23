@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not add or subtract a constant with a value greater than one from an iterator [PB-74]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not add or subtract a constant with a value greater than one from an iterator [PB-74-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not allow an expression of integral type to add to or subtract from
+a pointer or random access iterator when the resulting value would overflow
+the bounds of the container." [CERT-CTR55-CPP]
+
+If you don't know whether there is enough next elements in your container,
+you need to check against the end of your container between each increment.
+
+This rule detects when an integer constant, enumeration constant, or const
+variable with a value greater than one is added to or subtracted from a random
+access iterator in a single step.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check if appropriate protection against overflow is
+implemented in code.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior. If a random access iterator
+is used in an additive expression, but the resulting value is outside
+the bounds of the container, then the behavior is undefined.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void f1() {
+    std::vector&lt;int&gt; v;
+    for(std::vector&lt;int&gt;::iterator it; it != v.end(); it += 2) {  // Violation
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void f1() {
+    std::vector&lt;int&gt; v;
+    for(std::vector&lt;int&gt;::iterator it; it != v.end(); ++it) {     // OK
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   CTR55-CPP. Do not use an additive operator on an iterator if the result
+   would overflow
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR55-CPP.+Do+not+use+an+additive+operator+on+an+iterator+if+the+result+would+overflow">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR55-CPP.+Do+not+use+an+additive+operator+on+an+iterator+if+the+result+would+overflow</A>
+
+</PRE>
+</BODY>
+</HTML>

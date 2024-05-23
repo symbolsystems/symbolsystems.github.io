@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The result of the memory allocation function should be cast immediately [MRM-58_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The result of the memory allocation function should be cast immediately [MRM-58_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Because objects returned by the C Standard memory allocation functions are
+implicitly converted into any object type, we recommend casting the results
+of these functions into a pointer of the allocated type because it increases
+the chances that the compiler will catch and diagnose a mismatch between the
+intended type of the object and the actual type of the object." [CERT-MEM02-C]
+
+This rule detects when the result of a call to a standard C memory allocation
+function (malloc, calloc, realloc or align_alloc) is not immediately cast
+to some type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid a mismatch between the intended type of the
+object and the actual type of the object.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void bar()
+{
+    int *p = malloc(sizeof(int));                  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void bar ()
+{
+    int *p = (int*)malloc(sizeof(int));            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MEM02-C. Immediately cast the result of a memory allocation function call
+   into a pointer to the allocated type
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM02-C.+Immediately+cast+the+result+of+a+memory+allocation+function+call+into+a+pointer+to+the+allocated+type">https://wiki.sei.cmu.edu/confluence/display/c/MEM02-C.+Immediately+cast+the+result+of+a+memory+allocation+function+call+into+a+pointer+to+the+allocated+type</A>
+
+</PRE>
+</BODY>
+</HTML>

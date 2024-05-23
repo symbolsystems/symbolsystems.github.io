@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Initialize static class members [INIT-09]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Initialize static class members [INIT-09-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+All static member variables should be explicitly initialized.
+
+Static members variables will be initialized by compiler, but it is considered
+good practice to initialize all variables, not just automatic/stack variables,
+to an initial value for purposes of clarity and bringing focused attention to
+the initialization of each variable.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule will report a violation only if in current translation unit there is
+an out of class definition (namespace scope definition). For example:
+  class A {
+    static int a;       // Not checked - no out-of-class definition
+  };                    // in current translation unit
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves clarity of the code and brings focused attention to the
+initialization of each variable.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+  static int a; // Not checked - no out-of-class definition
+  static int b; // Checked - reported on out-of-class definition
+};
+int A::b;       // Violation - b not initialized
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {
+  static int b; // OK - initialized
+};
+int A::b = 0;   // OK - initialized
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Function types shall have named parameters [CODSTA-158]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Function types shall have named parameters [CODSTA-158-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule requires that names be specified for all the parameters
+in a declaration. The parameter names can provide useful information
+regarding the function interface and a mismatch between a declaration
+and definition might be indicative of a programming error."[MISRA C:2012]
+
+See also: MISRA2004-16_3, CODSTA-159
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks function types other than in function declarations
+and definitions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and clarity of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef void foot(int*);        /* Violation */
+
+void foo1(void (*fp1)(int)) {   /* Violation */
+  void (*fp2)(float);           /* Violation */
+  fp1 = (void (*)(int))fp2;     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef void foot(int* p1);       /* OK */
+
+void foo1(void (*fp1)(int p)) {   /* OK */
+  void (*fp2)(float f);           /* OK */
+  fp1 = (void (*)(int p))fp2;     /* OK */
+}
+
+/* Examples not reported by this rule */
+void foo2(int);  /* OK - See rule MISRA2004-16_3 */
+void foo3();     /* OK - See rule CODSTA-159 */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.2
+
+</PRE>
+</BODY>
+</HTML>

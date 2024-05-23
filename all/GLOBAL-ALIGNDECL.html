@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Explicit alignment specifiers in all declarations of an object with external linkage shall be the same [GLOBAL-ALIGNDECL]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Explicit alignment specifiers in all declarations of an object with external linkage shall be the same [GLOBAL-ALIGNDECL-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the definition of an object has an alignment specifier, any other
+declaration of that object shall either specify equivalent alignment
+or have no alignment specifier. If the definition of an object does
+not have an alignment specifier, any other declaration of that object
+shall also have no alignment specifier." [ISO/IEC 9899:2011]
+
+"If any declaration (including the definition) of an object includes an explicit
+alignment specification, all other declarations of the same object shall also
+include the same explicit alignment specification.
+Two alignment specifications are the same if they are lexically identical after
+macro expansion.
+This rule applies both to alignments specified directly by an expression,
+and by naming a type." [MISRA C:2012 Amendment 3]
+
+This rule detects when declarations of the same variable with external linkage
+have different alignment specifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code consistency and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// header.h
+
+#include &lt;stdalign.h&gt;
+
+typedef float float32_t;
+typedef int int32_t;
+
+extern alignas (16) int32_t var1;           // Violation
+extern alignas (float) int32_t var2;        // Violation
+
+// file.c
+
+#include "header.h"
+
+int32_t var1;                               // Violation
+alignas (float32_t) int32_t var2;           // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix your code use the same alignment specifier in all declarations.
+
+// header.h
+
+#include &lt;stdalign.h&gt;
+
+typedef float float32_t;
+typedef int int32_t;
+
+extern alignas (16) int32_t var1;           // OK
+extern alignas (float32_t) int32_t var2;    // OK
+
+
+// file.c
+
+#include "header.h"
+
+alignas (16) int32_t var1;                  // OK
+alignas (float32_t) int32_t var2;           // OK
+   
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.5 Rule 8.15
+
+2. Programming languages -- C ISO/IEC 9899:2011
+   6.7.5 Alignment specifier
+
+</PRE>
+</BODY>
+</HTML>

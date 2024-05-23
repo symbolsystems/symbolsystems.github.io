@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Where multiple handlers are provided in a single try-catch statement or function-try-block for a derived class and some or all of its bases, the handlers shall be ordered most-derived to base class [MISRA2008-15_3_6]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Where multiple handlers are provided in a single try-catch statement or function-try-block for a derived class and some or all of its bases, the handlers shall be ordered most-derived to base class [MISRA2008-15_3_6-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When testing to see if the type of an exception matches the type of a handler,
+a derived class exception will match with a handler for its base class.
+If the base class handler is found before the handler for the derived class,
+the base class handler will be used. The derived class handler is unreachable
+code and can never be executed." [MISRA C++:2008]
+
+This rule detects when the handler for a base class is used before the handler
+for a derived class in a single try-catch statement or function-try-block.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid writing unreachable code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B { };
+class D : public B { };
+
+void foo()
+{
+    try
+    {
+        // ...
+    }
+    catch ( B &amp;b )
+    {
+        // ...
+    }
+    catch ( D &amp;d )     // Violation
+    {
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B { };
+class D : public B { };
+
+void foo()
+{
+    try
+    {
+        // ...
+    }
+    catch ( D &amp;d )     // OK - Derived class caught before base class
+    {
+        // ...
+    }
+    catch ( B &amp;b )     // OK - Base class caught after derived class
+    {
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M15-3-6. Where multiple handlers are provided in a single try-catch
+   statement or function-try-block for a derived class and some or all of its
+   bases, the handlers shall be ordered most-derived to base class
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. MISRA C++:2008 - Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-3-6
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 0.0.1 A function shall not contain unreachable statements
+
+5. OWASP API Security Top 10-2019
+   API7-Security Misconfiguration
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+6. OWASP Top 10 2017
+   A6-Security Misconfiguration
+   <A HREF="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html</A>
+
+7. OWASP Top 10-2021
+   A05:2021 – Security Misconfiguration
+   <A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+8. SEI CERT C++ Coding Standard
+   ERR54-CPP. Catch handlers should order their parameter types from most
+   derived to least derived
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR54-CPP.+Catch+handlers+should+order+their+parameter+types+from+most+derived+to+least+derived">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR54-CPP.+Catch+handlers+should+order+their+parameter+types+from+most+derived+to+least+derived</A>
+
+</PRE>
+</BODY>
+</HTML>

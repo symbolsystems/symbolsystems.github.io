@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Objects or functions with external linkage shall be declared in a header file [AUTOSAR-A3_3_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Objects or functions with external linkage shall be declared in a header file [AUTOSAR-A3_3_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Declarations at file scope are external by default. Therefore if two files
+both declare an identifier with the same name at file scope, the linker will
+either give an error, or they will be the same variable, which may not be what
+the programmer intended.
+
+Placing the declarations of objects and functions with external linkage
+in a header file documents that they are intended to be accessible from other
+translation units. If external linkage is not required, then the object or
+function shall either be declared in an unnamed namespace or declared static."
+
+The rule reports a violations on variables or functions with external linkage
+defined in implementation file that do not have declarations in a header file.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not report violations on:
+- 'main' function
+- members of unnamed namespaces
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule minimizes dependencies between translation units and prevents
+confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// file.cpp
+int i1;        // Violation
+int i2 = 0;    // Violation
+
+void foo1(){}  // Violation
+void foo2(){}  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// file.h
+extern int i2;
+extern void foo2();
+
+// file.cpp
+#include "file.h"
+
+static int i1; // OK - declared as static
+int i2 = 0;    // OK - declared in a header file
+
+static void foo1();  
+static void foo1(){} // OK - declared as static
+void foo2(){}        // OK - declared in a header file
+
+// Exceptions
+extern int ex;     // OK - declaration
+extern void fun(); // OK - declaration
+
+namespace {
+    int iN;        // OK - member of unnamed namespace
+    void fooN(){}  // OK - member of unnamed namespace
+}
+
+int main(){        // OK - main function
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A3-3-1. Objects or functions with external linkage (including members of
+   named namespaces) shall be declared in a header file
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 137
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems 
+   Chapter 6, Section 3, Rule 3-3-1
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.5.1 A function or object with external linkage should be introduced in a header file
+
+5. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8, rule 8.10
+
+6. Origin: Misra Guidelines - Rule 23
+
+7. OWASP API Security Top 10-2019
+   API9-Improper Assets Management
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa9-improper-assets-management.md</A>
+
+8. SEI CERT C Coding Standard
+   DCL15-C. Declare file-scope objects or functions that do not need external
+   linkage as static
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL15-C.+Declare+file-scope+objects+or+functions+that+do+not+need+external+linkage+as+static">https://wiki.sei.cmu.edu/confluence/display/c/DCL15-C.+Declare+file-scope+objects+or+functions+that+do+not+need+external+linkage+as+static</A>
+
+</PRE>
+</BODY>
+</HTML>

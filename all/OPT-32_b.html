@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions with void return type shall not be empty [OPT-32_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions with void return type shall not be empty [OPT-32_b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A function which does not return a value and which does not have external side
+effects will only consume time and will not contribute to the generation of any
+outputs, which may not meet developer expectations." [MISRA C++:2008]
+
+This rule reports violations on empty functions with void return type.
+The function is non empty if, after preprocessing, contains a code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is possible that some functions intentionally have no code at all
+(e.g. visitors, interface implementations, callbacks).
+This rule reports these cases as well.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents unnecessary time consumption.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1( void ) // Violation
+{
+}
+
+void foo2( void ) // Violation
+{
+    // comments only
+}
+
+void foo3( void ) // Violation - no code after preprocessing
+{
+#if 0
+    int i;
+#endif
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo1( int p )   // OK
+{
+    return p*10;
+}
+
+void foo2( int* p ) // OK
+{
+    (*p) = 10;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M0-1-8. All functions with void return type shall have external side
+   effect(s)
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-8
+
+</PRE>
+</BODY>
+</HTML>

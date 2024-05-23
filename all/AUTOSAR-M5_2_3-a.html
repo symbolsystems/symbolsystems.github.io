@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Casts from a base class to a derived class should not be performed on polymorphic types [AUTOSAR-M5_2_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Casts from a base class to a derived class should not be performed on polymorphic types [AUTOSAR-M5_2_3-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A downcast occurs when a class type is converted to another class type that
+is derived from that first class. Polymorphism enables strong abstraction
+between the interface and implementation of a hierarchy. Explicit casts
+bypass this layer of abstraction resulting in higher levels of coupling
+and dependency."
+
+"Casting from a base class to a derived class is unsafe unless some mechanism
+is provided to ensure that the cast is legitimate."
+
+See also: OOP-28, OOP-29, OOP-35, OOP-50
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents illegal casts and ensures that abstraction layer is not bypassed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+    virtual int foo( ) const;
+};
+
+class D : public B
+{
+public:
+    virtual int foo( ) const;
+};
+ 
+void use(B const &amp; b){
+    D const *d = (D*) &amp;b;  // Violation	
+    d-&gt;foo();
+}
+
+int main( )
+{
+    D d;
+    use(d);
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+    virtual int foo( ) const = 0;
+};
+
+class D : public B
+{
+public:
+    virtual int foo( ) const;
+};
+ 
+void use(B const &amp; b){
+    b.foo();               // OK - virtual function is used
+}
+
+int main( )
+{
+    D d;
+    use(d);
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-2-3. Casts from a base class to a derived class should not be performed
+   on polymorphic types
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 5, Rule 5-2-3
+
+</PRE>
+</BODY>
+</HTML>

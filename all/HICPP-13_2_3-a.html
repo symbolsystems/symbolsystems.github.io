@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare binary arithmetic and bitwise operators as non-members [HICPP-13_2_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare binary arithmetic and bitwise operators as non-members [HICPP-13_2_3-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Overloaded binary arithmetic and bitwise operators should be declared as
+non-member functions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Allows operands of different types to be used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+
+class A {
+  public:
+    bool operator*(A const &amp;other);  // Violation
+    bool operator==(A const &amp;other); // OK
+};
+A operator+(int32_t lhs, A const &amp;rhs);                // OK
+A operator+(A const &amp;lhs, int32_t rhs);                // OK
+std::ostream &amp;operator&lt;&lt;(std::ostream &amp;o, A const &amp;a); // OK
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+
+class A {
+  public:
+    bool operator==(A const &amp;other); // OK
+};
+bool operator*(A const &amp;lhs, A const &amp;other);          // OK
+A operator+(int32_t lhs, A const &amp;rhs);                // OK
+A operator+(A const &amp;lhs, int32_t rhs);                // OK
+std::ostream &amp;operator&lt;&lt;(std::ostream &amp;o, A const &amp;a); // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   13.2.3. Declare binary arithmetic and bitwise operators as non-members
+
+</PRE>
+</BODY>
+</HTML>

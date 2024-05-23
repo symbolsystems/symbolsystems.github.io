@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unintentionally discarding the remainder of integer division [MISRA-048_d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unintentionally discarding the remainder of integer division [MISRA-048_d-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The operands of division ('/') should have an arithmetic or enumeration type.
+The usual arithmetic conversions are performed on the operands and determine
+the type of the result. If either operand is a floating-point type, the result
+is a floating-point type. Otherwise, the integral promotions are performed
+on both operands and the result is an integral type.
+
+The rule reports a violation if the result of division of two integral values
+is used in expression where a floating type would be more suitable (assignment
+to a variable of floating-point type, passing to a function as a parameter
+of a floating-point type or returning from a function with a floating-point
+return type). If an explicit cast is used on division, then a violation
+is not reported.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule can prevent data loss.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void get_float(float f);
+
+double foo(float f)
+{
+   int a = 3;
+   int b = 4;
+   double d = a/b;     // Violation
+   f = 10 + a/b;       // Violation
+   get_float(a/2);     // Violation
+   return 10/b - 2.0;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void get_float(float f);
+
+double foo1(float f)
+{
+   int a = 3;
+   int b = 4;
+   double d = (double)a/b;   // OK
+   f = 10 + a/(float)b;      // OK
+   get_float(a/2.0F);        // OK
+   return 10.0/b - 2.0;      // OK
+}
+
+/* Examples not reported by rule */
+double ret_double(int);
+
+void foo2()
+{
+   int a = 3;
+   int b = 4;
+   int arr[3];
+   double d;
+   
+   d = (double)(a/b);     // OK - explicit cast
+   d = 10 + (int)(a/b);   // OK - explicit cast
+   d = ret_double(a/b);   // OK
+   a = arr[a/b];          // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 48
+
+</PRE>
+</BODY>
+</HTML>

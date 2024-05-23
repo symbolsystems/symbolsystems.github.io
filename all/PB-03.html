@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Using mixed types in ternary operator is not allowed [PB-03]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Using mixed types in ternary operator is not allowed [PB-03-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a result of conditinal operator is directly
+assigned to expression which type is not compatible with type of the second
+or third operand of conditional operator.
+
+As compatible types are recognized:
+- the same types
+- typedefs to the same type
+- references to the same type
+- types that differs only by const or volatile qualifiers
+- pointers and arrays of the same type
+
+If as an operand is used integer constant '0', then its type is compatible
+with pointer type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents implicit conversions which may result in a loss of information
+and improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The violation is reported if both types are pointers to typedefs
+to the same type.
+
+typedef int INT1;
+typedef int INT2;
+
+void foo(int x) {
+    INT1* ti1;
+    INT2* ti2;
+
+    ti1 = (x == 0) ? ti1 : ti2;  // Violation reported
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int x) {
+    char c;
+    short s;
+    short* ps;
+    int i;
+    unsigned int ui;
+    int* pi;
+    float f;
+
+  
+    i = (x == 0) ? i : c;        // Violation
+    i = (x == 0) ? s : i;        // Violation
+    i = (x == 0) ? ui : i;       // Violation
+    c = (x == 0) ? 'c' : 's';    // Violation - the type of character constant is 'int'
+    s = (x == 0) ? s : (s + s);  // Violation - the type of expression (s + s) is 'int'
+    s = (x == 0) ? s : 10;       // Violation - the type of constant '10' is 'int'
+    pi = (x == 0) ? pi : ps;     // Violation
+    f = (x == 0) ? f : 0.1;      // Violation - the type of constant '0.1' is 'double'
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef int INT;
+
+void foo(int x) {
+    INT ti;
+    int i;
+    signed int si;
+    const volatile int cvi = 0;
+    int* pi;
+    int ai[5];
+
+    i = (x == 0) ? i : ti;     // OK
+    i = (x == 0) ? si : i;     // OK
+    i = (x == 0) ? i : cvi;    // OK
+    i = (x == 0) ? i : 'i';    // OK  - the type of character constant is 'int'
+    i = (x == 0) ? i : *pi;    // OK
+    i = (x == 0) ? 10 : 20;    // OK
+    pi = (x == 0) ? 0 : pi;    // OK
+    pi = (x == 0) ? 0 : ai;    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The result of a built-in assignment operator should not be used [CODSTA-138]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The result of a built-in assignment operator should not be used [CODSTA-138-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a result of an assignment operator is used. The
+assignment should be a separate (top-level) expression.
+
+Both simple (=) and compound (*=, /=, %=, +=, -=, &gt;&gt;=, &lt;&lt;=, &amp;=, ˆ=, |=)
+operators are checked.
+
+Only built-in assignment operators are checked - C++ overloaded operators
+( for example operator= ) are not checked.
+
+See also: CODSTA-102, MISRA-046_b, MISRA2004-12_2_a, MISRA2004-13_1, PB-02
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violation is not reported in following cases:
+- top-level comma operator:
+  i = 0, j = 0, k = 0;       // OK
+  x + (i = 0, j = 0, k = 0); // Violation
+- top-level 'for' initialization and increment sections:
+  for ( i = 0; ; i = 0 );    // OK
+  for (; i = 0; );           // Violation
+  for (;; i + (j = 0) );     // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The use of assignment operators, simple or compound, in combination with other
+arithmetic operators is not recommended because:
+- It can significantly impair the readability of the code;
+- It introduces additional side effects into a statement making it more
+  difficult to avoid the undefined behaviour" [MISRA C:2012 Rule 13.4]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of non-compliant code:
+
+int g;
+int foo(int i)
+{
+  int j[ i = 10 ];      // Violation
+  foo( i += 1 );        // Violation
+  if( i &lt; 0 || (i = g));// Violation
+  while(i = 10);        // Violation
+  g = i = 2;            // Violation
+  sizeof(i &lt;&lt;= 2);      // Violation
+  return i *= 2;        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int g;
+int foo(int i)
+{
+  // Usually the compliant code uses separate assignment statement:
+  i = 2;
+  g = i;
+  if( i &lt; 0 || g)
+    i = g;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   5.1.2. Do not rely on the sequence of evaluation within an expression
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.18.2 The result of an assignment operator should not be used
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 13.4
+
+</PRE>
+</BODY>
+</HTML>

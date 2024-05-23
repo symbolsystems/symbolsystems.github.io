@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The standard header files &lt;time.h&gt; or &lt;ctime&gt; shall not be used [AUTOSAR-M18_0_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The standard header files &lt;time.h&gt; or &lt;ctime&gt; shall not be used [AUTOSAR-M18_0_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;time.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;time.h&gt; shall be used.
+
+The time and date functions have unspecified, undefined
+and implementation-defined behaviours associated with them."
+[MISRA C:2012 Rule 21.10 with Amendment 3]
+
+The rule detects when the &lt;time.h&gt; or &lt;ctime&gt; header is included.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent unspecified, undefined and implementation-defined
+behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;time.h&gt;    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not include the &lt;time.h&gt; header.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M18-0-4. The time handling functions of library &lt;ctime&gt; shall not be used
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.5 Libraries, AV Rule 25
+
+3. Origin: Misra Guidelines - Rule 127
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 20
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 18, Section 7, Rule 18-0-4
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.10
+
+7. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   3 Consequential Amendments
+   3.1.2 Consistency of terminology regarding header file inclusion
+
+8. ISO/IEC 9899:2011 Programming languages -- C
+   7.27 Date and time &lt;time.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A function template that is used in multiple translation units shall be defined in one and only one file [HICPP-7_4_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A function template that is used in multiple translation units shall be defined in one and only one file [HICPP-7_4_2-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"[A] function template . . . that is intended for use in multiple translation
+units should be defined in a single header file, so that the definition will
+be processed in exactly the same way (the same sequence of tokens) in each
+translation unit." ["High Integrity C++ Coding Standards"]
+
+This rule detects when a function template with external linkage has more
+than one definition in the testing scope.
+The rule does not report violations on function templates that are defined
+in unnamed namespaces.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes definitions in files in the testing scope. For this reason,
+the set of findings reported for the same file may vary depending
+on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior, as well as improve
+the maintainability of your code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption:
+the testing scope contains only 'test1.cpp', and 'test2.cpp'.
+
+// test1.cpp
+template &lt;typename T&gt;
+void foo() {                            // Violation
+    //...
+}
+
+void bar1() {
+    foo&lt;int&gt;();
+}
+
+// test2.cpp
+template &lt;typename T&gt;
+void foo() {                            // Violation
+    //...
+}
+
+void bar2() {
+    foo&lt;int&gt;();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption:
+the testing scope contains only 'test.h', 'test1.cpp', and 'test2.cpp'.
+
+// test.h
+template &lt;typename T&gt;
+void foo() {                            // OK
+    //...
+}
+
+// test1.cpp
+#include "test.h"
+void bar1() {
+    foo&lt;int&gt;();
+}
+
+// test2.cpp
+#include "test.h"
+void bar2() {
+    foo&lt;int&gt;();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+   
+1. High Integrity C++ Coding Standard
+   7.4.2. Ensure that an inline function, a function template, or a type used
+   from multiple translation units is defined in a single header file
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,221 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Member functions declared in derived class shall not hide functions declared in base classes [JSF-094_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Member functions declared in derived class shall not hide functions declared in base classes [JSF-094_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if in a derived class a member function is declared
+with the same name and not equivalent parameter declaration or different
+cv-qualifiers (const/volatile function) as member function declared in base
+class.
+
+In such case the member function from the derived class hides the member
+function from the base class. There is no overriding and the base class
+function is not considered for overloading. For example:
+  struct Base {
+    void foo(char*);
+  };
+  struct Derived : public Base {
+    void foo(int); // hides Base::foo(char*)
+  };
+  Derived d;
+  d.foo("hi");     // does not compile - Base::foo(char*) hidden
+
+To detect cases where a member function in derived class hides a member
+function in a base class and cv-qualifiers are the same and parameter
+declarations are equivalent, use OOP-32.
+
+See also: OOP-32
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. Equivalent parameter declarations are such that:
+- are identical
+- differ only in the use of equivalent typedef “types”
+- differ only in a pointer * versus an array []
+- differ only in that one is a function type and the other is a
+  pointer to the same function type
+- differ only in the presence or absence of const and/or volatile
+- differ only in their default arguments
+
+2. You can "import" methods from base class through using-declaration:
+    struct Base {
+        void foo(int);
+        void foo(float);
+    };
+    struct Derived : Base {
+        using Base::foo; // "foo" functions from Base class are now not hidden
+        void foo(char);
+    };
+
+3. If all methods are re-defined, no violations is reported:
+    struct Base {
+        virtual void foo(int);
+        virtual void foo(float);
+        void bar();
+    };
+    struct Derived : Base {
+        virtual void foo(int);
+        virtual void foo(float);
+        void bar();
+    };
+
+4. For templates instances are checked. No violation will be reported if class
+is not instantiated.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report violations on operator functions. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents misinterpretating which function is called.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base{
+public:
+    virtual void foo1() const;
+    void foo2(int);
+};
+
+class Derived : public Base{
+public:
+    void foo1();                // Violation
+    void foo2(char*);
+};
+
+void foo(){
+    Derived D;
+    Base* b = &amp;D;
+    Derived* d = &amp;D;
+
+    b-&gt;foo1();     // calls Base::foo1()
+    d-&gt;foo1();     // calls Derived::foo1()
+    
+    // d-&gt;foo2(1); // does not compile
+    b-&gt;foo2(0);    // calls Base::foo2(int)
+    d-&gt;foo2(0);    // calls Derived::foo2(char*)
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base{
+public:
+    virtual void foo1() const;
+    void foo2(int);
+};
+
+class Derived : public Base{
+public:
+    void foo1() const;          // OK - declared as const
+    void foo3(char*);           // OK - the name was changed         
+};
+
+void foo(){
+    Derived D;
+    Base* b = &amp;D;
+    Derived* d = &amp;D;
+
+    b-&gt;foo1();     // calls Derived::foo1()
+    d-&gt;foo1();     // calls Derived::foo1()
+    
+    d-&gt;foo2(1);    // calls Base::foo2(int)
+    b-&gt;foo2(0);    // calls Base::foo2(int)
+    d-&gt;foo3(0);    // calls Derived::foo3(char*)
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-2-1. Non-virtual public or protected member functions shall not be
+   redefined in derived classes
+
+2. AUTOSAR C++14 Coding Guidelines
+   A7-3-1. All overloads of a function shall be visible from where it is
+   called
+
+3. C++ standard (ISO/IEC 14882:2003)
+   Section 10.2 Member name lookup
+   Section 10.3 Virtual functions
+   Section 13 Overloading
+
+4. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Class Design and Inheritance", Rule 38
+
+5. High Integrity C++ Coding Standard
+   13.1.1. Ensure that all overloads of a function are visible from where it
+   is called
+
+6. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 94
+
+7. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.4.2 Derived classes shall not conceal functions that are inherited from their bases
+
+8. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 6, Item 33
+
+</PRE>
+</BODY>
+</HTML>

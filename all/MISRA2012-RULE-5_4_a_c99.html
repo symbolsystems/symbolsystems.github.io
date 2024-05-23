@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The name of a macro should be distinct from the names of its parameters(c99) [MISRA2012-RULE-5_4_a_c99]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The name of a macro should be distinct from the names of its parameters(c99) [MISRA2012-RULE-5_4_a_c99-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule requires that, when a macro is being defined, its name be distinct 
+from:
+- the names of the other macros that are currently defined; and
+- the names of their parameters.
+
+It also requires that the names of the parameters of a given macro be distinct
+from each other but does not require that macro parameters names be distinct
+across two different macros.
+
+The definition of distinct depends on the implementation and the version
+of the C language that is being used:
+- In C99 the minimum requirement is that the first 63 characters are significant
+with each universal character or extended source character counting as a
+single character." [MISRA C:2012 Rule 5.4]
+
+This rule detects cases when:
+- a macro has the same name (or the first 63 characters of the name) as one of
+  its parameters;
+- the parameters of a macro have the same names (or the first 63 characters of
+  their names).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Long macro identifiers may impair the readability of code. While many automatic
+code generation systems produce long macro identifiers, there is a good argument
+for keeping macro identifier lengths well below this limit."
+[MISRA C:2012 Rule 5.4]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Macros and identifiers whose names are the same may confuse the developer and
+lead to undefined behavior of the program. This rule helps keep macro names and
+identifiers distinct.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define MACRO1_01(MACRO1_01) MACRO1_01 + 1      /* Violation */
+
+/*      123456789012345678901234567890123456789012345678901234567890123****** */
+#define MACRO2_____________________________________________________01231( \
+        MACRO2_____________________________________________________01231) /*
+                                        Violation - reported two lines above */
+
+#define MACRO3____( \
+        MACRO3_________________________________________________________X, \
+        MACRO3_________________________________________________________Y) /*
+                                      Violation - reported three lines above */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define MACRO1_01(MACRO1_02) MACRO1_02 + 1      /* OK - different name of
+                                                        parameter */
+
+#define MACRO2_____________________________________________________01231( \
+        MACRO2_____________________________________________________01241) /*
+                                      OK - difference in first 63 characters */
+
+#define MACRO3____( \
+        MACRO3_________________________________________________________X, \
+        MACRO3________________________________________________________XY) /*
+                                                                          OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.4
+
+</PRE>
+</BODY>
+</HTML>

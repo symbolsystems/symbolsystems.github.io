@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use the 'this' pointer explicitly in lambdas with a default by-reference capture [CODSTA-MCPP-15_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use the 'this' pointer explicitly in lambdas with a default by-reference capture [CODSTA-MCPP-15_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A by-reference capture [&amp;] results in a closure that contains a reference to
+a local variable or a parameter available in the scope where the lambda is
+defined. It also captures the current object (if it exists) by reference.
+If there is an identifier (a variable or a function) that has the same name
+as the class member and can be used in a lambda body, the lambda code becomes
+ambiguous. To avoid ambiguity, use 'this-&gt;' each time you want to refer to the
+class member.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you keep your code clear and avoid mistakes when accessing
+class members.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+private:
+    int z;
+    void f();
+    void f2(){};
+};
+
+void A::f()
+{
+    z = 0;
+    [&amp;]{
+        f2();      // Violation
+        return z;  // Violation
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+private:
+    int z;
+    void f();
+    void f2(){};
+};
+
+void A::f()
+{
+    z = 0;
+    [&amp;]{
+        this-&gt;f2();      // OK
+        return this-&gt;z;  // OK
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 6: Lambda Expressions, Item 31: "Avoid default capture modes"
+
+</PRE>
+</BODY>
+</HTML>

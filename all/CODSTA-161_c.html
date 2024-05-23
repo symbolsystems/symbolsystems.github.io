@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An operand of essentially character type should not be used where an operand is interpreted as a numeric value [CODSTA-161_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An operand of essentially character type should not be used where an operand is interpreted as a numeric value [CODSTA-161_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An operand of essentially character type should not be used where an operand
+is interpreted as a numeric value. The numeric values of character data are
+implementation-defined." [MISRA C:2012 Rule 10.1]
+
+This rule detects cases when the operands of the following operators
+have have essentially character type:
+[], +(unary), -(unary), *, /, %, &gt;&gt;, &lt;&lt;, ~, &amp;, |, ^, +=, -=, /=, *=,
+^=, |=, &amp;=, &lt;&lt;=, &gt;&gt;=, %= 
+
+The term "essential type" is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents confusion and implementation-defined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef char CHAR; /* essentially character type */
+void foo( int res )
+{
+    CHAR ch;
+    int arr[2];
+
+    arr[ch];          /* Violation */
+    res &amp; (ch + 1);   /* Violation */
+    ch &gt;&gt; 1u;         /* Violation */
+    ~'A';             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by this rule */
+typedef unsigned char UCHAR; /* essentially unsigned type */
+void foo( int res )
+{
+    UCHAR uch;
+    int arr[2];
+
+    arr[uch];          /* OK */
+    res &amp; (uch + 1);   /* OK */
+    uch &gt;&gt; 1u;         /* OK */
+    ~L'A';             /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.1
+
+2. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

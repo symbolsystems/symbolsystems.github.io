@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Conversions shall not be performed between a pointer to an incomplete type and any other type [MISRA2012-RULE-11_2]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Conversions shall not be performed between a pointer to an incomplete type and any other type [MISRA2012-RULE-11_2-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to an incomplete type shall not be converted into another type.
+A conversion shall not be made into a pointer to incomplete type. Although
+a pointer to void is also a pointer to an incomplete type, this rule does
+not apply to pointers to void." [MISRA C:2012 Rule 11.2]
+
+"Pointers to an incomplete type are sometimes used to hide the representation
+of an object. Converting a pointer to an incomplete type into a pointer
+to object would break this encapsulation." [MISRA C:2012 Rule 11.2]
+
+This rule reports a violation if a pointer to an incomplete type is converted
+(explicit or implicit) into or from a pointer to any other type. An incomplete
+type is one that describes an object, but lacks information needed to determine
+its size.
+
+The implicit conversion of a pointer is detected in the following cases:
+
+- assignment expression
+- initialization (only simple variables and arrays)
+- passing argument to function call
+- returning value from function
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A null pointer constant may be converted into a pointer to an incomplete type."
+According to the C standard, an integer constant expression with the value 0,
+or such an expression cast to type void *, is called a null pointer constant.
+
+"A pointer to an incomplete type may be converted into void." 
+[MISRA C:2012 Rule 11.2]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+"Conversion into or from a pointer to an incomplete type may result in a pointer
+that is not correctly aligned, resulting in undefined behaviour.
+Conversion of a pointer to an incomplete type into or from a floating type
+always results in undefined behaviour." [MISRA C:2012 Rule 11.2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct S1* ST1;
+typedef struct S2 ST2;
+
+/* Examples of incorrect code */ 
+void f (struct S3* sp3);
+
+ST2* foo (void* vptr)
+{
+    ST1 sp1;
+    ST2* sp2;
+    int* ptr = sp1;      /* Violation - implicit conversion from a pointer
+                            to an incomplete struct to a pointer to int type 
+                            in an initialization */
+  
+    sp1 = (ST1)sp2;      /* Violation - explicit cast is not allowed */
+    f( ptr );            /* Violation - implicit conversion from a pointer
+                            to int type to a pointer an incomplete struct type
+                            in a function call */
+    
+    return vptr;         /* Violation - implicit conversion from a pointer
+                            to void type to a pointer to an incomplete struct
+                            type in a function return */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stddef.h&gt;
+
+typedef struct S1* ST1;
+
+/* Examples of correct code and exceptions */ 
+struct S3* f ( void );
+
+ST1 foo (void* vptr)
+{
+    ST1 sp1;
+    struct S1* sp2 = NULL; /* OK - A null pointer constant may be converted
+                              into a pointer to an incomplete type */
+    sp1 = sp2;             /* OK - the same types */
+    sp1 = (ST1)sp2;        /* OK - the same types */
+    (void)f( );            /* OK - A pointer to an incomplete type may
+                              be converted into void. */
+    return sp1;            /* OK - the same types */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.2
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.4 Cast operators
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5.4 Cast operators
+
+4. SEI CERT C++ Coding Standard
+   EXP57-CPP. Do not cast or delete pointers to incomplete classes
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP57-CPP.+Do+not+cast+or+delete+pointers+to+incomplete+classes">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP57-CPP.+Do+not+cast+or+delete+pointers+to+incomplete+classes</A>
+
+5. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

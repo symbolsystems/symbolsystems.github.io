@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define =delete functions with parameters of type rvalue reference to const [HICPP-8_3_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define =delete functions with parameters of type rvalue reference to const [HICPP-8_3_4-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A simple model for an rvalue reference is that it allows for the modification
+of a temporary. A const rvalue reference therefore defeats the purpose of the
+construct as modifications are not possible. However, one valid use case
+is where the function is defined =delete. This will disallow the use of an
+rvalue as an argument to that function." [High Integrity C++]
+
+This rule detects declarations of functions containing a parameter of a const
+rvalue reference type, except when a function is declared with '=delete'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+template &lt;class T&gt; void f1(const T &amp;&amp;);          // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+template &lt;class T&gt; void f1(T &amp;) noexcept;        // OK
+template &lt;class T&gt; void f1(const T &amp;&amp;) = delete; // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   8.3.4. Define =delete functions with parameters of type rvalue reference to
+   const
+
+</PRE>
+</BODY>
+</HTML>

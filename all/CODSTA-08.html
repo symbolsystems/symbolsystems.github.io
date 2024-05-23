@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use break in for loops [CODSTA-08]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use break in for loops [CODSTA-08-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a 'break' statement causes exit
+from the 'for' loop. If the 'for' loop is interrupted, then the rest
+of the code in the block, and the remaining iterations are skipped.
+This behaviour may not be consistent with developer expectations.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoiding breaks in the for loop makes your code easier to follow.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void func() 
+{
+    for (int j = 0; j &lt; 10; j++) {        
+        if (j==5) 
+        {
+            break;                     // Violation
+        }
+    }
+  
+    for (;;) {        
+        //...
+        break;                         // Violation    
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */
+
+void func() 
+{
+    for (int j = 0; j &lt; 5; j++) {
+         // OK - 'for' loop does not contain 'break'
+    }
+    
+    while (true) 
+    {
+        //...
+        break; // OK - 'break' interrupts 'while' loop
+    } 
+  
+    for (int j = 0; j &lt; 5; j++) {
+        while (true) 
+        {
+            //...
+            break; // OK - 'break' interrupts 'while' loop
+        } 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

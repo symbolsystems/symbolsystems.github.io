@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Functions and objects should not be defined with external linkage if they are referenced in only one translation unit [MISRA2012-RULE-8_7]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Functions and objects should not be defined with external linkage if they are referenced in only one translation unit [MISRA2012-RULE-8_7-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when identifiers with external linkage (objects
+or functions) are used only in the translation unit in which they are
+defined. Such identifiers should not have external linkage. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule looks for references and definitions in files in the testing scope.
+For this reason, the set of violations reported for the same file may
+vary, depending on the scope of analysis.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Restricting the visibility of an object by giving it internal linkage
+or no linkage reduces the chance that it might be accessed inadvertently.
+Similarly, reducing the visibility of a function by giving it internal
+linkage reduces the chance of it being called inadvertently.
+
+Compliance with this rule also avoids any possibility of confusion between
+an identifier and an identical identifier in another translation unit
+or a library" [MISRA C:2012 Rule 8.7]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: testing scope contains only 'test1.c', 'test2.c' and 'test.h'.
+
+/* test.h */
+void bar(void);
+extern void bar2(void);
+
+/* test1.c */
+#include "test.h"
+int i = 0;                  /* Violation - the object 'i' is referenced
+                               only in the translation unit 'test1.c' */
+static void foo1(int x) {
+    for(; i &lt; x; i++) { /* ... */ }
+}
+
+/* test2.c */
+#include "test.h"
+void bar(void) {            /* Violation - the function 'bar()' is referenced
+   /* ... */                   only in the translation unit 'test2.c' */
+}
+
+void bar2(void) {           /* Violation - the function 'bar2()' is referenced
+   /* ... */                   only in the translation unit 'test2.c' */
+}
+
+void bar3(void) {           /* Violation - the function 'bar3()' is referenced
+   /* ... */                   only in the translation unit 'test2.c' */
+}
+
+static void foo2(void) {
+    bar();
+    bar2();
+    bar3();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: testing scope contains only 'test1.c', 'test2.c' and 'test.h'.
+
+/* test.h */
+extern void bar2(void);
+
+/* test1.c */
+#include "test.h"
+static void foo1(int x) {
+    int i = 0;              /* OK - the object has no linkage */
+    for(; i &lt; x; i++) { /* ... */ }
+    bar2();
+}
+
+/* test2.c */
+#include "test.h"
+static void bar(void) {     /* OK - the function 'bar()' has an internal
+    /* ... */                  linkage */
+}
+
+void bar2(void) {           /* OK - the function 'bar2()' is referenced
+    /* ... */                  in both translation units */
+}
+
+static void bar3(void) {    /* OK - the function 'bar3()' has an internal
+    /* ... */                  linkage */
+}
+
+static void foo2(void) {
+    bar();
+    bar2();
+    bar3();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.7
+
+</PRE>
+</BODY>
+</HTML>

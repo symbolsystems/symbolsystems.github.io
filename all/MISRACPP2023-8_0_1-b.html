@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use parentheses to indicate the precedence of operators in expressions [MISRACPP2023-8_0_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use parentheses to indicate the precedence of operators in expressions [MISRACPP2023-8_0_1-b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C language has a relatively large number of operators and their relative
+precedences are not intuitive. This can lead less experienced programmers to
+make mistakes. Using parentheses to make operator precedence explicit removes
+the possibility that the programmer's expectations are incorrect. It also
+makes the original programmer's intention clear to reviewers or maintainers of
+the code." [MISRA C:2012]
+
+This rule detects when a non-parenthesized binary operator is used as the
+operand of another binary or ternary operator. This rule checks the following
+binary operators: *, /, %, +, -, &lt;&lt;, &gt;&gt;, &lt;, &gt;, &lt;=, &gt;=, ==, !=, &amp;, ^, |, &amp;&amp;, ||
+and the conditional operator ?:. It is allowed to have an operand without
+parenthesis when the precedence of the operand is the same as the precedence
+of the expression (see table in MISRA C 2012 Rule 12.1).
+
+See also: MISRA2004-12_1_e, FORMAT-25
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not check:
+- expressions in preprocessor directives,
+- user-defined operators.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintainability of your code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int p1, int p2) {
+    int a = p1 * p2 + 1;     // Violation
+    if(p1 + p2 != p1 - p2);  // Violation
+    if(p1 == 1 &amp;&amp; p2 &gt; 1 );  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code add parenthesis around the operands.
+
+void foo(int p1, int p2) {
+    int a = p1 * (p2 + 1);       // OK
+    if((p1 + p2) != (p1 - p2));  // OK
+    if((p1 == 1) &amp;&amp; (p2 &gt; 1));   // OK
+}
+
+// Examples not reported by rule
+void foo2(int p1, int p2) {
+    int a = p1 * -p2;       // OK - operand is a unary operator
+    a = p1 + p2 - 1;        // OK - expressions with the same precedence
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.0.1 Parentheses should be used to make the meaning of an expression appropriately explicit
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 12.1
+
+</PRE>
+</BODY>
+</HTML>

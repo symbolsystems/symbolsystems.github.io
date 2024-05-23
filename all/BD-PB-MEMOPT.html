@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid calls to memory-setting functions that can be optimized out by the compiler [BD-PB-MEMOPT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid calls to memory-setting functions that can be optimized out by the compiler [BD-PB-MEMOPT-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the call to a memory-setting function may potentially
+be removed from the resulting binary code by the optimizing compiler, because it constitutes
+a dead store.
+
+The rule recognizes the following functions as memory-setting functions:
+
+&lt;string.h&gt;
+    void * memset(void * out_buf, int, size_t)
+    void * memcpy(void * out_buf, void *, size_t)
+
+&lt;winnbase.h&gt; (Windows API)
+    void ZeroMemory(PVOID  out_buf, SIZE_T)
+
+To avoid a violation being reported, it is usually recommended to use the safe version of
+a memory-setting function or to make sure the memory is accessed after is is set.
+
+Examples of safe versions of memory-setting functions:
+
+&lt;string.h&gt; (since C11, Annex K)
+    errno_t memset_s(void * out_buf, rsize_t, int, rsize_t)
+	
+&lt;winbase.h&gt; (Windows API)
+    PVOID SecureZeroMemory(PVOID out_buf, SIZE_T)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2022.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Exact detection of all the possible situations when the call to a memory-setting function
+may be removed by the optimizing compiler is not possible, therefore there may be
+cases when the rule:
+* reports a violation even if the call will not be removed by the compiler 
+* does not report a violation even though the call will be removed by the compiler
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Memory-setting functions are often used to overwrite the contents of the memory
+that contains sensitive or confidentional data. If the compiler removes the call
+to memory-setting functions as a part of its optimization process, the data
+remains in memory even after the buffer is freed/deallocated.
+"If this data contains sensitive password information, then an attacker can read
+the password and use the information to bypass protection mechanisms." [CWE-14]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid leakage of sensitive data.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void example()
+{
+	char password[100];
+
+	// [...] Calculate and use password
+
+	// Attempt to zero memory
+	memset(password, '\0', 100); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void repair()
+{
+	char password[100];
+
+	// [...] Calculate and use password
+
+	// Zero memory
+	memset_s(password, '\0', 100); // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+MSC06-C. Beware of compiler optimizations
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC06-C.+Beware+of+compiler+optimizations">https://wiki.sei.cmu.edu/confluence/display/c/MSC06-C.+Beware+of+compiler+optimizations</A>
+
+CWE-14: Compiler Removal of Code to Clear Buffers
+<A HREF="http://cwe.mitre.org/data/definitions/14.html">http://cwe.mitre.org/data/definitions/14.html</A>
+
+</PRE>
+</BODY>
+</HTML>

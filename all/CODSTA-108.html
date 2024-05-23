@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The standard header file &lt;tgmath.h&gt; shall not be used [CODSTA-108]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The standard header file &lt;tgmath.h&gt; shall not be used [CODSTA-108-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;tgmath.h&gt; should not be #included."
+[MISRA C:2012 Rule 21.11 with Amendment 3]
+
+The rule reports a violation message if a file includes any of the following
+headers: 'tgmath.h' or 'ctgmath'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;tgmath.h&gt;    /* Violation */
+
+double d;
+
+void f ( void )
+{
+    sqrt ( d );  /* generic sqrt used */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;math.h&gt;      /* OK */
+
+double d;
+
+void f ( void )
+{
+    sqrt ( d ); /* math.h version used */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.11
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.17 Rule 21.11
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   7.22 Type-generic math &lt;tgmath.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

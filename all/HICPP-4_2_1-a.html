@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Apply the U suffix to literals used in a context that requires an unsigned integral expression [HICPP-4_2_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Apply the U suffix to literals used in a context that requires an unsigned integral expression [HICPP-4_2_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a literal is used to initialize a variable of an unsigned type or with an
+operand of unsigned type in a binary operation, the U suffix should be
+appended to the literal to circumvent an implicit conversion and make the
+intent explicit." [HIC++ v4.0, Rule 4.2.1]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves readability and removes confusion if an improper value (negative) is
+assigned.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+void foo() {
+    uint32_t u(0); // Violation
+    u += 2;        // Violation
+    u += 2U;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+void foo() {
+    uint32_t u(0U); // OK
+    u += 2U;        // OK
+    u += 2U;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   4.2.1. Ensure that the U suffix is applied to a literal used in a context
+   requiring an unsigned integral expression
+
+</PRE>
+</BODY>
+</HTML>

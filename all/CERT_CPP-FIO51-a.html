@@ -1,0 +1,224 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure resources are freed [CERT_CPP-FIO51-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure resources are freed [CERT_CPP-FIO51-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule helps to ensure that allocated resources are deallocated on all paths.
+Violations of the rule identify execution paths in an application where resources
+are leaked.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Failure to close resources may lead to starvation, which could have
+security implications.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Assume resource references can be stored by third-party methods of the following
+types" set of parameters allows you to determine how strict the rule is when a reference
+to a resource may be stored by a third-party function. For example, if there is a
+third-party function SpecialCollection::add() and a resource is passed as a parameter
+to this function, it will be stored in a collection and may later be closed by iterating
+over the collection. Since Flow Analysis does not know the exact behavior of arbitrary
+third-party functions, it behaves in either of the following ways:
+
+   * With "Any functions" parameter enabled (the default approach), Flow Analysis assumes
+     that any third-party function may store a reference to a resource if the resource is
+     passed into the function. This prevents the rule from reporting false positives if
+     the resource is later closed using the stored reference. However, this may also
+     lead to some false negatives (real leaks are not reported as violations) if the
+     function does not store a reference to the resource.
+    
+   * With "Functions that accept parameters which could host resource reference" parameter
+     enabled, Flow Analysis assumes that a function may store a reference to a resource if
+     it takes an additional parameter that can be used to store a pointer or a reference to
+     the given resource. This prevents the rule from reporting false positives if the resource
+     is later closed using the stored reference. However, this may also lead to some false
+     negatives (real leaks are not reported as violations) if the function does not store
+     a reference to the resource.
+   
+   * With "Functions with names matching the pattern" parameter enabled, Flow Analysis
+     assumes that any third-party method which matches regex may store a reference to
+     a resource if the resource is passed into the method. This prevents the rule from reporting
+     false positives if the resource is later closed using the stored reference. However,
+     this may also lead to some false negatives (real leaks are not reported as violations)
+     if the function does not store a reference to the resource.
+   
+   * With all the parameters disabled, Flow Analysis takes a more aggressive approach and it
+     assumes that third-party methods do not affect resources in any way. This approach
+     may lead to some false positives, but it will not overlook any of the real leaks
+     that the default approach may miss.
+
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+The types of resources handled by this rule can be viewed and edited in test configuration section:
+Static Analysis -&gt; Flow Analysis Advanced Settings -&gt; Resources
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Having a strict policy with respect to closing resources helps to make an application more
+robust by preventing resource starvation.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers violations.
+
+#include &lt;stdio.h&gt;
+
+static void fileAllocation()
+{
+    FILE* p = fopen("file.name", "r");
+}
+
+static void fileReallocation()
+{
+    FILE* p = fdopen(0, "r");
+    p = freopen("file.name", "r", p);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger violations:
+
+#include &lt;stdio.h&gt;
+
+static void fileAllocation()
+{
+    FILE* p = fopen("file.name", "r");
+    fclose(p);
+}
+
+static void fileReallocation()
+{
+    FILE* p = fdopen(0, "r");
+    p = freopen("file.name", "r", p);
+    fclose(p);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Weaknesses On the Cusp
+CWE-401: Missing Release of Memory after Effective Lifetime
+<A HREF="https://cwe.mitre.org/data/definitions/401.html">https://cwe.mitre.org/data/definitions/401.html</A>
+
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-772: Missing Release of Resource after Effective Lifetime
+<A HREF="http://cwe.mitre.org/data/definitions/772.html">http://cwe.mitre.org/data/definitions/772.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 22.1
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.13
+
+SEI CERT C Coding Standard
+CON30-C. Clean up thread-specific storage
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON30-C.+Clean+up+thread-specific+storage">https://wiki.sei.cmu.edu/confluence/display/c/CON30-C.+Clean+up+thread-specific+storage</A>
+
+SEI CERT C Coding Standard
+FIO22-C. Close files before spawning processes
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO22-C.+Close+files+before+spawning+processes">https://wiki.sei.cmu.edu/confluence/display/c/FIO22-C.+Close+files+before+spawning+processes</A>
+
+SEI CERT C Coding Standard
+FIO42-C. Close files when they are no longer needed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO42-C.+Close+files+when+they+are+no+longer+needed">https://wiki.sei.cmu.edu/confluence/display/c/FIO42-C.+Close+files+when+they+are+no+longer+needed</A>
+
+SEI CERT C Coding Standard
+MEM00-C. Allocate and free memory in the same module, at the same level of abstraction
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM00-C.+Allocate+and+free+memory+in+the+same+module%2C+at+the+same+level+of+abstraction">https://wiki.sei.cmu.edu/confluence/display/c/MEM00-C.+Allocate+and+free+memory+in+the+same+module%2C+at+the+same+level+of+abstraction</A>
+
+SEI CERT C Coding Standard
+MEM12-C. Consider using a goto chain when leaving a function on error when using and releasing resources
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resources">https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resources</A>
+
+SEI CERT C Coding Standard
+MEM31-C. Free dynamically allocated memory when no longer needed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM31-C.+Free+dynamically+allocated+memory+when+no+longer+needed">https://wiki.sei.cmu.edu/confluence/display/c/MEM31-C.+Free+dynamically+allocated+memory+when+no+longer+needed</A>
+
+SEI CERT C Coding Standard
+WIN30-C. Properly pair allocation and deallocation functions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/WIN30-C.+Properly+pair+allocation+and+deallocation+functions">https://wiki.sei.cmu.edu/confluence/display/c/WIN30-C.+Properly+pair+allocation+and+deallocation+functions</A>
+
+SEI CERT C++ Coding Standard
+ERR57-CPP. Do not leak resources when handling exceptions
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR57-CPP.+Do+not+leak+resources+when+handling+exceptions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR57-CPP.+Do+not+leak+resources+when+handling+exceptions</A>
+
+SEI CERT C++ Coding Standard
+FIO51-CPP. Close files when they are no longer needed
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/FIO51-CPP.+Close+files+when+they+are+no+longer+needed">https://wiki.sei.cmu.edu/confluence/display/cplusplus/FIO51-CPP.+Close+files+when+they+are+no+longer+needed</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A15-0-2 At least the basic guarantee for exception safety shall be provided for all operations. In addition, each function may offer either the strong guarantee or the nothrow guarantee
+
+AUTOSAR C++14 Coding Guidelines
+Rule A15-1-4 If a function exits with an exception, then before a throw, the function shall place all objects/resources that the function constructed in valid states or it shall delete them
+
+OWASP API Security Top 10-2019
+API4-Lack of Resources &amp; Rate Limiting
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa4-lack-of-resources-and-rate-limiting.md</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002000: The application must terminate all network connections associated with a communications session at the end of the session.
+
+</PRE>
+</BODY>
+</HTML>

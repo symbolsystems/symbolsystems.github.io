@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A cast shall not be performed between pointer to object and a non-integer arithmetic type [CODSTA-130]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A cast shall not be performed between pointer to object and a non-integer arithmetic type [CODSTA-130-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if an explicit cast between a pointer to
+"object type" and "non-integer arithmetic type" is used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule recognizes following types as pointers to "object type":
+- pointer to class/struct/union which is not incomplete
+- pointer to enum
+- pointer to primitive type like bool, char, int, float, pointer etc
+  (except for pointer to void)
+
+This rule recognizes following as "non-integer arithmetic types":
+- plain char
+- named enum, or enum which is used in the definition of an object, function or
+  a type
+- results of logical and comparison operators (!, &amp;&amp;, ||, ==, !=, &lt;, &gt;, &lt;=, &gt;=)
+- floating-point types
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Conversion of an boolean, character or enum type into a pointer to object may
+result in a pointer that is not correctly aligned, resulting in undefined
+behaviour.
+
+Conversion of a pointer to object into a boolean, character or enum type may
+produce a value that cannot be represented in the chosen integer type resulting
+in undefined behavior.
+
+Conversion of a pointer to object into or from an floating type results in
+undefined behaviour." [MISRA C:2012 Rule 11.7]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Code examples which result in rule violation */
+
+struct S {
+  int x;
+};
+struct S * sp;  /* pointer to "object type" */
+
+int *ptr_obj;   /* pointer to "object type" */
+
+char c;         /* variable with "non-integer arithmetic type" */
+
+enum E { EV };
+enum { VV } e2; /* variable with "non-integer arithmetic types" */
+
+void foo1 ( void )
+{
+  (char) sp;          /* Violation */
+  (enum E) ptr_obj;   /* Violation */
+
+  (struct S *) c;     /* Violation */
+  (int *) EV;         /* Violation */
+  (char *) e2;        /* Violation */
+
+  (float *) (c &lt; 0);  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code which do not result in rule violation */
+
+struct S;
+struct S * ptr_to_incomplete;
+void* ptr_to_void;
+
+signed char sc;
+enum { EV };
+
+enum E { E1 };
+struct R { int x; };
+
+void foo1 ( void )
+{
+  (char) ptr_to_incomplete; /* Not reported - pointer to incomplete type */
+  (enum E) ptr_to_void;     /* Not reported - pointer to void */
+
+  (struct R *) sc;          /* Not reported - not plain char */
+  (int *) EV;               /* Not reported - unnamed enum */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 11.7
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.4 Cast operators
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   6.3.2.3 Pointers, 6.5.4 Cast operators
+
+4. 2019 CWE Weaknesses On the Cusp
+   CWE-704: Incorrect Type Conversion or Cast
+   <A HREF="https://cwe.mitre.org/data/definitions/704.html">https://cwe.mitre.org/data/definitions/704.html</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Restore stream format [BD-PB-STREAMFMT]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Restore stream format [BD-PB-STREAMFMT-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a stream format that is changed fails to be restored
+within the same function.
+
+The stream format should first be remembered and then restored with
+appropriate flags. This prevents code defects that may be caused by a wrong
+assumption about the state of the stream (for example, you may incorrectly
+assume that a stream writes numbers in a decimal format, changes it to
+hexadecimal, and then back to decimal).
+
+The rule only checks streams that are visible outside the function.
+
+The rule checks for modifications the following formats:
+- flags(left, right, internal, dec, oct, hex, fixed, scientific, boolalpha,
+  showpos, showpoint, showbase, skipws, unitbuf, uppercase)
+- precision of floating point values(precision)
+- fill character for padding(fill)
+
+The rule assumes that the following ways of saving the format are correct:
+- ios::fmtflags oldFlags = cout.flags();
+- ios::fmtflags oldFlags = cout.flags(ios::hex);
+- ios::fmtflags oldFlags = cout.setf(ios_base::left);
+- ios::fmtflags oldFlags = cout.setf(ios_base::left, ios_base::adjustfield);
+- streamsize oldPrecision = cout.precision();
+- streamsize oldPrecision = cout.precision(10);
+- streamsize oldPrecision = cout.precision();
+- char oldFill = cout.fill();
+- char oldFill = cout.fill('x');
+
+The rule assumes that the following ways of restoring the saved format are
+correct:
+- cout.flags(oldFlags);
+- cout.precision(oldPrecision);
+- cout &lt;&lt; setprecision(oldPrecision);
+- cout.fill(oldFill);
+- cout &lt;&lt; setfill(oldFill);
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule detects stream formats that fail to be explicitly saved and restored
+in a function.
+If you save and restore stream formats by calling other functions, parameterize
+the rule with a list of the functions that handle the stream format to prevent
+reporting false positives (see PARAMETERS).
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Functions for handling stream format" parameter allows you to specify functions that can be used to handle
+the stream format. The rule will not trigger when a stream object is passed to the listed functions.
+
+The following columns allow you to define different aspects of functions in the functions table: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide the fully qualified name of the type or namespace
+  where the function is declared. Use '*' if you want to describe a function declared in any type or namespace,
+  or a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' should contain the name of the described function.
+
+* The '+ definitions in subclasses' is used to indicate whether the current entry will apply
+  to functions with the given name defined in subclasses of the given class.
+  Note that this applies to both instance and non-instance functions.
+  
+* The 'Acceptable parameters' column is used to specify the parameters that can be used to pass the stream to the function. 
+  List the 1-based indexes of parameters separated by a comma or use '*' to specify that all parameters are affected.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you ensure that a modified stream format is properly restored.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+
+#include &lt;sstream&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+void foo0(int n) {
+    std::cout &lt;&lt; std::setw(4) &lt;&lt; std::hex &lt;&lt; n &lt;&lt; std::dec &lt;&lt; std::endl;
+} // VIOLATION
+
+void foo1(std::ostringstream &amp;o, double f) {
+    o.precision(3);
+    o &lt;&lt; f;
+} // VIOLATION
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;sstream&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+void foo0(int n) {
+    std::ios::fmtflags old = std::cout.flags();
+    std::cout &lt;&lt; std::setw(4) &lt;&lt; std::hex &lt;&lt; n &lt;&lt; std::dec &lt;&lt; std::endl;
+    std::cout.flags(old);
+}
+
+void foo1(std::ostringstream &amp;o, double f) {
+    std::streamsize old = o.precision();
+    o.precision(3);
+    o &lt;&lt; f &lt;&lt; std::setprecision(old);
+}
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid expressions in return statements of void functions [MISRA-084]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid expressions in return statements of void functions [MISRA-084-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If any return statements are used in a function which returns a void type,
+expressions shall not be placed after the return" [MISRA-C:1998]
+
+This rule detects when a function that returns the 'void' type contains
+the 'return' statement not directly followed by the ';' semicolon.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1(void)
+{
+    return 0;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f1(void)
+{
+    return;       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:1998 Guidelines for the use of the C language in Vehicle Based Software
+   Chapter 7, Rule 84.
+
+</PRE>
+</BODY>
+</HTML>

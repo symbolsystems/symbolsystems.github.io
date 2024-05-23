@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Classes which have only getters/setters (accessors/mutators) are not allowed [CODSTA-CPP-81]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Classes which have only getters/setters (accessors/mutators) are not allowed [CODSTA-CPP-81-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The number of getters (accessors) and setters (mutators) functions should be
+minimized. Numerous getters and setters may indicate that a class simply serves
+to aggregate a collection of data rather than to embody an abstraction with a
+well-defined state or invariant. In this case, a struct with public data may be
+a better alternative.
+
+A getter is defined as a method which simply returns member variable.
+A setter is defined as a method which simply sets member variable.
+
+Rule reports a violation if class or struct have only getters and setters.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+No violation is reported if class have virtual methods or parents.
+
+Some methods are ignored:
+- constructors
+- destructor
+- copy assignment operators
+
+Rule reports a violation if the percentage of getters/setters is equal or
+higher than THRESHOLD.
+
+percentage := number of getters and setters / number of all not ignored methods
+
+The THRESHOLD is set to 100% by default which means a violation is reported
+if class has only getters and setters. The rule can be modified in RuleWizard
+and THRESHOLD can be changed. Please see 'checkMethodsPercentage' method
+(last node in the rule). For example a violation can be reported if 80% of
+methods are getters or setters.
+
+No violation is reported if not all methods have visible bodies. This is
+especially imortant for templates, where method is instantiated only when
+it is called.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Numerous accessors and mutators may indicate that a class simply serves
+to aggregate a collection of data rather than to embody an abstraction
+with a well-defined state or invariant. In this case, a struct with
+public data may be a better alternative.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {                       // Violation
+    public:
+        int getX() {
+            return m;
+        }
+        void setX(int p) {
+            m = p;
+        }
+    private:
+        int m;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct C {                      // OK
+    int m;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 123
+
+</PRE>
+</BODY>
+</HTML>

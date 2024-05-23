@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid string literal duplication [CDD-DUPS]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid string literal duplication [CDD-DUPS-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule identifies code with duplicated string literals. The rule finds duplicated
+string literals across all tested code, whether or not the duplicated literals appear
+in the same file. A violation is reported for each occurrence.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v9.2
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+This rule can be parameterized to achieve best results. 
+
+* Minimal number of duplicates (default value is 5) 
+  Will report violation only if minimum number of occurrences is found
+   
+* Minimal length of duplicated string (default value is 3) 
+  All string literals which size is less than parameter value will not be reported
+   
+* Ignore string literals 
+  All string literals which match any of regular expressions defined will not be reported   
+
+"Report string duplicate found" parameter allows to change scope of duplicated 
+ string literals findings:
+
+* Anywhere in the test scope (default)
+  All string literals duplicates in the test scope are reported
+
+* In the same project
+  Only string literals duplicates located in the same project are reported
+  
+* In the same file
+  Only string literals duplicates located in the same file are reported 
+  
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Rule improves readability and maintainability.
+If a string literal is used repeatedly, it should be stored in a constant.
+It would be much easier for a developer to change the value of a repeated string
+by just changing one single string constant instead of finding all the repeated string
+literals and changing them one by one.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+const char* foo(int a, int b) 
+{
+    if (a &gt; 0) {
+        return "pass";    // duplicated string
+    }
+    if (b &gt; 0) {
+        return "pass";    // duplicated string
+    }
+    if (a &lt; b) {
+        return "pass";    // duplicated string
+    }
+    if (a == b) {
+        return "pass";    // duplicated string
+    }
+    if (a + b &gt; 0) {
+        return "pass";    // duplicated string
+    }
+    return "fail";
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const char* foo(int a, int b) 
+{
+    const char* pass = "pass";
+    if (a &gt; 0) {
+        return pass;
+    }
+    if (b &gt; 0) {
+        return pass;
+    }
+    if (a &lt; b) {
+        return pass;
+    }
+    if (a == b) {
+        return pass;
+    }
+    if (a + b &gt; 0) {
+        return pass;
+    }
+    return "fail";
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>

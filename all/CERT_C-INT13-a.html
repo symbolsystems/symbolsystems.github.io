@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use bitwise operators only on unsigned operands [CERT_C-INT13-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use bitwise operators only on unsigned operands [CERT_C-INT13-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Bitwise operators should be used only with unsigned integer operands, as the
+results of bitwise operations on signed integers are implementation-defined.
+Bitwise operators include the complement operator ~, bitwise shift operators
+&gt;&gt; and &lt;&lt;, bitwise AND operator &amp;, bitwise exclusive OR operator ^, bitwise
+inclusive OR operator | and compound assignment operators &gt;&gt;=, &lt;&lt;=, &amp;=, ^=
+and |=." [CERT C-INT13]
+
+This rule detects when an operand of a bitwise operator does not have
+an unsigned integer type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is enabled for the C code only.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. "When used as bit flags, it is acceptable to use preprocessor macros
+    or enumeration constants as arguments to the &amp; and | operators even
+    if the value is not explicitly declared as unsigned." [CERT C-INT13]
+    This rule assumes that bit flags are:
+    - expressions containing the left-shift operator in the following
+      form: '1 &lt;&lt; non-negative integer constant', or
+    - bitwise operators whose operands are bit flags, or
+    - enumeration constants initialized by bit flags
+    For example:
+    enum BitFlags {
+        EB1 = 1 &lt;&lt; 1 | 1 &lt;&lt; 2,  // EB1 is a bit flag
+        EB2 = 1 &lt;&lt; 1 &amp; 1 &lt;&lt; 2,  // EB2 is a bit flag
+    };
+
+2. "If the right-side operand to a shift operator is known at compile time,
+   it is acceptable for the value to be represented with a signed type
+   provided it is positive." [CERT C-INT13]
+
+   The rule does not trigger when the right-hand operand of the right-shift
+   operator is an integer constant expression of the signed type.
+   These cases are checked by the BD-PB-BADSHIFT rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1( void )
+{
+    int32_t ss1;
+
+    ss1 = ss1 &amp; 10;    // Violation
+    ss1 = ss1 &lt;&lt; 10;   // Violation
+    ss1 = ~ss1;        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1( void )
+{
+    uint32_t us1;
+
+    us1 = us1 &amp; 10u;    // OK
+    us1 = us1 &lt;&lt; 10u;   // OK
+    us1 = ~us1;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   INT13-C. Use bitwise operators only on unsigned operands
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT13-C.+Use+bitwise+operators+only+on+unsigned+operands">https://wiki.sei.cmu.edu/confluence/display/c/INT13-C.+Use+bitwise+operators+only+on+unsigned+operands</A>
+
+</PRE>
+</BODY>
+</HTML>

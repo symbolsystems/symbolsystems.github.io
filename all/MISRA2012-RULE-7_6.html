@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The small integer variants of the minimum-width integer constant macros should not be used [MISRA2012-RULE-7_6]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The small integer variants of the minimum-width integer constant macros should not be used [MISRA2012-RULE-7_6-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The macro INTN_C(value) shall expand to an integer constant expression
+corresponding to the type int_leastN_t. The macro UINTN_C(value) shall
+expand to an integer constant expression corresponding to the type
+uint_leastN_t." [ISO/IEC 9899:2011]
+
+"Each invocation of one of these macros shall expand to an integer constant
+expression suitable for use in #if preprocessing directives. The type of the
+expression shall have the same type as would an expression of the corresponding
+type converted according to the integer promotions. The value of the expression
+shall be that of the argument." [ISO/IEC 9899:2011]
+
+Due to integer promotions, the results of macro expansions may be of type 'int'
+instead of the expected smaller integer type when a macro for minimum-width
+integer constants with '8' or '16' in the name is used. In this case, the
+macro name may be confusing to the user.
+
+This rule detects when identifiers with names of the small integer variants of
+the minimum-width integer constant macros (INT8_C, UINT8_C, INT16_C, UINT16_C)
+are used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that 'int' type is 32 bits.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected behavior and confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+void f1(){
+  uint8_t a = UINT8_C(100);   // Violation
+  int16_t b = INT16_C(200);   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+void f1(){
+  uint32_t a = UINT32_C(100); // OK
+  int32_t b = INT32_C(200);   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.2 Rule 7.6
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.20.4 Macros for integer constants
+   7.20.4.1 Macros for minimum-width integer constants
+
+</PRE>
+</BODY>
+</HTML>

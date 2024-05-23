@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not share volatile data between threads [HICPP-18_2_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not share volatile data between threads [HICPP-18_2_3-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The "volatile" qualifier is often confused with thread synchronization
+semantics.  The qualifier is not related to thread synchronization semantics
+and was never intended for this purpose. It is intended to serve as a clue to
+the compiler that certain optimizations may not work as intended and that the
+value of the variable must be fetched from memory each time it is examined. The
+variable cannot be cached in a register because it can be changed by other
+unknown sources, (e.g., a hardware switch).
+
+"Declaring a variable with the volatile keyword does not provide any of the
+required synchronization guarantees:
+  a. atomicity
+  b. visibility
+  c. ordering"
+
+[HIC++ v4.0, Rule 18.2.3]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoids race-conditions and confusion about synchronization, thereby improving
+code quality and security.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;unistd.h&gt;
+class DataWrapper {
+  public:
+    DataWrapper() : flag(false), data(0) {}
+
+    void incrementData() {
+        while (flag == 0) {
+            sleep(1000);
+        }
+        flag = true;
+        ++data;
+        flag = false;
+    }
+
+  private:
+    mutable volatile bool flag; // Violation
+    int32_t data;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+
+class DataWrapper {
+  public:
+    DataWrapper() : data(0) {}
+    void incrementData() {
+        std::lock_guard&lt;std::mutex&gt; guard(mut);
+        ++data;
+    }
+
+  private:
+    /*
+       Using mutex locks or atomic variables is the safe way to communicate
+       between threads.
+    */
+    mutable std::mutex mut; // OK
+    int32_t data;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   18.2.3. Do not share volatile data between threads
+
+</PRE>
+</BODY>
+</HTML>

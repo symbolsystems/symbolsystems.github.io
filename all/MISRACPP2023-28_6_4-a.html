@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The result of std::remove, std::remove_if, std::unique and empty shall be used [MISRACPP2023-28_6_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The result of std::remove, std::remove_if, std::unique and empty shall be used [MISRACPP2023-28_6_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'std::remove', 'std::remove_if' and 'std::unique' functions return an
+iterator to one past the last valid element. In most cases this result
+should be used as the first operand in a call to std::erase.
+The result of the call to the 'empty' function should not be ignored,
+because it reports if a container contains any data.
+
+This rule detects when the result of the 'std::remove', 'std::remove_if',
+'std::unique' or 'empty' function is not used.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not apply to the 'std::remove( const char * )' function
+from the &lt;cstdio&gt; standard header.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent errors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+void foo(std::vector&lt;int&gt; &amp;v) {
+    empty(v);                                          // Violation
+    v.empty();                                         // Violation
+    std::remove_if(v.begin(),                          // Violation
+            v.end(), [](int x) {
+                return x &gt; 0;
+            });
+    std::unique(v.begin(), v.end());                   // Violation
+    std::remove(v.begin(),                             // Violation
+            v.end(), 0);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+bool foo(std::vector&lt;int&gt; &amp;v) {
+    if (empty(v)) {                                    // OK
+        return true;
+    }
+    v.erase(std::unique(v.begin(), v.end()),           // OK
+    v.end());
+    v.erase(std::remove_if(v.begin(),                  // OK
+            v.end(), [](int x) {
+                return x &gt; 0;
+            }), v.end());
+    v.erase(std::unique(v.begin(), v.end()), v.end()); // OK
+    v.erase(std::remove(v.begin(),                     // OK
+            v.end(), 0), v.end());
+    return empty(v);                                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 28.6.4 The result of std::remove, std::remove_if, std::unique and empty shall be used
+
+</PRE>
+</BODY>
+</HTML>

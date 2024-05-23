@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There should be no space between an increment/decrement operator (++/--) and its operand in macro definition [JSF-063_f]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There should be no space between an increment/decrement operator (++/--) and its operand in macro definition [JSF-063_f-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if there is space, tab, comment or new line
+character between an increment/decrement operator (++/--) and its operand.
+Both prefix and postfix operators are checked.
+
+See also: FORMAT-17, FORMAT-18, FORMAT-21, FORMAT-22, FORMAT-45
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule promotes continuity in the relationship between the operators
+and the operands on which they act.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+It might be not possible to correctly recognize the operator version
+(increment vs decrement) or recognize free text as the operator which
+might result in false negative or false positive.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M1(a) -- a /* Violation */
+#define M2 a ++ /* Violation */
+#define M3(a, b) \
+    do { \
+        ++/* Violation */a; \
+        a \
+        ++; /* Violation */ \
+    } while( b() -- ); /* Violation */
+#define M4 Just a simple text -- Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define M1(a) --a
+#define M2 a++
+#define M3(a, b) \
+    do { \
+        ++a; \
+        a++; \
+    } while( b()-- );
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 6 Style - 6.7 Miscellaneous - Rec. 27
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 63
+
+</PRE>
+</BODY>
+</HTML>

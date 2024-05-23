@@ -1,0 +1,103 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Wrap use of the C Standard Library [HICPP-17_2_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Wrap use of the C Standard Library [HICPP-17_2_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The C11 standard library is included in the C++ standard library, but security
+and concurrency issues related to using both libraries in your code are not
+explicitly prescribed. If you are using the C standard library, you should use
+wrappers to ensure that undefined behavior and data races to not occur. The
+rule reports a violation when uses of the C standard library are not
+encapsulated in wrappers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+All C API calls should be encapsulated in wrappers in separate source files.
+This rule should not be run against those sources, but against all other
+code to identify places where developers have failed to use the wrappers
+and are calling C API functions directly.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Encapsulates dangerous API usage and protects against abuse.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cerrno&gt;
+#include &lt;cstdio&gt;
+
+bool foo() {
+    std ::puts(" hello world "); // Violation
+    return (0 == errno);         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include "CWrappers.h"
+
+bool foo() {
+    Wrapper::puts("Hello world");       // OK - not calling C API.
+    return (0 == Wrapper::lastError()); // OK - not using errno.
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   17.2.1. Wrap use of the C Standard Library
+
+</PRE>
+</BODY>
+</HTML>

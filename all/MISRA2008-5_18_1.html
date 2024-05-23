@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The comma operator shall not be used [MISRA2008-5_18_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The comma operator shall not be used [MISRA2008-5_18_1-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Use of the comma operator is generally detrimental to the readability of code, 
+and the same effect can be achieved by other means."
+
+"The comma operator can be used to create confusing expressions. It can be used to
+exchange the values of variable array elements where the exchange appears to be a single
+operation. This simplicity of operation makes the code less intuitive and less readable. The
+comma operator may also be easily confused with a semicolon used in the for loop syntax.
+Therefore, all uses of the comma operator will not be allowed."
+
+See also: MISRA-042, CODSTA-CPP-08
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule does not report violation on overloaded comma operator.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int tab[] = {0, 1};     // OK - not the comma operator
+int x = (0, 1);         // Violation
+void foo(int x, int y) {// OK - not the comma operator
+    x = y, y = tab[0];  // Violation
+    foo(x, y);          // OK - not the comma operator
+    for (x = 0, y = 0; x &lt; 10; ++x, --y); // Violation 2x
+}
+struct S {
+    int operator,(const S&amp;); // OK - no violation on overloaded comma operator
+};
+void bar(S s, S r) {
+    s, r; // OK - no violation on overloaded comma operator
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int tab[] = {0, 1};
+int x = 1;
+void foo(int x, int y) {
+    x = y;
+    y = tab[0];
+    foo(x, y);
+    y = 0;
+    for (x = 0; x &lt; 10; ++x) {
+        --y;
+    }
+}
+struct S {
+    int operator,(const S&amp;);
+};
+void bar(S s, S r) {
+    s, r;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-18-1. The comma operator shall not be used
+
+2. High Integrity C++ Coding Standard
+   5.1.2. Do not rely on the sequence of evaluation within an expression
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 168
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-18-1
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.19.1 The comma operator should not be used
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 12.3
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 12, Rule 12.10
+
+</PRE>
+</BODY>
+</HTML>

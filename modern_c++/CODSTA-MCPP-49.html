@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+User-defined copy and move assignment operators should use user-defined no-throw swap function [CODSTA-MCPP-49]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+User-defined copy and move assignment operators should use user-defined no-throw swap function [CODSTA-MCPP-49-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using a non-throwing swap operation in the copy and move assignment operators
+helps to achieve Strong Exception Safety. Each assignment operator is also
+simplified because it does not require check for assignment to itself."
+[AUTOSAR A12-8-2]
+
+This rule reports a violation when a copy or move assignment operator does not
+use a user-defined no-throw swap function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a swap function is either a function with the 'swap'
+name, or a function containing the 'swap' substring in its name (case is ignored).
+This rule does not evaluate the 'swap' function.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code readability and consistency with the C++ standard
+library. It also promotes the no-throw guarantee.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;utility&gt;
+
+class B
+{
+public:
+    B&amp; operator=(const B&amp; oth) &amp;       // Violation
+    {
+        if (this != &amp;oth)
+        {
+            ptr1 = new std::int32_t(*oth.ptr1);
+            ptr2 = new std::int32_t(
+                    *oth.ptr2); // Exception thrown here results in
+                                // a memory leak of ptr1
+        }
+        return *this;
+    }
+    B&amp; operator=(B&amp;&amp; oth) &amp; noexcept   // Violation
+    {
+        if (this != &amp;oth)
+        {
+            ptr1 = std::move(oth.ptr1);
+            ptr2 = std::move(oth.ptr2);
+            oth.ptr1 = nullptr;
+            oth.ptr2 = nullptr;
+        }
+        return *this;
+    }
+private:
+    std::int32_t* ptr1;
+    std::int32_t* ptr2;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;utility&gt;
+
+class B
+{
+public:
+    B(const B&amp; oth) {}
+    B&amp; operator=(const B&amp; oth) &amp;       // OK
+    {
+        B tmp(oth);
+        Swap(*this, tmp);
+        return *this;
+    }
+    B&amp; operator=(B&amp;&amp; oth) &amp; noexcept   // OK
+    {
+        B tmp(std::move(oth));
+        Swap(*this, tmp);
+        return *this;
+    }
+    static void Swap(B&amp; lhs, B&amp; rhs) noexcept
+    {
+        std::swap(lhs.ptr1, rhs.ptr1);
+        std::swap(lhs.ptr2, rhs.ptr2);
+    }
+private:
+    std::int32_t* ptr1;
+    std::int32_t* ptr2;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-8-2: User-defined copy and move assignment operators should use
+   user-defined no-throw swap function.
+
+2. High Integrity C++ Coding Standard
+   12.5.6 Use an atomic, non-throwing swap operation to implement the
+   copy and move assignment operators
+
+</PRE>
+</BODY>
+</HTML>

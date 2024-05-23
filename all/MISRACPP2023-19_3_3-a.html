@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A macro parameter used as an operand to the # or ## operators, which is itself subject to further macro replacement, shall only be used as an operand to these operators [MISRACPP2023-19_3_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A macro parameter used as an operand to the # or ## operators, which is itself subject to further macro replacement, shall only be used as an operand to these operators [MISRACPP2023-19_3_3-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A macro parameter that is used as an operand of a # or ## operator is not
+expanded prior to being used. The same parameter appearing elsewhere in the
+replacement text is expanded. If the macro parameter is itself subject to macro
+replacement, its use in mixed contexts within a macro replacement may not meet
+developer expectations." [MISRA C:2012, Rule 20.12]
+
+The rule scans all files in current translation unit. First it finds all #define
+directives and collects following data:
+  1) defined identifiers
+  2) defined identifiers of function-like macros with parameters which are used
+     as operands of "#" or "##" and elsewhere in the replacement text;
+     information which parameters are used in such way is also collected
+
+Next, the translation unit files are scanned again. If a function-like call
+of identifier from step #2 is found, and an identifier from step #1 is passed
+as part of parameter collected in step #2, a violation is reported.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The conditional compilation directives (#ifdef etc) are not evaluated - all
+#define directives are collected as potentially evaluated. In following 
+example both M1 and M2 will be recognized as macro identifiers:
+   #if defined(DEBUG)
+      #define M1 a
+   #endif
+   #if 0
+      #define M2(x) foo(#x, x)
+   #endif
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents confusion caused by using both resolved and not resolved macro
+identifiers.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some macros are not supported:
+  - predefined macros
+  - macros defined in command line
+Such identifiers will not be detected as macros and violations will not be
+reported.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Example of non-compliant code: the macro parameter x is replaced with AA
+   which is subject to further macro replacement when not used as the operand
+   of ##. */
+#define AA        0xffff
+#define BB(x)     ( x ) + wow ## x
+void f(void) {
+  int wowAA = 0;
+  /* Expands as wowAA = (0xffff) + wowAA; */
+  wowAA = BB(AA);      /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Example of compliant code: the macro parameter X is not subject to further
+   macro replacement. */
+int speed;
+int speed_scale;
+int scaled_speed;
+#define SCALE(X) ( ( X ) * X ## _scale )
+void f(void) {
+  /* expands to scaled_speed = ((speed) * speed_scale); */
+  scaled_speed = SCALE(speed);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.3.3 The argument to a mixed-use macro parameter shall not be subject to further expansion
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.12
+
+</PRE>
+</BODY>
+</HTML>

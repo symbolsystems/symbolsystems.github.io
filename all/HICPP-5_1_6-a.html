@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The operand of the sizeof operator shall not contain any expression which has side effects [HICPP-5_1_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The operand of the sizeof operator shall not contain any expression which has side effects [HICPP-5_1_6-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The operand of a sizeof operator may be either an expression or may specify
+a type. If the operand contains an expression, a possible programming error
+is to expect that expression to be evaluated when it is actually not evaluated
+in most circumstances." [MISRA C:2012 Rule 13.6]
+
+The rule reports a violation if as the sizeof operand is used assignment,
+increment, decrement, new, delete or throw operator.
+
+See also: PB-02, PB-22
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Any expressions appearing in the operand of a sizeof operator are not normally
+evaluated. This rule mandates that the evaluation of any such expression shall
+not contain side effects, whether or not it is actually evaluated."
+[MISRA C:2012 Rule 13.6]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int p){
+    int k;
+    
+    sizeof(k = p);  // Violation  
+    sizeof(p++);    // Violation
+    sizeof(p--);    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int p){
+    int k;
+    
+    k = p;
+    sizeof(k);      // OK
+    p++;
+    sizeof(p);      // OK
+    p--;
+    sizeof(p);      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-3-4. Evaluation of the operand to the sizeof operator shall not contain
+   side effects
+
+2. High Integrity C++ Coding Standard
+   5.1.6. Do not code side effects into the right-hand operands of: &amp;&amp;, ||,
+   sizeof, typeid or a function passed to condition variable::wait
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 166
+
+4. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-3-4
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 13.6
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 12
+
+7. Origin: Misra Guidelines - Rule 40
+
+8. SEI CERT C++ Coding Standard
+   EXP52-CPP. Do not rely on side effects in unevaluated operands
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands</A>
+
+</PRE>
+</BODY>
+</HTML>

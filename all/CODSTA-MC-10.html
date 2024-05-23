@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic selection used in a macro definition should have a macro parameter in the controlling expression [CODSTA-MC-10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic selection used in a macro definition should have a macro parameter in the controlling expression [CODSTA-MC-10-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A generic selection expression should only be expanded from a function-like
+macro, with one of the macro's arguments expanded into the controlling
+expression of the generic selection." [MISRA C:2012 Amendment 3]
+
+This rule detects when a generic selection is used in a macro defintion
+and no macro parameter is used in its controlling expression.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int x;
+#define GEN(P) _Generic(x, int: 1, default : 0);               // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define GEN(P) _Generic((P), int: 1, default : 0);             // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Rule 23.7
+
+</PRE>
+</BODY>
+</HTML>

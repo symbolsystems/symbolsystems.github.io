@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid magic numbers [HICPP-5_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid magic numbers [HICPP-5_1_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Avoid spelling literal constants in code. They are not self-explanatory.
+Use symbolic values instead.
+
+The rule is enabled for C++ only. For C code CODSTA-29 should be used.
+
+See also: CODSTA-29
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations on literal constants used directly 
+in initializers.
+
+The rule does not report violations on literal constants '0' and '1',
+because they are often used as the part of fundamental logic of the code
+(e.g. '0' represents a NULL pointer).
+
+void fooExceptions() {
+    int i = 2;         // OK - constant is used as a simple initializer
+    int j = i + 2;     // Violation - constant is used in expression
+    int a1[2];         // OK - constant is used as array dimension
+    int a2[2+2];       // Violation - constant is used in expression
+    i = 0;             // OK - Exception for '0' value
+    i = a1[1];         // OK - Exception for '1' value 
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(int);
+
+int fooV(int i, int a[]) {
+    unsigned int ui;
+    float f;
+     
+    ui = 2u;      // Violation
+    ui = i + 2;   // Violation
+    a[2] = i;     // Violation
+    f = 1.1f;     // Violation
+    bar(2);       // Violation
+    return 0x2;   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar(int);
+
+const int MAX = 2;       // OK
+const float MAXF = 1.1;  // OK
+
+int fooOK(int i, int a[]) {
+    unsigned int ui;
+    float f;
+     
+    ui = MAX;       // OK
+    ui = i + MAX;   // OK
+    a[MAX] = i;     // OK
+    f = MAXF;       // OK
+    bar(MAX);       // OK
+    return MAX;     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-1. Literal values shall not be used apart from type initialization,
+   otherwise symbolic names shall be used instead
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Coding Style", Rule 17
+
+3. High Integrity C++ Coding Standard
+   5.1.1. Use symbolic names instead of literal values in code
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.18 Constants, AV Rule 151
+
+</PRE>
+</BODY>
+</HTML>

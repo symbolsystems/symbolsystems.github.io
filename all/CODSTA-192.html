@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The final member of a structure should not be an array of size '0' or '1' [CODSTA-192]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The final member of a structure should not be an array of size '0' or '1' [CODSTA-192-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Flexible array members are a special type of array in which the last
+element of a structure with more than one named member has an incomplete
+array type; that is, the size of the array is not specified explicitly
+within the structure. Before the introduction of flexible array members
+in the C Standard, structures with a one-element array as the final member
+were used to achieve similar functionality." [CERT-DCL38-C]
+
+This rule detects when the final member of a structure is an array of size
+'1' or '0'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Failing to use the correct syntax when declaring a flexible array member
+can result in undefined behavior, although the incorrect syntax will work
+on most implementations." [CERT-DCL38-C]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S1
+{
+    int m1;
+    int arr[1];             // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S1
+{
+    int m1;
+    int arr[];              // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   DCL38-C. Use the correct syntax when declaring a flexible array member
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL38-C.+Use+the+correct+syntax+when+declaring+a+flexible+array+member">https://wiki.sei.cmu.edu/confluence/display/c/DCL38-C.+Use+the+correct+syntax+when+declaring+a+flexible+array+member</A>
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.2.1 Structure and union specifiers
+
+3. McCluskey 2001 "Flexible Array Members and Designators in C9X"
+
+</PRE>
+</BODY>
+</HTML>

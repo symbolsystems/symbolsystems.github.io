@@ -1,0 +1,137 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The names of macros that exist prior to preprocessing should be distinct from the identifiers that exist after preprocessing (c99) [CODSTA-170_c99]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The names of macros that exist prior to preprocessing should be distinct from the identifiers that exist after preprocessing (c99) [CODSTA-170_c99-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule requires that the names of macros that exist prior to preprocessing
+be distinct from the identifiers that exist after preprocessing. It applies to
+identifiers, regardless of scope or name space, and to any macros that have 
+been defined regardless of whether the definition is still in force when the 
+identifier is declared. 
+
+The definition of distinct depends on the implementation and the version
+of the C language that is being used:
+- In C90 the minimum requirement is that the first 31 characters
+  are significant;
+- In C99 the minimum requirement is that the first 63 characters
+  are significant, with each universal character or extended source
+  character counting as a single character." [MISRA C:2012 Rule 5.5]
+
+This rule detect cases when the name of the macro before preprocessing and 
+the name of the identifier after preprocessing are the same or the first 63
+characters of their names are identical.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule applies to a single translation unit.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Keeping macro names and identifiers distinct can help to avoid developer
+confusion." [MISRA C:2012 Rule 5.5]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define Sum(x, y) ( ( x ) + ( y ) )
+int Sum;                                       /* Violation */
+
+#define ID1_macro_identifier_name__________________________________600X45(x) x
+int ID1_macro_identifier_name__________________________________600X(X, Y); /* 
+                                                                    Violation */
+
+#define ID2_struct DEF_STR
+#undef ID2_struct
+struct ID2_struct {};                          /* Violation */
+
+#ifdef MAC
+  #define ID3_local LocalName
+#endif
+
+int ID3_local;                                 /* Violation - reported if 'MAC'
+                                                              is not defined */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define Sum(x, y) ( ( x ) + ( y ) )
+int SumL;                                       /* OK - different name */
+
+#define ID1_macro_identifier_name__________________________________600XX(x) x
+int ID1_macro_identifier_name__________________________________600YY(X, Y); /*
+                                                                          OK */
+
+#define ID2_struct DEF_STR
+#undef ID2_struct
+#define ID2_struct DEF_STR1
+
+struct ID2_struct {};                           /* OK - macro expands
+                                                        to 'DEF_STR1' */
+#define MAC 10
+
+#ifdef MAC
+  #define ID3_local LocalName
+#endif
+
+int ID3_local;                                  /* OK - macro expands
+                                                        to 'LocalName' */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 5.5
+
+</PRE>
+</BODY>
+</HTML>

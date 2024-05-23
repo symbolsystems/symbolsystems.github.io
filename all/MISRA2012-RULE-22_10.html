@@ -1,0 +1,270 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value of 'errno' shall only be tested when the last function to be called was an errno-setting-function [MISRA2012-RULE-22_10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value of 'errno' shall only be tested when the last function to be called was an errno-setting-function [MISRA2012-RULE-22_10-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when the value of errno is not used properly. It can trigger in
+the following cases:
+
+1) The value of errno is not set to 0 prior to a call to an errno-setting-function.
+In such case, the errno-setting-function will leave the value of errno unmodified.
+For this reason, if the value is not set to 0 before the call, errno cannot be used
+to detect error.
+
+2) The value of errno is not tested against 0 after a call to an errno-setting-function.
+If errno has been set by a library function, its result is likely to be incorrect.
+Note: The value of errno does not need to be checked if the function returns a value
+that conclusively indicates error.
+
+3) The value of errno is tested against 0 after a call to a function that is NOT
+an errno-setting-function.
+Functions other than errno-setting-functions may or may not set errno to indicate
+that an error has occured. For this reason, the value of errno must be considered
+unreliable and cannot be used to detect error within such functions.
+
+The rule can be parameterized to specify in which of the above cases it should report
+a violation.
+
+The list of errno-setting-functions:
+
+&lt;stdio.h&gt;
+    long int ftell (FILE* stream)
+    int fgetpos (FILE* stream, fpos_t* pos )
+    int fsetpos (FILE* stream, const fpos_t* pos )
+    
+&lt;inttypes.h&gt;
+    intmax_t strtoimax (const char* str, char** endptr, int base)
+    uintmax_t strtoumax (const char* str, char** endptr, int base)
+    intmax_t wcstoimax (const wchar_t* wcs, wchar_t** endptr, int base)
+    uintmax_t wcstoumax (const wchar_t* wcs, wchar_t** endptr, int base)
+    
+&lt;stdlib.h&gt;
+    long int strtol (const char* str, char** endptr, int base)
+    unsigned long int strtoul (const char* str, char** endptr, int base)
+    long long int strtoll (const char* str, char** endptr, int base)
+    unsigned long long int strtoull (const char* str, char** endptr, int base)
+    float strtof (const char* str, char** endptr)
+    double strtod (const char* str, char** endptr)
+    long double strtold (const char* str, char** endptr)
+    
+&lt;wchar.h&gt;
+    wint_t fgetwc (FILE* stream)
+    wint_t fputwc (wchar_t wc, FILE* stream)
+    long int wcstol (const wchar_t* str, wchar_t** endptr, int base)
+    unsigned long int wcstoul (const wchar_t* str, wchar_t** endptr, int base)
+    long long int wcstoll (const wchar_t* str, wchar_t** endptr, int base)
+    unsigned long long int wcstoull (const wchar_t* str, wchar_t** endptr, int base)
+    float wcstof (const wchar_t* str, wchar_t** endptr)
+    double wcstod (const wchar_t* str, wchar_t** endptr)
+    long double wcstold (const wchar_t* str, wchar_t** endptr)
+    size_t wcrtomb (char* pmb, wchar_t wc, mbstate_t* ps)
+    size_t wcsrtombs (char* dest, const wchar_t** src, size_t max, mbstate_t* ps)
+    size_t mbrtowc (wchar_t* pwc, const char* pmb, size_t max, mbstate_t* ps)
+    size_t mbsrtowcs (wchar_t* dest, const char** src, size_t max, mbstate_t* ps)
+    
+&lt;uchar.h&gt;
+    size_t c16rtomb (char* pmb, char16_t c16, mbstate_t* ps)
+    size_t c32rtomb (char* pmb, char32_t c32, mbstate_t* ps)
+    size_t mbrtoc16 (char16_t* pc16, const char* pmb, size_t max, mbstate_t* ps)
+    size_t mbrtoc32 (char32_t* pc32, const char* pmb, size_t max, mbstate_t* ps)
+   
+&lt;math.h&gt;
+   double acos(double); float acosf(float); long double acosl(long double);
+   double asin(double); float asinf(float); long double asinl(long double);
+   double cosh(double); float coshf(float); long double coshl(long double);
+   double sinh(double); float sinhf(float); long double sinhl(long double);
+   double acosh(double); float acoshf(float); long double acoshl(long double);
+   double atanh(double); float atanhf(float); long double atanhl(long double);
+   double exp(double); float expf(float); long double expl(long double);
+   double log(double); float logf(float); long double logl(long double);
+   double log10(double); float log10f(float); long double log10l(long double);
+   double exp2(double); float exp2f(float); long double exp2l(long double);
+   double expm1(double); float expm1f(float); long double expm1l(long double);
+   int ilogb(double); int ilogbf(float); int ilogbl(long double);
+   double log1p(double); float log1pf(float); long double log1pl(long double);
+   double log2(double); float log2f(float); long double log2l(long double);
+   double logb(double); float logbf(float); long double logbl(long double);
+   double sqrt(double); float sqrtf(float); long double sqrtl(long double);
+   double erfc(double); float erfcf(float); long double erfcl(long double);
+   double tgamma(double); float tgammaf(float); long double tgammal(long double);
+   double lgamma(double); float lgammaf(float); long double lgammal(long double);
+   long lround(double); long lroundf(float); long lroundl(long double);
+   long long llround(double); long long llroundf(float); long long llroundl(long double);
+   long lrint(double); long lrintf(float); long lrintl(long double);
+   long long llrint(double); long long llrintf(float); long long llrintl(long double);  
+   double atan2(double, double); float atan2f(float, float); long double atan2l(long double, long double);
+   double ldexp(double, int); float ldexpf(float, int); long double ldexpl(long double, int);
+   double scalbn(double, int); float scalbnf(float, int); long double scalbnl(long double, int);
+   double scalbln(double, long); float scalblnf(float, long); long double scalblnl(long double, long);
+   double pow(double, double); float powf(float, float); long double powl(long double, long double);
+   double hypot(double, double); float hypotf(float, float); long double hypotl(long double, long double);
+   double fmod(double, double); float fmodf(float, float); long double fmodl(long double, long double);
+   double remainder(double, double); float remainderf(float, float); long double remainderl(long double, long double);
+   double nextafter(double, double); float nextafterf(float, float); long double nextafterl(long double, long double);
+   double nexttoward(double, long double); float nexttowardf(float, long double); long double nexttowardl(long double, long double);
+   double remquo(double, double, int *); float remquof(float, float, int *); long double remquol(long double, long double, int *);
+    
+&lt;signal.h&gt;
+   signal-handler signal(int, signal-handler)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.0
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The improper use of errno may result in failing to detect an error condition or in 
+incorrectly identifying an error condition when none exists.
+[SEI CERT C Coding Standard, Rule 12: Error Handling (ERR), ERR30-C]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+If the "Report a violation when errno is not set to 0 before an errno-setting-function call"
+option is enabled, the rule will trigger for cases specifiedin point 1) (see the DESCRIPTION section).
+This covers Rule 22.8 from Additional security guidelines for MISRA C:2012.
+
+If the "Report a violation when errno is not tested against 0 after an errno-setting-function call"
+option is enabled, the rule will trigger for cases specified in point 2) (see the DESCRIPTION section)
+This covers Rule 22.9 from Additional security guidelines for MISRA C:2012.
+
+If the "Report a violation when errno is tested against 0 after calling a function that is not
+an errno-setting-function" option is enabled, the rule will trigger for cases specified in point 3)
+(see the DESCRIPTION section)
+This covers Rule 22.10 from Additional security guidelines for MISRA C:2012.
+
+All above parameters are enabled by default.
+
+"Additional errno setting functions" allows user to define additional functions which should be considered
+errno-setting-functions.
+The following columns allow you to define different aspects of functions in the functions table: 
+
+* The 'Enabled' column can be used to temporarily disable some of the defined functions for Flow Analysis.
+
+* The 'Fully qualified type name or namespace (wildcard)' column should be used to provide the fully qualified name of the type or namespace
+  where the function is declared. Use '*' if you want to describe a function declared in any type or namespace,
+  or a global function declared outside of any type or namespace.
+
+* The 'Function name (wildcard)' should contain the name of the described function.
+
+* The '+ definitions in subclasses' is used to indicate whether the current entry will apply
+  to functions with the given name defined in subclasses of the given class.
+  Note that this applies to both instance and non-instance functions.
+  
+* The "Correct return value constraint" should be specified when function returns an out-of-band error indicator, 
+  which means that when error occurs, it returns value that cannot be returned by any successful call.
+  The errno value does not have to be tested against 0 if the check of such return value is present instead.
+  Possible values are : &gt;A / &gt;=A / &lt;A / &lt;=A / ==B / !=B, where A is constant, B is constant/"true"/"false",
+  e.g. "&gt;=-1", "!=0", "==true"
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+
+void example(const char* p)
+{
+    double d = strtod(p, NULL); // VIOLATION - errno should be set to 0 before call to "strtod" and checked after call
+    errno = 0;
+    d = atof(p);
+    if (0 != errno) { // VIOLATION - "atof" may or may not set errno
+        // Handle error...
+    }
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+
+void repair(const char* p)
+{
+    errno = 0;
+    double d = strtod(p, NULL);
+    if (0 != errno) {
+        // Handle error...
+    }
+    d = atof(p);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+OWASP Top 10-2021
+A05:2021 - Security Misconfiguration
+<A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration/">https://owasp.org/Top10/A05_2021-Security_Misconfiguration/</A>
+
+OWASP Top 10 2017
+A6-Security Misconfiguration
+<A HREF="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html</A>
+
+OWASP API Security Top 10-2019
+API7-Security Misconfiguration
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 2: New rules, Rule 22.8, 22.9, 22.10
+
+SEI CERT C Coding Standard
+ERR30-C. Set errno to zero before calling a library function known to set errno, and check errno only after the function returns a value indicating failure
+<A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152351">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152351</A>
+
+SEI CERT C Coding Standard
+ERR32-C. Do not rely on indeterminate values of errno
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR32-C.+Do+not+rely+on+indeterminate+values+of+errno">https://wiki.sei.cmu.edu/confluence/display/c/ERR32-C.+Do+not+rely+on+indeterminate+values+of+errno</A>
+
+</PRE>
+</BODY>
+</HTML>

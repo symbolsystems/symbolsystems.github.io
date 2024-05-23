@@ -1,0 +1,219 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no unreachable code in "else" block [AUTOSAR-M0_1_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no unreachable code in "else" block [AUTOSAR-M0_1_1-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule refers to code which cannot under any circumstances be reached,
+and which can be identified as such at compile-time. Code that can be reached
+but may never be executed is excluded from the rule (e.g. defensive programming
+code). A portion of code is unreachable if there is no control flow path from
+the relevant entry point to that code."
+
+The rule reports a violation if in an if-else construct the condition
+of 'if' statement always evaluates to true and 'else' statement contains
+a code (that is unreachable).
+
+See also: MISRA2004-13_7 (group)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid useless code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule detects only the following conditions that always evaluate to true:
+- The same variable is used as both operands of the equality operator '=='
+  [e.g.: if(a==a)...]
+- A numeric constant other than 0 is used
+  [e.g.: if(42) ... ]
+- Numeric constants are used as both operands of an equality or relational
+  operator
+  [e.g.: if(42 &gt;= 24) ... ]
+- The logical operator '||' is used with any of the above conditions as the left
+  operand
+  [e.g.: if((a==a) || (x &lt; y)) ... ]
+
+  // Examples of code not detected by the rule
+
+  typedef struct S {int mem;} ST;
+  void foo2(int i){
+      ST st;
+
+      if(st.mem == st.mem) {     // Expressions are not checked
+
+      } else {
+          i++;                   // unreachable code
+      }
+
+      if((2-2) &lt;= 1 || i &gt; 0) {  // Expressions are not checked
+
+      } else {
+          i++;                   // unreachable code
+      }
+  }
+
+The rule may report a violation on a template function depending on
+the template instantiation arguments. This may lead to what
+appears to be a false positive, for example:
+
+  template &lt;int C&gt;
+  int f() {
+      if (C) {        // Can always be true or false depending
+          return 1;   // on instantiation arguments
+      } else {        // Violation here when instantiated with &lt;0&gt;
+          return C;
+      }
+  }
+
+  void instance()
+  {
+      f&lt;0&gt;();         // else is reachable in f&lt;0&gt;
+      f&lt;1&gt;();         // else is not reachable in f&lt;1&gt;
+  }
+
+With only f&lt;1&gt;(), no violation is shown. However, as each instance of template
+function is checked independently of the others, a violation will be shown in
+the template, because f&lt;0&gt;() has been instantiated, and the violation
+is correct for that instance. This may lead to a misunderstanding that the 'else'
+clause will never be reachable, which is not necessarily true.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int i){
+    if(i == i) {
+        // ...
+    } else {        // Violation
+        i++;        // unreachable code
+    }
+
+    if(1) {
+        // ...
+    } else {        // Violation
+        i++;        // unreachable code
+    }
+
+    if(0 &lt;= 1) {
+        // ...
+    } else {        // Violation
+        i++;        // unreachable code
+    }
+
+    if(0 &lt;= 1 || i &gt; 0) {
+        // ...
+    } else {        // Violation
+        i++;        // unreachable code
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of correct code
+void foo1(int i){
+    if(i == 0) {
+        // ...
+    } else {        // OK
+        i++;
+    }
+  
+    if(i) {
+        // ...
+    } else {        // OK
+        i++;
+    }
+  
+    if(i &lt;= 1 || i &gt; 5) {
+        // ...
+    } else {        // OK
+        i++;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    M0-1-1. A project shall not contain unreachable code
+
+2.  High Integrity C++ Coding Standard
+    1.2.1. Ensure that all statements are reachable
+
+3.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.24 Flow Control Structures, AV Rule 186
+
+4.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 0, Rule 0-1-1
+
+5.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 0.0.1 A function shall not contain unreachable statements
+
+6.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 2.1
+
+7.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 14
+
+8.  Origin: Misra Guidelines - Rule 52
+
+9.  SEI CERT C Coding Standard
+    MSC07-C. Detect and remove dead code
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC07-C.+Detect+and+remove+dead+code">https://wiki.sei.cmu.edu/confluence/display/c/MSC07-C.+Detect+and+remove+dead+code</A>
+
+10. SEI CERT C Coding Standard
+    MSC12-C. Detect and remove code that has no effect or is never executed
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed">https://wiki.sei.cmu.edu/confluence/display/c/MSC12-C.+Detect+and+remove+code+that+has+no+effect+or+is+never+executed</A>
+
+</PRE>
+</BODY>
+</HTML>

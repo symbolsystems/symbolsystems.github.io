@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using unsecured shell functions that may be affected by shell metacharacters [SECURITY-11]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using unsecured shell functions that may be affected by shell metacharacters [SECURITY-11-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects code that uses environment functions:
+popen, system, execlp, execvp, _exec, exec
+According to David A. Wheeler (see reference below):
+"Many systems, such as the command line shell and SQL interpreters, 
+have "metacharacters" - characters that are not interpreted as data. 
+Those characters are: { &amp; ; ` ' \ " | * ? ~ &lt; &gt; ^ ( ) [ ] { } $ \n \r }. 
+Such characters might commands, or delimit data from commands or other data. 
+If your program invokes those other systems and allows attackers to insert 
+such metacharacters, the usual result is that an attacker can completely 
+control your program. 
+What makes the shell metacharacters particularly pervasive is that several 
+important library calls, such as popen() and system() are implemented 
+by calling the command shell, meaning that they will be affected by shell 
+metacharacters too. 
+Similarly, execlp() and execvp() may cause the shell to be called. 
+Many guidelines suggest avoiding popen(), system(), execlp(), execvp() 
+entirely and use execve() directly in C when trying to spawn a process."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents the use of unsecured shell functions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifdef __GNUC__
+#include &lt;unistd.h&gt;
+#else
+#include &lt;process.h&gt;
+#endif
+
+void main( void ) {
+    execl( "c:\\command.com", "", "_execl", "", "" );   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use unsecured system functions in your program.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/handle-metacharacters.html">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/handle-metacharacters.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-001290: The application must protect audit information from unauthorized modification
+
+</PRE>
+</BODY>
+</HTML>

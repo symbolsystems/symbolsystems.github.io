@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Structure and union members of atomic objects shall not be directly accessed [MISRA2012-RULE-12_6]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Structure and union members of atomic objects shall not be directly accessed [MISRA2012-RULE-12_6-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Accessing a member of an atomic structure or union object results in undefined
+behavior.
+For example, a data race would occur if access to the entire structure or union
+in one thread conflicts with access to a member from another thread, where
+at least one access is a modification. Members can be safely accessed using
+a non-atomic object which is assigned to or from the atomic object."
+[ISO/IEC 9899:2011]
+
+Instead of direct access to a member of an atomic structure or union
+the following access functions from the C standard library can be used:
+atomic_init(), atomic_store(), atomic_load(), atomic_exchange(),
+atomic_compare_exchange().
+
+This rule detects when members of atomic objects of structure or union types
+are directly accessed using the '.' or '-&gt;' operators.
+
+See also: CODSTA-MC-18
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule detects an access to the member of the atomic object using the '-&gt;'
+operator if a pointer to the structure or union is explicitly declared
+as a pointer to the atomic object. The CODSTA-MC-18 rule should be used
+to prevent other cases, for example:
+
+typedef struct {
+    int m1;
+    int m2;
+} TS;
+_Atomic TS ats;
+
+void func()
+{
+    TS *tsp = (TS*)&amp;ats;          // Violation of CODSTA-MC-18
+    tsp-&gt;m2;                      // No violation of CODSTA-MC-17
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior and data races.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct {
+    int m1;
+    int m2;
+} TS;
+
+void func()
+{
+    _Atomic TS ts;
+    _Atomic TS *tsp;
+    ts.m1;                        // Violation
+    tsp-&gt;m2;                      // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+
+typedef struct {
+    int m1;
+    int m2;
+} TS;
+
+void func()
+{
+    _Atomic TS ts;
+    TS copy;
+    copy = atomic_load(&amp;ts);
+    copy.m1;                      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.8 Rule 12.6
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.5.2.3 Structure and union members
+
+</PRE>
+</BODY>
+</HTML>

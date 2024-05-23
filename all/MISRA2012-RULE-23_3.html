@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic selection should contain at least one non-default association [MISRA2012-RULE-23_3]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic selection should contain at least one non-default association [MISRA2012-RULE-23_3-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A generic selection that consists only of a usable 'default' association
+does not do anything useful; the default association's result value
+is evaluated unconditionally." [MISRA C:2012 Amendment 3]
+
+This rule detects generic selections containing only a default association.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unnecessary code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M(X) _Generic((X), default: (X))                 // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding non-default associations.
+
+#define cbrt(X) _Generic((X),           \
+                    default: cbrt,      \
+                    long double: cbrtl, \
+                    float: cbrtf        \
+                )(X)
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.3
+
+</PRE>
+</BODY>
+</HTML>

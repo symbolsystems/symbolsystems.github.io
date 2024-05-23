@@ -1,0 +1,185 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All automatic variables shall have been assigned a value before being used [MISRA-030]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All automatic variables shall have been assigned a value before being used [MISRA-030-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The intent of this rule is that all variables shall have been written to before
+they are read. This does not necessarily require initialisation at declaration.
+Ideally a static check should be performed for any automatic variables which 
+might be used without having first been assigned a value" [MISRA-C:1998]
+
+The rule reports a violation on declaration of variable with automatic storage
+duration if this variable is not assigned before its first use.
+
+The rule assumes that local variable might be initialized by passing its
+non-const pointer to an external function.
+
+The rule does not report violations on declarations of variables of class/struct
+types that can be initialized by constructors (in the C++ language).
+
+See also: INIT-06, INIT-10, INIT-14, BD-PB-NOTINIT
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is recommended to initialize all variables before use. To detect
+these cases can be used a bug detective rule: BD-PB-NOTINIT
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents reading from uninitialized variables. 
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. For variables of complex type (arrays, classes, structs) the rule assumes
+   that all elements are initialized if at least one element was assigned.
+   It may cause that the rule won't report violations in some cases where
+   not all elements of complex variable are initialized.
+
+   int foo() {
+      int a1[5];    // Violation not reported - 'a1' is not fully initialized
+      a1[3] = 0; 
+      return a1[2];
+   }
+
+2. The rule does not check a flow. If a variable is assigned to a pointer
+   and initialized by this pointer, then such initialization is not detected
+   by the rule.
+
+   char foo(char* buf, int i) {
+      char c1;                   // Violation reported
+      char* cp = &amp;c1;
+      *cp = '1';
+      return c1;
+   }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    int si;
+    int sj;
+};
+
+void foo1(int* ptr);
+void foo2(int par);
+
+void foo( ) {
+    int var1;       // Violation      
+    int var2;       // Violation
+    int var3[5];    // Violation
+    struct S var4;  // Violation in file.cpp, OK in file.c 
+    
+    var1++;         // non initialized variable 'var1' is used
+    foo2(var2);     // non initialized variable 'var2' is used
+    var1 = var3[3]; // non initialized variable 'var3[3]' is used
+    var1 = var4.si; // non initialized variable 'var4.si' is used   
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+struct S {
+    int si;
+    int sj;
+};
+
+void foo1(int* ptr);
+void foo2(int par);
+
+void foo( ) {
+    int var1 = 0;   // OK      
+    int var2;       // OK
+    int var3[5];    // OK
+    struct S var4;  // OK
+    
+    var1;
+    var1++;         // OK - variable was initialized
+    
+    foo1(&amp;var2);
+    foo2(var2);     // OK - address of variable was passes as non-const pointer to function
+    
+    memset(var3, 0, sizeof(var3));  
+    var1 = var3[3]; // OK - initialization by memset function 
+    
+    var4.si = 0;
+    var1 = var4.si; // OK - variable was assigned
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 11 Variables - Rule 40
+
+2. High Integrity C++ Coding Standard
+   8.4.1. Do not access an invalid object or an object with indeterminate
+   value
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.16 Initialization, AV Rule 142
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 8, Rule 8-5-1
+
+5. MISRA-C:1998 Guidelines for the use of the C language in critical systems
+   7.8 Initialisation, Rule 30
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 9, rule 9.1
+
+7. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 4
+
+</PRE>
+</BODY>
+</HTML>

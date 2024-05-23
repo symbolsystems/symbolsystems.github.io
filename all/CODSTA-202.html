@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An inline definition of a function with external linkage shall not contain definitions and uses of static objects [CODSTA-202]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An inline definition of a function with external linkage shall not contain definitions and uses of static objects [CODSTA-202-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An inline definition of a function with external linkage shall not contain
+a definition of a modifiable object with static or thread storage duration,
+and shall not contain a reference to an identifier with internal linkage."
+[ISO/IEC 9899:2011]
+
+"[I]f a function has an external and inline definition, implementations
+are free to choose which definition to invoke (two distinct invocations
+of the function may call different definitions, one the external definition,
+the other the inline definition). Therefore, issues can arise when these
+definitions reference internally linked objects or mutable objects with static
+or thread storage duration." [CERT-MSC40-C]
+
+This rule detects when inline functions with external linkage contain
+one of the following:
+- a definition of a modifiable object with static storage duration
+- a reference to an identifier with internal linkage
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent unspecified behavior.
+
+"An inline definition provides an alternative to an external definition,
+which a translator may use to implement any call to the function in the same
+translation unit. It is unspecified whether a call to the function uses
+the inline definition or the external definition." [ISO/IEC 9899:2011]
+
+"Since an inline definition is distinct from the corresponding external
+definition and from any other corresponding inline definitions in other
+translation units, all corresponding objects with static storage duration
+are also distinct in each of the definitions." [ISO/IEC 9899:2011]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static int si = 3;
+
+extern inline int foo(int a) {                 // Violation
+  return a * si;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int i = 3;
+
+extern inline int foo(int a) {                 // OK
+  return a * i;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   MSC40-C. Do not violate constraints
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC40-C.+Do+not+violate+constraints">https://wiki.sei.cmu.edu/confluence/display/c/MSC40-C.+Do+not+violate+constraints</A>
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   6.7.4 Function specifiers
+
+</PRE>
+</BODY>
+</HTML>

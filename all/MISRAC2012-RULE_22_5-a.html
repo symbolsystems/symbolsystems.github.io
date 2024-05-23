@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer to a FILE object shall not be dereferenced [MISRAC2012-RULE_22_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer to a FILE object shall not be dereferenced [MISRAC2012-RULE_22_5-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer to a FILE object shall not be dereferenced directly or indirectly
+(e.g. by a call to memcpy or memcmp)." [MISRA C:2012 Rule 22.5]
+
+"The direct manipulation of a FILE object is prohibited as this may be
+incompatible with its use as a stream designator." [MISRA C:2012 Rule 22.5]
+
+This rule detects cases when a pointer to a FILE object is dereferenced
+directly (i.e. used as the operand 'a' in expressions: '*a', 'a-&gt;b', 'a[b]').
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The Standard (C90 Section 7.9.3(6), C99 Section 7.19.3(6) ) states that the
+address of a FILE object used to control a stream may be significant
+and a copy of the object may not give the same behaviour. This rule ensures
+that such a copy cannot be made." [MISRA C:2012 Rule 22.5]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include&lt;stdio.h&gt;
+
+void f1()
+{
+    FILE* ptrFile;
+
+    *ptrFile;        /* Violation */
+    ptrFile[0];      /* Violation */
+
+    /* The following example assumes that FILE * specifies
+       a complete type with a member named '_file' */
+    ptrFile-&gt;_file;  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not dereference pointers to FILE objects.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 22.5
+
+2. SEI CERT C Coding Standard
+   FIO38-C. Do not copy a FILE object
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO38-C.+Do+not+copy+a+FILE+object">https://wiki.sei.cmu.edu/confluence/display/c/FIO38-C.+Do+not+copy+a+FILE+object</A>
+
+</PRE>
+</BODY>
+</HTML>

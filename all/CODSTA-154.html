@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An external object or function shall not have more than one non-defining declaration in translation unit [CODSTA-154]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An external object or function shall not have more than one non-defining declaration in translation unit [CODSTA-154-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if in one translation unit more than one external
+declaration of object or function exists.
+
+This rule applies to non-defining declarations only.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule detects cases when you have more then one declaration. For example,
+a function might be declared in more than one header. If both headers are
+included in a translation unit, a violation will be reported:
+    // header1.h
+    void foo(); // Violation
+    // header2.h
+    void foo(); // Violation
+    // source1.c which includes (directly or indirectly) header1.h and header2.h
+
+Another case is when you have a declaration in a source and also in a header.
+If both files are in the same translation unit, a violation will be reported:
+    // header3.h
+    void foo3(); // Violation
+    // source2.c which includes (directly or indirectly) header3.h
+    void foo3(); // Violation
+
+Finally, a violation will be reported if one file (source or header) have
+more than one declaration, for example:
+    void foo4(); // Violation
+    void foo4(); // Violation
+
+"Typically, a single declaration will be made in a header file that will be
+included in any translation unit in which the identifier is defined or used."
+[MISRA C:2012]
+
+Although this rule does not ensure that there is one and only one declaration
+in a header across translation units, but it detects some cases in which this
+standard is not followed.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Having only single declaration in one and only one header file ensures
+consistency between declaration and definition and between declarations
+in different translation units.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check declarations of template functions. For example:
+   template&lt;typename T&gt; extern int foo1(); // No Violation
+   template&lt;typename T&gt; extern int foo1(); // No Violation
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* file.h */
+extern int x1;           /* Violation */
+extern int x2;           /* Violation */
+extern void foo1(void);  /* Violation */
+
+
+/* file.c */
+#include "file.h"
+extern int x1;           /* Violation */
+int x2;                  /* OK - external definition */
+int x2;                  /* Violation - external declaration */
+extern void foo1(void);  /* Violation */
+void foo2(void);         /* Violation */
+void foo2(void);         /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* file.h */
+extern int x1;           /* OK */
+extern int x2;           /* OK */
+extern void foo1(void);  /* OK */
+void foo2(void);         /* OK */
+static void foos(void);  /* OK */
+
+/* file.c */
+#include "file.h"
+int x1;                  /* OK - external definition */
+int x2 = 0;              /* OK - external definition */
+void foo1(void){};       /* OK */
+void foo2(void){};       /* OK */
+static void foos(void);  /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.5
+
+</PRE>
+</BODY>
+</HTML>

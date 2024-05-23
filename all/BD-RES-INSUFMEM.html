@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Allocate sufficient memory to hold an object of a given type [BD-RES-INSUFMEM]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Allocate sufficient memory to hold an object of a given type [BD-RES-INSUFMEM-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when an allocated memory block is insufficient to hold 
+a complete object of a given type. 
+The rule triggers when a newly allocated memory block is assigned to a pointer 
+to a type that has a greater size than this memory block.
+
+By default, the rule assumes that the following functions allocate memory:
+    void* malloc (size_t size)
+    void* realloc (void* ptr, size_t size)
+    void* calloc (size_t num, size_t size)
+    void* aligned_alloc (size_t alignment, size_t size)
+You can parameterize the rule to customize the list of allocating functions
+(see PARAMETERS).
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks the first assignment of a newly allocated memory block to 
+a non-void pointer.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+
+Allocating insufficient memory may result in undefined behavior when that
+memory is accessed.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+
+The "Allocating functions" parameter allows you to specify functions that
+allocate memory.
+Fill in the following columns to configure an allocating function.
+- "Enabled" - enables or disables the allocating function. If disabled,
+    the rule does not consider the function to be an allocating function.
+- "Fully qualified type name or namespace (wildcard)" - specifies
+    the fully qualified name of the type or namespace that declares
+    the function. You can use "*" for a function declared in any type or
+    namespace, or for a global function declared outside of any type or
+    namespace.
+- "Function name (wildcard)" - specifies the name of the function.
+- "+ definitions in subclasses" - if enabled, the information configured in
+    the current row applies to functions with the specified name that are
+    defined in subclasses of the given class. Note that this applies to both
+    instance and non-instance functions.
+- "Size parameters" - specifies which function parameters are responsible for
+    size allocation. List 1-based indexes of parameters separated by a comma.
+    If more than one index is specified (for example, for the calloc function),
+    the memory size is calculated as the product of values passed to
+    the specified parameters.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the size of the pointer type is greater than the size
+of the allocated memory block. 
+The example assumes that sizeof(char) == 1 and sizeof(int) == 4. This means
+that an incorrect type is used to calculate the size of the allocated memory.
+As a result, only 3 bytes are allocated, while  4 bytes are required.
+
+#include &lt;stdlib.h&gt;
+
+void example() {
+    int* ptr = (int*) malloc(3 * sizeof(char)); // VIOLATION
+    //...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using the correct type when calculating the size of the 
+memory to be allocated.
+
+#include &lt;stdlib.h&gt;
+
+void example() {
+    int* ptr = (int*) malloc(3 * sizeof(int)); // NO VIOLATION
+    //...
+}
+
+</PRE>
+</BODY>
+</HTML>

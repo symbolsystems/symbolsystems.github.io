@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A tag name shall be a unique identifier [GLOBAL-UNIQUETYPEC]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A tag name shall be a unique identifier [GLOBAL-UNIQUETYPEC-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The tag name shall be unique across all name spaces and translation units.
+All declarations of the tag shall specify the same type.
+Multiple complete declarations of the same tag are only permitted by this rule
+if the tag is declared in a header file and that header file is included
+in multiple source files."
+[MISRA C:2012]
+
+This rule detects classes, structures, unions and enumerations whose names 
+are duplicated or reused as other identifiers.
+
+Since this rule checks if the tag name is unique across all name spaces,
+it is recommended to use it for C code. For C++ code we recommend
+using the GLOBAL-UNIQUETYPE rule, which takes into account qualifications
+of identifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The tag name may be the same as the typedef name with which it is associated."
+[MISRA C:2012]
+
+typedef struct S                            /* OK */
+{
+  int mbr1;
+  int mbr2;
+} S;                                        /* OK */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent developer confusion and undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check the following identifiers:
+- macros
+- functions declared in nested blocks
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.c' and 'test2.c'.
+
+/* test1.c */
+struct S {};                                /* Violation */
+union U {};                                 /* Violation */
+
+void foo1() {
+    struct S s_;
+    enum E { E1 };                          /* Violation */
+}
+
+/* test2.c */
+struct S {};                                /* Violation */
+
+void foo2() {
+    struct S s_;
+    typedef int U;                          /* Violation */
+    float E;                                /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.c', 'test2.c' and 'test.h'.
+
+/* test.h */
+struct S {};                                /* OK */
+union U {};                                 /* OK */
+
+/* test1.c */
+#include "test.h"
+
+void foo1() {
+    struct S s_;
+    enum E { E1 };                          /* OK */
+}
+
+/* test2.c */
+#include "test.h"
+
+void foo2() {
+    struct S s_;
+    typedef int I;                          /* OK */
+    float F;                                /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.7
+
+</PRE>
+</BODY>
+</HTML>

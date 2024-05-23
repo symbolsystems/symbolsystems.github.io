@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Initialize all, only the first, or none of the enumerators in an enumeration [HICPP-7_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Initialize all, only the first, or none of the enumerators in an enumeration [HICPP-7_2_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Explicitly initializing some enumerators in an enumeration, while relying on
+the compiler to initialize the rest, is prone to error. During maintenance, for
+example, introducing implicitly-initialized enumerators that have the same
+value as an existing enumerator that was initialized explicitly may result in
+an error.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Defining additional enumerators after all others have been defined is actually
+recommended when using an enumeration to define the size of, and to index, an
+array. In this case, it is acceptable to define three additional enumerators
+that represent the first and last elements, as well as the size of the array.
+
+#include &lt;cstdint&gt;
+// ok
+enum Team : int32_t {
+  Anna,
+  Bob,
+  Joe,
+  John,
+  Sandra,
+  Tim,
+  Team_First = Anna,
+  Team_Last = Tim,
+  Team_Size
+};
+int32_t performance[Team_Size];
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Enumerations are always initialized to the correct value
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+enum E : int32_t {
+    RED,
+    ORANGE = 2, // Violation
+    YELLOW
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+// OK
+enum E : int32_t { RED = 1, ORANGE = 2, YELLOW = 3 };
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.2.2. Initialize none, the first only or all enumerators in an enumeration
+
+</PRE>
+</BODY>
+</HTML>

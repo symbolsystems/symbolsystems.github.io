@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the default operator 'new' for over-aligned types [CERT_CPP-MEM57-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the default operator 'new' for over-aligned types [CERT_CPP-MEM57-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Although the global operator 'new', the default allocation function invoked
+by the 'new' expression, is specified by the C++ standard [ISO/IEC 14882-2014]
+to allocate sufficient storage suitably aligned to represent any object of
+the specified size, since the expected alignment isn't part of the function's
+interface, the most a program can safely assume is that the storage allocated
+by the default operator new defined by the implementation is aligned for
+an object with a fundamental alignment. In particular, it is unsafe to use
+the storage for an object of a type with a stricter alignment requirement
+an over-aligned type." [CERT-MEM57-CPP]
+
+This rule detects when a default operator 'new' or an overloaded global
+operator 'new' is used for an over-aligned type. The compliant solution is
+to use an overloaded member operator 'new'.
+This rule assumes that an over-aligned type is a type whose declaration
+contains the 'alignas' specifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Avoid relying on the default operator 'new' to obtain storage for objects
+of over-aligned types. Doing so may result in an object being constructed
+at a misaligned location, which has undefined behavior and can result
+in abnormal termination when the object is accessed, even on architectures
+otherwise known to tolerate misaligned accesses." [CERT-MEM57-CPP]
+
+This rule helps you prevent undefined behavior that can lead to abnormal
+termination.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct alignas(32) S {
+    char arr[8];
+};
+
+void f1() {
+    S* ps = new S;     // Violation
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdlib&gt;
+struct alignas(32) S {
+    char arr[8];
+    void *operator new(size_t nbytes);
+};
+
+void f1() {
+    S* ps = new S;     // OK
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   MEM57-CPP. Avoid using default operator new for over-aligned types
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM57-CPP.+Avoid+using+default+operator+new+for+over-aligned+types">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MEM57-CPP.+Avoid+using+default+operator+new+for+over-aligned+types</A>
+
+</PRE>
+</BODY>
+</HTML>

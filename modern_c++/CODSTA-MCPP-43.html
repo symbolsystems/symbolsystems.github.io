@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'set_unexpected' identifier should not be used [CODSTA-MCPP-43]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'set_unexpected' identifier should not be used [CODSTA-MCPP-43-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All code shall conform to ISO/IEC 14882:2014 - Programming Language C++ and
+shall not use deprecated features." [AUTOSAR-A1-1-1]
+
+The 'set_unexpected' function from the Standard Library was deprecated in
+the C++11 and removed in the C++17 version of the C++ Language Standard.
+
+This rule detects when the 'set_unexpected' identifier is used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports all occurrences of the 'set_unexpected' identifier. For this
+reason, the rule may report 'set_unexpected' that does not represent a function
+form the Standard Library. For example:
+
+int set_unexpected; // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that your code complies with the up-to-date version
+of the C++ Language Standard. This allows you to increase longevity of
+an application and address the defects and vulnerabilities that may emerge
+as deployment environments evolve.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void my_unexpected() {
+    throw 1;
+}
+
+void bar() throw(int) {
+    char c;
+    trhow c;
+}
+
+void foo() {
+    std::set_unexpected(my_unexpected);           // Violation
+    try {
+        bar();
+    } catch(int e) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'set_unexpected' identifier.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A1-1-1. All code shall conform to ISO/IEC 14882:2014 - Programming Language
+   C++ and shall not use deprecated features.
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   D.11 Violating exception-specifications
+
+3. Programming languages -- C++ ISO/IEC 14882:2014
+   D.11 Violating exception-specifications
+
+</PRE>
+</BODY>
+</HTML>

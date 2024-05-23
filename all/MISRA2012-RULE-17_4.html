@@ -1,0 +1,199 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All exit paths from a function with non-void return type shall have an explicit return statement with an expression [MISRA2012-RULE-17_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All exit paths from a function with non-void return type shall have an explicit return statement with an expression [MISRA2012-RULE-17_4-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects functions that fail to return a value from all exit paths.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that exit points are 'return', 'goto', and 'throw'
+statements, as well as the 'exit' function from the 'stdlib' library.
+
+The rule doesn't check coroutine functions.
+
+The rule does not track the flow. It assumes that each path could
+be reached independently from conditions in conditional statements. 
+As a result, some false positives may be reported if the tested code includes
+unreachable paths without exit points.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, a 'return' statement is missing from the function.
+
+int foo1(int x)                             // Violation
+{
+    if(x == 0)
+    {
+        if(x == 0)
+        {
+            // missing 'return' statement
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int foo2(int x)                             // Violation
+{
+    switch(x)
+    {
+    case 0:
+        return x + 1;
+    case 1:
+        return x + 2;
+    case 2:
+        return x + 3;
+    // missing 'default' statement with 'return'
+    }
+}
+
+int foo3(int x)
+{
+    // missing value in 'return'
+    return;                                 // Violation
+}
+
+int foo4(int x)                             // Violation 
+{
+    if (x &gt; 10)
+    {
+        return 0;
+    }
+    if (x &lt;= 10)
+    {
+        return 1;
+    }
+    // unreachable path - rule does not track the flow
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo1(int x)                             // OK
+{
+    if(x == 0)
+    {
+        if(x == 0)
+        {
+            return x;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int foo2(int x)                             // OK
+{
+    switch(x)
+    {
+    case 0:
+        return x + 1;
+    case 1:
+        return x + 2;
+    case 2:
+        return x + 3;
+    default:
+        return x;
+    }
+}
+
+int foo3(int x)
+{
+    return 0;                               // OK
+}
+
+int foo4(int x)                             // OK 
+{
+    if (x &gt; 10)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+    // unreachable path
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  ISO/IEC 9899:1990 Programming languages -- C
+    6.6.6.4 The return statement
+
+2.  ISO/IEC 9899:1999 Programming languages -- C
+    6.9.1 Function definitions
+
+3.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.13 Function, AV Rule 114
+
+4.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 8, Rule 8-4-3
+
+5.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 17.4
+
+6.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 16, Rule 16.8
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,170 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prevent buffer overflows from tainted data [AUTOSAR-A27_0_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prevent buffer overflows from tainted data [AUTOSAR-A27_0_1-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+The rule detects when code writes to a buffer, but the write operation can go beyond
+the buffer boundary. 
+
+To prevent buffer overflow errors, ensure that the destination buffer has sufficient 
+size to hold both the input and the null-terminator character.
+
+The rule will report a violation when the following instances are detected:
+
+   * The size of the destination buffer is known or can be approximated to be lower 
+     than the input
+   * Buffer input is considered to be tainted  
+   * Input size was not compared to buffer size
+   
+Following copy operations are checked:
+   * strcpy
+   * strcat - violation is reported if a single operation did not fit the buffer (the 
+     rule will not track actual buffer input)
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Possible buffer overflow is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to execute 
+arbitrary code, enabling the exploiter to gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+
+The "Aggressive mode" parameter allows you to enable or disable reporting
+potential violations. If enabled, the rule additionally reports possible
+violations, even if there is a high probability that they are false positives.
+Enabling this parameter results in better bug detection, but it may increase
+the number of false alarms.  
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+void example()
+{
+    char* input;
+    scanf("%s", input); 
+    char* buffer = (char*)malloc(100);
+    strcpy(buffer, input); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+void example()
+{
+    char* input;
+    scanf("%s", input); 
+    char* buffer = (char*)malloc(100);
+    if(strlen(input) &lt; strlen(buffer)){
+        strcpy(buffer, input); // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-787: Out-of-bounds Write
+<A HREF="http://cwe.mitre.org/data/definitions/787.html">http://cwe.mitre.org/data/definitions/787.html</A>
+
+CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')
+<A HREF="http://cwe.mitre.org/data/definitions/120.html">http://cwe.mitre.org/data/definitions/120.html</A>
+
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 1: New directives, Dir 4.14
+
+SEI CERT C Coding Standard
+STR31-C. Guarantee that storage for strings has sufficient space for character data and the null terminator
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR31-C.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator">https://wiki.sei.cmu.edu/confluence/display/c/STR31-C.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator</A>
+
+SEI CERT C++ Coding Standard
+STR50-CPP. Guarantee that storage for strings has sufficient space for character data and the null terminator
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR50-CPP.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator">https://wiki.sei.cmu.edu/confluence/display/cplusplus/STR50-CPP.+Guarantee+that+storage+for+strings+has+sufficient+space+for+character+data+and+the+null+terminator</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-1 Inputs from independent components shall be validated
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-2 A C-style string shall guarantee sufficient space for data and the null terminator
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+</PRE>
+</BODY>
+</HTML>

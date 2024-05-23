@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Any one function (or method) will contain no more than 200 logical source lines of code (L-SLOCs) [METRICS-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Any one function (or method) will contain no more than 200 logical source lines of code (L-SLOCs) [METRICS-25-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Any one function (or method) will contain no more than 200
+logical source lines of code (L-SLOCs).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Logical line of code is a single declaration or statement terminated
+by semicolon.
+Two semicolons in parenthesis after 'for' keyword are counted as one.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents using long functions which tend to be complex and
+therefore difficult to comprehend and test.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int sample_function(int p)      // Violation
+{
+    int x, y;                   // L-SLOCs number = 1
+    
+    // ...
+    
+    x++;                        // L-SLOCs number = 99
+    for(y = 10; y &gt; 0; y--){    // L-SLOCs number = 100
+    	x = y;                  // L-SLOCs number = 101
+    }
+    
+    // ...
+    
+    x = x + p; y = y + p;       // L-SLOCs number = 150, L-SLOCs number = 151
+
+    // ...
+    
+    return x;                   // L-SLOCs number = 201
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use functions containing more than 200
+logical source lines of code (L-SLOCs).
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 3.2 Code Size and Complexity, AV Rule 1
+
+</PRE>
+</BODY>
+</HTML>

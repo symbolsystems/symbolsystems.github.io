@@ -1,0 +1,167 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+using-directives and using-declarations (excluding class scope or function scope using-declarations) shall not be used in header files [CODSTA-CPP-90]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+using-directives and using-declarations (excluding class scope or function scope using-declarations) shall not be used in header files [CODSTA-CPP-90-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A 'using' declaration introduces a name into the declarative region
+in which the 'using' declaration appears. That name is a synonym for
+the name of some entity declared elsewhere." [ISO/IEC 14882:2003]
+"A 'using' directive specifies that the names in the nominated namespace
+can be used in the scope in which the 'using' directive appears after
+the 'using' directive." [ISO/IEC 14882:2003]
+
+When 'using' directives or 'using' declarations (excluding class scope
+or function scope using-declarations) are used in a header file, then
+the order of inclusion of header files can affect the behavior
+of a program.
+
+This rule detects when header files include 'using' directives or 'using'
+declarations that are not in the class or function scope.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"It is important to ensure that the order of inclusion of header files
+cannot affect the behaviour of a program." [MISRA C++:2008 Rule 7-3-6]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. This rule does not detect 'using' directives in templates.
+
+// file.h
+namespace NS1 { }
+template &lt;class T&gt;
+void func1() {
+    using namespace NS1; /* No Violation */
+}
+void instance() {
+    func1&lt;int&gt;();
+}
+
+2. This rule does not detect 'using' declarations that refer
+   to a global namespace.
+
+// file.h
+void foo();
+using ::foo; /* No Violation */
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// file.h
+namespace NS1
+{
+    void func1();
+}
+
+namespace NS2
+{
+    void func2();
+}
+using namespace NS1; // Violation
+using NS2::func2;    // Violation
+
+void bar1() {
+    func2();
+}
+
+// file.cpp
+#include "file.h"
+
+void bar2() {
+    func2();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// file.h
+namespace NS1
+{
+    void func1();
+}
+
+namespace NS2
+{
+    void func2();
+}
+
+void bar1() {
+    using NS2::func2; // OK
+    func2();
+}
+
+// file.cpp
+#include "file.h"
+
+using namespace NS1;  // OK
+void bar2() {
+    func1();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M7-3-6. Using-directives and using-declarations (excluding class scope or
+   function scope using-declarations) shall not be used in header files
+
+2. ISO/IEC 14882:2003 Programming languages -- C++
+   7.3.3 The using declaration
+   7.3.4 Using directive
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems. Chapter 6, Section 7, Rule 7-3-6
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Derived classes that do not need further explicit initialization and require all the constructors from the base class shall use inheriting constructors [CODSTA-MCPP-37]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Derived classes that do not need further explicit initialization and require all the constructors from the base class shall use inheriting constructors [CODSTA-MCPP-37-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Reimplementing constructors that do not need further initialization is
+error-prone and may lead to using wrong base class constructor accidentally."
+[AUTOSAR-A12-1-6]
+
+Derived classes should inherit constructors from the base class if the
+derived class doesn't need to initialize new data members and if
+all of the constructors from the base class are required.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves code readability and consistency with the C++ standard
+library. This rule also helps prevent unexpected side effects and enforces
+compliance with some safety-critical standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    A(int x, int y) : x(x + 8), y(y) {}
+    explicit A(int x) : A(x, 0) {}
+
+private:
+    int x;
+    int y;
+};
+
+class B : public A                // Violation
+{
+public:
+    B(int x, int y) : A(x, y) {}
+    B(int x) : A(x) {}
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    A(int x, int y) : x(x + 8), y(y) {}
+    explicit A(int x) : A(x, 0) {}
+
+private:
+    int x;
+    int y;
+};
+
+class B : public A               // OK
+{
+public:
+    using A::A;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-1-6. Derived classes that do not need further explicit initialization
+            and require all the constructors from the base class shall use 
+            inheriting constructors
+
+</PRE>
+</BODY>
+</HTML>

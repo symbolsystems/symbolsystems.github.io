@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Thread objects, thread synchronization objects, and thread-specific storage pointers shall only be accessed by the appropriate Standard Library functions [MISRA2012-RULE-22_12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Thread objects, thread synchronization objects, and thread-specific storage pointers shall only be accessed by the appropriate Standard Library functions [MISRA2012-RULE-22_12-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Thread objects and thread synchronization objects are expected to be
+unique for the corresponding thread and synchronization resources.
+Thread-specific storage pointers are identified by unique keys.
+Any direct manipulation (copy, assignment, etc.) may result in undefined
+behaviour." [MISRA C:2012 Amendment 4]
+
+This rule detects when:
+- an expression of the 'thrd_t' type is used in a different way than
+  as an argument to the 'thrd_detach()', 'thrd_join()' or 'thrd_equal()'
+  function call,
+- an expression of the 'tss_t' type is used in a different way than
+  as an argument to the 'tss_delete()', 'tss_get()' or 'tss_set()'
+  function call,
+- an expression of the 'mtx_t' or 'cnd_t' type is used,
+- an expression of the struct or union type containing a member of the
+  'thrd_t', 'mtx_t', 'cnd_t' or 'tss_t' type is used,
+- an expression of a pointer to the 'thrd_t', 'mtx_t', 'cnd_t' or 'tss_t'
+  type is assigned to a pointer to a different type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+thrd_t t1;
+thrd_t t2;
+mtx_t m;
+
+void recv_func(void *);
+
+void f1() {
+    recv_func(&amp;m);            // Violation
+    if (t1 == t2) {}          // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;threads.h&gt;
+
+thrd_t t1;
+thrd_t t2;
+mtx_t m;
+
+void recv_func(void *);
+
+void f1() {
+    mtx_lock( &amp;m );             // OK
+    if (thrd_equal(t1, t2)) {}  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.14 Rule 22.12
+
+</PRE>
+</BODY>
+</HTML>

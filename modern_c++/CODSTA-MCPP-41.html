@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'random_shuffle' identifier should not be used [CODSTA-MCPP-41]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'random_shuffle' identifier should not be used [CODSTA-MCPP-41-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All code shall conform to ISO/IEC 14882:2014 - Programming Language C++ and
+shall not use deprecated features." [AUTOSAR-A1-1-1]
+
+The 'random_shuffle' function template from the Standard Library was deprecated
+in the C++11 and removed in the C++17 version of the C++ Language Standard.
+
+This rule detects when the 'random_shuffle' identifier is used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports all occurrences of the 'random_shuffle' identifier. For this
+reason, the rule may report 'random_shuffle' that does not represent a function
+from the Standard Library. For example:
+
+int random_shuffle; // Violation
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that your code complies with the up-to-date version
+of the C++ Language Standard. This allows you to increase longevity of
+an application and address the defects and vulnerabilities that may emerge
+as deployment environments evolve.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void foo()
+{
+    std::vector&lt;int&gt; myvector;
+    std::random_shuffle ( myvector.begin(), myvector.end() );   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'random_shuffle' identifier.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A1-1-1. All code shall conform to ISO/IEC 14882:2014 - Programming Language
+   C++ and shall not use deprecated features.
+
+2. Programming languages -- C++ ISO/IEC 14882:2014
+   D.12 Random shuffle
+
+3. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002290: The application must use the Federal Information Processing Standard (FIPS) 140-2-validated 
+   cryptographic modules and random number generator if the application implements encryption, key exchange, 
+   digital signature, and hash functionality
+
+</PRE>
+</BODY>
+</HTML>

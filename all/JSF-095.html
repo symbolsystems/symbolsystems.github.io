@@ -1,0 +1,211 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An inherited default parameter shall never be redefined [JSF-095]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An inherited default parameter shall never be redefined [JSF-095-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Never redefine an inherited default parameter value, because default parameter
+values are statically bound, while virtual functions — the only functions you
+should be overriding — are dynamically bound."
+[Effective C++: Third Edition, Item 37]
+
+"If a default argument is different for a parameter in an overriding function,
+the value used in the call will be different when calls are made via the base
+or derived object, which may be contrary to developer expectations."
+[MISRA C++:2008 Rule 8-3-1]
+
+The rule reports a violation if a parameter in an inherited virtual function
+is redefined with a different default parameter value. The rule allows to
+redefine a default parameter value only if both expressions used as default
+parameter values have the same representation. If the default parameter value
+is not defined for a parameter in an overriding function, then violation
+is not reported. 
+
+See also: OOP-32, OOP-33
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Default parameter value which depends on template parameter is checked only
+if the default value is used in a function call.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents misinterpreting which default parameter value is used.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    virtual void func1(int i = 1);
+};
+
+class Derived: public Base
+{
+public:
+    virtual void func1(int i = 0);    // Violation
+};
+
+void foo(Derived&amp; d){
+    Base&amp; b = d;
+    b.func1();         // will use default of 1
+    d.func1();         // will use default of 0
+}
+
+// Examples of code reported by the rule
+
+int fcall1(int);
+int fcall2(int);
+const int x = 1;
+
+class Base2
+{
+public:
+    virtual void func1(int i = 1u);
+    virtual void func2(int i = 1+2);
+    virtual void func3(short i = (short)1);
+    virtual void func4(int i = x);
+    virtual void func5(int i = fcall1(1));
+};
+
+class Derived2: public Base2
+{
+public:
+    virtual void func1(int i = 1);         // Violation
+    virtual void func2(int i = 2+1);       // Violation
+    virtual void func3(short i = 1);       // Violation
+    virtual void func4(int i = 1);         // Violation
+    virtual void func5(int i = fcall2(1)); // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    virtual void func1(int i = 1);
+};
+
+class Derived: public Base
+{
+public:
+    virtual void func1(int i = 1);    // OK
+};
+
+void foo(Derived&amp; d){
+    Base&amp; b = d;
+    b.func1();         // will use default of 1
+    d.func1();         // will use default of 1
+}
+
+// Examples of correct code
+
+int fcall1(int);
+int fcall2(int);
+const int x = 1;
+
+class Base2
+{
+public:
+    virtual void func1(int i = 1u);
+    virtual void func2(int i = 1+2);
+    virtual void func3(short i = (short)1);
+    virtual void func4(int i = x);
+    virtual void func5(int i = fcall1(1));
+    virtual void func6(int i);
+    virtual void func7(int i = 1);
+};
+
+class Derived2: public Base2
+{
+public:
+    virtual void func1(int i = 1u);          // OK - the suffix was added
+    virtual void func2(int i = 1+2);         // OK - the expression was changed
+    virtual void func3(short i = (short)1);  // OK - the cast was added
+    virtual void func4(int i = x);           // OK - the same variable is used
+    virtual void func5(int i = fcall1(1));   // OK - the same function call  with
+                                             //      the same argument is used
+    virtual void func6(int i = 1);           // OK - default value not defined
+                                             //      in base class
+    virtual void func7(int i);               // OK - the value is not redefined
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M8-3-1. Parameters in an overriding virtual function shall either use the
+   same default arguments as the function they override, or else shall not
+   specify any default arguments
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards,"
+   Addison-Wesley, (C) 2005 Pearson Education, Inc.
+   Chapter: "Class Design and Inheritance", Rule 38
+
+4. High Integrity C++ Coding Standard
+   9.1.2. Make default arguments the same or absent when overriding a virtual
+   function
+
+5. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 95
+
+6. MISRA C++:2008 - Guidelines for the use of the C++ language
+   in critical systems, Chapter 6, Section 8, Rule 8-3-1
+
+7. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter: "Inheritance
+   and Object-Oriented Design", Item 38
+
+8. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 6, Item 37
+
+</PRE>
+</BODY>
+</HTML>

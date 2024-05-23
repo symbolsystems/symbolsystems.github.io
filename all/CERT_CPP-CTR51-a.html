@@ -1,0 +1,174 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not modify container while iterating over it [CERT_CPP-CTR51-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not modify container while iterating over it [CERT_CPP-CTR51-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Storing an iterator, reference, or pointer to an element within a container
+for any length of time comes with a risk that the underlying container may
+be modified such that the stored iterator, pointer, or reference becomes
+invalid. . . Use only a valid pointer, reference, or iterator to refer to
+an element of a container." [CTR51-CPP]
+
+This rule detects when an iterator instance is obtained from a container
+and that container is modified before all operations on the iterator instance
+are completed.
+
+The following types of containers are checked:
+    std::deque
+    std::forward_list
+    std::list
+    std::map
+    std::multimap
+    std::multiset
+    std::unordered_map
+    std::unordered_multimap
+    std::unordered_set
+    std::unordered_multiset
+    std::set
+    std::vector
+    
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Methods that modify a container may or may not invalidate the iterator obtained
+from that container. For example, inserting an element into std::vector
+invalidates the iterator only if the insertion changes the vector's capacity.
+Similarly, erasing an element from std::list invalidates the iterator only if
+it points to the erased element. For this reason, Flow Analysis may be unable
+to determine if iterator invalidation occured.
+To prevent false negatives, Flow Analysis assumes that all operations that can
+potentially invalidate iterators always result in iterator invalidation.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Using invalid references, pointers, or iterators to reference elements of
+a container results in undefined behavior." [CTR51-CPP]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report unvalidated violations" parameter can result in more violations,
+but possibly also more false positives, being reported. In this mode Flow 
+Analysis will not check whether the path of the violation can be reached from
+the beginning of the function. In some complicated cases, restricted analysis
+depth may prevent Flow Analysis from completing the violation validation
+procedure. If this happens, violation can be found only with this parameter 
+turned on.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior by preventing iterator
+invalidation (see SECURITY RELEVANCE).
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example which triggers a violation:
+
+#include &lt;list&gt;
+using namespace std;
+
+void itmod(list&lt;int&gt; &amp;l, int val)
+{
+    list&lt;int&gt;::iterator i = l.begin();
+    while (i != l.end()) {
+        if (*i == val) {
+            l.erase(i); // point where iterator is invalidated
+        }
+        ++i; // VIOLATION
+    }
+}
+
+The problem is that the "erase" method  in the "list" container 
+invalidates the iterator "i".
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The code should be restructured so that iterator "i" will be replaced by 
+next the valid iterator after calling the "erase" method.
+
+#include &lt;list&gt;
+using namespace std;
+
+void itmod_fix(list&lt;int&gt; &amp;l, int val)
+{
+    list&lt;int&gt;::iterator i = l.begin();
+    while (i != l.end()) {
+        if (*i == val) {
+            i = l.erase(i); // FIXED
+        } else {
+            ++i;
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C++ Coding Standard
+CTR51-CPP. Use valid references, pointers, and iterators to reference elements of a container
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR51-CPP.+Use+valid+references%2C+pointers%2C+and+iterators+to+reference+elements+of+a+container">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR51-CPP.+Use+valid+references%2C+pointers%2C+and+iterators+to+reference+elements+of+a+container</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A23-0-2 Elements of a container shall only be accessed via valid references, iterators, and pointers.
+
+</PRE>
+</BODY>
+</HTML>

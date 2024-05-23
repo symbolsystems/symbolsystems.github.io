@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Assignment statements should not be nested within other assignment statements [MISRA-046_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Assignment statements should not be nested within other assignment statements [MISRA-046_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Assignments nested within expressions cause additional side effects. The best 
+way to avoid any chance of this leading to a dependence on order of evaluation 
+is to not embed assignments within expressions."
+
+The rule reports a violation if an assignment statement is nested in other
+assignment statement.
+
+See also: MISRA2004-12_2_e, PB-02
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code and prevents evaluation of expression
+dependent on compiler version.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( int x, int y, int z ) {
+    x = y = z / 3;  // Violation
+    x = y = y++;    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo( int x, int y, int z ) {
+    y = z / 3;  // OK
+    x = y;      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 46
+
+</PRE>
+</BODY>
+</HTML>

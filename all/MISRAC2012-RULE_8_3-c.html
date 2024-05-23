@@ -1,0 +1,168 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All declarations of an object or function shall have compatible types [MISRAC2012-RULE_8_3-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All declarations of an object or function shall have compatible types [MISRAC2012-RULE_8_3-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when declarations of an object or function with external
+linkage in different translation units do not have compatible types.
+
+"Compatible types are types that, for the purpose of declaration matching,
+are treated as the same. Two identical types are compatible but two compatible
+types need not be identical. For example, 'short int' and 'short' are
+compatible." [MISRA C++:2008 Appendix C: Glossary]
+
+"The easiest way of ensuring object or function types are compatible
+is to make the declarations identical." [MISRA C++:2008 Rule 3-2-1]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+Examples of compatible types:
+- typedefs to the same types
+    typedef int INT1;
+    typedef int INT2;
+
+    extern INT1 g1;             /* OK */
+    INT2 g1;                    /* OK */
+
+- 'short/int/long/long long' with or without an explicit 'signed' specifier
+    extern signed int g2;       /* OK */
+    int g2;                     /* OK */
+
+- array declarations with or without an explicitly declared size
+    extern int arr1[];          /* OK */
+    int arr1[5];                /* OK */
+
+- arrays and pointers to the same types in declarations of parameters
+    extern void (*fp1)(int*);   /* OK */
+    extern void (*fp1)(int[]);  /* OK */
+    extern void (*fp1)(int[5]); /* OK */
+
+The rule does not consider types that differ only by cv-qualifiers that modify
+parameter types to be compatible.
+    extern void (*fp2)(const int);   /* Violation */
+    extern void (*fp2)(int);         /* Violation */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"It is undefined behaviour if the declarations of an object or function
+in two different translation units do not have compatible types."
+[MISRA C++:2008 Rule 3-2-1]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+extern int g1;                   /* Violation */
+extern short g2[5];              /* Violation */
+extern void (*fp)(int*, int*);   /* Violation */
+extern int* f1(int*);            /* Violation */
+                                    
+                              
+/* test2.cpp */
+extern short g1;                 /* Violation */
+extern short g2[4];              /* Violation */
+extern void (*fp)(char*, int*);  /* Violation */
+extern int* const f1(int*);      /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Assumption: the testing scope contains only 'test1.cpp' and 'test2.cpp'.
+
+/* test1.cpp */
+extern int g1;                    /* OK */
+extern short g2[5];               /* OK */
+extern void (*fp)(char*, int*);   /* OK */
+extern int* f1(int*);             /* OK */
+                                    
+                              
+/* test2.cpp */
+extern int g1;                    /* OK */
+extern short g2[5];               /* OK */            
+extern void (*fp)(char*, int*);   /* OK */
+extern int* f1(int*);             /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+   
+1. AUTOSAR C++14 Coding Guidelines
+   M3-2-1. All declarations of an object or function shall have compatible types
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Section 6: Rules, Rule 3-2-1
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.2.2 All declarations of a variable or function shall have the same type
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.3
+
+5. SEI CERT C Coding Standard
+   DCL40-C. Do not create incompatible declarations of the same function or
+   object
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL40-C.+Do+not+create+incompatible+declarations+of+the+same+function+or+object">https://wiki.sei.cmu.edu/confluence/display/c/DCL40-C.+Do+not+create+incompatible+declarations+of+the+same+function+or+object</A>
+
+</PRE>
+</BODY>
+</HTML>

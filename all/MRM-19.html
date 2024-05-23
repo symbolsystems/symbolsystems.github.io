@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not allocate memory and expect that someone else will deallocate it later [MRM-19]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not allocate memory and expect that someone else will deallocate it later [MRM-19-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a class contains a pointer member to non-static
+data allocated by 'new' that is not deallocated in destructor via 'delete'.
+Violation is not reported if a class does not define any destructor. 
+The 'delete' operator can be used directly in destructor or in function
+directly called from destructor.
+
+See also: MRM-18, MRM-20, MRM-33
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps to ensure that all allocated memory is being cleaned
+up properly.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {
+public:
+  C();
+  ~C();
+
+private:
+  int* cp1;
+  int* cp2;
+  int* cp3;
+};
+
+C::C() : cp1(new int){      // Violation
+  cp2 = new int;            // Violation
+  this-&gt;cp3 = new int;      // Violation
+}
+
+C::~C(){
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C {
+public:
+  C();
+  ~C();
+  void deleteMemberPointer();
+private:
+  int* cp1;
+  int* cp2;
+  int* cp3;
+  int* cp4;
+  int* cp5;
+  int* cp6;
+};
+
+C::C() : cp1(new int), cp2(new int){  // OK
+  cp3 = new int;                      // OK
+  this-&gt;cp4 = new int;                // OK
+  cp5 = new int;                      // OK
+  this-&gt;cp6 = new int;                // OK
+}
+
+void C::deleteMemberPointer(){
+  delete cp3;
+  delete this-&gt;cp4;
+}
+
+void deletePointer(int*&amp; rp){
+  delete rp;
+}
+
+C::~C(){
+  delete cp1;
+  delete this-&gt;cp2;
+  deletePointer(cp5);
+  deletePointer(this-&gt;cp6);
+  deleteMemberPointer();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 16 Memory Allocation - Rec. 58
+
+2. SEI CERT C Coding Standard
+   MEM00-C. Allocate and free memory in the same module, at the same level of
+   abstraction
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM00-C.+Allocate+and+free+memory+in+the+same+module%2C+at+the+same+level+of+abstraction">https://wiki.sei.cmu.edu/confluence/display/c/MEM00-C.+Allocate+and+free+memory+in+the+same+module%2C+at+the+same+level+of+abstraction</A>
+
+</PRE>
+</BODY>
+</HTML>

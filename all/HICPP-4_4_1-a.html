@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions from floating to integral type [HICPP-4_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions from floating to integral type [HICPP-4_4_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conversions from floating point to integral types discard information, and may
+lead to undefined behaviour if the floating-point value cannot be represented
+in the integral type."
+
+See also: MISRA-043, PORT-27, PORT-28
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicit casts should normally only be used in the case where a conversion 
+which could result in a loss of information is specifically required by the 
+programmer. If the static checking of implicit conversions is overridden by
+the use of explicit casts in this way, then the programmer should be aware
+of the issues of truncation and lost of precision associated with the operation,
+and should provide appropriate checking of values in the code"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(unsigned char c);
+
+long foo(unsigned int ui, double d)
+{
+    float f;
+    unsigned short us1;
+    short s2 = d;           // Violation
+    us1 = 0.5;              // Violation
+    ui = f;                 // Violation
+    bar(f);                 // Violation
+    return f;               // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar(unsigned char c);
+
+long foo(unsigned int ui, double d)
+{
+    float f;
+    unsigned short us1;
+    short s2 = (short)d;           // OK
+    us1 = (unsigned short)0.5;     // OK
+    ui = (unsigned int)f;          // OK
+    bar((unsigned char)f);         // OK
+    return (long)f;                // OK        
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-7-1. An integer expression shall not lead to data loss
+
+2. AUTOSAR C++14 Coding Guidelines
+   M5-0-5. There shall be no implicit floating-integral conversions
+
+3. High Integrity C++ Coding Standard
+   4.4.1. Do not convert floating values to integral types except through use
+   of standard library functions
+
+4. ISO/DIS 26262
+   point 8.4.4
+
+5. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 180, AV Rule 184
+
+6. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-5
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10
+
+8. Origin: Misra Guidelines rule 43
+
+</PRE>
+</BODY>
+</HTML>

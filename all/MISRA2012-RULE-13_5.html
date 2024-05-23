@@ -1,0 +1,237 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The right hand operand of a logical &amp;&amp; or || operator shall not contain persistent side effects [MISRA2012-RULE-13_5]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The right hand operand of a logical &amp;&amp; or || operator shall not contain persistent side effects [MISRA2012-RULE-13_5-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"There are some situations in C or C++ where certain parts of expressions may
+not be evaluated. If these sub-expressions contain side effects then those side
+effects may or may not occur, depending on the values of other sub expressions.
+The operators which can lead to this problem are &amp;&amp; and || where the evaluation
+of the right-hand operand is conditional on the value of the left-hand operand."
+[MISRA C:2012 Rule 13.5]
+
+"The operations that cause side effects are accessing a volatile object,
+modifying an object, modifying a file, or calling a function that does
+any of those operations, which cause changes in the state of the execution
+environment of the calling function." [ISO/IEC 9899:1999]
+
+"If evaluation of the right-hand operand would produce side effects which are
+not persistent at the point in the program where the expression occurs then it
+does not matter whether the right-hand operand is evaluated or not."
+[MISRA C:2012 Rule 13.5]
+
+"A side effect is said to be persistent at a particular point in execution
+if it might have an effect on the execution state at that point. All of the
+following side effects are persistent at a given point in the program:
+- Modifying a file;
+- Modifying an object;
+- Accessing a volatile object.
+When a function is called, it may have side effects. Modifying a file
+or accessing a volatile object are persistent as viewed by the calling
+function. However any objects modified by the called function, whose 
+lifetimes have ended by the time it returns, do not affect the caller's
+execution state. Any side effects arising from modifying such objects
+are not persistent as viewed by the caller." [MISRA C:2012 Appendix J]
+
+The rule reports a violation if the right-hand operand of logical operator
+contains:
+- assignment operator
+- increment or decrement operator
+- accessing a volatile object
+- new, delete or throw statement
+- calling a function that cause a persistent side effect (three nested levels
+  of function calls are checked). Functions called via function pointer are
+  not checked.
+
+As persistent side effect in a function call is detected:
+- the modification of global, member or static object
+- the modification of dereferenced pointer
+- the modification of argument passed by reference
+- the use of volatile object
+- new, delete or throw statement
+
+See also: MISRA2004-12_2_a, CODSTA-105
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"In the case of the ?: operator, either the second or third operands are
+evaluated but not both. The ?: operator is specifically provided to choose
+between two sub-expressions, and is therefore less likely to lead to mistakes."
+The ?: operator is checked by rule CODSTA-105.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents conditional evaluation of the right-hand operand that can
+easily cause problems if the developer relies on a side effect occurring.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1( ) {
+    int i;
+    int j;
+    if ((j == i) || (0 == i++)) ;                // Violation
+    if ((j == i) || (0 == (i = j))) ;            // Violation
+}
+
+int global_object;
+int side_effect_function1(){
+    global_object = 0;
+    //...
+    return global_object;
+}
+
+int side_effect_function2(int* ptr){
+    *ptr = 0;
+    //...
+    return *ptr;
+}
+
+int side_effect_function3(int i){
+    int* ptr = &amp;i;
+    *ptr = 0;
+    //...
+    return *ptr;
+}
+
+volatile int vi;
+int side_effect_function4(int i){
+    i = vi;
+    //...
+    return i;
+}
+
+void foo2( ) {
+    int i;
+    int j;
+    if ((j == i) &amp;&amp; side_effect_function1()) ;   // Violation
+    
+    if ((j == i) &amp;&amp; side_effect_function2(&amp;i)) ; // Violation
+    
+    // Modification of dereferenced pointer is always recognized as a persistent
+    // side effect, even if, for example, the pointer points to a local variable
+    if ((j == i) &amp;&amp; side_effect_function3(i)) ;  // Violation
+    
+    if ((j == i) &amp;&amp; side_effect_function4(i)) ;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1( ) {
+    int i;
+    int j;
+    if ((j == i) || (0 == i))   // OK
+    	i++;
+}
+
+int global_object;
+int side_effect_function(){
+    global_object = 0;
+    //...
+    return 1;
+}
+
+void foo2( ) {
+    int i;
+    int j;
+    
+    if (j == i){
+    	if(side_effect_function()); // OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    M5-14-1. The right hand operand of a logical &amp;&amp;, || operators shall not
+    contain side effects
+
+2.  High Integrity C++ Coding Standard
+    5.1.6. Do not code side effects into the right-hand operands of: &amp;&amp;, ||,
+    sizeof, typeid or a function passed to condition variable::wait
+
+3.  ISO/DIS 26262
+    point 8.4.4
+
+4.  ISO/IEC 14882:1998 Programming languages -- C++
+    5.14 Logical OR operator
+    5.14 Logical OR operator
+    1.9 Program execution
+
+5.  ISO/IEC 9899:1990 Programming languages -- C
+    6.3.13 Logical AND operator
+    6.3.14 Logical OR operator
+    5.1.2.3 Program execution
+
+6.  ISO/IEC 9899:1999 Programming languages -- C
+    6.5.13 Logical AND operator
+    6.5.14 Logical OR operator
+    5.1.2.3 Program execution
+
+7.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.21 Operators, AV Rule 157
+
+8.  MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 5, Rule 5-14-1
+
+9.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 8.14.1 The right-hand operand of a logical &amp;&amp; or || operator should not contain persistent side effects
+
+10. MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 13.5, Appendix J
+
+11. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 12, Rule 12.4
+
+12. Origin: Misra Guidelines - Rule 33
+
+13. SEI CERT C Coding Standard
+    EXP02-C. Be aware of the short-circuit behavior of the logical AND and OR
+    operators
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP02-C.+Be+aware+of+the+short-circuit+behavior+of+the+logical+AND+and+OR+operators">https://wiki.sei.cmu.edu/confluence/display/c/EXP02-C.+Be+aware+of+the+short-circuit+behavior+of+the+logical+AND+and+OR+operators</A>
+
+</PRE>
+</BODY>
+</HTML>

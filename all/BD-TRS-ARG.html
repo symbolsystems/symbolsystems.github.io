@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare objects shared between POSIX threads with appropriate storage durations [BD-TRS-ARG]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare objects shared between POSIX threads with appropriate storage durations [BD-TRS-ARG-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when objects are shared between POSIX threads without 
+appropriate storage durations. Accessing the stack of a thread from another 
+thread can cause invalid memory access, as the referenced stack frame may 
+not be valid when the other thread is trying to access it. Regular shared variables
+should be protected by a call to the pthread_join(pthread_t thread, void **retval)
+method, which is a thread synchronization mechanism.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps you prevents invalid memory access.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include&lt;stdio.h&gt;
+#include&lt;pthread.h&gt;
+
+void *childThread(void *val) {
+    int *res = (int *) val;
+    printf("Result: %d\n", *res);
+    return NULL;
+}
+
+void createThread(pthread_t *tid) {
+    int val = 1;
+    int result;
+    if ((result = pthread_create(tid, NULL, childThread, &amp;val)) != 0) {
+        /* Handle error */
+    }
+} // VIOLATION
+
+int main(void) {
+    pthread_t tid;
+    int result;
+    createThread(&amp;tid);
+    if ((result = pthread_join(tid, NULL)) != 0) {
+        /* Handle error */
+    }
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include&lt;stdio.h&gt;
+#include&lt;pthread.h&gt;
+
+/* Declare val as a global static variable */
+int val;
+
+void *childThread(void *val) {
+    /* Correctly prints 1 */
+    int *res = (int *) val;
+    printf("Result: %d\n", *res);
+    return NULL;
+}
+
+void createThread(pthread_t *tid) {
+    val = 1;
+    int result;
+    if ((result = pthread_create(tid, NULL, childThread, &amp;val)) != 0) {
+        /* Handle error */
+    }
+} // NO VIOLATION
+
+int main(void) {
+    pthread_t tid;
+    createThread(&amp;tid);
+    int result;
+    if ((result = pthread_join(tid, NULL)) != 0) {
+        /* Handle error */
+    }
+    return 0;
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+CON34-C. Declare objects shared between threads with appropriate storage durations
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON34-C.+Declare+objects+shared+between+threads+with+appropriate+storage+durations">https://wiki.sei.cmu.edu/confluence/display/c/CON34-C.+Declare+objects+shared+between+threads+with+appropriate+storage+durations</A>
+
+SEI CERT C Coding Standard
+POS50-C. Declare objects shared between POSIX threads with appropriate storage durations
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS50-C.+Declare+objects+shared+between+POSIX+threads+with+appropriate+storage+durations">https://wiki.sei.cmu.edu/confluence/display/c/POS50-C.+Declare+objects+shared+between+POSIX+threads+with+appropriate+storage+durations</A>
+
+</PRE>
+</BODY>
+</HTML>

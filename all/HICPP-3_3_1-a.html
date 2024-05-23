@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use variables with static storage duration [HICPP-3_3_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use variables with static storage duration [HICPP-3_3_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Variables with linkage (and, hence, static storage duration) are commonly
+referred to as global variables. These variables can be accessed and modified
+from anywhere in the translation unit if they have internal linkage and
+anywhere in the program if they have external linkage. This can lead to
+uncontrollable relationships between functions and modules.
+
+Additionally, certain aspects of the order of initialization of global
+variables are unspecified and implementation undefined in the C++ Language
+Standard. This can lead to unpredictable results for global variables that are
+initialized at run-time (dynamic initialization).
+
+This rule does not prohibit the use of a const object with linkage so long as:
+  * it is initialized through static initialization
+  * the object is not ODR-used
+" [HIC++ v4.0, Rule 3.3.1]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves code quality and security by closing off points where the program
+state could be accidentally or intentionally manipulated or abused.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+static int32_t foo();
+extern int32_t ga = foo(); // Violation -external linkage
+
+namespace {
+int32_t la = 0; // Violation -unnamed namespace, internal linkage
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/*
+
+  Repairing the example may be involved. As in the case of external linkage,
+  much of the code will have to be refactored. In the case of internal linkage,
+  only the code in the translation unit will have to be refactored.
+
+  In general, global variables that are used by a function can be considered
+  additional inputs or outputs. Thus, instead of using global variables, the
+  program state could be allocated from the heap or a memory pool and
+  managed by a class or simply passed-in as parameters, either by value or
+  const-reference, (for read-only state data), or by reference, (for read/
+  write data.)
+
+  Violations of this rule will require examination to determine the
+  proper course of action for repair on a case-by-case basis.
+
+*/
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   3.3.1. Do not use variables with static storage duration
+
+</PRE>
+</BODY>
+</HTML>

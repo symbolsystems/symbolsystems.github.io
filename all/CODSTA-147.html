@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointer should not be compared with NULL using relational operators &lt;, &gt;, &gt;=, &lt;= [CODSTA-147]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointer should not be compared with NULL using relational operators &lt;, &gt;, &gt;=, &lt;= [CODSTA-147-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If pointers that do not point to the same aggregate or union (nor just
+beyond the same array object) are compared using relational operators,
+then behavior is undefined." [ISO/IEC 9899:1999]
+
+Comparing a pointer against a null pointer constant using a relational operator
+(&lt;, &lt;=, &gt;, &gt;=) is undefined behavior in C and may lead to incorrect
+behavior in C++. The pointer value is an address that cannot be a negative
+value or is a null pointer constant that indicates that the pointer is not
+pointing to any object. A null pointer constant is an integral constant
+expression that evaluates to zero, or the cast of such value to type 'void*'.
+
+Equality operators (==, !=) should be used to check if a pointer value
+is the null pointer constant.
+
+The rule reports a violation if one operand of a relational operator
+is a pointer type and the other is a constant value '0' used directly
+or preceded by a cast. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents undefined and incorrect behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void foo() {
+    int* ptr;
+    
+    if(ptr &gt; 0){         // Violation
+        //...
+    }
+    
+    if(ptr &lt; (int*)0){   // Violation
+        //...
+    }
+    
+    if(NULL &gt;= ptr){     // Violation
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void foo() {
+    int* ptr;
+    
+    if(ptr != 0){         // OK
+        //...
+    }
+    
+    if(ptr == (void*)0){  // OK
+        //...
+    }
+    
+    if(NULL == ptr){      // OK
+        //...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1990 Programming languages -- C
+   6.3.8 Relational operators
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.5.8 Relational operators
+
+</PRE>
+</BODY>
+</HTML>

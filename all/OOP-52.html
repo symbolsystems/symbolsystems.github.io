@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer to a class may not be converted to a pointer of a second class unless the one inherits from the other [OOP-52]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer to a class may not be converted to a pointer of a second class unless the one inherits from the other [OOP-52-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A cast should not be performed between a pointer to class type and a pointer
+to different class type. Conversions of this type may be invalid.
+
+See also: MISRA2004-11_4, OPT-29, OOP-20, OOP-28, OOP-35
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violation if cast is used between pointers
+to classes that are in the same inheritance hierarchy.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents incorrect pointer alignment.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A1 {}; 
+class B1 {}; 
+
+void foo1( ) { 
+  A1* a; 
+  B1* b; 
+
+  a = (A1*)b;  // Violation
+  b = (B1*)a;  // Violation
+}
+
+class A2 {}; 
+class B2 : public A2 {}; 
+class C2 : public A2 {}; 
+
+void foo2( ) { 
+  A2* a; 
+  B2* b;
+  C2* c;
+
+  a = (A2*)b;  // OK - B2 inherits from A2
+  b = (B2*)a;  // OK - B2 inherits from A2
+  
+  a = (A2*)a;  // OK - cast to the same type
+
+  c = (C2*)b;  // Violation - classes are not in the same hierarchy 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not cast pointer to class to a pointer to different class.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

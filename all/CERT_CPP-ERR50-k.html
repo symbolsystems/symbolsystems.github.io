@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Properly define exit handlers [CERT_CPP-ERR50-k]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Properly define exit handlers [CERT_CPP-ERR50-k-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when functions registered as exit handlers do not return normally.
+
+Functions can be registered as exit handlers by calling the atexit() or at_quick_exit() functions.
+
+"Two specific issues include nested calls to an exit function and terminating a call to an exit 
+handler by invoking longjmp. A nested call to an exit function is undefined behavior . . .
+If a call to the longjmp() function is made that would terminate the call to a function 
+registered with atexit(), the behavior is undefined."
+[ENV32-C. All exit handlers must return normally]
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4.0
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"Exit handlers must terminate by returning. It is important and potentially safety-critical for all
+exit handlers to be allowed to perform their cleanup actions."
+[ENV32-C. All exit handlers must return normally]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid undefined behavior.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that triggers a violation:
+ 
+#include &lt;stdlib.h&gt;
+
+void exit1() {
+    extern int some_condition;
+    if (some_condition) {
+        /* ... More cleanup code ... */
+        exit(0); // VIOLATION
+    }
+    return;
+}
+
+int main(void) {
+    if (atexit(exit1) != 0) {
+        /* Handle error */
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void exit1() {
+    extern int some_condition;
+    if (some_condition) {
+        /* ... More cleanup code ... */
+    }
+    return;
+}
+
+int main(void) {
+    if (atexit(exit1) != 0) {
+        /* Handle error */
+    }
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2008 Guidelines for the use of the C+ language in critical systems
+Chapter 6, Section 15, Rule 15-5-3
+
+AUTOSAR C++14 Coding Guidelines
+Rule A15-5-3 The std::terminate() function shall not be called implicitly
+
+SEI CERT C Coding Standard
+ENV32-C. All exit handlers must return normally
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ENV32-C.+All+exit+handlers+must+return+normally">https://wiki.sei.cmu.edu/confluence/display/c/ENV32-C.+All+exit+handlers+must+return+normally</A>
+
+SEI CERT C++ Coding Standard
+ERR50-CPP. Do not abruptly terminate the program
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+</PRE>
+</BODY>
+</HTML>

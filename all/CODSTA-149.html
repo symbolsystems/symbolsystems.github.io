@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Missing break statement between cases in a switch statement [CODSTA-149]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Missing break statement between cases in a switch statement [CODSTA-149-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A switch statement consists of several 'case' labels, plus an optional 'default'
+label. A series of statements following those labels conventionally ends with
+a break statement; if omitted, control flow falls through to the next label in
+the switch statement block. Because the break statement is not required,
+omitting it does not produce compiler diagnostics. If the omission was
+unintentional, it can result in an unexpected control flow.
+
+This rule reports a violation if there is no statement which would break
+the control flow between case or default labels. The following statements
+are recognized as breaking the control flow:
+- break, return
+- exit(), abort(), _Exit()
+- continue, goto, throw (if those statements cause control flow to jump out
+  of the switch label)
+
+The rule also recognizes a "fall through" comment placed at the end of the case.
+The regular expression recognized is: falls?.?thro?u (ignoring case).
+(e.g. following comments are acceptable: 'falls through', 'fall through',
+ 'fall thru', 'FALLS THROUGH', 'FALL THRU')
+
+No violation is reported on the last label.
+
+See also: CODSTA-56, CODSTA-64, MISRA2004-15_2
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not require the statement which breaks the control flow to be
+placed unconditionally at the end of the case/default statements.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule helps prevent logic errors and unexpected application
+behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Example of code which results in a rule violation:
+int foo(int i, int j)
+{
+    int x;
+    switch (i)
+    {
+        case 1:                  // Violation - missing break
+            x = i + 1;
+        case 2:                  // Violation - missing break
+            x = i + 2;
+        case 3:                  // Violation - missing break
+            x = i + 3;
+        default:                 // Violation - missing break
+            x = 0;
+        case 4:                  // OK (last label in switch)
+            x = i + 3;
+    }
+    return x;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Example of code which does not result in rule violation:
+int foo(int i, int j)
+{
+    int x;
+    do
+    {
+        switch (i)
+        {
+            case 0:                     // OK (empty label)
+            case 1:                     // OK ("fall through" comment found)
+                x = i + 1;
+                // Control falls through
+            case 2:                     // OK ('break' found)
+                x = i + 2;
+                break;
+            case 3:                     // OK ('return' found)
+                x = i + 3;
+                if (x &gt; 123) {
+                    return 0;
+                }
+            default:                    // OK ('continue' escapes the switch)
+                continue;
+            case 4:                     // OK (last label in switch)
+                x = i + 3;
+        }
+    } while (x &gt; 0);
+    return x;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-484: Omitted Break Statement in Switch
+   <A HREF="http://cwe.mitre.org/data/definitions/484.html">http://cwe.mitre.org/data/definitions/484.html</A>
+
+2. SEI CERT C Coding Standard
+   MSC17-C. Finish every set of statements associated with a case label with a
+   break statement
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC17-C.+Finish+every+set+of+statements+associated+with+a+case+label+with+a+break+statement">https://wiki.sei.cmu.edu/confluence/display/c/MSC17-C.+Finish+every+set+of+statements+associated+with+a+case+label+with+a+break+statement</A>
+
+</PRE>
+</BODY>
+</HTML>

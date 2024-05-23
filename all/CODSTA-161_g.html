@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An operand of essentially unsigned type should not be used as the operand to the unary minus operator [CODSTA-161_g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An operand of essentially unsigned type should not be used as the operand to the unary minus operator [CODSTA-161_g-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An operand of essentially unsigned type should not be used as the operand to 
+the unary minus operator, as the signedness of the result is determined by the 
+implemented size of int" [MISRA C:2012 Rule 10.1]
+
+This rule detects cases when the operand of a unary minus operator
+has "essentialy unsigned type".
+
+The term "essential type" is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unexpected results which may follow integer promotion.  
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+unsigned int ret_uint(void);
+
+void foo ( void )
+{
+    unsigned char uc1, uc2;
+    unsigned int ui1;
+    -ui1;            /* Violation */
+    -(uc1 + uc2);    /* Violation */
+    -10u;            /* Violation */
+    -ret_uint();     /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+unsigned int ret_uint(void);
+
+void foo ( void )
+{
+    unsigned char uc1, uc2;
+    unsigned int ui1;
+    -(int)ui1;                    /* OK */
+    -(signed char)(uc1 + uc2);    /* OK */
+    -10;                          /* OK */
+    -(signed int)ret_uint();      /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.1
+
+2. SEI CERT C Coding Standard
+   INT31-C. Ensure that integer conversions do not result in lost or
+   misinterpreted data
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data">https://wiki.sei.cmu.edu/confluence/display/c/INT31-C.+Ensure+that+integer+conversions+do+not+result+in+lost+or+misinterpreted+data</A>
+
+</PRE>
+</BODY>
+</HTML>

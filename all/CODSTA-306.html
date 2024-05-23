@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The volatile qualifier shall be used appropriately [CODSTA-306]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The volatile qualifier shall be used appropriately [CODSTA-306-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when:
+* a local variable, or
+* a function parameter, or
+* a function return type, or
+* a member function, or
+* a structured binding
+is declared with the volatile qualifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Since C++20, some of the cases detected by this rule are also deprecated by the standard.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected or undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+volatile int f1(volatile int a) // Violation x2
+{
+    volatile int v01;           // Violation
+    int* volatile v02;          // Violation
+    return v01;
+}
+
+class C
+{
+    void f2() volatile;         // Violation
+};
+
+int arr[2] = {1, 2};
+volatile auto [a1, a2] = arr;   // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int f1(int a)                   // OK
+{
+    int v01;                    // OK
+    int* v02;                   // OK
+
+    // Examples of the correct code:
+    volatile int* v03;          // OK - a pointer-to-volatile is not volatile
+    volatile int&amp; v04 = v01;    // OK - a reference-to-volatile is not volatile
+    return a;
+}
+
+class C {
+  void f2();                    // OK
+};
+
+int arr[2] = {1, 2};
+auto [a1, a2] = arr;            // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.1.2 The volatile qualifier shall be used appropriately
+
+</PRE>
+</BODY>
+</HTML>

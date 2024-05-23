@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Don't use unsafe C functions that do write to range-unchecked buffers [AUTOSAR-A27_0_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Don't use unsafe C functions that do write to range-unchecked buffers [AUTOSAR-A27_0_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Don't use the unsafe C legacy: strcpy, strcat, sprintf, vsprintf, gets, 
+strncpy, strncat, snprintf, fgets - functions that do write to range-unchecked 
+buffers, and/or do not check and correctly handle out-of-bounds errors.
+See also: SECURITY-12,SECURITY-13,SECURITY-16
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents using functions which may cause overflow.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+void foo( void ) {
+    char* str1 = "testcase";
+    char* str2 = "testcase";
+    char* str3 = 0;
+    str3 = strcat( str1, str2 );    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Don't use the unsafe C legacy.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A27-0-4. C-style strings shall not be used.
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Type Safety", Rule 99
+
+3. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+4. SEI CERT C Coding Standard
+   API02-C. Functions that read or write to or from an array should take an
+   argument to specify the source or target size
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/API02-C.+Functions+that+read+or+write+to+or+from+an+array+should+take+an+argument+to+specify+the+source+or+target+size">https://wiki.sei.cmu.edu/confluence/display/c/API02-C.+Functions+that+read+or+write+to+or+from+an+array+should+take+an+argument+to+specify+the+source+or+target+size</A>
+
+5. SEI CERT C Coding Standard
+   ENV01-C. Do not make assumptions about the size of an environment variable
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ENV01-C.+Do+not+make+assumptions+about+the+size+of+an+environment+variable">https://wiki.sei.cmu.edu/confluence/display/c/ENV01-C.+Do+not+make+assumptions+about+the+size+of+an+environment+variable</A>
+
+6. SEI CERT C Coding Standard
+   MSC24-C. Do not use deprecated or obsolescent functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions">https://wiki.sei.cmu.edu/confluence/display/c/MSC24-C.+Do+not+use+deprecated+or+obsolescent+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

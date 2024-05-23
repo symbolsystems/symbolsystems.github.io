@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A non-transient lambda shall not implicitly capture this [MISRACPP2023-8_1_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A non-transient lambda shall not implicitly capture this [MISRACPP2023-8_1_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when a non-transient lambda uses an implicitly captured 'this'
+expression.
+
+"If a lambda with implicit capture (having = or &amp; in the capture list) attempts
+to capture a member variable of a class, what is in fact captured is the this
+pointer. This behaviour can be surprising, and may result in undefined
+behaviour if the lambda is called after the object’s lifetime has ended. This
+issue cannot occur for a transient lambda."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"A lambda is transient when:
+* It is immediately invoked; or
+* It is passed to a function that does not store it.
+
+A function does not store a lambda when:
+* The function is defined in the same translation unit as the lambda; and
+* The lambda is only copied or moved when it is passed as an argument; and
+* The function only calls the lambda and/or passes the lambda to another
+  function that does not store it."
+[MISRA C++:2023]
+
+"This rule applies to capture by value and capture by reference."
+[MISRA C++:2023]
+
+"Note: implicitly capturing this using [=] is deprecated from C++20."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+* This rule does not report default captures; it only reports when
+  a captured member variable is actually used, or a member method
+  is actually called, which results in capturing the 'this' pointer.
+* This rule does not apply to lambdas in uninstantiated templates.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid undefined behavior if the lambda is called after
+the object's lifetime has ended.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+  int field;
+  void f() {
+    auto l = [&amp;]()                 // Violation - 'field' is implicitly captured
+        { return field; };
+  }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+  int field;
+  void f() {
+    auto l = [this]()              // OK
+        { return field; };
+  }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.1.1 A non-transient lambda shall not implicitly capture this
+
+</PRE>
+</BODY>
+</HTML>

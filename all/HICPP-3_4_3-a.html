@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer smart pointers over raw local pointers [HICPP-3_4_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer smart pointers over raw local pointers [HICPP-3_4_3-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a local pointer is declared, and then deleted in the same
+function, you should use a smart pointer rather than a raw pointer to avoid
+unintentional memory leaks, and ensure that the memory is properly freed
+in all cases.
+
+This rule detects local pointers that are allocated by 'new'
+(initialization or assignment) and deallocated by 'delete' in the same
+function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Smart pointers can prevent most cases of memory leaks by making the memory
+deallocation automatic.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int divider)
+{
+    int* p = new int;                         // Violation
+
+    // if exception - resource not freed
+    int res = *p / divider;
+
+    delete p;
+    return res;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+int foo(int divider)
+{
+    std::unique_ptr&lt;int&gt; p (new int());       // OK
+
+    // if exception - resource freed
+    int res = *p / divider;
+    return res;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   3.4.3. Use RAII for resources
+
+</PRE>
+</BODY>
+</HTML>

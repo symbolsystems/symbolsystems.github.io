@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Structs should only contain public data members and should not be a base or inherit [OOP-57]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Structs should only contain public data members and should not be a base or inherit [OOP-57-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A type defined as struct shall: (1) provide only public data members,
+(2) not provide any special member functions or methods, (3) not be a
+base of another struct or class, (4) not inherit from another struct or
+class." [AUTOSAR A12-4-2]
+
+This rule checks structs for functions, non-public members, and inherits
+from another class or struct. It also checks for uses of a struct as a
+base for another class or struct.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves code readability, helps differentiate a struct from a class,
+and helps you achieve compliance with some coding standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+struct D              // Violation - struct has private/protected members
+{
+public:
+  std::int32_t x;
+
+protected:
+  std::int32_t y;
+
+private:
+  std::int32_t z;
+};
+
+struct F : public D   // Violation - struct inherits from another struct
+{
+    int a;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class D              // OK
+{
+public:
+  std::int32_t x;
+
+protected:
+  std::int32_t y;
+
+private:
+  std::int32_t z;
+};
+
+struct F              // OK
+{
+    int a;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A11-0-2. A type defined as struct shall: (1) provide only public data
+   members, (2) not provide any special member functions or methods, (3) not
+   be a base of another struct or class, (4) not inherit from another struct
+   or class
+
+</PRE>
+</BODY>
+</HTML>

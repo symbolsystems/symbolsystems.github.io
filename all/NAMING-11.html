@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The name of enumeration type shall begin with an uppercase letter and contain a suffix '_t' at the end [NAMING-11]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The name of enumeration type shall begin with an uppercase letter and contain a suffix '_t' at the end [NAMING-11-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if the name of enumeration type does not begin
+with an uppercase letter or is not followed by a suffix '_t'.
+See also: NAMING-09, NAMING-10, NAMING-12
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum possibleColors1_t { RED, BLUE, GREEN };     // Violation
+enum PossibleColors2   { YELLOW, BLACK, WHITE }; // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum PossibleColors1_t { RED, BLUE, GREEN };     // OK
+enum PossibleColors2_t { YELLOW, BLACK, WHITE }; // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

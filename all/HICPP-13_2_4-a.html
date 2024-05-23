@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+When overloading the subscript operator (operator[]), implement both const and non-const versions [HICPP-13_2_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+When overloading the subscript operator (operator[]), implement both const and non-const versions [HICPP-13_2_4-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A non-const overload of the subscript operator should allow an object to be
+modified, i.e., return a reference to member data. The const version is there
+to allow the operator to be invoked on a const object."
+[HIC++ v4.0, Rule 13.2.4]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule applies to operator [].
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Allows the object's data to be accessible in const and non-const
+implementations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class Array {
+  public:
+    Array() {
+        for (int32_t i = 0; i &lt; Max_Size; ++i) {
+            m_x[i] = i;
+        }
+    }
+    int32_t &amp;operator[](int32_t a) // OK: non-const version
+    {
+        return m_x[a];
+    }
+    // Violation: No const version
+  private:
+    static const int32_t Max_Size = 10;
+    int32_t m_x[Max_Size];
+};
+
+void foo() {
+    Array a;
+    int32_t i = a[3]; // non-const
+    a[3] = 33;        // non-const
+    const Array ca;
+    i = ca[3]; // compilation error
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class Array {
+  public:
+    Array() {
+        for (int32_t i = 0; i &lt; Max_Size; ++i) {
+            m_x[i] = i;
+        }
+    }
+
+    int32_t &amp;operator[](int32_t a) // OK: non-const version
+    {
+        return m_x[a];
+    }
+
+    int32_t operator[](int32_t a) const // OK: const version
+    {
+        return m_x[a];
+    }
+
+  private:
+    static const int32_t Max_Size = 10;
+    int32_t m_x[Max_Size];
+};
+
+void foo() {
+    Array a;
+    int32_t i = a[3]; // non-const
+    a[3] = 33;        // non-const
+    const Array ca;
+    i = ca[3]; // const
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-5-1. If "operator[]" is to be overloaded with a non-const version,
+   const version shall also be implemented
+
+2. High Integrity C++ Coding Standard
+   13.2.4. When overloading the subscript operator (operator[]) implement both
+   const and non-const versions
+
+</PRE>
+</BODY>
+</HTML>

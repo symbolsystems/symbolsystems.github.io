@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'switch' statement should not contain labels other than 'case' and 'default' [CODSTA-243]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'switch' statement should not contain labels other than 'case' and 'default' [CODSTA-243-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A 'switch' statement contains a label group that is directly enclosed
+by a 'switch' body. If labels other than 'case' or 'default' are used,
+it can be misleading and potentially introduce unstructured control
+flow.
+
+This rule detects when a label other than 'case' or 'default' is used
+in a 'switch' label group.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f(int i)
+{
+    switch (i)
+    {
+    LABEL1:               // Violation
+        break;
+    case 0:
+        LABEL2:           // Violation
+        break;
+    default:
+    LABEL3:               // Violation
+        break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f(int i)
+{
+    switch (i)
+    {
+    case 0:
+        {
+            LABEL1:      // OK
+            break;
+        }
+    case 1:
+        if(i &gt; 0)
+        {
+            LABEL2:      // OK
+            i = i + 2;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+</PRE>
+</BODY>
+</HTML>

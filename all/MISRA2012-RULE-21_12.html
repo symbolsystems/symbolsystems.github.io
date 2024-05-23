@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The features provided by &lt;fenv.h&gt; should not be used [MISRA2012-RULE-21_12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The features provided by &lt;fenv.h&gt; should not be used [MISRA2012-RULE-21_12-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;fenv.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;fenv.h&gt; shall be used.
+Calling the fesetenv or feupdateenv functions with invalid arguments results
+in undefined behaviour.
+Calling the 'fesetround' function should be done with care because:
+1. Setting the rounding mode may have unexpected consequences, e.g., setting
+   the current rounding mode to upwards does not guarantee that the result
+   of evaluating an expression is an upward approximation to the value
+   of the expression over the reals.
+2. Several implementations of functions declared in &lt;math.h&gt; have been designed
+   to support round-to-nearest only: if such functions are called when
+   a different rounding mode is set, the results can be unpredictable."
+[MISRA C:2012 Rule 21.12 with Amendment 3]
+
+The rule detects use of the following global functions:
+- feclearexcept
+- fegetenv
+- fegetexceptflag
+- fegetround
+- feholdexcept
+- feraiseexcept
+- fesetenv
+- fesetexceptflag
+- fesetround
+- fetestexcept
+- feupdateenv
+
+The rule detects the following identifiers:
+- FE_ALL_EXCEPT
+- FE_DFL_ENV
+- FE_DIVBYZERO
+- FE_DOWNWARD
+- FE_INEXACT
+- FE_INVALID
+- FE_OVERFLOW
+- FE_TONEAREST
+- FE_TOWARDZERO
+- FE_UNDERFLOW
+- FE_UPWARD
+- FENV_ACCESS
+- fenv_t
+- fexcept_t
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"In some circumstances, the values of the floating-point status flags
+are unspecified and attempts to access them may lead to undefined behaviour.
+The order in which exceptions are raised by the 'feraiseexcept' function
+is unspecified and could therefore result in a program that has been designed
+for a certain order not operating correctly." [MISRA C:2012 Rule 21.12]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;fenv.h&gt;
+
+void foo ( float x, float y )
+{
+    float z;
+
+    feclearexcept ( FE_DIVBYZERO );         // Violation
+
+    z = x / y;
+
+    if ( fetestexcept ( FE_DIVBYZERO ) )    // Violation
+    {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use functions and identifiers defined in the &lt;fenv.h&gt; library.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.12
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.18 Rule 21.12
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   7.6 Floating-point environment &lt;fenv.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

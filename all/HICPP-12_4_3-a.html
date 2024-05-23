@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not specify both an NSDMI and a member initializer in a constructor for the same non-static member [HICPP-12_4_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not specify both an NSDMI and a member initializer in a constructor for the same non-static member [HICPP-12_4_3-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Non-static members should not be initialized more than once in a constructor.
+Initializing a data member in an initializer list and in the base class will
+create confusion as to which value is being set to the data member.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a non static member is being initialized in the base class, then it should
+not be in the initialization list.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The move/copy constructors are exempt from this rule, as in this context the
+rule conflicts with Rule 12.4.2: ”Ensure that a constructor initializes
+explicitly all base classes and non-static data members”, which takes
+precedence.” [HIC++ v4.0, Rule 12.4.3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves clarity about which value was used to initialize the data member.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class A {
+  public:
+    // initialization list
+    A()
+        : member_1(1), member_2(1) // Violation
+    {}
+
+  private:
+    int32_t member_1;
+    int32_t member_2 = 0; // Violation
+    int32_t member_3 = 0;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+class A {
+  public:
+    // initialization list
+    A()
+        : member_1(1) // OK. member_2 was removed from initialization list
+    {}
+
+  private:
+    int32_t member_1;
+    int32_t member_2 = 0; // OK
+    int32_t member_3 = 0;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   12.4.3. Do not specify both an NSDMI and a member initializer in a
+   constructor for the same non static member
+
+</PRE>
+</BODY>
+</HTML>

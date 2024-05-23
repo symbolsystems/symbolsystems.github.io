@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Braces ("{}") which enclose a block will not have an empty line after "{" nor before "}" [FORMAT-44]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Braces ("{}") which enclose a block will not have an empty line after "{" nor before "}" [FORMAT-44-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports a violation if braces ("{}") which enclose a block have
+an empty line after "{" or before "}". Only lines between matching
+braces are checked, so no violation is reported if braces are placed
+in one line or if there are no lines between them (the block is
+completely empty and the closing brace is in line directly after the
+opening brace).
+
+The rule checks opening and closing braces only for blocks. Not all 
+braces are "block" braces. The block is a compound statement and can
+be used, for example:
+ - by itself
+ - to enclose a body of statements:
+   'if', 'else', 'while', 'do-while', 'for', 'switch', 'try', 'catch'
+ - to enclose a function's body
+Examples of braces which are not "block" braces:
+ - class definition
+ - variable initializer
+
+See also: FORMAT-02, FORMAT-03, FORMAT-34, FORMAT-42, FORMAT-43
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar()
+{ // Violation
+
+} // Violation
+int foo(int i) {                // Violation
+
+    if (i &gt; 0) {                // Violation
+
+        {                       // Violation
+
+            int j; }            // Violation
+        return i;
+
+    } else if (i &lt; 0) {         // Violation (opening and closing brace)
+
+
+    } else                      // Violation
+    {   return 0;               // Violation
+
+    }                           // Violation
+}
+
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar()
+{ // OK - completely empty block
+}
+int foo(int i) {
+    if (i &gt; 0) {
+        // OK - this line has a comment
+
+        { int j; } // OK - the braces are in the same line
+        return i;
+    } else if (i &lt; 0) {
+        // OK - this line has a comment
+    } else
+    {   return 0;
+    }
+    return 0;
+}
+
+// Braces that are not "block" braces are not checked
+enum E {EN1 = 2, EN2 = 1};
+class FooBar{};
+struct S{ int i; float f; } ss;
+int array[] = {1,2,3,4,5};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 60
+
+</PRE>
+</BODY>
+</HTML>

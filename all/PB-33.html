@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit type conversions in assignments involving enum types [PB-33]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit type conversions in assignments involving enum types [PB-33-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Implicit conversions between:
+* enum and not enum types
+* enum and different enum types
+are not allowed.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents depending on the value of enum constant which can change
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum ABC0{A0, B0, C0};
+
+void foo1(int arg1){}
+
+int foo(int p)
+{
+    ABC0 x;
+    int i = x; // Violation
+    foo1(x);   // Violation
+    return x;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum ABC0{A0, B0, C0};
+
+void foo1(int arg1){}
+
+int foo(int p)
+{
+    ABC0 x;
+    int i = (int)x; // OK
+    foo1((int)x);   // OK
+    return (int)x;  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

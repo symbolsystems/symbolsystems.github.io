@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Function types shall be in prototype form [MISRA2012-RULE-1_5_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Function types shall be in prototype form [MISRA2012-RULE-1_5_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule checks if a function types are in prototype form.
+It reports a violations if a declaration of a function type:
+- is in K&amp;R style, or
+- has an empty parameter list
+
+See also: MISRA2004-16_3, CODSTA-158
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The early version of C, commonly referred to as K&amp;R C, did not provide
+a mechanism for checking the number of arguments or their types against
+the corresponding parameters. The type of an object or function did not
+have to be declared in K&amp;R C since the default type of an object and the
+default return type of a function was int." [MISRA C:2012]
+
+"An empty parameter list is not valid in a prototype. If a function type
+has no parameters its prototype form uses the keyword void." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The mismatch between the number of arguments and parameters, their types
+and the expected and actual return type of a function provides potential 
+for undefined behaviour." [MISRA C:2012]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int func1();   /* Violation - not in prototype form */
+
+int func2(n)   /* Violation - K&amp;R style identifier and declaration list */
+int n;
+{
+    return n;
+}
+
+void (*fp1)(); /* Violation - not in prototype form */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int func1(void);    /* OK - prototype specifies 0 parameters */
+
+int func2(int n)    /* OK */
+{
+    return n;
+}
+
+void (*fp1)(void);  /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.2
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+3. Programming languages -- C ISO/IEC 9899:2011
+   6.11 Future language directions
+   6.11.6 Function declarators
+
+</PRE>
+</BODY>
+</HTML>

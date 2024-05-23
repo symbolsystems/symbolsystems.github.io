@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Arguments of integer-constant macros should be decimal, octal, or hexadecimal constants with appropriate values [CODSTA-220]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Arguments of integer-constant macros should be decimal, octal, or hexadecimal constants with appropriate values [CODSTA-220-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the argument of a macro INT(N)_C or UINT(N)_C (where (N)
+is 8,16,32,64, or MAX) fails to satisfy any of the following conditions:
+- The argument must be an unsuffixed integer constant (decimal, octal, or
+  hexadecimal).
+- The value of the argument must not exceed the width indicated by the name of
+  the macro.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+void f1() {
+    INT32_C  ( 10.0 );                      // Violation - double constant
+    UINT8_C  ( 100UL );                     // Violation - suffixed constant
+    INT32_C  ( 10 + 10 );                   // Violation - constant expression
+    INT32_C  ( 0b1010 );                    // Violation - binary constant
+
+    // In examples below the values of arguments exceed allowed limits
+    UINT16_C ( -1 );                        // Violation
+    UINT8_C  ( 256 );                       // Violation
+    INT8_C   ( -129 );                      // Violation
+    INT16_C  ( 0x10001 );                   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use macro arguments that are unsuffixed integer constants with
+values that do not exceed the width indicated by the name of a given macro.
+
+#include &lt;stdint.h&gt;
+void f1() {
+    INT32_C  ( 10 );                      // OK
+    UINT8_C  ( 100 );                     // OK
+    INT32_C  ( 20 );                      // OK
+    INT32_C  ( 0xa );                     // OK
+    INT16_C  ( -1 );                      // OK
+    UINT16_C ( 256 );                     // OK
+    INT16_C  ( -129 );                    // OK
+    INT32_C  ( 0x10001 );                 // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.4 Rule 7.5
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   7.20.4 Macros for integer constants
+
+</PRE>
+</BODY>
+</HTML>

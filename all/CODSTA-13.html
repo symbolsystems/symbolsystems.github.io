@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+&gt;, &gt;=, &lt;, &lt;= shall not be applied to pointer types except where they point to the same array [CODSTA-13]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+&gt;, &gt;=, &lt;, &lt;= shall not be applied to pointer types except where they point to the same array [CODSTA-13-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Attempting to make comparisons between pointers will produce undefined
+behaviour if the two pointers do not point to the same object."
+[MISRA-C:2004]
+
+This rule detects comparisons between expressions of pointer or array type
+that do not point to the same object or array.
+
+See also: BD-PB-PTRCMP
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule only detects cases when the direct operand of a relational operator
+is one of the following: a variable, a parameter, an expression '&amp;a', 'a.b',
+or 'a-&gt;b'.
+The rule does not check the flow, which may result in reporting false positive
+or false negative violations, depending on how pointers are assigned on
+different paths.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule allows you to avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( int* p ) {
+    int a1[3];
+    int a2[4];
+    int* p1 = a1;
+    int* p2 = a2;
+    int* p3 = 0;
+
+    if (p1 &lt; p2);   // Violation
+    if (p1 &lt; p3);   // Violation
+    if (p1 &lt; p);    // Violation - it is not known where 'p' points
+}
+
+struct S {
+    int ms1;
+    int ms2;
+};
+
+void fs1() {
+    S s1;
+    S s2;
+    &amp;s1.ms1 &gt; &amp;s2.ms1;  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by only comparing pointers that point to the same
+object or array.
+
+/* Examples of correct code */
+void f1( ) {
+    int a1[3];
+
+    int* p1 = a1;
+    int* p2 = &amp;a1[2];
+
+    if (p1 &lt; p2);           // OK
+}
+
+struct S {
+    int ms1;
+    int ms2;
+};
+
+void fs1() {
+    S s1;
+    &amp;s1.ms1 &gt; &amp;s1.ms2;      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 17, Rule 17.3
+
+</PRE>
+</BODY>
+</HTML>

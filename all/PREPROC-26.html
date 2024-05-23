@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The #ifndef, #ifdef, #if, #elif, #else, and #endif pre-processor directives shall only be used for conditional file inclusion and include guards [PREPROC-26]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The #ifndef, #ifdef, #if, #elif, #else, and #endif pre-processor directives shall only be used for conditional file inclusion and include guards [PREPROC-26-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C++ provides safer, more readable and easier to maintain ways of achieving
+what is often done using the pre-processor. The pre-processor does not obey
+the linkage, lookup and function call semantics. Instead, constant objects,
+constexprs, inline functions and templates are to be used." [AUTOSAR A16-0-1]
+
+This rule detects when the pre-processor directives #ifndef, #ifdef, #if,
+#elif, #else, and #endif are used in code.
+
+See also: PREPROC-01, PREPROC-22
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule allows using the directives in the mechanism that prevents multiple
+inclusions of the same header file.
+
+#ifndef FOO_HH         // OK
+#define FOO_HH
+//...
+#endif                 // OK
+
+The rule allows using the directives for conditional file inclusion.
+
+#ifdef WIN32           // OK
+#include &lt;windows.h&gt;
+// ...
+#endif                 // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifndef MAX                  // Violation
+#define MAX 10
+#endif                       // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static const int MAX = 10;   // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A16-0-1. The pre-processor shall only be used for unconditional and
+   conditional file inclusion and include guards, and using the following
+   directives: (1) #ifndef, (2) #ifdef, (3) #if, (4) #if defined, (5) #elif,
+   (6) #else, (7) #define, (8) #endif, (9) #include
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer to member virtual function shall only be tested for equality with null-pointer-constant [HICPP-5_7_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer to member virtual function shall only be tested for equality with null-pointer-constant [HICPP-5_7_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The result of equality comparison between pointer to member virtual function
+and anything other than null-pointer-constant is unspecified."
+[AUTOSAR A5-10-1]
+
+This rule detects when the address of a virtual member function is used
+as an operand of an equality operator (== or !=).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule doesn't trigger when a pointer to a virtual member function
+is compared with a null-pointer-constant (nullptr).
+
+This rule doesn't trigger when an indirect pointer to a virtual member
+function is used as an operand of an equality operator.
+
+For example, the following code will not trigger the rule:
+
+class C {
+public:
+    virtual void vfoo();
+};
+
+void bar() {
+    void (C::*fp)() = &amp;C::vfoo;
+    if (fp == 0) { }             // No violation
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent unspecified results.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {
+public:
+    virtual void vfoo();
+    void foo();
+};
+
+void bar() {
+    if (&amp;C::vfoo == 0) {                  // Violation
+    }
+    if (&amp;C::vfoo != &amp;C::foo) {            // Violation
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not compare a pointer to the virtual member function
+with anything except a null-pointer-constant (nullptr).
+
+class C {
+public:
+    virtual void vfoo();
+    void foo();
+};
+
+void bar() {
+    if (&amp;C::vfoo == nullptr) {            // OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-10-1. A pointer to member virtual function shall only be tested for
+   equality with null-pointer-constant
+
+2. High Integrity C++ Coding Standard
+   5.7.2. Ensure that a pointer to member that is a virtual function is only
+   compared (==) with nullptr
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 13.3.4 A comparison of a potentially virtual pointer to member function shall only be with nullptr
+
+</PRE>
+</BODY>
+</HTML>

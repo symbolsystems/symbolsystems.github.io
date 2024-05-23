@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Define both sized and unsized versions of operator delete [AUTOSAR-A18_5_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Define both sized and unsized versions of operator delete [AUTOSAR-A18_5_4-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Overloading the sized and unsized versions of "operator delete" and
+"operator delete[]" is allowed in C++14. Deallocating memory using the sized
+version is more efficient than deallocating with the unsized version,
+especially when the allocator allocates in size categories rather than storing
+the size nearby the object.
+
+C++17 also adds aligned and non-aligned versions of "operator delete" and
+"operator delete[]".
+
+This rule checks for global definitions of "operator delete" or
+"operator delete[]", including the sized, unsized, aligned and non-aligned
+versions.  The rule reports a violation if the either but not both of the
+corresponding variants has been defined.  E.g. the sized, but not the
+unsized version.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves deallocation efficiency and helps you comply with some
+coding standards.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdlib&gt;
+#include &lt;new&gt;
+
+void operator delete(void* ptr) noexcept // Violation
+{
+    std::free(ptr);
+}
+
+void operator delete(void* ptr, std::align_val_t al) noexcept // Violation
+{
+    std::free(ptr);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdlib&gt;
+#include &lt;new&gt;
+
+void operator delete(void* ptr) noexcept // OK
+{
+    std::free(ptr);
+}
+
+void operator delete(void* ptr, std::size_t size) noexcept // OK
+{
+    std::free(ptr);
+}
+
+void operator delete(void* ptr, std::align_val_t al) noexcept // OK
+{
+    std::free(ptr);
+}
+
+void operator delete(void* ptr,
+                     std::size_t size, std::align_val_t) noexcept // OK
+{
+    std::free(ptr);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-5-4. If a project has sized or unsized version of operator "delete"
+   globally defined, then both sized and unsized versions shall be defined
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.4 If a project defines either a sized or unsized version of a global operator delete, then both shall be defined
+
+</PRE>
+</BODY>
+</HTML>

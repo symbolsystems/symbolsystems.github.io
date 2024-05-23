@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+C-style arrays shall not be used [MISRACPP2023-11_3_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+C-style arrays shall not be used [MISRACPP2023-11_3_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A C-style array is implicitly convertible to a raw pointer and easily loses
+information about its size. This construct is unsafe, unmaintainable, and
+a source of potential errors.
+For fixed-size, stack-allocated arrays, 'std::array' is supposed to be used
+instead. This type is designed to work with standard library algorithms."
+[AUTOSAR A18-1-1]
+
+This rule detects variables of an array type.
+
+See also: STL-10
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"It is allowed to declare a static constexpr data member
+of a C-style array type." [AUTOSAR A18-1-1]
+
+class A{
+public:
+    static constexpr int arr[] {1,2,3};    // OK - exception
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code maintainability and avoid potential errors
+that may be caused by implicit conversion of arrays.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A{
+public:
+    int ma[3];  // Violation
+};
+void f1() {
+    A a[10];    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by replacing the C-style arrays by the 'std::array' type.
+
+#include &lt;array&gt;
+class A{
+public:
+    std::array&lt;int, 10&gt; ma;                // OK
+};
+void f1() {
+    std::array&lt;A, 10&gt; a;                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A18-1-1. C-style arrays shall not be used
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "STL: Containers", Rule 77
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 11.3.1 Variables of array type should not be declared
+
+</PRE>
+</BODY>
+</HTML>

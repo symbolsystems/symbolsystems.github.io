@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The zero-alignment specifier should not be used in an object declaration [CODSTA-MC-03]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The zero-alignment specifier should not be used in an object declaration [CODSTA-MC-03-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The alignment requirement of an entity is the strictest nonzero
+alignment specified by its alignment-specifiers, if any; otherwise,
+the alignment-specifiers have no effect." [ISO/IEC 14882:2017]
+
+"If the alignment of an object is important, it should be specified
+explicitly." [MISRA C:2012 Amendment 3]
+
+The rule detects zero-alignment specifiers in object declarations.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"This rule applies to any integer constant expression operand
+to _Alignas that evaluates to zero." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdalign.h&gt;
+
+#define SIZE 0
+
+alignas (SIZE) int g1;                           // Violation
+alignas (0) int g2;                              // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the zero-alignment specifier.
+
+#include &lt;stdalign.h&gt;
+
+int g1;                                          // OK
+alignas (8) int g2;                              // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.5 Rule 8.16
+
+2. Programming languages -- C ISO/IEC 9899:2011
+   6.7.5 Alignment specifier
+
+</PRE>
+</BODY>
+</HTML>

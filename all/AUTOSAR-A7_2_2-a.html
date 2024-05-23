@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use an explicit enumeration base and ensure that it is large enough to store all enumerators [AUTOSAR-A7_2_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use an explicit enumeration base and ensure that it is large enough to store all enumerators [AUTOSAR-A7_2_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The underlying type of an unscoped enumeration is implementation defined,
+with the only restriction being that the type must be able to represent
+the enumeration values. An explicit enumeration base should always be specified
+with a type that will accommodate both the smallest and the largest enumerator.
+A scoped enum will implicitly have an underlying type of int,
+however, the requirement to specify the underlying type still applies."
+[HIC++ v4.0, 7.2.1]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An enumeration declared in an extern "C" block (i.e., an enumeration intended
+to be used with C) does not require an explicit underlying type."
+[HIC++ v4.0, 7.2.1]
+
+extern "C"
+{
+    enum E3 // ok by Exception
+    {
+        E3_0 ,
+        E3_1 ,
+        E3_2
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Specifying the size of an enum explicitly improves code portability by not
+relying on the compiler's specific implementation behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E1 // Violation
+{ E1_0,
+  E1_1,
+  E1_2 };
+
+enum class E2 // violation
+{ E2_0,
+  E2_1,
+  E2_2 };
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+enum E1 : int16_t // OK
+{ E1_0,
+  E1_1,
+  E1_2 };
+enum class E2 : int64_t // OK
+{ E2_0,
+  E2_1,
+  E2_2 };
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-2-2. Enumeration underlying base type shall be explicitly defined
+
+2. High Integrity C++ Coding Standard
+   7.2.1. Use an explicit enumeration base and ensure that it is large enough
+   to store all enumerators
+
+</PRE>
+</BODY>
+</HTML>

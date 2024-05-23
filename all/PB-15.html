@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Don't assign the dividend of two integers to a floating-point type [PB-15]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Don't assign the dividend of two integers to a floating-point type [PB-15-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The operands of division ('/') shall have arithmetic or enumeration type.
+The usual arithmetic conversions are porformed on the operands and determine
+the type of the result. The result of division of two integral values
+is an integral value although it is passed to the float or double type.
+
+The rule reports a violation if the result of division of two integral values
+is assigned to variable of floating-point type, passed to function as parameter
+of floating-point type or returned from function with floating-point return type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents possible loss of data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void get_float(float f);
+
+double foo(float f)
+{
+   int a = 3;
+   int b = 4;
+   double d = a/b;  // Violation
+   f = a/b;         // Violation
+   get_float(a/2);  // Violation
+   return 10/b;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void get_float(float f);
+
+double foo(float f)
+{
+   int a = 3;
+   int b = 4;
+   double d = (double)a/b;  // OK
+   f = a/(float)b;          // OK
+   get_float(a/2.0F);       // OK
+   return 10.0/b;           // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 167
+
+</PRE>
+</BODY>
+</HTML>

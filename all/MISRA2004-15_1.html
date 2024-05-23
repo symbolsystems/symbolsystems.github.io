@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A switch label shall only be used when the most closely-enclosing compound statement is the body of a switch statement [MISRA2004-15_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A switch label shall only be used when the most closely-enclosing compound statement is the body of a switch statement [MISRA2004-15_1-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The Standard permits a switch label, i.e. a case label or default label,
+to be placed before any statement contained in the body of a switch statement,
+potentially leading to unstructured code. In order to prevent this,
+a switch label shall only appear at the outermost level of the compound
+statement forming the body of a switch statement." [MISRA C:2012 Rule 16.2]
+
+The rule detects nested switch-labels.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo( int a, int b )
+{
+    switch(a)
+    {
+        case 1:
+        {
+            case 6:       /* Violation */
+                ;
+            default:      /* Violation */
+                break;
+        }
+            break;
+
+        case 2:
+            if (b == 1)
+            {
+                 case 3:  /* Violation */
+                 break;
+            }
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use nested 'case'/'default' statements.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-4-3. A switch statement shall be a well-formed switch statement
+
+2. AUTOSAR C++14 Coding Guidelines
+   M6-4-4. A switch-label shall only be used when the most closely-enclosing
+   compound statement is the body of a switch statement
+
+3. High Integrity C++ Coding Standard
+   6.3.1. Ensure that the label(s) for a jump statement or a switch condition
+   appear later, in the same or an enclosing block
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 6, Rule 6-4-3, Rule 6-4-4
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.2, Rule 16.1
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 15, Rule 15.1
+
+</PRE>
+</BODY>
+</HTML>

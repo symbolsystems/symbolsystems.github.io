@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer non-member non-friend functions to member functions [CODSTA-CPP-22]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer non-member non-friend functions to member functions [CODSTA-CPP-22-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Given a choice between a member function (which can access not only the
+private data of a class, but also private functions, enums, typedefs, etc.)
+and a non-member non-friend function (which can access none of these things)
+providing the same functionality, the choice yielding greater encapsulation
+is the non-member non-friend function, because it doesn't increase the number
+of functions that can access the private parts of the class."
+[Effective C++, Third Edition, Item 23]
+
+"A class might have a large number of convenience functions, some related 
+to bookmarks, others related to printing, still others related to cookie
+management, etc. As a general rule, most clients will be interested in only
+some of these sets of convenience functions. There's no reason for a client
+interested only in bookmark-related convenience functions to be compilation
+dependent on, e.g., cookie-related convenience functions. The straightforward
+way to separate them is to declare bookmark-related convenience functions
+in one header file, cookie-related convenience functions in a different header
+file, printing-related convenience functions in a third, etc.
+Partitioning functionality in this way is not possible when it comes from
+a class's member functions, because a class must be defined in its entirety;
+it can't be split into pieces." [Effective C++, Third Edition, Item 23]
+
+The rule reports violations on member functions which do not use neither
+private nor protected members of class and call at least one public method
+from this class or from its parents.
+
+See also: CODSTA-CPP-20, CODSTA-CPP-29
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations on operator functions.
+Operators are checked by CODSTA-CPP-20 rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Prefer non-member non-friend functions to member functions. Doing so increases
+encapsulation, packaging flexibility, and functional extensibility."
+[Effective C++, Third Edition, Item 23]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class WebBrowser {
+public:
+    void clearCache();
+    void clearHistory();
+    void removeCookies();
+  
+    void clearEverything();
+};
+
+void WebBrowser::clearEverything(){   // Violation
+    clearCache();
+    clearHistory();
+    removeCookies();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class WebBrowser {
+public:
+    void clearCache();
+    void clearHistory();
+    void removeCookies();
+};
+
+void clearEverything(WebBrowser&amp; wb){ // OK
+    wb.clearCache();
+    wb.clearHistory();
+    wb.removeCookies();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc., Chapter 4, Item 23
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Class Design and Inheritance", Rule 44
+
+</PRE>
+</BODY>
+</HTML>

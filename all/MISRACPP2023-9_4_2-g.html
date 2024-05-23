@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The condition of a 'switch' statement should only be preceded by an optional simple-declaration [MISRACPP2023-9_4_2-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The condition of a 'switch' statement should only be preceded by an optional simple-declaration [MISRACPP2023-9_4_2-g-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The init-statement in a 'switch' can be either a simple-declaration that allows
+the declaration of a variable with restricted scope or an expression-statement.
+Using an expression-statement in the init-statement introduces complexity
+without any extra benefit.
+
+This rule detects when an expression-statement is used in the init-statement
+of a 'switch'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A simple-declaration is a statement that introduces, creates, and optionally
+initializes one or several variables.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability and maintainability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f(int i)
+{
+  switch (i = 0; i)               // Violation
+  {
+    case 0:
+      // ...
+      break;
+    case 1:
+      // ...
+      break;
+    default:
+      // ...
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f()
+{
+  switch (int i = 0; i)           // OK
+  {
+    case 0:
+      // ...
+      break;
+    case 1:
+      // ...
+      break;
+    default:
+      // ...
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.4.2 The structure of a switch statement shall be appropriate
+
+</PRE>
+</BODY>
+</HTML>

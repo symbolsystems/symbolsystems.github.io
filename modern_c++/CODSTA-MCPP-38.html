@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Braced-initialization {}, without equals sign, shall be used for variable initialization [CODSTA-MCPP-38]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Braced-initialization {}, without equals sign, shall be used for variable initialization [CODSTA-MCPP-38-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Braced-initialization using {} braces is simpler and less ambiguous
+than other forms of initialization. It is also safer, because it does
+not allow narrowing conversions for numeric values, and it is immune
+to C++'s most vexing parse.
+The use of an equals sign for initialization misleads into thinking
+that an assignment is taking place, even though it is not. For built-in
+types like int, the difference is academic, but for user-defined types,
+it is important to explicitly distinguish initialization from assignment,
+because different function calls are involved." [AUTOSAR A8-5-2]
+
+This rule detects the following cases:
+- A variable is initialized without a braced initializer.
+- A variable is initialized using a braced initializer, but the braces
+  are preceded by the equals sign.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"If a class declares both a constructor taking std::initializer_list
+argument and a constructor which invocation will be ignored in favor
+of std::initializer_list constructor, this rule is not violated
+by calling a constructor using () parentheses" [AUTOSAR A8-5-2]
+
+#include &lt;initializer_list&gt;
+struct S1 {
+    int m1;
+    S1(int i) : m1(i){}
+    S1(std::initializer_list&lt;int&gt; list) : m1(1){}
+};
+
+void f1() {
+    S1 s1(10);     // OK - Exception
+}
+
+This rule does not report variables declared with 'auto'
+or 'decltype(auto)' specifiers, because if an initializer
+of a variable of type 'auto' is enclosed in braces, then
+the result of type deduction may confuse the developer
+(see AUTOSAR A8-5-3).
+
+void f1()
+{
+    auto c1 = [](int x){return x + 2;};    // OK - Exception
+    decltype(auto) c2 = c1;                // OK - Exception
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent narrowing conversions of numeric values.
+It also allows you to improve code clarity and avoid ambiguity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;initializer_list&gt;
+#include &lt;vector&gt;
+struct S1 {
+    int m1;
+    S1(int i) : m1(i){}
+};
+
+void f1() {
+    int i1 = 10;                   // Violation
+    S1 s1(10);                     // Violation
+    std::vector&lt;int&gt; v = {1,2,3};  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, initialize the variables with a {} initializer that
+is not preceded by the equals sign.
+
+#include &lt;initializer_list&gt;
+#include &lt;vector&gt;
+struct S1 {
+    int m1;
+    S1(int i) : m1(i){}
+};
+
+void f1() {
+    int i1 {10};                 // OK
+    S1 s1 {10};                  // OK
+    std::vector&lt;int&gt; v {1,2,3};  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-5-2 A Braced-initialization {}, without equals sign,
+   shall be used for variable initialization.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,120 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not increase the accessibility of overridden or hidden methods [OOP-54]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not increase the accessibility of overridden or hidden methods [OOP-54-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Increasing the accessibility of overridden or hidden methods allows greater
+access than was originally intended for a method.
+
+This rule detects when:
+- a private method from a base class is overridden or hidden by a public or
+protected method in a derived class
+- a protected method from a base class is overridden or hidden by a public
+method in a derived class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A method from a base class is hidden by a method in a derived class
+if both methods have the same signature.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve encapsulation and prevent unauthorized access to
+restricted methods.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+protected:
+    virtual void f1();
+    void f2(){ }
+private:
+    void f3();
+};
+
+class Derived : public Base {
+public:
+    virtual void f1();          // Violation
+    using Base::f2;             // Violation
+protected:
+    void f3();                  // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+protected:
+    virtual void f1();
+    void f2(){ }
+private:
+    void f3();
+};
+
+class Derived : public Base {
+protected:
+    virtual void f1();          // OK
+    using Base::f2;             // OK
+private:
+    void f3();                  // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

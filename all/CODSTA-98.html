@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All 'if...else if' constructs will contain either a final else clause or a comment indicating why a final else clause is not necessary [CODSTA-98]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All 'if...else if' constructs will contain either a final else clause or a comment indicating why a final else clause is not necessary [CODSTA-98-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All 'if...else if' constructs will contain either a final 'else' clause
+or a comment indicating why a final 'else' clause is not necessary.
+This rule only applies when an 'if' statement is followed by one or more
+'else if'."
+
+The rule assumes a comment explains why the final 'else' is not necessary
+if it is placed in the same line as the closing brace '}' of last 'else if'
+and contains 'else' word.
+
+See also: CODSTA-23, MISRA2004-14_10
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The final 'else' can be empty (the rule will not report a violation), but
+for clarity it's better to add a comment which explains why the final
+else can be empty.
+
+Sometimes it's better to use the 'switch' statement instead of a series of
+'else if'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Providing a final 'else' clause (or comment indicating why a final 'else'
+clause is unnecessary) ensures all cases are handled in an else if series"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum Status { S1, S2, S3 };
+void foo(int a, enum Status s)
+{
+    if (a &lt; 0)
+    {
+    }
+    else if (a &gt; 3)   // Violation - no final else nor comment
+    {
+    }
+    
+    if (s == S1)
+    {
+    }
+    else if (s == S2)
+    {
+    }
+    else if (s == S3)   // Violation - no final else and comment not recognized
+    {
+    }
+    // Final else not needed because all possible cases handled
+
+    // OK: final else not needed because there is no 'else if'
+    if(a &lt; 0)
+    {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum Status { S1, S2, S3 };
+void foo(int a, enum Status s)
+{
+    // Fix: final else added
+    if (a &lt; 0)
+    {
+    }
+    else if (a &gt; 3)   // OK - final else added
+    {
+    }
+    else
+    {
+    }
+    
+    // Fix: comment explaining why final else is not needed placed
+    // in correct line
+    if (s == S1)
+    {
+    }
+    else if (s == S2)
+    {
+    }
+    else if (s == S3)   // OK - comment with 'else' word is in line with '}'
+    {
+    } // Final else not needed because all possible cases handled
+
+    // Sometimes a 'switch' is a better replacement for a series of
+    // 'if...else if'
+    switch (s)
+    {
+        case S1:
+            break;
+        case S2:
+            break;
+        case S3:
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 192
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The lambda that captures local objects by reference should not be assigned to the variable with a greater lifetime [CERT_CPP-EXP61-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The lambda that captures local objects by reference should not be assigned to the variable with a greater lifetime [CERT_CPP-EXP61-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When an object is captured by reference in a lambda, lifetime of the object
+is not tied to the lifetime of the lambda." [AUTOSAR C++14]
+
+Lambdas capture objects that have automatic storage duration. If a lambda
+captures an entity by reference, it is recommended to avoid storing it in
+a variable that has a greater scope, as this may result in the lambda object
+outliving the captured reference object.
+
+This rule detects when a lambda that captures by reference a local variable or
+parameter is assigned to:
+- a global or member variable
+- a static local variable
+- a local reference to a global, member, or static local variable
+- a parameter of a reference type
+- a dereferenced pointer to a global, member, or static local variable
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent dangling references that may lead to memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+std::function&lt;int()&gt; glob;
+
+void g1(int p) {
+    glob = [&amp;](){               // Violation
+        return p;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+std::function&lt;int()&gt; glob;
+
+void g1(int p) {
+    glob = [=](){               // OK
+        return p;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-1-4. A lambda expression object shall not outlive any of its reference-
+   captured objects
+
+2. SEI CERT C++ Coding Standard
+   EXP61-CPP. A lambda object must not outlive any of its reference captured
+   objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP61-CPP.+A+lambda+object+must+not+outlive+any+of+its+reference+captured+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP61-CPP.+A+lambda+object+must+not+outlive+any+of+its+reference+captured+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

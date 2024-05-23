@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call a function with a mismatched language linkage [CERT_CPP-EXP56-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call a function with a mismatched language linkage [CERT_CPP-EXP56-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When calling a function, it is undefined behavior if the language linkage
+of the function type used in the call does not match the language linkage
+of the function definition. For instance, a mismatch in language linkage
+specification may corrupt the call stack due to calling conventions or other
+ABI mismatches. Do not call a function through a type whose language linkage
+does not match the language linkage of the called function's definition.
+This restriction applies both to functions called within a C++ program
+as well as function pointers used to make a function call from outside
+of the C++ program." [CERT-EXP56-CPP]
+
+This rule detects when a function/a pointer to a function is assigned
+or cast to a function/a pointer to a function whose type has a different
+language linkage.
+This rule only detects a mismatch between the C and C++ language linkages.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"It is acceptable to call a function with a mismatched language linkage
+when the combination of language linkage specifications, runtime platform,
+and compiler implementation result in no effect on runtime behavior
+of the function call." [CERT-EXP56-CPP]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+"When calling a function, it is undefined behavior if the language linkage
+of the function type used in the call does not match the language linkage
+of the function definition." [CERT-EXP56-CPP]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+extern "C" int fc1(int) { return 1; }     // fc1 has C linkage
+int fcpp1(int) { return 1; }              // fcpp1 has C++ linkage
+
+int (*fp1)(int) = fc1;                    // Violation
+extern "C" int (*fp2)(int) = fcpp1;       // Violation
+
+extern "C" void fc2( int(*)(int) );
+extern "C++" int fcpp2(int);
+void f1() {
+    fc2( fcpp2 );                         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+extern "C" {
+    int fc1(int) { return 1; }
+    int (*fp1)(int) = fc1;                // OK
+}
+int fcpp1(int) { return 1; }
+int (*fp2)(int) = fcpp1;                  // OK
+
+extern "C" void fc2( int(*)(int) );
+extern "C++" int fcpp2(int);
+extern "C" int foo_wrapper(int i) { return fcpp2(i); }
+void f1() {
+    fc2( foo_wrapper );                   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   EXP56-CPP. Do not call a function with a mismatched language linkage
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP56-CPP.+Do+not+call+a+function+with+a+mismatched+language+linkage">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP56-CPP.+Do+not+call+a+function+with+a+mismatched+language+linkage</A>
+
+</PRE>
+</BODY>
+</HTML>

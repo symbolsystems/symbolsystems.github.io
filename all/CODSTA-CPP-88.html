@@ -1,0 +1,98 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The name of typedef should not be the same as the name of its basic type [CODSTA-CPP-88]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The name of typedef should not be the same as the name of its basic type [CODSTA-CPP-88-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In a given scope, a typedef specifier can be used to redefine the name of any
+type declared in that scope to refer to the type to which it already refers."
+[ISO/IEC 14882]
+
+For ease of use, C++ doesn't require that a type name be prefixed with
+the keywords class, struct, union or enum when used in object declarations
+or type casts, so the use of a typedef with the same name as its basic type
+is not reasonable.
+
+The rule reports a violation if a direct typedef to class, struct, union 
+or enum type has the same name as its basic type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and efficiency of code.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule reports a violation if a typedef is defined as extern "C".
+
+extern "C" typedef struct cc {int x; int y;} cc; // Violation is reported
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct vector {int x; int y;} vector;     // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct vector {int x; int y;};        // OK
+typedef struct S {int x; int y;} ST;  // OK - typedef has different name
+typedef ST S;                         // OK - only direct typedef is checked
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882 Programming languages -- C++
+   7.1.3 The typedef specifier
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The enumeration constant named 'FALSE' should be explicitly initialized by 0 value [CODSTA-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The enumeration constant named 'FALSE' should be explicitly initialized by 0 value [CODSTA-25-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The enumeration types are sometimes used to define boolean values.
+If the enumeration type contains an enumeration constant named 'FALSE', then 
+this constant should be explicitly initialized by 0 value. 
+It is allowed to use decimal, octal or hexadecimal values (e.g. 0000, 0x0000)
+and the number 0 can be followed by a suffix (e.g. 0u, 0l, 0UL).
+
+See also: CODSTA-24, CODSTA-42, CODSTA-43
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1()
+{
+    enum BOOL
+    {
+        FALSE,           // Violation
+        TRUE
+    };
+}
+
+void foo2()
+{
+    enum BOOL
+    {
+        TRUE = 1,
+        FALSE = !TRUE    // Violation
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1()
+{
+    enum BOOL
+    {
+        FALSE = 0,       // OK
+        TRUE = 1
+    };
+}
+
+void foo2()
+{
+   enum BOOL
+    {
+        FALSE = 0u,      // OK
+        TRUE = 1u
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

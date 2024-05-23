@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Non-static data members should be either all private or all public [CODSTA-CPP-201]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Non-static data members should be either all private or all public [CODSTA-CPP-201-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when the class or struct:
+* has a protected non-static data member, or
+* has non-static data members with different access specifiers.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability by differentiating between classes
+which contain logic and classes that group data members without defining
+any invariants.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S // Violation
+{
+    int a;
+protected:
+    int b;
+private:
+    int c;
+};
+
+class C1 // Violation
+{
+protected:
+    int a;
+};
+
+class C2 // OK - static members are not subject to this rule
+{
+    int a;
+public:
+    static int staticA;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S // OK
+{
+    int a;
+    int b;
+    int c;
+};
+
+class C1 // OK - private members can be exposed by protected or public methods
+{
+    int a;
+protected:
+    int getA();
+};
+
+class C2 // OK - static members are not subject to this rule
+{
+    int a;
+public:
+    static int staticA;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 14.1.1 Non-static data members should be either all private or all public
+
+</PRE>
+</BODY>
+</HTML>

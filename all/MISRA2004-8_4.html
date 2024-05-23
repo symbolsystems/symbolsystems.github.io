@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If objects or functions are declared more than once their types shall be compatible [MISRA2004-8_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If objects or functions are declared more than once their types shall be compatible [MISRA2004-8_4-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Two types have compatible type if their types are the same. For two qualified
+types to be compatible, both shall have the identically qualified version
+of a compatible type. For two pointer types to be compatible, both shall
+be identically qualified and both shall be pointers to compatible types.
+For two array types to be compatible, both shall have compatible element types,
+and if both size specifiers are present, and are integer constant expressions,
+then both size specifiers shall have the same constant value.
+For two function types to be compatible, both shall specify compatible return
+types. Moreover, the parameter type lists, if both are present, shall agree
+in the number of parameters and in use of the ellipsis terminator;
+corresponding parameters shall have compatible types."
+
+The rule reports a violation if two declarations of object or function are not 
+compatible. The rule assumes that typedefs to the same type are compatible
+and signed short/int/long type is the same as short/int/long type.
+
+See also: MISRA2004-8_3_a, MISRA2004-8_3_b, CODSTA-67
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule is limited only to translation unit scope.
+The rule does not check dimensions of array types.
+
+int arr[4]; 
+int arr[5]; /* Violation is not reported */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* In many cases incompatible declarations will be flagged as syntax errors */
+
+int var1;    
+short var1;      /* Violation */
+
+int var2;      
+const int var2;  /* Violation */
+
+int* arr;  
+int arr[5];      /* Violation */
+
+char foo1();              /* Violation */
+signed char foo1(); 
+
+void foo2(signed int i);  /* Violation */
+void foo2(unsigned int i);
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+short int var1;  /* OK */
+short var1; 
+
+const int var2;  /* OK */
+const int var2;
+
+int arr[];       /* OK */
+int arr[5];
+
+typedef char char_t;
+char foo1();              /* OK */
+char_t foo1();
+
+void foo2(signed int i);  /* OK */
+void foo2(int i);       
+
+void foo3(int* ap);       /* OK */
+void foo3(int ap[]);   
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 8.4, Rule 8.3
+
+2. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 8
+
+3. Origin: Misra Guidelines rule 26
+
+4. ISO/IEC 9899:1999
+   sections 6.2.7, 6.7.3, 6.7.5.3
+
+5. SEI CERT C Coding Standard
+   DCL40-C. Do not create incompatible declarations of the same function or
+   object
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL40-C.+Do+not+create+incompatible+declarations+of+the+same+function+or+object">https://wiki.sei.cmu.edu/confluence/display/c/DCL40-C.+Do+not+create+incompatible+declarations+of+the+same+function+or+object</A>
+
+</PRE>
+</BODY>
+</HTML>

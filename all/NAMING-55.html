@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A macro identifier should have an appropriate form [NAMING-55]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A macro identifier should have an appropriate form [NAMING-55-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each identifier that contains a double underscore '__' or begins
+with an underscore followed by an uppercase letter is reserved
+to the implementation for any use." [ISO/IEC 14882:2017]
+
+Macro names should be distinct from other identifiers and should
+not collide with keywords or alternative representations, as this
+may result in undefined behavior.
+
+This rule detects when a macro name:
+- contains a double underscore, or
+- starts with an underscore followed by an uppercase letter, or
+- contains characters other than uppercase letters, numbers, and underscores.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define pi 3.141592653    // Violation
+#define _MAC 10           // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define PI 3.141592653    // OK
+#define MAC 10            // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   5.10 Identifiers
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.10.1 User-defined identifiers shall have an appropriate form
+
+</PRE>
+</BODY>
+</HTML>

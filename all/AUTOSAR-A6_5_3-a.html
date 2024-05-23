@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+'Do' statements should not be used except in a function-like macro [AUTOSAR-A6_5_3-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+'Do' statements should not be used except in a function-like macro [AUTOSAR-A6_5_3-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do-statements are bug-prone, as the termination condition
+is checked at the end and can be overlooked." [AUTOSAR A6-5-3]
+
+This rule detects 'do' statements.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"A do-statement may be used in a function-like macro to ensure that its
+invocation behaves like an expression statement consisting of a function
+call." [AUTOSAR A6-5-3]
+
+This rule allows the use of 'do' statements in function-like macro
+definitions when the 'do-while' statement is the entire body of the macro (it
+can be terminated with a semicolon or not) and contains explicit braces '{}'.
+
+#define DO_WHILE(arg)       \
+  do /* OK */               \
+  {                         \
+     /*...*/                \
+  } while (arg == 0)
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability and prevents bug-prone code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void fun1()
+{
+  int i = 0;
+  do {                                       // Violation
+    // do something
+    i++;
+  } while (i &lt; 20);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void fun1()
+{
+  int i = 1;
+  // do something
+  while(i &lt; 20) {                            // OK
+    // do something
+    i++;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-5-3. Do statements should not be used
+
+</PRE>
+</BODY>
+</HTML>

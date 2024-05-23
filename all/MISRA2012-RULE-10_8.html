@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value of a composite expression shall not be cast to a different essential type category or a wider essential type [MISRA2012-RULE-10_8]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value of a composite expression shall not be cast to a different essential type category or a wider essential type [MISRA2012-RULE-10_8-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation if the value of a "composite expression" is cast
+to a type that has different "essential type category", or is a wider "essential
+type".
+
+The terms "composite expression", "essential type category" and "essential type"
+are defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"1. An essentially real floating expression may be cast to an essentially
+    complex floating type providing that the corresponding real type
+    is not wider than the type of the expression.
+2. An essentially real complex expression may be cast to essentially real
+   floating type providing that type is not wider than the corresponding
+   real type of the expression." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+By restricting the implicit and explicit conversions that may be applied to
+non-trivial expressions, this rule helps avoiding issues caused by:
+"- the confusion about the type in which integer expressions are evaluated, 
+  as this depends on the type of the operands after any integer promotion
+- the common misconception among programmers that the type in which
+  a calculation is conducted is influenced by the type to which the result
+  is assigned or cast. This false expectation may lead to unintended results"
+[MISRA C:2012 Rule 10.8]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of code which results in violation */
+/* This example assumes 'short' has 16 bits and 'int' has 32 bits */
+void foo(int s32a, int s32b, unsigned short u16a, unsigned short u16b)
+{
+    /* Cast to a different essential type category ("signed" to "unsigned") */
+    (unsigned short) (s32a + s32b);         /* Violation */
+    
+    /* Cast to wider essential type (16 bit to 32 bit ")*/
+    (unsigned int) (u16a + u16b);           /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code which does not result in violation */
+/* This example assumes 'short' has 16 bits and 'int' has 32 bits */
+void foo(unsigned int u32a, unsigned int u32b, int s32a)
+{
+     /* Cast to same essential type category (unsigned) to a narrower type */
+    (unsigned short) (u32a + u32b);    
+
+    /* s32a is not a composite expression */
+    (unsigned short) s32a;    
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.8, 8.10.3 Composite operators and expressions
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.12 Rule 10.8
+
+</PRE>
+</BODY>
+</HTML>

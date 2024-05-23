@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Both the copy constructor and copy assignment operator should have the same public/protected/private permission [MRM-40_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Both the copy constructor and copy assignment operator should have the same public/protected/private permission [MRM-40_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Declare both the copy constructor and the copy assignment operator with the same
+permission (for example, declare both private).
+
+These two methods should have similar effects. For example, if you wanted to
+disallow copying by declaring one of them as private, the other one
+should probably be declared private as well.
+
+See also: MRM-40_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Sometimes you might want to have different permissions for those methods. For
+example, you might want to make the copy constructor public to allow
+initialization of references, and at the same time disallow assigning to this
+object in future (which requires a private copy assignment operator).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule prevents inconsistent class interface.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A // Violation - different permissions
+{
+    public:
+        A(const A&amp;) {}
+    private:
+        A&amp; operator=(const A&amp;);
+};
+
+struct B // Violation - different permissions
+{
+        B&amp; operator=(const B&amp;);
+    protected:
+        B(const B&amp;);
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A  // OK - same permissions
+{ 
+    private:
+        A(const A&amp;) {}
+        A&amp; operator=(const A&amp;);
+};
+
+struct B // OK - only one declared
+{ 
+        B&amp; operator=(const B&amp;);
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 52
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

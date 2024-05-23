@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Suspicious use of semicolon [CERT_C-EXP15-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Suspicious use of semicolon [CERT_C-EXP15-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports a violation message if the semicolon constituting
+the statement body is placed in the same line as closing ")"
+parentheses (e.g., if(e); or while(e); or for(e;e;e);.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule does not report a violation message if the ';' is placed
+in different line than the ')'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents accidental termination of 'if', 'while', or 'for' constructs.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int param)
+{
+  if (param);   // Violation
+  
+  for(;;)  ;    // Violation  
+
+  while(param); // Violation
+  {
+  
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int param)
+{
+  if (param)     // OK
+  {
+  }
+  
+  for(;;)        // OK
+  ; 
+
+  while(param)   // OK
+  {
+  
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. SEI CERT C Coding Standard
+   EXP15-C. Do not place a semicolon on the same line as an if, for, or while
+   statement
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP15-C.+Do+not+place+a+semicolon+on+the+same+line+as+an+if%2C+for%2C+or+while+statement">https://wiki.sei.cmu.edu/confluence/display/c/EXP15-C.+Do+not+place+a+semicolon+on+the+same+line+as+an+if%2C+for%2C+or+while+statement</A>
+
+</PRE>
+</BODY>
+</HTML>

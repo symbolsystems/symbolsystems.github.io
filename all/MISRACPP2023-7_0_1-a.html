@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no conversion from type bool [MISRACPP2023-7_0_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no conversion from type bool [MISRACPP2023-7_0_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports if bool is converted to any other type
+by an implicit or explicit conversion.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report on equality operators where both operands have
+type bool.
+
+An explicit cast to class T of the following forms:
+* T { bool },
+* T ( bool ),
+* static_cast&lt; T &gt;( bool ),
+* ( T )bool
+is permitted if T has a converting constructor with a parameter of type bool.
+
+A value of type bool may be assigned to a bit-field of length 1.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent potential errors and avoid confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+bool b1 = true;
+bool b2 = false;
+
+void f()
+{
+    if (b1 &amp; b2) {}       // Violation - b1 and b2 converted to int
+    if (b1 &lt; true) {}    // Violation - b1 and 'true' converted to int
+    static_cast&lt;int&gt;(b1); // Violation - b1 converted to int
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct A
+{
+  explicit A( bool );
+};
+
+bool b1 = true;
+bool b2 = false;
+
+void f()
+{
+    if (b1 &amp;&amp; b2) {}      // OK - no conversion
+    if (b1 != true) {}    // OK - equality operator 
+    static_cast&lt;A&gt;(b1);   // OK - call to converting constructor
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.1 There shall be no conversion from type bool
+
+</PRE>
+</BODY>
+</HTML>

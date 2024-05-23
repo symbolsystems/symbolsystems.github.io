@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use comments to remove sections of code [HICPP-2_3_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use comments to remove sections of code [HICPP-2_3_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Comments are intended to provide a rationale for programming decisions and
+information about the code as it evolves. They are not intended to be used for
+indefinitely disabling unused sections of the code, which can make the code
+more difficult to  read and understand. Use conditional compilation constructs
+(e.g., #if or #ifdef) for code that is not intended to be compiled and add a
+comment explaining the use of the construct. Use a source control system as a
+means of reintroducing code that has been removed.
+
+This rule applies to both // and /* ... */ styles of comment.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule can report false positives if the comment contains text similar
+to the code. In the following comment, a violation will be reported because
+it contains the text that is similar to the function call:
+
+/*
+ * The file contains functions(name1, name2); variables(name1, name2);
+ */
+
+Similarities between source code and comment text may prevent the violation
+from being reported on comments containing code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo() {
+    int x = 5;
+    /*  Section of code     // Violation
+        commented out
+    if (x==0){
+        x++;
+    }
+    */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo() {
+    int x = 5;
+/* Comment without          // OK
+   code within */
+#if 0
+    if (x==0){
+        x++;
+    }
+#endif
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   2.3.2. Do not comment out code
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer 'auto' to explicit type names in variable declarations [CODSTA-MCPP-08_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer 'auto' to explicit type names in variable declarations [CODSTA-MCPP-08_a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The auto type-specifier signifies that the type of a variable being declared
+shall be deduced from its initializer. The type of the declared variable
+using the declarator-id is determined from the type of its initializer
+using the rules for template argument deduction." [ISO/IEC 14882:2011]
+
+It is recommended that you use the 'auto' specifier instead of explicit type
+names in variable declarations.
+
+This rule detects the following cases:
+1. The definition of a variable with internal linkage or with no linkage
+   contains an explicit initializer that is not a literal or integral
+   constant expression.
+
+2. The declared type of a variable is not an array type, and does not contain
+   the 'auto' specifier.
+
+3. The declared type of a variable and the type of the expression used
+   in an initializer are the same, or both are of arithmetic types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid mistakes by preventing unnecessary type conversions
+and the use of uninitialized variables (declaring variables with the 'auto'
+keyword forces initialization).
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The rule does not detect variables that are declared inside 'if', 'while',
+   'for conditions'.
+2. The rule does not detect variables that are declared in template functions.
+3. The rule does not detect static const member variables that are initialized
+   inside a class body
+4. The rule may report false violations if more than one variable is declared
+   in the same statement.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void foo() {
+    std::vector&lt;int&gt; v;
+    std::vector&lt;int&gt;::iterator it = v.begin();    // Violation
+    unsigned n = v.size();                        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+void foo() {
+    std::vector&lt;int&gt; v;
+    auto it = v.begin();    // OK
+    auto n = v.size();      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 2: "auto", Item 5: "Prefer auto to explicit type declarations"
+
+2. Programming languages -- C++ ISO/IEC 14882:2011
+   7.1.6.4 auto specifier
+
+</PRE>
+</BODY>
+</HTML>

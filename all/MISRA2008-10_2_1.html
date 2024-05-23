@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All accessible entity names within a multiple inheritance hierarchy should be unique [MISRA2008-10_2_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All accessible entity names within a multiple inheritance hierarchy should be unique [MISRA2008-10_2_1-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All accessible entity names within a multiple inheritance hierarchy should
+be unique. If the names are ambiguous, the compiler should report the name
+clash and not generate arbitrary or unexpectedly resolved code."
+[MISRA C++:2008 Rule 10-2-1]
+
+This rule detects when a derived class inherits from two or more base classes
+that contain identifiers with identical names, and using these identifiers
+in the derived class without explicit references to the base classes would
+result in ambiguity.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule also reports violations on private members and on deleted functions
+in base classes. They are inaccessible in derived classes, but their usage
+results in the compiler reporting an ambiguity, which may not be obvious
+to a developer.
+
+class A {
+    int a;           // Violation
+};
+class B {
+    int a;           // Violation
+};
+class C: public A, public B {
+};
+void g(C* pc) {
+//	pc -&gt; a = 1; // error: ambiguous: A::a or B::a
+}
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+1. "For the purposes of this rule, visible function identifiers that
+   form an overloaded set shall be considered as the same entity."
+   [MISRA C++:2008 Rule 10-2-1]
+
+2. This rule does not detect assignment operator functions.
+
+   "Because a copy/move assignment operator is implicitly declared
+   for a class if not declared by the user, a base class copy/move
+   assignment operator is always hidden by the corresponding assignment
+   operator of a derived class" [ISO/IEC 14882:2011]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid the name clash and generating unexpectedly
+resolved code for multiple inheritance entities.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    long count;                 // Violation
+    int foo ( )                 // Violation
+    {
+        return 1;
+    }
+};
+
+class B
+{
+public:
+    long count;                 // Violation
+    int foo ( )                 // Violation
+    {
+        return 1;
+    }
+};
+
+class C: public A, public B
+{
+public:
+    using A::foo;
+
+    int count1;
+    void foo1 ( )
+    {
+        // unexpectedly resolved code
+        count1 = foo();
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A
+{
+public:
+    long count;                  // OK
+    int foo ( )                  // OK
+    {
+        return 1;
+    }
+};
+
+class B
+{
+public:
+    long count1;                 // OK
+    int foo1 ( )                 // OK
+    {
+        return 1;
+    }
+};
+
+class C: public A, public B
+{
+public:
+    void foo2 ( )
+    {
+        count1 = foo();
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M10-2-1. All accessible entity names within a multiple inheritance
+   hierarchy should be unique
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems. 6.10.2 Member name lookup: Rules, Rule 10-2-1
+
+3. Programming languages -- C++ ISO/IEC 14882:2011
+   12.8 Copying and moving class objects
+
+</PRE>
+</BODY>
+</HTML>

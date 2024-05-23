@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call the 'system()' function from the 'stdlib.h' or 'cstdlib' library with an argument other than '0' (null pointer) [CERT_C-ENV33-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call the 'system()' function from the 'stdlib.h' or 'cstdlib' library with an argument other than '0' (null pointer) [CERT_C-ENV33-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The C Standard system() function executes a specified command by invoking an
+implementation-defined command processor, such as a UNIX shell or CMD.EXE in
+Microsoft Windows. Use of the system() function can result in exploitable
+vulnerabilities, in the worst case allowing execution of arbitrary system
+commands." [CERT-ENV33-C]
+
+This rule detects when the 'system()' function from the standard library is
+called.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"It is permissible to call system() with a null pointer argument to determine
+the presence of a command processor for the system." [CERT-ENV33-C]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you reduce the number of application vulnerabilities and
+prevents undefined and implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+void f1( char* cmd)
+{
+    system(cmd);                /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+void f1( char* cmd, char *input)
+{
+    char *const args[3] = {"any_exe", input, NULL};
+    char **env = NULL;
+    execve( cmd, args, env);    /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   ENV33-C. Do not call system()
+   <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152177">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152177</A>
+
+</PRE>
+</BODY>
+</HTML>

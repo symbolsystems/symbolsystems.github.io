@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not initialize a reference to an object whose address can be changed [INIT-05]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not initialize a reference to an object whose address can be changed [INIT-05-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A reference should not be initialized to an object whose address can be
+changed. For example, if a reference is initialized to an object that is
+obtained by dereferencing a pointer and the object that this pointer points to
+is deleted, the reference will refer to a non-existing object.
+
+This rule detects when a reference is initialized to an object accessed by
+dereferencing a pointer.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent illegal access to the memory that has been freed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int * bar();
+
+void foo(char * a)
+{
+   int * ptr = new int(1);
+   int &amp; rintptr1 = *ptr;                      // Violation
+   int &amp; rintptr2 = ptr[0];                    // Violation
+   int &amp; rintptr3 = *bar();                    // Violation
+   char &amp; rcharptr = *a;                       // Violation
+   if (ptr) delete ptr;
+   // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct code */ 
+int &amp; bar();
+
+void foo(char &amp; a)
+{
+   int val = 1;
+   int &amp;rval1 = val;                           // OK
+   int &amp;rval2 = bar();                         // OK
+   char &amp;rchar = a;                            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

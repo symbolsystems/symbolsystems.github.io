@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The #endif pre-processor directives will only be used to prevent multiple inclusions of the same header file [HICPP-16_1_1-e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The #endif pre-processor directives will only be used to prevent multiple inclusions of the same header file [HICPP-16_1_1-e-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Conditional code compilation should be kept to a minimum as it can
+significantly obscure testing and maintenance efforts." [JOINT STRIKE FIGHTER]
+
+This rule detects when the #endif preprocessor directive is used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule allows using the #endif directive in the mechanism that prevents
+multiple inclusions of the same header file.
+
+#ifndef FOO_HH
+#define FOO_HH
+//...
+#endif            // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifndef MAX
+#define MAX 10
+#endif                        // Violation
+
+void f();
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static const int MAX = 10;    // OK
+
+void f();
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   16.1.1. Use the preprocessor only for implementing include guards, and
+   including header files with include guards
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.6 Pre-Processing Directives, AV Rule 28
+
+3. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-2-1
+
+4. The Power of Ten - Rules for Developing Safety Critical Code.
+   Rule 8
+
+</PRE>
+</BODY>
+</HTML>

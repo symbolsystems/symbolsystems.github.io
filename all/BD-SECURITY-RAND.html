@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Properly seed pseudorandom number generators [BD-SECURITY-RAND]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Properly seed pseudorandom number generators [BD-SECURITY-RAND-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+"Initializing random number engines by default initializes pseudo-random
+generator with a default_seed constant value. However, this can be not obvious
+for a developer and can lead to unexpected program behaviour." [AUTOSAR A26-5-2]
+
+If a pseudorandom number generator is called with the same initial state, it
+generates an identical sequence of random numbers in different runs of a program.
+This enables an attacker to predict the sequence of random numbers that will be
+generated in the future runs. For this reason, calling the 'rand' and 'random'
+functions should be preceded with a call to 'srand' or 'srandom' respectively,
+which should take a different argument every time a program is run. 
+
+This rule detects when:
+- a call to 'rand' or 'random' is not preceded by a call to 'srand' or 'srandom'
+  respectively.
+- 'srand' or 'srandom' is called with the same argument in different runs
+  of a program.
+- a pseudo-random number engine from the C++ standard library is initialized with
+  a 'default_seed' constant value.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"If the PRNG is subsequently seeded with the same initial seed value, then it
+will generate the same sequence. As a result, after the first run of
+an improperly seeded PRNG, an attacker can predict the sequence of random
+numbers that will be generated in the future runs. Improperly seeding or
+failing to seed the PRNG can lead to vulnerabilities, especially in security
+protocols". [MSC32-C.]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you avoid vulnerabilities by preventing an attacker form
+predicting the random numbers that will be generated in the future runs
+of the program.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+This rule assumes that a pseudorandom number generator is initialized only if
+the initialization function 'srand' or 'srandom' is called within the same
+function as 'rand' or 'random' respectively.
+The rule will always trigger if it detects 'rand'/'random' that is not preceded with
+'srand'/'srandom' within the same function, even if 'srand'/'srandom' is called
+at the beginning of the 'main' function.
+      
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;random&gt;
+ 
+void func1(void) {
+    for (unsigned int i = 0; i &lt; 10; ++i) {
+        /* Always generates the same sequence */
+        printf("%ld, ", rand()); // VIOLATION
+    }
+}
+
+void func2() {
+    std::default_random_engine eng{};
+    std::uniform_int_distribution&lt;int&gt; ud{0, 100};
+    int r = ud(eng);           // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+#include &lt;random&gt;
+ 
+void func1(void) {
+    srandom(time(NULL));
+    for (unsigned int i = 0; i &lt; 10; ++i) {    
+        printf("%ld, ", rand()); // NO VIOLATION
+    }
+}
+
+void func2() {
+    std::random_device rd;
+    std::default_random_engine eng{rd()};
+    std::uniform_int_distribution&lt;int&gt; ud{0, 100};
+    int r = ud(eng);           // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+OWASP Top 10-2021
+A02:2021 - Cryptographic Failures
+<A HREF="https://owasp.org/Top10/A02_2021-Cryptographic_Failures/">https://owasp.org/Top10/A02_2021-Cryptographic_Failures/</A>
+   
+OWASP Top 10 2017
+A3-Sensitive Data Exposure
+<A HREF="https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html">https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure.html</A>
+
+OWASP API Security Top 10-2019
+API3-Excessive Data Exposure
+<A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+SEI CERT C Coding Standard
+MSC32-C. Properly seed pseudorandom number generators
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC32-C.+Properly+seed+pseudorandom+number+generators">https://wiki.sei.cmu.edu/confluence/display/c/MSC32-C.+Properly+seed+pseudorandom+number+generators</A>
+
+SEI CERT C++ Coding Standard
+MSC51-CPP. Ensure your random number generator is properly seeded
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MSC51-CPP.+Ensure+your+random+number+generator+is+properly+seeded">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MSC51-CPP.+Ensure+your+random+number+generator+is+properly+seeded</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A26-5-2 Random number engines shall not be default-initialized.
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002290: The application must use the Federal Information Processing Standard (FIPS) 140-2-validated cryptographic modules and random number generator if the application implements encryption, key exchange, digital signature, and hash functionality.
+
+</PRE>
+</BODY>
+</HTML>

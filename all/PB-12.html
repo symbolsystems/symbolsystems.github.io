@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast a signed char to an unsigned int [PB-12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast a signed char to an unsigned int [PB-12-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The loss of sign (sign errors), can occur when converting from a signed type
+to an unsigned type. If an explicit cast is used to conversion from a signed
+char type to an unsigned int type then counterintuitively a value of expression
+could be changed.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents loss of sign (sign errors).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo( char ch )
+{
+    unsigned int i = 10u;
+    if((unsigned int) ch &gt; i){   // Violation
+        return 0;
+    } else {
+        return 1; 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo( unsigned char ch )
+{
+    unsigned int i = 10u;
+    if((unsigned int) ch &gt; i){  // OK
+        return 0;
+    } else {
+        return 1; 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,135 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid unused private member variables [OPT-05]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid unused private member variables [OPT-05-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Variables declared and never used in a project constitute noise and may
+indicate that the wrong variable name has been used somewhere. Removing these
+declarations reduces the possibility that they may later be used instead
+of the correct variable." [MISRA C++:2008]
+
+This rule detects private member variables that are declared but never used in
+the code.
+
+See also: OPT-02, OPT-06
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not recognize initialization of a member variable in
+the constructor list to be a use of that variable.
+
+This rule does not trigger if the private member variable is declared in
+a class that meets one of the following conditions:
+- It contains one or more functions that have non-accessible bodies (in
+  the tested translation unit).
+- It is a friend of a class that contains one or more functions that have
+  non-accessible bodies (in the tested translation unit).
+- It is a friend of a template class or a template function.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and efficiency, as well as prevent
+problems that may be caused by confusing variable names.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the "m1", " m2", "m3", and "m4" variables are
+declared, but never used (initialization in a constructor is not recognized to
+be a use).
+
+class A {
+public:
+    A();
+    int foo(A a);
+private:
+    int m1; // Violation
+    int m2; // Violation
+    int m3; // Violation
+    int m4; // Violation
+};
+
+A::A() : m1(0), m2(1), m3(2) {}
+
+int A::foo(A a){}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by either using or removing the declared variables. In
+the fix below, the "m1", " m2", and "m3" variables are used, while the "m4"
+variable is removed.
+
+class A {
+public:
+    A();
+    int foo(A a);
+private:
+    int m1; // OK
+    int m2; // OK
+    int m3; // OK
+};
+
+A::A() : m1(0), m2(1), m3(2) {}
+
+int A::foo(A a){
+    m1 = a.m2 + this-&gt;m3;
+    return m1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M0-1-3. A project shall not contain unused variables
+
+2. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 0, Rule 0-1-3
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

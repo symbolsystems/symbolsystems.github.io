@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Boolean condition always evaluates to the same value due to enumeration with only zero or only non-zero constants [PB-68]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Boolean condition always evaluates to the same value due to enumeration with only zero or only non-zero constants [PB-68-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation when you use an enumeration type in a boolean
+condition with one of the following characteristics:
+   * all enumerator constants have non-zero values, or
+   * all enumerator constants have zero values
+Booleans will always convert to "true" in the first case and "false" in the
+second (in the second case).
+
+See also: CODSTA-151, CODSTA-CPP-89
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If a boolean condition always evaluates to the same value, it is likely that
+there is a programming error. It is possible that some code is unreachable
+(dead code).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// All enumerators have value 0
+enum E1 {
+    E1C1 = 0, E1C2 = 0
+} e1;
+
+// All enumerators have non-zero value
+typedef enum {
+    E2C1 = 1, E2C2 = -1
+} E2;
+
+E2 e2;
+int foo0();
+static void foo(enum E1 a1)
+{
+    int b = !e2;        // Violation
+    if (a1);            // Violation
+    E1C2 &amp;&amp; foo0();     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Enumerators with zero and non-zero values
+enum E3 {
+    E3C1 = 0, E3C2 = 10
+} e3;
+
+int foo0();
+static void foo(enum E3 a3)
+{
+    int b = !e3;       // OK
+    if (a3);            // OK
+    E3C2 &amp;&amp; foo0();     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-398 
+   <A HREF="http://cwe.mitre.org/data/definitions/398.html">http://cwe.mitre.org/data/definitions/398.html</A>
+
+</PRE>
+</BODY>
+</HTML>

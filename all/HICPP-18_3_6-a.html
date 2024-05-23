@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use relaxed atomics [HICPP-18_3_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use relaxed atomics [HICPP-18_3_6-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The CPU may reorder memory operations if you do not order memory for atomic
+variables sequentially. As a result, understanding the correctness of the code
+will be extremely difficult because there will be a  lack of total event
+ordering across threads. This rule reports a violation if relaxed operations on
+an atomic variable is detected.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents race conditions and improves code quality and security by
+preventing memory operations from being reordered unexpectedly.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;atomic&gt;
+#include &lt;cstdint&gt;
+
+template &lt;typename T&gt; class CountingConsumer {
+  public:
+    explicit CountingConsumer(T *ptr, int32_t counter)
+        : m_ptr(ptr), m_counter(counter) {}
+
+    void consume(int data) {
+        m_ptr-&gt;consume(data);
+
+        if (m_counter.fetch_sub(1,
+                                std::memory_order_release) == 1) { // Violation
+            delete m_ptr;
+        }
+    }
+
+    T *m_ptr;
+    std::atomic&lt;int32_t&gt; m_counter, test;
+    int i;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;atomic&gt;
+#include &lt;cstdint&gt;
+
+template &lt;typename T&gt; class CountingConsumer {
+  public:
+    explicit CountingConsumer(T *ptr, int32_t counter)
+        : m_ptr(ptr), m_counter(counter) {}
+
+    void consume(int data) {
+        m_ptr-&gt;consume(data);
+
+        if (m_counter.fetch_sub(1, std::memory_order_acquire) == 1) { // OK
+            delete m_ptr;
+        }
+    }
+
+    T *m_ptr;
+    std::atomic&lt;int32_t&gt; m_counter, test;
+    int i;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   18.3.6. Do not use relaxed atomics
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A single operation with side-effect shall only be used in the proper context [CODSTA-102]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A single operation with side-effect shall only be used in the proper context [CODSTA-102-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A single operation with side-effects shall only be used in the following
+contexts:
+- by itself
+- the right-hand side of an assignment
+- a condition
+- the only argument expression with a side-effect in a function call
+- condition of a loop
+- switch condition
+- single part of a chained operation."
+
+The rule reports a violation if an expression containing a side-effect
+is used in context that is not one of the list above.
+
+As side-effects the rule detects:
+- modifying an object by increment, decrement or assignment operator
+- using 'new', 'delete' or 'throw' statement
+
+Calling a function that have side effects is not recognized as a side effect
+by this rule - it is implemented in CODSTA-103 rule.
+
+"It is permissible for a side-effect to occur in conjunction
+with a constant expression."
+
+See also: CODSTA-103
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+ 
+Accessing a volatile object is not recognized as side-effect.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The rule attempts to prohibit side-effects in expressions that would
+be unclear, misleading, obscure, or would otherwise result in unspecified
+or undefined behavior."
+
+Prevents hiding side-effects within an expression.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int g;
+void bar(int, int*);
+int foo1(int p, int *r) {
+    int i;
+    i = g - ++p;        // Violation - "++p" does not occur by itself
+    for (int j = 0; j &lt; 10; ++j); // OK - occurs by itself
+    if (i++ &lt; *r);      // Violation - does not occur by itself
+    if (i++ &lt; 0);       // OK - expression with constant
+    r[++i];             // Violation - "++i" in context of "[]"
+    bar(g++, r);        // Violation - not the only argument
+    bar(g++, 0);        // OK - the other argument is constant
+    return g++ + i;     // Violation - does not occur by itself
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int g;
+void baz(int);
+void bar(int, int*);
+int foo1(int p, int *r) {
+    int i;
+    ++p;
+    i = g - p;          // OK
+    for (int j = 0; j &lt; 10; ++j); // OK
+    i++;
+    if (i &lt; *r);        // OK
+    if (i++ &lt; 0);       // OK
+    ++i;
+    r[i];               // OK
+    g++;
+    bar(g, r);          // OK
+    bar(g++, 0);        // OK
+
+    // Additional examples:
+    i /= ++p;           // OK - right-hand side of an assignment
+    if (i++);           // OK - in a condition
+    baz(g++);           // OK - the only argument with side effects
+    while(g++);         // OK - condition of a loop
+    switch(g++);        // OK - switch condition
+    return g++;         // OK - similar to right hand side of an assignment
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.25 Expressions, AV Rule 204
+
+</PRE>
+</BODY>
+</HTML>

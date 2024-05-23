@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Wrap functions that can spuriously wake up in a loop [CODSTA-191]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Wrap functions that can spuriously wake up in a loop [CODSTA-191-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Execution of threads are paused using appropriate functions. A waiting thread
+resumes execution only after it has been notified that the condition predicate
+is true. A condition predicate is an expression constructed from the variables
+of a function that must be true for a thread to be allowed to continue
+execution.
+
+When functions that pause and resume threads are called inside an 'if' block
+that checks the condition predicate, the condition predicate is checked only
+after the notification is received. As a result, if the notification is
+spurious or malicious, the thread would wake up prematurely. For this reason,
+it is recommended to use a loop to ensure that the condition predicate is
+checked both before and after the call.
+
+This rule detects when one of the following functions is called outside of any
+loop (while, do-while, for): cnd_wait(), cnd_timedwait(), cond_wait(),
+cond_timedwait(), cond_reltimedwait(), pthread_cond_wait(),
+pthread_cond_timedwait(), pthread_cond_reltimedwait_np(),
+std::condition_variable::wait(), std::condition_variable::wait_for(),
+std::condition_variable::wait_until().
+
+The rule does not verify if a loop contains a correct condition.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"The std::condition_variable::wait() function has an overloaded form
+that accepts a function object representing the predicate. This form of wait()
+behaves as if it were implemented as while (!pred()) wait(lock);."
+[CERT-CON54-CPP]
+
+This solution is also valid for the wait_for() and wait_until() functions.
+
+#include &lt;condition_variable&gt;
+#include &lt;mutex&gt;
+
+extern bool until_finish(void);
+extern std::mutex m;
+extern std::condition_variable condition;
+
+void func()
+{
+    std::unique_lock&lt;std::mutex&gt; lk(m);
+    condition.wait(lk, []{ return until_finish(); });      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents indefinite blocking and denial of service attack (an attempt
+to make a computer resource unavailable to its intended users).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;condition_variable&gt;
+#include &lt;mutex&gt;
+
+extern std::mutex m;
+extern std::condition_variable condition;
+
+struct CondPred* pred;
+
+void func()
+{
+    std::unique_lock&lt;std::mutex&gt; lk(m);
+    if (pred == nullptr) {
+        condition.wait(lk);                // Violation
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;condition_variable&gt;
+#include &lt;mutex&gt;
+
+extern std::mutex m;
+extern std::condition_variable condition;
+
+struct CondPred* pred;
+
+void func()
+{
+    std::unique_lock&lt;std::mutex&gt; lk(m);
+    while (pred == nullptr) {
+        condition.wait(lk);                // OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   CON36-C. Wrap functions that can spuriously wake up in a loop
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/CON36-C.+Wrap+functions+that+can+spuriously+wake+up+in+a+loop">https://wiki.sei.cmu.edu/confluence/display/c/CON36-C.+Wrap+functions+that+can+spuriously+wake+up+in+a+loop</A>
+
+2. SEI CERT C++ Coding Standard
+   CON54-CPP. Wrap functions that can spuriously wake up in a loop
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON54-CPP.+Wrap+functions+that+can+spuriously+wake+up+in+a+loop">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON54-CPP.+Wrap+functions+that+can+spuriously+wake+up+in+a+loop</A>
+
+</PRE>
+</BODY>
+</HTML>

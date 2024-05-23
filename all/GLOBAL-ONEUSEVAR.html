@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A project shall not contain non-volatile POD variables having only one use [GLOBAL-ONEUSEVAR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A project shall not contain non-volatile POD variables having only one use [GLOBAL-ONEUSEVAR-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"With the exception of volatile variables, variables declared and used only
+once do not contribute to program computations. A 'use' is either an assignment
+(explicit initialization) or a reference." [MISRA C++:2008 Rule 0-1-4]
+
+This rule detects non-volatile variables of POD type that are used only once
+in the testing scope.
+
+This rule considers variables to be of POD type according to the definition
+of POD (Plain Old Data) specified in:
+- the MISRA C++:2008 (Appendix C) standard
+- the C++ ISO/IEC 14882:1998 standard (for cases not defined by MISRA C++:2008)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Variables declared and used only once (...) are essentially noise but their presence
+may indicate that the wrong variable has been used elsewhere. Missing statements
+contribute to this problem." [MISRA C++:2008 Rule 0-1-4]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+This rule does not check:
+- non-static members
+- static members in template classes
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+const int c = 21;     /* Violation */
+
+int f1(int x) {
+    int v1;           /* Violation */
+    int v2;           /* Violation */
+    v1 = x + 21;
+    return v2;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const int c = 21;     /* OK - initialized and used  */
+
+int f1(int x) {
+    int v1;           /* OK - used more than once  */
+    v1 = x + c;
+    return v1;
+}
+
+ /* Examples not reported by the rule */
+int f2() {
+    int v1;           /* OK - not used at all  */
+    int v2;           /* OK - used more than once  */
+    int v3;           /* OK - used more than once  */
+    v2 = v2 + 1;
+    return (v3 + 2) * v3;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 0, Rule 0-1-4
+
+2. ISO/IEC 14882:1998 Programming languages -- C++
+   3.9 Types, 9 Classes
+
+3. AUTOSAR C++14 Coding Guidelines
+   M0-1-4. A project shall not contain non-volatile POD variables having only
+   one use
+
+</PRE>
+</BODY>
+</HTML>

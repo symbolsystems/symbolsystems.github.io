@@ -1,0 +1,99 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer const objects or enums to #defines for simple constants [CODSTA-37]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer const objects or enums to #defines for simple constants [CODSTA-37-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A macro name may be removed by the preprocessor before source code is
+compiled. As a result, when an error that involves the use of a constant
+is reported during compilation, then the error message may refer to the constant
+value rather than the macro name, which can be confusing for the developer.
+This can be prevented by replacing the macro with a constant variable.
+
+This rule detects macros that define simple numeric constants.
+
+See also: MISRA2004-19_7, CODSTA-03, CODSTA-38
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not detect macros whose names are used in conditions
+of #if/#elif preprocessor directives in the same file.
+
+#define SIZE_INT 32            // OK
+//...
+#if (EXT_SIZE &gt; SIZE_INT)
+//...
+#endif
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps to avoid confusing error messages.
+Additionally, it can help you optimize your code if a floating-point constant
+is used. Using the constant produces smaller code than using a #define,
+as it results in only one copy of the constant value in object code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define CONST_VAL_1 20      // Violation
+#define CONST_VAL_2 0.0001  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const int CONST_VAL_1 = 20;         // OK
+const double CONST_VAL_2 = 0.0001;  // OK
+
+// Examples not detected by this rule:
+#define FUNC_LIKE_MAC() 10          // OK - function-like macro
+#define COMPLEX_EXPR 100 + 200      // OK - not a simple numeric constant
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 2
+
+</PRE>
+</BODY>
+</HTML>

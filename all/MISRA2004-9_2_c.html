@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The non-zero initialization of structures requires an explicit initializer for each element [MISRA2004-9_2_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The non-zero initialization of structures requires an explicit initializer for each element [MISRA2004-9_2_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If any member of a structure object or subobject is explicitly initialized,
+the entire object or subobject should be explicitly initialized.
+
+This rule detects when a structure object or subobject is partially
+initialized with non-zero values.
+
+See also: MISRA2004-9_2, MISRA2004-9_2_b
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+An initializer of the { 0 } form may be used to explicitly initialize all
+members of an object or subobject.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Providing an explicit initialization for each member of a structure ensures
+that every member has been considered.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check initializers that include initialization of subobjects
+via designated initializers.
+
+struct S1
+{
+   int m1, m2;
+};
+struct S2
+{
+    struct S1 s1;
+};
+
+struct S2 s = { .s1.m1 = 1 };  /* Violation is not reported */
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef struct S1
+{
+    int m11;
+    int m12;
+    int m13;
+} TS1;
+
+typedef struct S2
+{
+    TS1 m21;
+    TS1 m22;
+} TS2;
+
+TS1 s11 = { 1 };                        /* Violation */
+TS1 s12 = { 1, 2 };                     /* Violation */
+
+TS2 s21 = { { 1, 2, 3 }, { 1, 2 } };    /* Violation */
+TS2 s22 = { { 1, 2, 3 } };              /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef struct S1
+{
+    int m11;
+    int m12;
+    int m13;
+} TS1;
+
+typedef struct S2
+{
+    TS1 m21;
+    TS1 m22;
+} TS2;
+
+TS1 s11 = { 0 };                        /* OK */
+TS1 s12 = { 1, 2, 0 };                  /* OK */
+
+TS2 s21 = { { 1, 2, 3 }, { 1, 2, 0 } }; /* OK */
+TS2 s22 = { { 1, 2, 3 }, { 0 } };       /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M8-5-2. Braces shall be used to indicate and match the structure in the
+   non-zero initialization of arrays and structures
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.7.8 Initialization
+
+3. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 8, Rule 8-5-2
+
+4. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 9, Rule 9.2
+
+</PRE>
+</BODY>
+</HTML>

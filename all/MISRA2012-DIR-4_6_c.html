@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use typedefs from stdint.h instead of declaring your own in C99 code [MISRA2012-DIR-4_6_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use typedefs from stdint.h instead of declaring your own in C99 code [MISRA2012-DIR-4_6_c-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For C99, the types provided by &lt;stdint.h&gt; should be used."
+[MISRA C:2012 Dir 4.6]
+
+This rule reports a violation on typedef declaration which directly denote one
+of following types: 
+    short, int, long, long long
+    signed char, unsigned char
+For "char" type, only typedefs to explicitly signed or explicitly unsigned char
+type are checked (typedefs to plain char are not checked)
+
+Instead of declaring your own typedefs, you should use typedefs provided by
+stdint.h header in C99 standard:
+    intN_t  - designates a signed integer type with width N
+    uintN_t - designates an unsigned integer type with width N
+
+See also: MISRA2004-6_3, MISRA2004-6_3_b
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Only typedefs which directly denote types listed in Description section are
+checked. Typedef to typedef are not checked, even if they indirectly denote such
+type. Example:
+    typedef int my_int;             /* Violation */
+    typedef my_int another_int;     /* OK (not checked - typedef to typedef) */
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Rule does not report on typedefs with name that starts with "bool". The stdint.h 
+header does not provide boolean type. Example:
+    typedef int boolean_type;       /* OK (name starts with "bool") */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Defining a specific-length type whose size is not the same as the implemented
+type is counter-productive both in terms of storage requirements and in terms
+of portability. Care should be taken to avoid defining types with the wrong
+size" [MISRA C:2012 Dir 4.6]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef signed short my_short;  /* Violation */
+typedef volatile long count;    /* Violation */
+typedef signed char schar;      /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Use typedefs from stdint.h: */
+#include &lt;stdint.h&gt;
+
+typedef volatile int32_t count;     /* OK */
+int16_t x;   /* OK */
+
+/* Plain chars are not checked: */
+typedef char my_char;               /* OK (not checked) */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 7: Directives, Dir 4.6
+
+</PRE>
+</BODY>
+</HTML>

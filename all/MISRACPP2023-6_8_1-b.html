@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not read the value of a non-active union field [MISRACPP2023-6_8_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not read the value of a non-active union field [MISRACPP2023-6_8_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+In a union, at most one of the data members can be active at any time.
+A non-active union member has indeterminate value.
+Reading the value of such a member results in undefined behavior.
+
+This rule reports a violation when a non-active union member is accessed. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Reading the value of a non-active union member can allow an attacker to control the behavior of the program, or to gain access to sensitive data.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+The non-active member "b" of union "u" is returned by function "foo".
+
+union u
+{
+  int a;
+  int b[2];
+};
+
+int foo()
+{
+  u o;
+  o.a = 42;
+  return o.b[0]; // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Always use the union member which is currently active.
+
+union u
+{
+  int a;
+  int b[2];
+};
+
+int foo()
+{
+  u o;
+  o.a = 42;
+  return o.a; // NO VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 6.8.1 An object shall not be accessed outside of its lifetime
+
+</PRE>
+</BODY>
+</HTML>

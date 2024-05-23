@@ -1,0 +1,185 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Exceptions shall be raised only after start-up and before termination of the program [CERT_CPP-ERR58-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Exceptions shall be raised only after start-up and before termination of the program [CERT_CPP-ERR58-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Before the program starts executing the body of 'main', it is in a start-up
+phase, constructing and initializing static objects. Similarly, after 'main'
+has returned, it is in a termination phase where static objects are being
+destroyed. If an exception is thrown in either of these phases it leads to the
+program being terminated in an implementation-defined manner."
+[MISRA C++:2008, Rule 15-3-1]
+
+"Exceptions thrown in destructors of objects with static storage duration or in
+constructors of namespace scope objects with static storage duration are not
+caught by a function-try-block on main(). Exceptions thrown in destructors of
+objects with thread storage duration or in constructors of namespace-scope
+objects with thread storage duration are not caught by a function-try-block
+on the initial function of the thread." [ISO/IEC 14882:2011]
+
+This rule detects when a global or static member object uses the function that
+isn't explicitly declared as exception-safe during the construction,
+initialization, or destruction phase.
+
+See also: BD-PB-NOEXCEPT
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that exception-safe functions are functions that are declared
+with the throw(), noexcept, or noexcept(true) exception specification.
+Functions declared as 'constexpr' are exception-safe, because they can not
+throw exceptions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Throwing an exception during start-up or termination results in the program
+being terminated in an implementation-defined manner."
+[MISRA C++:2008, Rule 15-3-1]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    C ( );
+};
+
+class D
+{
+public:
+    D ( ) noexcept;
+    ~D ();
+};
+
+int foo() {
+    // ...
+    return 0;
+}
+
+C c;                        // Violation
+D d;                        // Violation
+int i = foo();              // Violation
+
+int main( ... )
+{
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding an exception-safe specification to the functions
+that are used during startup initialization or by removing the calls to that
+functions.
+
+class C
+{
+public:
+    C ( ) noexcept;
+};
+
+class D
+{
+public:
+    D ( ) noexcept;
+    ~D () noexcept;
+};
+
+int foo() {
+    // ...
+    return 0;
+}
+
+C c;                        // OK
+D d;                        // OK
+int i = 0;                  // OK
+
+int main( ... )
+{
+    i = foo();
+    // ...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-3. The std::terminate() function shall not be called implicitly
+
+2. AUTOSAR C++14 Coding Guidelines
+   M15-3-1. Exceptions shall be raised only after start-up and before
+   termination
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-3-1, Rule 15-5-3
+
+5. Programming languages -- C++ ISO/IEC 14882:2011
+   15.3 Handling an exception
+   15.5.1 The std::terminate() function
+
+6. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+7. SEI CERT C++ Coding Standard
+   ERR58-CPP. Handle all exceptions thrown before main() begins executing
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR58-CPP.+Handle+all+exceptions+thrown+before+main%28%29+begins+executing">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR58-CPP.+Handle+all+exceptions+thrown+before+main%28%29+begins+executing</A>
+
+</PRE>
+</BODY>
+</HTML>

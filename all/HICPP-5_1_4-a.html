@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not capture variables implicitly in a lambda [HICPP-5_1_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not capture variables implicitly in a lambda [HICPP-5_1_4-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+You can capture variables to help document your intentions, as well as allow
+different variables to be captured by copy and captured by reference within
+the same lambda. It is not necessary, however, to capture objects with static
+storage duration or constants that are not ODR-used. The use of objects with
+static storage duration, in fact, should be avoided to avoid confusion
+
+See also: HICPP-3_3_1-a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves readability and removes confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;algorithm&gt;
+#include &lt;cstddef&gt;
+#include &lt;vector&gt;
+void foo(std ::vector&lt;size_t&gt; const &amp;v) {
+    size_t sum = 0;
+    std ::for_each(v.cbegin(), v.cend(),
+                   [&amp;](size_t s) { sum += s; });    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;algorithm&gt;
+#include &lt;cstddef&gt;
+#include &lt;vector&gt;
+void foo(std ::vector&lt;size_t&gt; const &amp;v) {
+    size_t sum = 0;
+    std ::for_each(v.cbegin(), v.cend(),
+                   [&amp;sum](size_t s) { sum += s; }); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   5.1.4. Do not capture variables implicitly in a lambda
+
+</PRE>
+</BODY>
+</HTML>

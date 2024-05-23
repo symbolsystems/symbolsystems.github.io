@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the 'notify_one()' function when multiple threads are waiting on the same condition variable [SECURITY-50]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the 'notify_one()' function when multiple threads are waiting on the same condition variable [SECURITY-50-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The 'notify_one()' member function unblocks one of the threads that are blocked
+on the specified condition variable at the time of the call. If multiple threads
+are waiting on the same condition variable, the scheduler can select any of
+those threads to be awakened (assuming that all threads have the same priority
+level). The 'notify_all()' member function unblocks all of the threads that are
+blocked on the specified condition variable at the time of the call."
+[CERT-CON55-CPP]
+
+"The use of 'notify_one()' is safe if each thread uses a unique condition
+variable. If multiple threads share a condition variable, the use of
+'notify_one()' is safe only if the following conditions are met:
+- All threads must perform the same set of operations after waking up, which
+  means that any thread can be selected to wake up and resume for a single
+  invocation of 'notify_one()'.
+- Only one thread is required to wake upon receiving the signal.
+The 'notify_all()' function can be used to unblock all of the threads
+that are blocked on the specified condition variable if the use of
+'notify_one()' is unsafe." [CERT-CON55-CPP]
+
+This rule detects when the 'notify_one()' function is called on a global
+condition variable. If multiple threads share the same condition variable,
+the 'liveness' property may be violated.
+
+The compliant solution is to use the 'notify_all()' function, or to ensure
+that a unique condition variable is used for each thread.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you preserve the liveness when using condition variables.
+"The liveness property requires that every operation or function invocation
+execute to completion without interruption; for example, there is no deadlock."
+[CERT-CON55-CPP]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;condition_variable&gt;
+std::condition_variable cond;
+
+void f1( ) {
+    //...
+    cond.notify_one();         // Violation
+    //...
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;condition_variable&gt;
+std::condition_variable cond;
+
+void f1( ) {
+    //...
+    cond.notify_all();         // OK
+    //...
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   CON55-CPP. Preserve thread safety and liveness when using condition
+   variables
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON55-CPP.+Preserve+thread+safety+and+liveness+when+using+condition+variables">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON55-CPP.+Preserve+thread+safety+and+liveness+when+using+condition+variables</A>
+
+</PRE>
+</BODY>
+</HTML>

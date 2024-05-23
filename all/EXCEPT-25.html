@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not leave 'catch' blocks empty [EXCEPT-25]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not leave 'catch' blocks empty [EXCEPT-25-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When an exception handling block. . . is used, but that block is empty, this
+can prevent the software from running reliably. If the relevant code is
+reachable by an attacker, then this reliability problem might introduce
+a vulnerability." [CWE-1069]
+
+Ensuring application security involves appropriate handling of errors by using
+exceptions. An empty "catch" block may indicate that there is an unhandled
+error at the code level.
+
+This rule detects 'catch' blocks with empty bodies.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not detect 'catch' blocks that only contain a comment. If you
+deliberately include no code in a 'catch' block, leave a comment with
+an explanation.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that errors are correctly handled with exceptions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'catch' block is empty.
+
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+
+using namespace std;
+
+void foo()
+{
+    char buffer[256];
+    try {
+        ifstream myfile("file.txt");
+        myfile.getline(buffer, 256);
+    }                                                // Violation in line below
+    catch (std::exception const&amp; e) {
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by adding code to the 'catch' block.
+
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+
+using namespace std;
+
+void foo()
+{
+    char buffer[256];
+    try {
+        ifstream myfile("file.txt");
+        myfile.getline(buffer, 256);
+    } catch (std::exception const&amp; e) {              // OK
+        cout &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; endl;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. OWASP Top 10 2017
+   A6-Security Misconfiguration
+   <A HREF="https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html">https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html</A>
+
+2. OWASP API Security Top 10-2019
+   API7-Security Misconfiguration
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa7-security-misconfiguration.md</A>
+
+3. OWASP Top 10-2021
+   A05:2021 – Security Misconfiguration
+   <A HREF="https://owasp.org/Top10/A05_2021-Security_Misconfiguration">https://owasp.org/Top10/A05_2021-Security_Misconfiguration</A>
+   
+4. CWE-1069: Empty Exception Block
+   <A HREF="https://cwe.mitre.org/data/definitions/1069.html">https://cwe.mitre.org/data/definitions/1069.html</A>
+
+5. SEI CERT C++ Coding Standard
+   ERR56-CPP. Guarantee exception safety
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR56-CPP.+Guarantee+exception+safety">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR56-CPP.+Guarantee+exception+safety</A>
+
+</PRE>
+</BODY>
+</HTML>

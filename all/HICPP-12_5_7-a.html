@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare assignment operators with the ref-qualifier &amp; [HICPP-12_5_7-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare assignment operators with the ref-qualifier &amp; [HICPP-12_5_7-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+A non-static member function can be declared with a ref-qualifier since
+the C++11 standard was introduced.
+When a function is declared with an lvalue ref-qualifier (the token '&amp;' is
+added after the parameter list), the call to that function can only be made
+on lvalue objects.
+Similarly, when a function is declared with an rvalue ref-qualifier (the token
+'&amp;&amp;' is added after the parameter list), the call to that function can only be
+made on rvalue objects.
+However, when a  member assignment operator function is declared without any
+ref-qualifier, the call to that function can be made on both rvalue and lvalue
+objects. As a result, the behavior of the user-defined assignment operator
+is inconsistent with the behavior of the built-in assignment operator.
+
+This rule detects member assignment operator functions that are declared
+without an lvalue ref-qualifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Adding '&amp;' to the function declaration ensures that the call can only
+be made on lvalue objects, as is the case for the built-in operators."
+[HIC++ Coding Standard]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A1 {
+public:
+    A1&amp; operator=(int);       // Violation
+    A1&amp; operator+=(int) &amp;&amp;;   // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A1 {
+public:
+    A1&amp; operator=(int) &amp;;     // OK
+    A1&amp; operator+=(int) &amp;;    // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-8-7. Assignment operators should be declared with the ref-qualifier &amp;
+
+2. High Integrity C++ Coding Standard
+   12.5.7. Declare assignment operators with the ref-qualifier &amp;
+
+</PRE>
+</BODY>
+</HTML>

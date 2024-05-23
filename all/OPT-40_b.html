@@ -1,0 +1,166 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The same code (after preprocessing) in different clauses of switch statement [OPT-40_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The same code (after preprocessing) in different clauses of switch statement [OPT-40_b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if:
+- the code in two different switch clauses (case or default) after preprocessing
+  is the same, and
+- the switch clause contains a break, continue, or return statement, and
+- the duplicated code is non-trivial (simple cases are ignored)
+
+See also: PB-67
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks preprocessed code. Due to this:
+- macros which expand to the same code are treated as identical
+- whitespaces, comments and preprocessor directives are ignored.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+If the same code is used in several different clauses of a 'switch' statement,
+then it may be an implementation error or indicate that the code is a candidate 
+for code refactoring.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int, int, int, int);
+
+void foo_switch_1(int x, int y, int z)
+{
+    switch (x) {                      /* Violation - mistake in code */
+        case 1:
+            x = foo(x, y, z, 1);
+            break;
+        case 2:
+            x = foo(x, y, z, 1);
+            break;
+        default:
+            x = foo(x, y, z, 3);
+            break;
+    }
+    
+    switch (x) {                      /* Violation - unnecessary duplication */
+        case 1:
+            x = foo(x, y, z, 1);
+            break;
+        case 2:
+            x = foo(x, y, z, 2);
+            break;
+        default:
+            x = foo(x, y, z, 1);
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int, int, int, int);
+
+void foo_switch_1(int x, int y, int z)
+{
+    switch (x) {                    /* OK */
+        case 1:
+            x = foo(x, y, z, 1);
+            break;
+        case 2:
+            x = foo(x, y, z, 2);
+            break;
+        default:
+            x = foo(x, y, z, 3);
+            break;
+    }
+    
+    switch (x) {                    /* OK */
+        case 2:
+            x = foo(x, y, z, 2);
+            break;
+        default:
+            x = foo(x, y, z, 1);
+            break;
+    }
+    
+    switch (x) {                    /* OK - simple cases are not reported */
+        case 1:
+            x = y;
+            break;
+        case 2:
+            x = y;
+            break;
+    }
+    
+    switch (x) {                    /* OK - case clause does not contain
+                                       break, continue nor return statement */
+        case 0 :
+            x = foo(x, y, z, 1);
+        case 1:
+            y = x + 1;
+        case 2:
+            x = foo(x, y, z, 1);
+        case 3:
+            y = x + 3;
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

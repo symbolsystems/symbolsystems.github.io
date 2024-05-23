@@ -1,0 +1,87 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The names of macro identifiers should not be longer than 31 characters [PORT-36_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The names of macro identifiers should not be longer than 31 characters [PORT-36_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The ISO standard requires internal identifiers to be distinct in the first 31
+characters to guarantee code portability. This limitation shall not be exceeded,
+even if the compiler supports it. This rule shall apply across all name spaces.
+Macro names are also included and the 31 character limit applies before
+and after substitution. [MISRA C:2004 Rule 5.1]
+
+This rule detects when a macros or a macro paramater has more than 31 characters
+in its name.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code portability and readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M1_45678901234567890123456789012 1;        // Violation
+#define M1(P1_45678901234567890123456789012) 1;    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by modifying the names of identifiers.
+
+#define M1_4567890123456789012345678901 1;        // OK
+#define M1(P1_4567890123456789012345678901) 1;    // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 5, Rule 5.1
+
+2. Origin: Misra Guidelines - Rule 11
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,173 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A 'default' label, if it exists, shall appear as either the first or the last switch label of a switch statement [MISRAC2012-RULE_16_1-g]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A 'default' label, if it exists, shall appear as either the first or the last switch label of a switch statement [MISRAC2012-RULE_16_1-g-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a switch statement has a 'default' label, then the label should be the first
+or the last label.
+
+See also: CODSTA-35
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule makes it easy to locate the default label within a switch statement.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of incorrect 'default' placements: */
+void foo ( int i )
+{
+  switch ( i )
+  {
+    case 0:
+    default:              /* Violation: 'default' not first nor last  */
+      i = 8;
+      break;
+    case 1:
+      i = 7;
+      break;
+  }
+  switch ( i )
+  {
+    case 0:
+      i = 8;
+      break;
+    default:              /* Violation: 'default' not first nor last  */
+      i = 10;
+      break;
+    case 1:
+      i = 7;
+      break;
+  }
+  switch ( i )
+  {
+    case 0:
+      i = 8;
+      break;
+    default:              /* Violation: 'default' not first nor last  */
+    case 1:
+      i = 7;
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of correct 'default' placements: */
+void foo ( int i )
+{
+  switch ( i )
+  {
+    default:              /* OK: 'default' is first */
+    case 0:
+      i = 8;
+      break;
+    case 1:
+      i = 7;
+      break;
+  }
+  switch ( i )
+  {
+    default:              /* OK: 'default' is first */
+      i = 10;
+      break;
+    case 0:
+      i = 8;
+      break;
+    case 1:
+      i = 7;
+      break;
+  }
+  switch ( i )
+  {
+    case 0:
+      i = 8;
+      break;
+    case 1:
+    default:              /* OK: 'default' is last */
+      i = 7;
+      break;
+  }
+  switch ( i )
+  {
+    case 0:
+      i = 8;
+      break;
+    case 1:
+      i = 7;
+      break;
+    default:              /* OK: 'default' is last */
+      i = 10;
+      break;
+  }
+}
+
+/* Lack of 'default' is not a violation of this rule: */
+void bar ( int i )
+{
+  switch ( i )
+  {
+    case 0:
+      i = 8;
+      break;
+    case 1:
+      i = 7;
+      break;
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.5, Rule 16.1
+
+</PRE>
+</BODY>
+</HTML>

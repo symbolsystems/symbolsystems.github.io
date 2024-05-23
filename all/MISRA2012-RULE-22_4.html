@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid writing to a stream which has been opened as read only [MISRA2012-RULE-22_4]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid writing to a stream which has been opened as read only [MISRA2012-RULE-22_4-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects attempts to write to a file which has been opened as read-only.
+
+The following file handling APIs are supported by this rule:
+
+1. FILE* streams (stdio.h)
+* Open file functions:
+        
+    FILE *fopen(const char *filename, const char *mode);
+    FILE *freopen(const char *filename, const char *mode, FILE *stream);
+        
+read only mode means 'mode' parameter = "r" or "rb"
+
+* Close file function:
+    int fclose (FILE *stream);
+
+* Write to file functions used with above functions:
+    
+    int fprintf(FILE *stream, const char *format, ...);
+    int fputs(const char *str, FILE *stream);
+    size_t fwrite(const void *ptr, size_t size, size_t count, FILE *stream);
+    int fputc(int character, FILE *stream);
+    
+    
+2. File descriptors (fcntl.h)
+
+* Open file functions:
+    
+    int open(const char *pathname, int flags);
+    int open(const char *pathname, int flags, mode_t mode);
+    int openat(int dirfd, const char *pathname, int flags);
+    int openat(int dirfd, const char *pathname, int flags, mode_t mode);
+        
+read only mode when 'flags' argument = "O_RDONLY" what is equivalent to integer = 0.
+
+* Close file function:
+    int close(int handle);
+        
+* Write to file functions used with above functions:
+    
+    ssize_t write(int fd, const void *buf, size_t count);
+    ssize_t writev(int fd, const struct iovec *iov, int iovcnt);
+    ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset);
+    ssize_t pwritev(int fd, const struct iovec *iov, int iovcnt, off_t offset);
+    
+    
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.2.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Writing to a read only stream has no defined behavior in the language specification.
+For this reason it is considered unsafe and it may cause segmentation fault errors.
+
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Helps avoid unexpected failures at runtime. The standard does not define behavior in the case of attempts 
+to write to a read only file, which may lead to unexpected behaviors.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+
+void example() {
+    FILE *fp = fopen("test.txt", "r");
+    fprintf(fp, "fprintf1"); // VIOLATION
+    fclose(fp);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Open the file for write access.
+
+#include &lt;stdio.h&gt;
+
+void repair() {
+    FILE *fp = fopen("test.txt", "w");
+    fprintf(fp, "fprintf1"); // NO VIOLATION
+    fclose(fp);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 22.4
+
+</PRE>
+</BODY>
+</HTML>

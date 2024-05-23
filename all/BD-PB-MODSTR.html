@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not modify string literals [BD-PB-MODSTR]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not modify string literals [BD-PB-MODSTR-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule reports violations when the contents of a variable
+initialized with an unmodifiable string literal are modified.
+
+If the variable of a pointer type is initialized with a string
+literal, as in:
+
+    char *p = "abc";
+
+then the pointer is initialized to the address of the string literal.
+Attempting to modify a string literal initialized in this way is
+undefined behavior.
+
+But in the following declaration, the string literal simply specifies
+the initial values of characters to be set in the declared array:
+
+    char p[] = "abc";
+
+Modifying an array initialized in this way is safe.  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+N/A
+ 
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void test()
+{
+    char *p  = "string literal";
+    p[0] = 'S'; // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+
+void test()
+{
+    char p[]  = "string literal";
+    p[0] = 'S'; // OK
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+STR30-C. Do not attempt to modify string literals
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR30-C.+Do+not+attempt+to+modify+string+literals">https://wiki.sei.cmu.edu/confluence/display/c/STR30-C.+Do+not+attempt+to+modify+string+literals</A>
+
+</PRE>
+</BODY>
+</HTML>

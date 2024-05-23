@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A conversion from function type to pointer-to-function type shall only occur in appropriate contexts [CODSTA-309]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A conversion from function type to pointer-to-function type shall only occur in appropriate contexts [CODSTA-309-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+​
+This rule reports when an object of function type is used in a context that
+is not considered appropriate.
+
+The following contexts are considered appropriate:
+* using the object of function type as the operand of the
+  unary '&amp;' (address-of) operator
+* using the object of function type as the operand of a 'static_cast'
+* using the object of function type to call the function
+* "assigning" the object of function type to an object with
+  a pointer-to-function type
+​
+​
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+​
+2023.2
+​
+​
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"An lvalue of function type T can be converted to a prvalue of type 'pointer
+to T'. The result is a pointer to the function." [ISO/IEC 14882:2017]
+
+"The following constructs are treated as assignments:
+* Assigning a value using the assignment operator; and
+* Initializing a variable, including within a lambda capture; and
+* Passing a function parameter by value, including passing a default value
+  for a function argument and passing a parameter to a function that is called
+  implicitly (such as the call to a constructor, to overloaded operators,
+  to operator() of closure types, ...); and
+* Returning a value from a function by value; and
+* Using a value in a switch statement’s case label (source expression), where
+  the target type is given by the adjusted type of the condition.
+Compound assignments are not 'assignments'."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+​
+This rule helps you avoid unexpected behavior and increase the readability
+of the code.
+​
+When an object of function type is implicitly converted to
+a pointer-to-function type, it is unclear whether the intention was to use
+the address of the function or a call to the function, where '()' were
+omitted by mistake. To remove this ambiguity, use the '&amp;' (address-of)
+operator or an explicit 'static_cast' to a pointer-to-function type.
+
+​
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of incorrect code:
+
+extern int f();
+void f1()
+{
+    if (0 == f)     // Violation
+        ;
+
+    auto fp1 = +f;  // Violation - operand of the "+" operator
+}
+​
+​
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+​
+// Examples of correct code:
+
+typedef int (*FP)();
+extern int f();
+extern int g(FP);
+FP f1()
+{
+    if (0 == &amp;f)    // OK - operand of the address-of operator
+        ;
+
+    if (!f())       // OK - function is called
+        ;
+
+    // Operand of the 'static_cast':
+    auto fp1 = static_cast&lt;int (*)()&gt;(f); // OK
+
+    // Assigned to an object with a pointer-to-function type:
+    FP fp2 = f;     // OK
+    fp2 = f;        // OK
+    auto l1 = [
+        r = f       // OK
+    ]() {};
+    g(f);           // OK
+    return f;       // OK
+}
+​
+​
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+​
+1. ISO/IEC 14882:2017 Programming languages - C++
+   7.3 Function-to-pointer conversion
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.11.3 A conversion from function type to pointer-to-function type shall only occur in appropriate contexts
+
+</PRE>
+</BODY>
+</HTML>

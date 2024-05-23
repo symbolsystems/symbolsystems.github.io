@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Never allow an exception to be thrown from a destructor, deallocation, and swap [CERT_CPP-DCL57-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Never allow an exception to be thrown from a destructor, deallocation, and swap [CERT_CPP-DCL57-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Never allow an error to be reported from a destructor, a resource deallocation
+function (e.g., operator delete), or a swap function. These are key functions
+that must not fail because they are necessary for the two key operations
+in transactional programming: to back out work if problems are encountered
+during processing, and to commit work if no problems occur."
+The rule reports a violation if from a destructor, an operator delete
+or a swap function is thrown an exception or is called a function
+that can throw exceptions.
+See also: EXCEPT-03
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Function can not throw any exceptions if has external 'C' linkage
+or in a declaration uses an empty exception specification throw() or noexcept.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents propagation of exceptions out of the destructor,
+operator delete and swap function.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Exceptions{};
+
+class A{
+    A();
+    ~A();
+    void operator delete(void*);
+};
+
+A::~A(){
+    throw Exceptions();            // Violation
+}
+
+void A::operator delete(void*){
+    throw Exceptions();            // Violation
+}
+
+class B {
+public:
+    B();
+    ~B();
+    void operator delete(void*);
+    void foo();        // can throw exceptions
+    static void soo(); // can throw exceptions
+};
+
+B::~B(){
+    foo();                         // Violation
+}
+
+void B::operator delete(void*){
+    soo();                         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A{
+    A();
+    ~A();
+    void operator delete(void*);
+    void foo() throw();        // can not throw exceptions
+    static void soo() throw(); // can not throw exceptions
+};
+
+A::~A(){
+    foo();                         // OK
+}
+
+void A::operator delete(void*){
+    soo();                         // OK
+}
+
+class B {
+public:
+    B();
+    ~B();
+    void operator delete(void*);
+    void foo();        // can throw exceptions
+    static void soo(); // can throw exceptions
+};
+
+B::~B(){
+    try{
+        foo();                     // OK
+    } catch (...){
+    }
+}
+
+void B::operator delete(void*){
+    try{
+        soo();                     // OK
+    } catch (...){
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-5-3. The std::terminate() function shall not be called implicitly
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Construction, Destruction, and Copying", Rule 51
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-5-3
+
+5. Programming languages -- C++ ISO/IEC 14882:2011 
+   15.5.1 The std::terminate() function
+
+6. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 8
+
+7. SEI CERT C++ Coding Standard
+   DCL57-CPP. Do not let exceptions escape from destructors or deallocation
+   functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL57-CPP.+Do+not+let+exceptions+escape+from+destructors+or+deallocation+functions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL57-CPP.+Do+not+let+exceptions+escape+from+destructors+or+deallocation+functions</A>
+
+8. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,242 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid use before initialization [MISRA2012-RULE-1_3_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid use before initialization [MISRA2012-RULE-1_3_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+Objects with static storage duration are always initialized - either explicitly or implicitly.
+Objects with automatic storage duration, if not initialized explicitly, have indeterminate value.
+Reading the value of such an object results in undefined behavior.
+
+This rule reports a violation when:
+ - a non-initialized object is used, or
+ - a non-initialized element of an array is used, or
+ - a non-initialized field of a class/struct is used, or
+ - a field of a non-initialized union object is used
+
+See also the PARAMETERS section for other situations when the rule may report violations.
+
+For the purpose of this rule, an object is non-initialized when:
+ - it is an uninitialized object of numeric, enum or union type, or
+ - it is an array where all elements are non-initialized, or
+ - it is a class/struct object with all non-static members non-initialized
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.0
+
+EXAMPLE
+
+struct S {
+    int a;
+    const char* b;
+    int c;
+};
+
+// variable "i" is not initialized but it is used on a binary expression
+int test01(int a)
+{
+    int i; 
+    return a + i; // VIOLATION: non-initialized "i" is used
+}
+
+// index "1" of array "tab" is not initialized but it is copied by a return statement
+int test02(int a)
+{
+    int tab[2];
+    tab[0] = 1;
+    return tab[1]; // VIOLATION: non-initialized "tab[1]" is used
+}
+
+int test03()
+{
+    struct S s;
+    return s.c; // VIOLATION: non-initialized "s.c" is used
+}
+
+void test04()
+{
+    struct S s1;
+    struct S s2 = s1; // VIOLATION: non-initialized "s1" is used
+}
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+This rule does not report on atomic objects. See also the rule BD-PB-NOTINITAT.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Reading the value of a non-initialized object results in undefined behavior.
+Additionally, it can allow an attacker to control the behavior of the program, or to gain access to sensitive data.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report when non-initialized object is passed to a third-party function as const" 
+parameter allows you to specify if the rule should trigger when a non-initialized object 
+is passed by pointer or reference to const to a function whose source code is not available.
+Since such an object cannot be modified inside the function, it is assumed that its value will be read.
+This parameter is enabled by default.
+
+The "Report when non-initialized structure is copied" parameter allows you to
+specify if the rule should trigger when a non-initialized object of class/struct/union type is:
+ - used as the rhs operand of the assignment operator, or
+ - passed to a function by value, or
+ - returned from a function by value, or
+ - thrown by value.
+This parameter is enabled by default.
+
+The "Report when partially-initialized object is copied" parameter allows you to
+specify if the rule should trigger when a partially-initialized object is:
+ - used as the rhs operand of the assignment operator, or
+ - passed to a function by value, or
+ - returned from a function by value, or
+ - thrown by value.
+This parameter is disabled by default.
+
+The "Report when potentially non-initialized element of an array is used" parameter allows you to
+specify if the rule should trigger when a potentially non-initialized element of an array is used.
+This parameter is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent undefined behavior.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+    int i;
+    char c[100];
+Here, "i" and "c" are non-initialized.
+ 
+For the purpose of this rule, an object is partially-initialized when:
+ - it is a class/struct object with some, but not all, initialized non-static members, or
+ - it is an array with some initialized elements, but the analyzer cannot deduce that all elements are initialized
+Example:
+    struct S {
+       int a, b, c;
+    };
+    S s;
+    s.b = 1;
+Here, "s" is partially-initialized, because it contains non-initialized members "s.a" and "s.c".
+
+For the purpose of this rule, an element of an array is potentially-initialized when
+the array contains at least one initialized element, but the analyzer cannot deduce if this is the same element.
+Example:
+    char buf[100];
+    buf[index] = 0;
+    int array[10];
+    array[0] = 0;
+Here, "buf[42]" is a potentially-initialized element of an array if the analyzer cannot prove that "index == 42".
+Also, "array[index]" is a potentially-initialized element of an array if the analyzer cannot prove that "index == 0".
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Always initialize a variable before its use.
+
+struct S {
+    int a;
+    const char* b;
+    int c;
+};
+
+int test01(int a)
+{
+    int i = 1;
+    return a + i; // NO VIOLATION
+}
+
+int test02(int a)
+{
+    int tab[2];
+    tab[0] = 1;
+    tab[1] = 1;
+    return tab[1]; // NO VIOLATION
+}
+
+int test03()
+{
+    struct S s = { 1, "ABC", 1 };
+    return s.c; // NO VIOLATION
+}
+
+void test04()
+{
+    struct S s1;
+    s1.a = 1;
+    s1.b = "ABC";
+    s1.c = 1;
+    struct S s2 = s1; // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 1.3  
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 8: Rules, Rule 9.1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 11.6.2 The value of an object must not be read before it has been set
+
+High Integrity C++ Coding Standard
+8.4.1 Do not access an invalid object or an object with indeterminate value
+
+SEI CERT C Coding Standard
+EXP33-C. Do not read uninitialized memory
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP33-C.+Do+not+read+uninitialized+memory">https://wiki.sei.cmu.edu/confluence/display/c/EXP33-C.+Do+not+read+uninitialized+memory</A>
+
+SEI CERT C++ Coding Standard
+EXP53-CPP. Do not read uninitialized memory
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP53-CPP.+Do+not+read+uninitialized+memory">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP53-CPP.+Do+not+read+uninitialized+memory</A>
+
+AUTOSAR C++14 Coding Guidelines
+Rule A8-5-0 All memory shall be initialized before it is read
+       
+
+</PRE>
+</BODY>
+</HTML>

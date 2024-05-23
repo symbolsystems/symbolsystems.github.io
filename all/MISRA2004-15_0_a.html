@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A break statement should be placed only at the end of switch clause [MISRA2004-15_0_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A break statement should be placed only at the end of switch clause [MISRA2004-15_0_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a 'break' statement is used in 'case'
+or 'default' clause and it is not a last statement in this clause.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If inside 'case' or 'default' is other statement ('while', 'for', 'do-while',
+'switch' or 'if') that contains a 'break', then this 'break' is not checked 
+by rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule enforces a simple and consistent structure on to the switch statement.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int a, int b)
+{
+    int c = 0;
+    switch(a)
+    {
+    case 1:
+        break;      /* Violation */
+        c = 0;
+       
+    case 2:
+    {
+      c = 2;
+      break;        /* Violation */
+    }
+    break;
+   
+    default:
+        break;      /* Violation */
+        return 0;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int a, int b)
+{
+    int c = 0;
+    switch(a)
+    {
+    case 1:
+        c = 0;
+        break;      /* OK */
+        
+    case 2:
+    {
+      c = 2;
+      break;        /* OK */
+    }
+   
+    default:
+        break;      /* OK */
+    }
+    return 0;
+}
+
+void foo2(int a, int b)
+{
+    int i;
+    /* nested 'break' is not checked */
+    switch(b){
+    case 0:
+        if(b &gt; 0){
+            break;      /* OK */
+        } else {
+            b = b + 2;
+        }
+        break;          /* OK */
+    
+    case 1:
+        for (i = 0; i &lt; 10; i++){
+          /* ... */
+            break;  /* OK */
+        }
+        b = 10;
+        break;      /* OK */
+   
+    default:
+        break;      /* OK */   
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 15
+
+</PRE>
+</BODY>
+</HTML>

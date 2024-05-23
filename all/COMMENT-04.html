@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Document functions in comments that precede function definitions [COMMENT-04]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Document functions in comments that precede function definitions [COMMENT-04-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Assumptions (limitations) made by functions should be documented in
+the function’s preamble. . .  Maintenance efforts become very difficult if
+the assumptions (limitations) upon which functions are built are unknown."
+[JOINT STRIKE FIGHTER AV Rule 134]
+
+This rule detects function definitions that are not preceded by a comment.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not analyze the content of comments.
+
+
+Exception:
+
+If a function has visible declaration preceded by a comment, then
+the rule does not trigger on the uncommented definition.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo1(int x){                                       // Violation
+    return x++;
+}
+
+int foo2(int x);
+int foo2(int x){                                       // Violation
+    return x++;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// returns squared x
+int foo1(int x){                                       // OK
+    return x*x;
+}
+
+// returns x multiplied by two
+int foo2(int x);
+
+int foo2(int x){                                       // OK
+    return x*2;
+}
+
+int foo3(int x);
+
+// returns x multiplied by three
+int foo3(int x){                                       // OK
+    return x*3;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 4 Source Code in Files - 4.3 Comments - Rec. 8
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.14 Comments, AV Rule 134
+
+</PRE>
+</BODY>
+</HTML>

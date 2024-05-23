@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid race conditions when using fork and file descriptors [APSC_DV-001995-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid race conditions when using fork and file descriptors [APSC_DV-001995-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+bd_trs_DESCRIPTION
+"When forking a child process, file descriptors are copied to the child process, which 
+can result in concurrent operations on the file. Concurrent operations on the same file 
+can cause data to be read or written in a nondeterministic order, creating race 
+conditions and unpredictable behavior."
+[SEI CERT C Coding Standard, POS38-C. Beware of race conditions when using 
+fork and file descriptors]
+
+This rule detects when a file is accessed by both the parent process and the child process
+created with the fork() function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Prevents race conditions when new processes are created with the fork() function.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;sys/types.h&gt;
+#include &lt;fcntl.h&gt;
+
+/* #include &lt;unistd.h&gt; */
+ssize_t read(int fd, void *buf, size_t count);
+pid_t fork(void);
+
+void bad(char* filename) {
+	char c;
+	pid_t pid;
+	int fd = open(filename, O_RDWR);
+	pid = fork();
+	if (pid == -1) {
+		/* Handle error */
+	}
+	if (pid == 0) { /*child*/
+		read(fd, &amp;c, 1); // VIOLATION
+	} else { /*parent*/
+		read(fd, &amp;c, 1); // VIOLATION
+	}
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Close and reopen the descriptor in the child process.
+
+#include &lt;sys/types.h&gt;
+#include &lt;fcntl.h&gt;
+
+/* #include &lt;unistd.h&gt; (POSIX) */
+pid_t fork(void);
+
+void repair(char* filename) {
+	char c;
+	pid_t pid;
+	int fd = open(filename, O_RDWR);
+	pid = fork();
+	if (pid == -1) {
+		/* Handle error */
+	}
+	if (pid == 0) { /*child*/
+		close(fd);
+		fd = open(filename, O_RDWR);
+		read(fd, &amp;c, 1);
+	} else { /*parent*/
+		read(fd, &amp;c, 1);
+	}
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Weaknesses On the Cusp
+CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')
+<A HREF="http://cwe.mitre.org/data/definitions/362.html">http://cwe.mitre.org/data/definitions/362.html</A>
+
+SEI CERT C Coding Standard
+POS38-C. Beware of race conditions when using fork and file descriptors
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS38-C.+Beware+of+race+conditions+when+using+fork+and+file+descriptors">https://wiki.sei.cmu.edu/confluence/display/c/POS38-C.+Beware+of+race+conditions+when+using+fork+and+file+descriptors</A>
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-001995: The application must not be vulnerable to race conditions.
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,133 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare member variables in the descending size order [OPT-13]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare member variables in the descending size order [OPT-13-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In 64-bit applications, longs and pointers are larger, which also increases
+the size of a structure containing these data types. The layout of structure
+elements determines how much space is required by the structure. 
+For example, a structure that contains an integer followed by a long
+in a 32-bit application is 8 bytes, but a 64-bit application adds 4 bytes
+of padding to the first element of the structure to align the second element
+on its natural boundary. To minimize this padding, reorder the data structure
+elements from largest to smallest.
+
+This rule assumes the following dependencies:
+bool &lt; long, long long
+float &lt; double &lt; long double
+char &lt; short &lt; int &lt; reference, pointer, long, long long
+arrays and objects should be at the beginning of the list of members
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If data structure elements are accessed as byte streams, you need to change your 
+code logic to adjust for the new order of elements in the data structure.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule helps to minimize memory consumption
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S1 {   // Violation - long should be declared before int
+              //           - double should be declared before float
+    int i;
+    long j;   
+    float f;
+    double d; 
+};
+
+struct S2 {   // Violation - pointer should be declared before int
+    int i;
+    int* j;   
+    int k;
+};
+
+struct S3 {   // Violation - objects should be declared at the beginning
+    int i;
+    S2 s2;     
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S1 {   // OK - long should be declared before int
+              //    - double should be declared before float
+    long j;
+    int i;
+    double d;    
+    float f;
+};
+
+struct S2 {   // OK - pointer should be declared before int
+    int* j;
+	int i;
+    int k;
+};
+
+struct S3 {   // OK - objects and arrays should be declared at the beginning
+    S2 s2; 
+    int a[10];
+    int i;
+    
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://www.ddj.com/184406427">http://www.ddj.com/184406427</A>
+
+</PRE>
+</BODY>
+</HTML>

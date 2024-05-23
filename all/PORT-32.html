@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Type long double shall not be used [PORT-32]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Type long double shall not be used [PORT-32-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The width of long double type, and therefore width of the significand,
+is implementation-defined.
+
+The width of long double type can be either:
+    - 64 bits, as the C++14 Language Standard allows long double to provide
+      at least as much precision as type double does, or
+    - 80 bits, as the IEEE 754 standard allows extended precision formats, or
+    - 128 bits, as the IEEE 754 standard defines quadruple precision format"
+[AUTOSAR A0-4-2]
+
+The rule detects 'long double' types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+long double d;                // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+double d;                     // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A0-4-2. Type long double shall not be used
+
+</PRE>
+</BODY>
+</HTML>

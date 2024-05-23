@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not confuse narrow and wide character strings and functions [CODSTA-188]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not confuse narrow and wide character strings and functions [CODSTA-188-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Passing narrow string arguments to wide string functions or wide string
+arguments to narrow string functions can lead to unexpected and undefined
+behavior. Scaling problems are likely because of the difference in size
+between wide and narrow characters. Because wide strings are terminated
+by a null wide character and can contain null bytes, determining the length
+is also problematic." [CERT-STR38-C]
+
+This rule detects implicit or explicit conversions of function arguments
+between pointers to plain char types and pointers to wchar_t types.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unexpected and undefined behaviors. Confusing narrow
+and wide character strings may result in buffer overflows or data truncation.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+#include &lt;wchar.h&gt;
+
+void narrowFunc(char* pn);
+void wideFunc(wchar_t* pw);
+
+void f(char* ns){
+    char    na[] =  "123";
+    wchar_t wa[] = L"123";
+
+    wideFunc(ns);                    /* Violation */
+    wideFunc(na);                    /* Violation */
+    narrowFunc(wa);                  /* Violation */
+    strlen(wa);                      /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+#include &lt;wchar.h&gt;
+
+void narrowFunc(char* pn);
+void wideFunc(wchar_t* pw);
+
+void f(char* ns){
+    char    na[] =  "123";
+    wchar_t wa[] = L"123";
+
+    narrowFunc(ns);                  /* OK */
+    narrowFunc(na);                  /* OK */
+    wideFunc(wa);                    /* OK */
+    strlen(na);                      /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   STR38-C. Do not confuse narrow and wide character strings and functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/STR38-C.+Do+not+confuse+narrow+and+wide+character+strings+and+functions">https://wiki.sei.cmu.edu/confluence/display/c/STR38-C.+Do+not+confuse+narrow+and+wide+character+strings+and+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

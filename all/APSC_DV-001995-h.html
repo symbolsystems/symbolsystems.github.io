@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid using the 'vfork()' function [APSC_DV-001995-h]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid using the 'vfork()' function [APSC_DV-001995-h-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Using the 'vfork()' function introduces many portability and security issues.
+There are many cases in which undefined and implementation-specific behavior
+can occur, leading to a denial-of-service vulnerability." [CERT-POS33-C]
+
+This rule detects the use of the 'vfork()' function from the standard library.
+The 'fork()' function should be used instead of 'vfork()' in all cases.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents using the 'vfork()' function, which may lead to race
+conditions or a denial-of-service vulnerability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+
+void f1( void )
+{
+    vfork( );      // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;unistd.h&gt;
+
+void f1( void )
+{
+    fork( );       // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. <A HREF="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/avoid-vfork.html">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/avoid-vfork.html</A>
+
+2. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+3. SEI CERT C Coding Standard
+   POS33-C. Do not use vfork()
+   <A HREF="https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152373">https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=87152373</A>
+
+4. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-001995: The application must not be vulnerable to race conditions
+
+5. DISA Application Security and Development Security Technical Implementation Guide (STIG)
+   APSC-DV-002400: The application must restrict the ability to launch Denial of Service (DoS) attacks 
+   against itself or other information systems
+
+</PRE>
+</BODY>
+</HTML>

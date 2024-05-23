@@ -1,0 +1,112 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not apply arithmetic to pointers that don't address an array or array element [MISRA2004-17_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not apply arithmetic to pointers that don't address an array or array element [MISRA2004-17_1-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Pointer arithmetic shall only be applied to pointers that address an array or 
+array element.
+Addition and subtraction of integers (including increment and decrement) from 
+pointers that do not point to an array or array element results in undefined 
+behaviour."
+The rule reports a violation when both following conditions are met:
+- variable of pointer type is used as operand in arithmetic
+  expression (addition, subtraction, incrementation, decrementing)
+- the variable was not assigned at all in current function or 
+  last assignment before the arithmetic expression was not from an "array expression"
+An "array expression" is an expression or variable which
+- has array type (e.g. int[]), or 
+- expression which takes address of array or array element, or
+- was previusly assigned an "array expression"
+See also: PB-51
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Limitation of rule:
+- complex expressions might be incorrectly recognized as "array expression" if
+  it contains expression with array type. In result a valid violation might 
+  not be reported.
+- control flow ('if' etc) is not taken into consideration, only line number, 
+  when checking for last assignment
+- violations on members (a-&gt;b, a.b) are not reported.
+- recursive check of "array expression" is limited to 10 levels
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule makes the code more readable and less confusing.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* example of incorrect code */
+void func(int* ptr1, int a[5]){
+    int i;
+    int* ptr2 = 0;
+    int* ptr3 = &amp;i;
+
+    ptr1++;          /* Violation - ptr1 may points to whatever*/
+    ptr1 = ptr2 + 1; /* Violation - ptr2 is a null pointer */
+    ptr3++;          /* Violation - ptr3 points to variable of non-array type*/   
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* example of correct code */
+void func(int* ptr3, int a[5]){
+    int* ptr1 = &amp;a;
+    int* ptr2 = &amp;a[3];
+
+    ptr1++;          /* OK - ptr1 points to an array */
+    ptr3 = ptr2 + 1; /* OK - ptr2 points to an array element */
+    ptr3++;          /* OK - ptr3 points to an array element */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+MISRA-C:2004 Guidelines for the use of the C language in critical systems
+Chapter 6, Section 17
+
+</PRE>
+</BODY>
+</HTML>

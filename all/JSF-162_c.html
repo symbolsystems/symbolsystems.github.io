@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Signed and unsigned values shall not be mixed in arithmetic operations [JSF-162_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Signed and unsigned values shall not be mixed in arithmetic operations [JSF-162_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Mixing signed and unsigned values is error prone as it subjects operations
+to numerous arithmetic conversion and integral promotion rules."
+The rule reports a violation if one operand of arithmetic binary expression
+is signed type and other is unsigned type.
+ 
+The following binary arithmetic operators are checked:
+  '+',  '-',  '*',  '/',  '%',  '^',  '&amp;',  '|', 
+  '+=', '-=', '*=', '/=', '%=', '^=', '&amp;=', '|='
+
+See also: CODSTA-99, CODSTA-101, MISRA2004-10_1_a, PB-25
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is recommended to give a 'u' suffix to integer constants where it can be
+used to avoid mixing signed and unsigned arithmetic in an expression.
+
+The rule takes the type of expression according to C/C++ standard.
+Due to integral promotion the type of expression containing only unsigned 
+operands can be signed, so the rule reports violations on the code like this:
+
+  (unsigned_short + unsigned_short) + unsigned_int;  // Violation
+
+Violation is reported because the type of expression
+(unsigned_short + unsigned_short) is signed int.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The violation is not reported if at least one operand of expression
+is constant expression (contains only literals, enumerations or
+sizeof expressions).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Complying with this rule leads to safer and more readable code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(signed int i, unsigned int ui) {
+    i += ui;                  // Violation
+}
+
+void foo2(unsigned short us1, unsigned short us2, unsigned int ui1) {
+    unsigned int ui2;
+    ui2 = (us1 + us2) - ui1;  // Violation - The type of expression us1 + us2
+                              // is 'signed int' due to integral promotion
+}
+
+// Example: no violation is reported if one operand is constant expression
+void foo3(signed int i, unsigned int ui) {
+    i = ui - 1;            // OK - RHS of '-' is arithmetic constant expression
+    ui = (sizeof(i) + i);  // OK - LHS of '+' is arithmetic constant expression
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(signed int i, unsigned int ui) {
+    // Review the code and see if it possible to change the types.
+    // Cast only if you are sure the cast won't change the value.
+    i += (int)ui;               // OK
+}
+
+void foo2(unsigned short us1, unsigned short us2, unsigned int ui1) {
+    unsigned int ui2;
+    unsigned int ui_tmp = us1 + us2;
+    ui2 = ui_tmp - ui1;         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 18 Portable Code - 18.3 Type Conversions - Port. Rec. 8
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 162
+
+</PRE>
+</BODY>
+</HTML>

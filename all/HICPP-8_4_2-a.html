@@ -1,0 +1,138 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The initializer for an aggregate or union shall be enclosed in braces [HICPP-8_4_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The initializer for an aggregate or union shall be enclosed in braces [HICPP-8_4_2-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"ISO C requires initializer lists for arrays, structures and union types to be
+enclosed in a single pair of braces (though the behaviour if this is not done
+is undefined). The rule given here goes further in requiring the use
+of additional braces to indicate nested structures." [MISRA C:2004 Rule 9.2]
+
+This rule detects when an aggregate initializer for an array, class,
+structure or union is not explicitly enclosed in braces.
+
+See also: MISRA2004-9_2_b, MISRA2004-9_2_c
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"This rule does not itself require explicit initialization of objects or
+subobjects." [MISRA C:2012 Rule 9.2]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An initializer of the form { 0 }, which sets all values to 0, may be used
+to initialize subobjects without nested braces." [MISRA C:2012 Rule 9.2]
+
+"An array may be initialized using a string literal." [MISRA C:2012 Rule 9.2]
+
+"An automatic structure or union may be initialized using an expression with
+compatible structure or union type." [MISRA C:2012 Rule 9.2]
+
+"A designated initializer may be used to initialize part of a subobject."
+[MISRA C:2012 Rule 9.2]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Using braces to indicate initialization of subobjects improves the clarity
+of code and forces programmers to consider the initialization of elements
+in complex data structures such as multi-dimensional arrays or arrays
+of structures." [MISRA C:2012 Rule 9.2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int y[3][2] = { 1, 2, 3, 4, 5, 6 };       /* Violation */
+
+typedef struct T { int i; int j; } ST;
+
+struct S
+{
+    int i;
+    ST t;
+} s = {1, 2, 3};                          /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int y[3][2] = { {1, 2}, {3, 4}, {5, 6} }; /* OK */
+
+typedef struct T { int i; int j; } ST;
+
+struct S
+{
+    int i;
+    ST t;
+} s = {1, {2, 3}};                        /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M8-5-2. Braces shall be used to indicate and match the structure in the
+   non-zero initialization of arrays and structures
+
+2. High Integrity C++ Coding Standard
+   8.4.2. Ensure that a braced aggregate initializer matches the layout of the
+   aggregate object
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.16 Initialization, AV Rule 144
+
+4. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 8, Rule 8-5-2
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 9.2
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 9, Rule 9.2
+
+</PRE>
+</BODY>
+</HTML>

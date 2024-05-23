@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer smart pointers over raw pointers for arrays or STL containers [CODSTA-MCPP-16_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer smart pointers over raw pointers for arrays or STL containers [CODSTA-MCPP-16_b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When you destruct an array or a STL container that contains dynamically
+allocated pointers, it is important to delete these pointers or else you are
+going to leak memory and resources. In this case, smart pointers should be used
+instead of raw pointers as elements of arrays or STL containers
+(list|forward_list|array|vector|stack|deque|queue).
+
+This rule reports violations on member arrays or containers of pointers when at
+least one element of the collection is deleted in a class destructor or in
+a function directly called from a destructor.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Smart pointers prevent most situations of memory leaks by making the memory
+deallocation automatic.
+
+The rule also helps simplify your code because there is no need for any extra
+data member in a unique_ptr object except for the pointer itself.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;vector&gt;
+
+class A1 {
+public:
+    ~A1() {
+        for(std::vector&lt;int*&gt;::iterator it = v1.begin(); it != v1.end(); ++it) {
+            delete *it;
+        }
+    }
+private:
+    std::vector&lt;int*&gt; v1;       // Violation
+};
+
+class A2 {
+public:
+	void doDelete();
+	~A2() {
+		doDelete();
+	}
+private:
+    std::vector&lt;char*&gt; v1;      // Violation
+};
+
+void A2::doDelete() {
+    for(char* ptr : v1) {
+        delete ptr;
+    }
+}
+
+class A3 {
+public:
+    ~A3() {
+        for(int i = 0; i &lt; 5; i++) {
+            delete arr[i];
+        }
+    }
+private:
+    int* arr[5];                // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+#include &lt;vector&gt;
+
+class A1
+{
+public:
+    ~A1() {}
+private:
+    std::vector&lt;std::unique_ptr&lt;int&gt;&gt; v1;   // OK
+};
+
+class A2
+{
+public:
+    ~A2() {}
+private:
+    std::vector&lt;std::unique_ptr&lt;char&gt;&gt; v1;  // OK
+};
+
+class A3
+{
+public:
+    ~A3() {}
+private:
+    std::unique_ptr&lt;int&gt; arr[5];            // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+   of C++11 and C++14", O'Reilly Media, Inc., Copyright 2015,
+   Chapter 4: Smart Pointers, Item 21: "Prefer std::make_unique and
+   std::make_shared to direct use of new"
+
+</PRE>
+</BODY>
+</HTML>

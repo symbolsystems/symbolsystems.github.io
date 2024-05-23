@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Digit sequences separators ' shall only be used consistently [AUTOSAR-A13_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Digit sequences separators ' shall only be used consistently [AUTOSAR-A13_6_1-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Since C++14 Language Standard it is allowed (optionally) to separate any two
+digits in digit sequences with separator '. However, to meet developer
+expectations, usage of separator in integer and floating-point digit sequences
+should be unified:
+    - for decimal values, separator can be placed every 3 digits
+    - for hexadecimal values, separator can be placed every 2 digits
+    - for binary values, separator can be placed avery 4 digits"
+[AUTOSAR A13-6-1]
+
+The rule detects when a digit sequence contains at least one ' separator and
+meets one of the following conditions:
+- the digit sequence separator ' is not placed every 3 digits in decimal values
+  starting from the right (integer values) or from '.' (floating point values)
+- the digit sequence separator ' is not placed every 2 digits in hexadecimal
+  values starting from the right (integer values) or from '.' (floating point
+  values)
+- the digit sequence separator ' is not placed every 4 digits in binary values
+  starting from the right side of the digit sequence
+- the digit sequence separator ' is used in an octal value
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that a digit-sequence in the exponent is always a decimal
+value.
+    double d1 = 0x10'FF.AA'BBp-1000;     // Violation - no ' every 3 digits in
+                                         // the exponent digit-sequence 1000
+    double d2 = 0x10'FF.AA'BBp-1'000;    // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve readability and comprehensibility of number
+constants.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+short s = 0b1'01'01'01'01'00;             // Violation
+int i = 100'00;                           // Violation
+long l = 1000'000;                        // Violation
+double pi = 3.1'415;                      // Violation
+int octal = 01'234'567;                   // Violation
+long hex = 0xFF'FFF'FFF;                  // Violation
+double dhex = 0xab'c.d'efp0;              // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+short s = 0b101'0101'0100;                // OK
+int i = 10'000;                           // OK
+long l = 1'000'000;                       // OK
+double pi = 3.141'5;                      // OK
+double d = 100'003.141'5;                 // OK
+int octal = 01234567;                     // OK
+long hex = 0xFF'FF'FF'FF;                 // OK
+double dhex = 0xa'bc.de'fp0;              // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A13-6-1. Digit sequences separators ' shall only be used as follows: (1)
+   for decimal, every 3 digits, (2) for hexadecimal, every 2 digits, (3) for
+   binary, every 4 digits
+
+</PRE>
+</BODY>
+</HTML>

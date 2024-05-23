@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use std::condition_variable_any on a std::mutex [HICPP-18_4_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use std::condition_variable_any on a std::mutex [HICPP-18_4_1-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The std::condition_variable_any class is a generalized implementation
+std::condition_variable and potentially adds size, performance, or operating
+system costs when used on a std::mutex class. You should use the
+std::condition_variable class with std::unique_lock&lt;std::mutex&gt;, and
+std::condition_variable_any on objects that have lock and unlock member
+functions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Avoids unnecessary overhead, improves code quality by eliminating unexpected
+behaviors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;condition_variable&gt;
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+#include &lt;vector&gt;
+
+std::mutex mut;
+std::condition_variable_any cv;
+std::vector&lt;int32_t&gt; container;
+
+void producerThread() {
+    int32_t i = 0;
+    std::lock_guard&lt;std::mutex&gt; guard(mut);
+
+    // critical section
+    container.push_back(i);
+
+    cv.notify_one();
+}
+
+void consumerThread() {
+    std::unique_lock&lt;std::mutex&gt; guard(mut);
+
+    cv.wait(guard, [] { return !container.empty(); }); // Violation
+
+    // critical section
+    container.pop_back();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;condition_variable&gt;
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+#include &lt;vector&gt;
+
+std::mutex mut;
+std::condition_variable cv;
+std::vector&lt;int32_t&gt; container;
+
+void producerThread() {
+    int32_t i = 0;
+    std::lock_guard&lt;std::mutex&gt; guard(mut);
+
+    // critical section
+    container.push_back(i);
+
+    cv.notify_one();
+}
+
+void consumerThread() {
+    std::unique_lock&lt;std::mutex&gt; guard(mut);
+
+    cv.wait(guard, [] { return !container.empty(); }); // Violation
+
+    // critical section
+    container.pop_back();
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   18.4.1. Do not use std::condition variable any on a std::mutex
+
+</PRE>
+</BODY>
+</HTML>

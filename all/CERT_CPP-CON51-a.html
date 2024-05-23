@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not call lock() directly on a mutex [CERT_CPP-CON51-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not call lock() directly on a mutex [CERT_CPP-CON51-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects when the 'lock()' member function is called directly on the
+object of 'std::mutex' type.
+
+Calling the 'lock()' and 'unlock()' functions directly on a mutex is not
+preferable. If you fail to release a lock that is held, or if an exception
+is thrown before the 'unlock()' function is called, all other threads that are
+waiting on the resource will be indefinitely blocked and the program may hang.
+
+For this reason, it is recommended to use 'std::lock_guard' or
+'std::unique_lock', which use RAII to manage the duration of the mutex lock.
+
+The std::lock_guard class keeps its associated mutex locked during the entire
+life time by acquiring the lock on construction and releasing the lock on
+destruction.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that critical sections are unlocked and provide
+stronger exception safety, because any critical section is automatically
+unlocked when the stack is unwound after an exception is thrown.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;mutex&gt;
+
+void foo()
+{
+    std::mutex mut;
+    mut.lock ();                              // Violation
+    // ...
+    mut.unlock ();
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;mutex&gt;
+
+void foo()
+{
+    std::mutex mut;
+    std::lock_guard&lt;std::mutex&gt; lock(mut);    // OK
+    // ...
+} // lock_guard object is destroyed and mutex 'mut' is released
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   3.4.3. Use RAII for resources
+
+2. SEI CERT C++ Coding Standard
+   CON51-CPP. Ensure actively held locks are released on exceptional
+   conditions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON51-CPP.+Ensure+actively+held+locks+are+released+on+exceptional+conditions">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CON51-CPP.+Ensure+actively+held+locks+are+released+on+exceptional+conditions</A>
+
+</PRE>
+</BODY>
+</HTML>

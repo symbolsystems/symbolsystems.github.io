@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All variables shall be initialized before use [JSF-142_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All variables shall be initialized before use [JSF-142_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A variable must always be initialized before use. Normally, the compiler gives 
+a warning if a variable is undefined. It is then sufficient to take care of 
+such cases. Instances of a class are usually initialized even if no arguments 
+are provided in the declaration (the empty constructor is invoked). To declare 
+a variable that has been initialized in another file, the keyword extern 
+is always used.
+By always initializing variables, instead of assigning values to them before 
+they are first used, the code is made more efficient since no temporary objects 
+are created for the initialization. For objects having large amounts of data, 
+this can result in significantly faster code."
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Exception to this rule are 'volatile' data, non-primitive types, and arrays.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents reading from uninitialized variables.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int a;             // Violation
+
+void foo( ) {
+    int b;         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int a = 0;        // OK
+
+void foo( ) {
+    int b = 0;    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 11 Variables - Rule 41
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Coding Style", Rule 19
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.16 Initialization, AV Rule 142
+
+4. <A HREF="http://cwe.mitre.org/data/definitions/457.html">http://cwe.mitre.org/data/definitions/457.html</A>
+
+5. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+6. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid side effects in arguments to unsafe macros [CERT_C-PRE31-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid side effects in arguments to unsafe macros [CERT_C-PRE31-d-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An unsafe function-like macro is one whose expansion results in evaluating
+one of its parameters more than once or not at all. Never invoke an unsafe
+macro with arguments containing an assignment, increment, decrement,
+volatile access, input/output, or other expressions with side effects 
+(including function calls, which may cause side effects)." [CERT C: PRE31-C]
+
+The rule reports a violation when an unsafe function-like macro is used with
+an argument that contains an assignment, increment, or decrement operator.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rules does not report a violation on macros whose names end with 'assert'.
+See also CODSTA-150 rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves maintainability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+1. The rule does not report a violation if the assignment, increment
+   or decrement operator is used in another macro.
+
+   #define min(x, y) (((x) &lt; (y)) ? (x) : (y))
+   #define INC(x) x++
+
+   int foo1(int i, int j){
+      int res = min(INC(i), j);                  // Violation not reported
+   }
+
+2. The rule does not report a violation if the unsafe function-like macro
+   is invoked in other macro.
+
+   #define PLUS_ONE(x) x + x + 1
+   #define MACRO_IN_MACRO(x) x = PLUS_ONE(x++)   // Violation not reported
+
+   int foo2(int i) {
+      MACRO_IN_MACRO(i);
+   }
+
+3. The rule assumes that a macro identifier represents an unsafe macro when 
+   at least one macro definition in the current translation unit is considered
+   to be unsafe. This may cause false positives when one translation unit
+   includes both safe and unsafe definitions of the same macro.
+
+   #define MACRO1(X) X + X                       // unsafe macro
+   #undef MACRO1
+
+   #define MACRO1(X) X                           // safe macro
+
+   void foo(int i) {
+      MACRO1(i++);                               // Violation reported
+   }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define min(x, y) (((x) &lt; (y)) ? (x) : (y))
+
+void foo(int i, int j) {
+    int res = min(i++, j);           // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define min(x, y) (((x) &lt; (y)) ? (x) : (y))
+
+void foo(int i, int j) {
+    i++;
+    int res = min(i, j);             // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   PRE31-C. Avoid side effects in arguments to unsafe macros
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/PRE31-C.+Avoid+side+effects+in+arguments+to+unsafe+macros">https://wiki.sei.cmu.edu/confluence/display/c/PRE31-C.+Avoid+side+effects+in+arguments+to+unsafe+macros</A>
+
+</PRE>
+</BODY>
+</HTML>

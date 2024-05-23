@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The names of standard library macros and objects shall not be reused [AUTOSAR-M17_0_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The names of standard library macros and objects shall not be reused [AUTOSAR-M17_0_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where the developer uses new versions of standard library macros or objects
+(e.g. to enhance functionality or add checks of input values), the modified
+macro or object shall have a new name.
+This is to avoid any confusion as to whether a standard macro or object,
+or a modified version of them, is being used."
+Rule checks if the following reserved names are used:
+- macro and typedef names from C standard library headers: assert.h,
+  complex.h, ctype.h, errno.h, float.h, iso646.h, limits.h, locale.h, math.h,
+  setjmp.h, signal.h, stdarg.h, stddef.h, stdio.h, stdlib.h, string.h, time.h,
+  wchar.h, wctype.h, stdint.h, inttypes.h, fenv.h, stdbool.h, tgmath.h
+- identifiers that begin with the underscore character
+See also: NAMING-33, MISRA2004-20_2, CODSTA-93
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define NULL ( a &gt; b )     // Violation
+#define _NULL ( a &gt; b )    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define MY_NULL ( a &gt; b ) // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M17-0-2. The names of standard library macros and objects shall not be
+   reused
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 17, Rule 17-0-2
+
+</PRE>
+</BODY>
+</HTML>

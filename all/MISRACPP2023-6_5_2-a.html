@@ -1,0 +1,143 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use static keyword except inside functions and classes [MISRACPP2023-6_5_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use static keyword except inside functions and classes [MISRACPP2023-6_5_2-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"In C and older C++ programs, the keyword 'static' is (confusingly) used
+to mean 'use internal linkage'. Don’t use 'static' except inside functions
+and classes. An unnamed namespace can be used to make names local to
+a compilation unit. The effect of an unnamed namespace is very similar to that
+of internal linkage."
+
+"The use of 'static' to indicate 'local to translation unit' is deprecated
+in C++. Use unnamed namespaces instead." [The C++ Programming Language]
+
+This rule detects when a non-const global object or global function
+is explicitly declared as static.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"Anonymous unions declared in a named namespace or in the global namespace
+shall be declared static." [ISO/IEC 14882]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents using deprecated language structures.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+static int var = 10;         // Violation
+​
+static int f1();             // Violation
+static int f1()              // Violation
+{
+  return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+namespace
+{
+  int var = 10;              // OK
+​
+  int f1();                  // OK
+  int f1()                   // OK
+  {
+    return 1;
+  }
+}
+
+// Examples of code not detected by this rule
+​
+static const int VAR = 100;  // OK 
+​
+class A {
+public:
+  static const int mem;      // OK
+};
+​
+void foo() {
+  static int i;              // OK
+}
+​
+static union {               // OK
+  int memU;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Bjarne Stroustrup, "The C++ Programming Language - Third Edition"
+   Chapter: 9.2 Linkage, B.2.3 Deprecated Features
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. High Integrity C++ Coding Standard
+   7.4.1. Ensure that any objects, functions or types to be used from a single
+   translation unit are defined in an unnamed namespace in the main source
+   file
+
+4. ISO/IEC 14882 Programming languages -- C++
+   Annex C - Compatibility, C.1.2 Clause 3: basic concepts
+   9.5 Unions
+
+5. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.5.2 Internal linkage should be specified appropriately
+
+</PRE>
+</BODY>
+</HTML>

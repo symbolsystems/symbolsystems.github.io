@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Missing comma in a string array initialization [PB-59]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Missing comma in a string array initialization [PB-59-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+During translation, adjacent narrow string literals are concatenated
+and adjacent wide string literals are also concatenated. If two adjacent
+strings used in an array initializer are not separated by a comma, then they 
+will be concatenated. This might not be what the programmer intended.
+
+The rule reports a violation if an array initializer includes two strings
+that will be concatenated and the array is a pointer to a char type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations if at least one of the concatenated 
+strings is defined as a macro.
+
+#define STR1 "str1"
+#define STR2 "str2"
+
+const char* arr[] = {
+    "str1"                     /* No Violation */
+    STR1,
+    STR2                       /* No Violation */
+    "str2"
+};
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Following this rule helps prevent unintentional behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+const char* days_of_week[] = {
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday"                    /* Violation - missing comma */
+    "Friday",
+    "Saturday",
+    "Sunday"
+};
+
+const char* digits[] = {
+    "0", "1", "2", "3", "4" "5", "6", "7", "8", "9" /* Violation - No comma
+                                                       between "4" and "5" */
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+const char* days_of_week[] = {
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",                   /* OK */
+    "Friday",
+    "Saturday",
+    "Sunday"
+};
+
+const char* digits[] = {
+    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" /* OK */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Recommended by Parasoft
+
+</PRE>
+</BODY>
+</HTML>

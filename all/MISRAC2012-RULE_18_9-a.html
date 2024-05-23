@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not modify objects with temporary lifetime [MISRAC2012-RULE_18_9-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not modify objects with temporary lifetime [MISRAC2012-RULE_18_9-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An array which is a member of a non-lvalue expression with structure
+or union type shall not be used as a value, other than as the immediate
+postfix-expression operand to a subscript operator. The subscript operator
+shall not be used to produce a modifiable lvalue." [MISRA C:2012 Amendment 3]
+
+"A non-lvalue expression with structure or union type, where the structure
+or union contains a member with array type (including, recursively, members
+of all contained structures and unions) refers to an object with automatic
+storage duration and temporary lifetime. Its lifetime begins when
+the expression is evaluated and its initial value is the value
+of the expression. Its lifetime ends when the evaluation of the containing
+full expression or full declarator ends. Any attempt to modify an object with
+temporary lifetime results in undefined behavior." [ISO/IEC 9899:2011]
+
+This rule detects access to an array member of a structure or union object
+with a temporary lifetime that was created as a result of a function call,
+or by using a conditional, assignment, or comma operator, except when it is
+used as the immediate postfix-expression operand to a subscript operator
+that does not produce a modifiable lvalue.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined and erroneous program behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    int arr[5];
+};
+struct S retS() {
+    struct S s;
+    return s;
+}
+
+void f1(int i) {
+    struct S s1, s2;
+    int* ptr = retS().arr;              // Violation
+    ptr = (s1 = s2).arr;                // Violation
+    ptr = (i &gt; 0 ? s1 : s2).arr;        // Violation
+    ptr = (s1, s2).arr;                 // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+    int arr[5];
+};
+struct S retS() {
+    struct S s;
+    return s;
+}
+
+void foo(int i) {
+    struct S s1, s2;
+    struct S tmpS = retS();
+    int* ptr = tmpS.arr;                // OK
+    s1 = s2;
+    ptr = s1.arr;                       // OK
+    ptr = (i &gt; 0 ? s1.arr : s2.arr);    // OK
+    tmpS = (s1, s2);
+    ptr = tmpS.arr;                     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   EXP35-C. Do not modify objects with temporary lifetime
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP35-C.+Do+not+modify+objects+with+temporary+lifetime">https://wiki.sei.cmu.edu/confluence/display/c/EXP35-C.+Do+not+modify+objects+with+temporary+lifetime</A>
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.16 Rule 18.9
+
+3. ISO/IEC 9899:2011 Programming languages -- C
+   6.2.4 Storage durations of objects
+
+</PRE>
+</BODY>
+</HTML>

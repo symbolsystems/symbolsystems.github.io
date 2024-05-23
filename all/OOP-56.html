@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A user-defined assignment operator shall not be virtual [OOP-56]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A user-defined assignment operator shall not be virtual [OOP-56-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an overloaded operator is declared virtual in a base class A, then in its
+subclasses B and C identical arguments list needs to be provided for
+the overriders. This allows to call an assignment operator of class B that
+takes an argument of type C which may lead to undefined behavior."
+[AUTOSAR A10-3-5]
+
+The rule detects when the following overloaded assignment operator functions
+are declared 'virtual':
+=, &lt;&lt;=, &gt;&gt;=, ^=, %=, &amp;=, *=, +=, -=, /=, |=.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    virtual C&amp; operator=(C const&amp; oth);        // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C
+{
+public:
+    C&amp; operator=(C const&amp; oth);                // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-3-5. A user-defined assignment operator shall not be virtual
+
+</PRE>
+</BODY>
+</HTML>

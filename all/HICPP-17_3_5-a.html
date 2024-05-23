@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not create an rvalue reference of std::array [HICPP-17_3_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not create an rvalue reference of std::array [HICPP-17_3_5-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The std::array class is a wrapper for a C style array. The cost of moving
+std::array is linear with each element of the array being moved. In most cases,
+passing the array by &amp; or const &amp; will provide the required semantics without
+this cost." [High Integrity C++ Coding Standard]
+
+This rule detects when an rvalue reference of 'std::array' is used as one of 
+the following:
+- the return type of a function
+- the type of a variable or parameter (in its declaration)
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and efficiency.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;array&gt;
+
+std::array&lt;int, 10&gt; garr;
+std::array&lt;int, 10&gt; &amp;&amp; rvgarr = std::move(garr);     // Violation
+
+void foo(std::array&lt;int, 10&gt; &amp;&amp;);                    // Violation
+
+std::array&lt;int, 10&gt; &amp;&amp; bar() {                       // Violation
+  std::array&lt;int, 10&gt; &amp;&amp; rvlarr = std::move(garr);   // Violation
+  return std::move(rvlarr);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use 'std::array&amp;' instead of 'std::array&amp;&amp;'.
+
+#include &lt;array&gt;
+
+std::array&lt;int, 10&gt; garr;
+std::array&lt;int, 10&gt; &amp; rgarr = garr;                  // OK
+
+void foo(std::array&lt;int, 10&gt; &amp;);                     // OK
+
+std::array&lt;int, 10&gt; &amp; bar() {                        // OK
+  std::array&lt;int, 10&gt; &amp; rlarr = garr;                // OK
+  return rlarr;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   17.3.5. Do not create an rvalue reference of std::array
+
+</PRE>
+</BODY>
+</HTML>

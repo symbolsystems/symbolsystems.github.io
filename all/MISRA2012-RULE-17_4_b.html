@@ -1,0 +1,226 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All exit paths from a function, except main(), with non-void return type shall have an explicit return statement with an expression [MISRA2012-RULE-17_4_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All exit paths from a function, except main(), with non-void return type shall have an explicit return statement with an expression [MISRA2012-RULE-17_4_b-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All exit paths from a function with non-void return type shall have
+an explicit return statement with an expression. 
+In a function with non-void return type, return expression gives the value
+that the function returns. The absence of a return with an expression leads to
+undefined behavior (and the compiler may not give an error)." [AUTOSAR A8-4-2]
+
+This rule detects functions, othen than main(), that fail to return a value
+from all exit paths.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Reaching the } that terminates the main function returns a value of 0."
+[ISO/IEC 9899:2011]
+
+"A return statement in main has the effect of leaving the main function
+(destroying any objects with automatic storage duration) and calling std::exit
+with the return value as the argument. If control reaches the end of main 
+without encountering a return statement, the effect is that of executing
+return 0;" [ISO/IEC 14882:2011]
+
+The rule assumes that exit points are 'return', 'goto', and 'throw'
+statements, as well as the 'exit' function from the 'stdlib' library.
+
+The rule doesn't check coroutine functions.
+
+The rule does not track the flow. It assumes that each path could
+be reached independently from conditions in conditional statements. 
+As a result, some false positives may be reported if the tested code includes
+unreachable paths without exit points.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, a 'return' statement is missing from the function.
+
+int foo1(int x)                             // Violation
+{
+    if(x == 0)
+    {
+        if(x == 0)
+        {
+            // missing 'return' statement
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int foo2(int x)                             // Violation
+{
+    switch(x)
+    {
+    case 0:
+        return x + 1;
+    case 1:
+        return x + 2;
+    case 2:
+        return x + 3;
+    // missing 'default' statement with 'return'
+    }
+}
+
+int foo3(int x)
+{
+    // missing value in 'return'
+    return;                                 // Violation
+}
+
+int foo4(int x)                             // Violation 
+{
+    if (x &gt; 10)
+    {
+        return 0;
+    }
+    if (x &lt;= 10)
+    {
+        return 1;
+    }
+    // unreachable path - rule does not track the flow
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo1(int x)                             // OK
+{
+    if(x == 0)
+    {
+        if(x == 0)
+        {
+            return x;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int foo2(int x)                             // OK
+{
+    switch(x)
+    {
+    case 0:
+        return x + 1;
+    case 1:
+        return x + 2;
+    case 2:
+        return x + 3;
+    default:
+        return x;
+    }
+}
+
+int foo3(int x)
+{
+    return 0;                               // OK
+}
+
+int foo4(int x)                             // OK 
+{
+    if (x &gt; 10)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+    // unreachable path
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-2. All exit paths from a function with non-void return type shall have
+   an explicit return statement with an expression
+
+2. High Integrity C++ Coding Standard
+   6.3.2. Ensure that execution of a function with a non-void return type ends
+   in a return statement with a value
+
+3. ISO/IEC 9899:2011 Programming languages -- C
+   5.1.2.2.3
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 9.6.5 A function with non-void return type shall return a value on all paths
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.4
+
+6. Programming languages -- C++ ISO/IEC 14882:2011
+   3.6.1 Main function
+
+7. SEI CERT C Coding Standard
+   MSC37-C. Ensure that control never reaches the end of a non-void function
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MSC37-C.+Ensure+that+control+never+reaches+the+end+of+a+non-void+function">https://wiki.sei.cmu.edu/confluence/display/c/MSC37-C.+Ensure+that+control+never+reaches+the+end+of+a+non-void+function</A>
+
+8. SEI CERT C++ Coding Standard
+   MSC52-CPP. Value-returning functions must return a value from all exit
+   paths
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/MSC52-CPP.+Value-returning+functions+must+return+a+value+from+all+exit+paths">https://wiki.sei.cmu.edu/confluence/display/cplusplus/MSC52-CPP.+Value-returning+functions+must+return+a+value+from+all+exit+paths</A>
+
+</PRE>
+</BODY>
+</HTML>

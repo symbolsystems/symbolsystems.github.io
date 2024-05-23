@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not pass an expression with array type to a function with a pointer or array type parameter [PB-41_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not pass an expression with array type to a function with a pointer or array type parameter [PB-41_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When an array is bound to a function parameter of pointer type the array
+is implicitly converted to a pointer to the first element of the array.
+In order to retain the array dimension, the parameter should be changed
+to a reference type or changed to a user defined type such as std::array."
+[High Integrity C++]
+
+This rule detects when an argument of an array type is passed to a function
+call as a parameter of an array or pointer type.
+
+See also: PB-41
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule allows to pass an argument as a parameter of a reference-to-array
+type, because in that case array decay does not happen.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve the readability of the code and avoid mistakes.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+
+void f1(int32_t a[10]);
+void f2(int32_t a[]);
+void f3(int32_t *a);
+void f4(int32_t *const &amp; a );
+
+void f()
+{
+    int32_t a1[10];
+    f1(a1);             // Violation
+    f2(a1);             // Violation
+    f3(a1);             // Violation
+    f4(a1);             // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+#include &lt;array&gt;
+
+void f1(int32_t (&amp;a)[10]);
+void f2(std::array&lt;int32_t, 10&gt; &amp;a);
+
+void f()
+{
+    int32_t a1[10];
+    std::array &lt; int32_t, 10 &gt; a2;
+    f1(a1);                            // OK
+    f2(a2);                            // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   4.1.1. Ensure that a function argument does not undergo an array-to-pointer
+   conversion
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 97
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.11.2 An array passed as a function argument shall not decay to a pointer
+
+</PRE>
+</BODY>
+</HTML>

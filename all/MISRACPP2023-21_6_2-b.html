@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Any member function named 'allocate' or 'deallocate' enclosed by namespace 'std' should not be used [MISRACPP2023-21_6_2-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Any member function named 'allocate' or 'deallocate' enclosed by namespace 'std' should not be used [MISRACPP2023-21_6_2-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Using 'allocate' and 'deallocate' functions requires ensuring that memory
+resources are appropriately released.
+
+This rule detects when the 'allocate' or 'deallocate' member function declared
+in namespace 'std' (or in any namespace in the Standard Library) is called
+or when its address is taken.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid memory leaks.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;memory&gt;
+
+void foo() {
+    std::allocator&lt;int&gt; alloc;
+    int* pi = alloc.allocate(1); // Violation
+    alloc.deallocate(pi, 1);     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the 'allocate' or 'deallocate' member functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.2 Dynamic memory shall be managed automatically
+
+</PRE>
+</BODY>
+</HTML>

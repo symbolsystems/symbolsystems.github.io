@@ -1,0 +1,92 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Don't use hex constant '0xffffffff' as an error marker [PORT-04]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Don't use hex constant '0xffffffff' as an error marker [PORT-04-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Sometimes the value '-1' is used as an error code or other special marker
+and it is written as '0xffffffff'. This expression is incorrect on a 64-bit
+platform, so you should explicitly define the value '-1'."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents writing an error prone code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifndef size_t
+typedef unsigned int size_t;
+#endif
+
+#define INVALID_RESULT (0xFFFFFFFFu)          // Violation
+#define NULL 0
+
+size_t MyStrLen(const char *str) {
+   size_t n;
+   if (str == NULL)
+     return INVALID_RESULT;
+   // ... 
+   return n;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#ifndef size_t
+typedef unsigned int size_t;
+#endif
+
+#define INVALID_RESULT (size_t(-1))          // OK
+#define NULL 0
+
+size_t MyStrLen(const char *str) {
+   size_t n;
+   if (str == NULL)
+     return INVALID_RESULT;
+   // ...
+   return n;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+<A HREF="http://software.intel.com/en-us/articles/lessons-on-development-of-64-bit-cc-applications/">http://software.intel.com/en-us/articles/lessons-on-development-of-64-bit-cc-applications/</A>
+Lesson 9.
+
+</PRE>
+</BODY>
+</HTML>

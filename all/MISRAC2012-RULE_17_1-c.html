@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The standard header file &lt;stdarg.h&gt; or &lt;cstdarg&gt; shall not be used [MISRAC2012-RULE_17_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The standard header file &lt;stdarg.h&gt; or &lt;cstdarg&gt; shall not be used [MISRAC2012-RULE_17_1-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The standard header file &lt;stdarg.h&gt; shall not be #included, and none of the
+features that are specified as being provided by &lt;stdarg.h&gt; shall be used.
+
+The Standard lists many instances of undefined behaviour associated with
+the features of &lt;stdarg.h&gt;, including:
+- va_end not being used prior to end of a function in which va_start was used;
+- va_arg being used in different functions on the same va_list;
+- the type of an argument not being compatible with the type specified
+  to va_arg." [MISRA C:2012 Rule 17.1 with Amendment 3]
+
+The rule detects when the &lt;stdarg.h&gt; or &lt;cstdarg&gt; header is included.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdarg.h&gt;     // Violation
+
+void f1(int i, ...){
+    va_list ap;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the &lt;stdarg.h&gt; header file.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 17.1
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   3 Consequential Amendments
+   3.1.2 Consistency of terminology regarding header file inclusion
+
+3. ISO/IEC 9899:2011 Programming languages -- C
+   7.16 Variable arguments &lt;stdarg.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

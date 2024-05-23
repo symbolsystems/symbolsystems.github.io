@@ -1,0 +1,150 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Don't write code that depends on the order of evaluation of expression that involves a function call [CERT_CPP-EXP50-d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Don't write code that depends on the order of evaluation of expression that involves a function call [CERT_CPP-EXP50-d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Apart from a few operators (notably the function call operator (), &amp;&amp;, ||, ?: 
+and , (comma)) the order in which sub-expressions are evaluated is unspecified 
+and can vary. This means that no reliance can be placed on the order of 
+evaluation of sub-expressions, and in particular no reliance can be placed on 
+the order in which side effects occur.
+Functions may have additional effects when they are called (e.g. modifying some
+global data). Dependence on order of evaluation could be avoided by invoking the
+function prior to the expression that uses it, making use of a temporary 
+variable for the value."
+Rule reports a violation if in an expression a function is called that takes as
+an argument a pointer or a reference to a non-const variable and modifies this
+variable, and in the same expression the variable is used in some other way. 
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Rule assumes that a variable is modified in function if it is directly modified
+by assignment or body of function is not defined in current translation unit.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents evaluation of expression dependent on compiler version.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo(int* ptr)
+{
+    (*ptr)++;
+    return 0;
+}
+int bar(int local_param)
+{
+    return local_param;
+}
+
+void foo_t(int i, int j)
+{
+    i = foo(&amp;j) + bar(j);    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int foo(int* ptr)
+{
+    (*ptr)++;
+    return 0;
+}
+int bar(int local_param)
+{
+    return local_param;
+}
+
+void foo_t(int i, int j)
+{
+    int temp = foo(&amp;j);
+    i = temp + bar(j);    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A5-0-1. The value of an expression shall be the same under any order of
+    evaluation that the standard permits
+
+2.  High Integrity C++ Coding Standard
+    5.1.2. Do not rely on the sequence of evaluation within an expression
+
+3.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.25 Expressions, AV Rule 204.1
+
+4.  MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 5, Rule 5-0-1
+
+5.  MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+    Rule 4.6.1 Operations on a memory location shall be sequenced appropriately
+
+6.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 1.3
+
+7.  MISRA C:2012 Guidelines for the use of the C language in critical systems
+    Section 8: Rules, Rule 13.2
+
+8.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 12
+
+9.  Origin: Misra Guidelines - Rule 46
+
+10. SEI CERT C Coding Standard
+    EXP10-C. Do not depend on the order of evaluation of subexpressions or the
+    order in which side effects take place
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP10-C.+Do+not+depend+on+the+order+of+evaluation+of+subexpressions+or+the+order+in+which+side+effects+take+place">https://wiki.sei.cmu.edu/confluence/display/c/EXP10-C.+Do+not+depend+on+the+order+of+evaluation+of+subexpressions+or+the+order+in+which+side+effects+take+place</A>
+
+11. SEI CERT C Coding Standard
+    EXP30-C. Do not depend on the order of evaluation for side effects
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP30-C.+Do+not+depend+on+the+order+of+evaluation+for+side+effects">https://wiki.sei.cmu.edu/confluence/display/c/EXP30-C.+Do+not+depend+on+the+order+of+evaluation+for+side+effects</A>
+
+12. SEI CERT C++ Coding Standard
+    EXP50-CPP. Do not depend on the order of evaluation for side effects
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP50-CPP.+Do+not+depend+on+the+order+of+evaluation+for+side+effects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP50-CPP.+Do+not+depend+on+the+order+of+evaluation+for+side+effects</A>
+
+</PRE>
+</BODY>
+</HTML>

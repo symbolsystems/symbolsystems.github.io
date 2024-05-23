@@ -1,0 +1,161 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A call of function with side-effect shall only be used in the proper context [CODSTA-103]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A call of function with side-effect shall only be used in the proper context [CODSTA-103-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A single operation with side-effects shall only be used in the following
+contexts:
+- by itself
+- the right-hand side of an assignment
+- a condition
+- the only argument expression with a side-effect in a function call
+- condition of a loop
+- switch condition
+- single part of a chained operation."
+
+The rule reports a violation if a function with side-effects is called
+in context that is not on the list above.
+
+The rule recognizes following side-effects:
+- modifying external object (e.g. global variable)
+- modifying object passed by pointer or reference
+- using a volatile object
+- new, delete or throw statements
+- calling function with known side-effect, for example abort() or fprintf()
+- calling function with any of the above expressions (three levels of function
+  calls are checked)
+
+It is permissible for a call of function with side-effects to occur in
+conjunction with a constant expression.
+
+See also: CODSTA-102
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The rule attempts to prohibit side-effects in expressions that would
+be unclear, misleading, obscure, or would otherwise result in unspecified
+or undefined behavior."
+
+Prevents hiding side-effects within an expression.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int global;
+volatile int* pv;
+int fun_nobody(int, int);
+
+int fun_side_eff1(int* r){
+    *r = 10;
+    return *r;
+}
+
+int fun_side_eff2(){
+    global++;
+    return global;
+}
+
+int fun_side_eff3(){
+    return (*pv &gt; 0);
+}
+
+void example(int p, int* ptr){
+    int i, j;
+
+    i = fun_side_eff1(ptr) + p;           // Violation
+
+    if(fun_side_eff2() &gt; i){}             // Violation
+
+    fun_nobody(i, fun_side_eff3());       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+int global;
+volatile int* pv;
+int fun_nobody(int, int);
+
+int fun_side_eff1(int* r){
+    *r = 10;
+    return *r;
+}
+
+int fun_side_eff2(){
+    global++;
+    return global;
+}
+
+int fun_side_eff3(){
+    if(*pv &gt; 0)
+        return 1;
+}
+
+void example(int p, int* ptr){
+    int i, j, k;
+
+    // move function call to separate expression
+    i = fun_side_eff1(ptr);   // OK
+    i += p;                   // OK
+
+    // use additional variable
+    j = fun_side_eff2();      // OK
+    if(j &gt; i){}               // OK
+
+    k = fun_side_eff3();      // OK
+    fun_nobody(i, k);         // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.25 Expressions, AV Rule 204
+
+</PRE>
+</BODY>
+</HTML>

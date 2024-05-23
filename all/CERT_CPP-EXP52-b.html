@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Object designated by a volatile lvalue should not be accessed in the operand of the sizeof operator [CERT_CPP-EXP52-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Object designated by a volatile lvalue should not be accessed in the operand of the sizeof operator [CERT_CPP-EXP52-b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The operand of a sizeof operator may be either an expression or may specify
+a type. If the operand contains an expression, a possible programming error
+is to expect that expression to be evaluated when it is actually not evaluated
+in most circumstances." [MISRA C:2012 Rule 13.6]
+
+The rule reports a violation if an object designated by a volatile lvalue 
+is accessed in the operand of the sizeof operator.
+
+
+Exception:
+
+"An expression of the form sizeof ( V ), where V is an lvalue with a volatile
+qualified type that is not a variable-length array, is permitted."
+[MISRA C:2012 Rule 13.6]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves maintainability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not report a violation if a parameter of array type uses
+a volatile expression as the size of array.
+
+void foo(){
+    volatile int v1;
+    sizeof(char (*)(int[v1]));    // No Violation 
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    volatile int mv;
+};
+
+void foo(volatile int v1){
+    volatile int* vp1;
+    int* volatile pv1;
+    struct S s;
+    int a[5];
+    
+    sizeof(v1 + 1);       // Violation  
+    sizeof((*pv1)/8);     // Violation  
+    sizeof(1 + vp1[2]);   // Violation  
+    sizeof(a[v1]);        // Violation  
+    sizeof(!s.mv);        // Violation
+    sizeof(char [v1]);    // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+    volatile int mv;
+};
+
+void foo(volatile int v1){
+    volatile int* vp1;
+    int* volatile pv1;
+    struct S s;
+    volatile int av[5];
+    
+    sizeof(v1);           // OK - Exception
+    sizeof(vp1 + 1);      // OK - pointer to volatile object  
+    sizeof(*pv1);         // OK - Exception   
+    sizeof(av[5]);        // OK - Exception
+    sizeof(struct S);     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-3-4. Evaluation of the operand to the sizeof operator shall not contain
+   side effects
+
+2. High Integrity C++ Coding Standard
+   5.1.6. Do not code side effects into the right-hand operands of: &amp;&amp;, ||,
+   sizeof, typeid or a function passed to condition variable::wait
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 166
+
+4. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-3-4
+
+5. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 13.6
+
+6. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 12
+
+7. Origin: Misra Guidelines - Rule 40
+
+8. SEI CERT C Coding Standard
+   EXP44-C. Do not rely on side effects in operands to sizeof, _Alignof, or
+   _Generic
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/EXP44-C.+Do+not+rely+on+side+effects+in+operands+to+sizeof%2C+_Alignof%2C+or+_Generic">https://wiki.sei.cmu.edu/confluence/display/c/EXP44-C.+Do+not+rely+on+side+effects+in+operands+to+sizeof%2C+_Alignof%2C+or+_Generic</A>
+
+9. SEI CERT C++ Coding Standard
+   EXP52-CPP. Do not rely on side effects in unevaluated operands
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands</A>
+
+</PRE>
+</BODY>
+</HTML>

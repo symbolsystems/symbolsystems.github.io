@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All structures should be typedef'd [CODSTA-47]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All structures should be typedef'd [CODSTA-47-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In C language, a structure declaration looks similar to a variable
+declaration of a struct type. Using a typedef for each structure
+makes variable declarations of struct types consistent with variable
+declarations of built-in types, which improves readability of code.
+Additionally, using typedefs prevents programming errors caused by
+typos in variable declarations.
+This rule detects when a structure does not have a typedef declaration
+in the current file.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule applies only to C code.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct A {    // Violation - no typedef
+    int i;
+};
+
+struct B {    // Violation - no typedef
+    int i;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef struct A {    // OK
+    int i;
+} A_t;
+
+struct B {            // OK
+    int i;
+};
+typedef struct B B_t;
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Parasoft recommended
+
+</PRE>
+</BODY>
+</HTML>

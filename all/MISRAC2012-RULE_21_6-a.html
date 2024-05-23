@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The Standard Library input/output functions shall not be used [MISRAC2012-RULE_21_6-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The Standard Library input/output functions shall not be used [MISRAC2012-RULE_21_6-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"This rule applies to the functions that are specified as being provided
+by &lt;stdio.h&gt; and, in C99, their wide-character equivalents specified 
+in Sections 7.24.2 and 7.24.3 of the C99 Standard as being
+provided by &lt;wchar.h&gt;."
+
+The rule reports violations on calls of functions declared in stdio.h header
+and on the following functions declared in wchar.h header: fwprintf, fwscanf, 
+wprintf, wscanf, swprintf, swscanf, vwprintf, vfwprintf, vswprintf, vwscanf,
+vfwscanf, vswscanf, fgetwc, fgetws, fputwc, fputws, getwc, putwc, ungetwc,
+fwide, getwchar, putwchar.
+
+See also: MISRA2004-20_9
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unspecified, undefined and implementation-defined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+void foo1 ()
+{
+    char str[20];
+    scanf ("%s",str);                 // Violation
+    printf("string %s", str);         // Violation
+}
+
+void foo2 ()
+{
+    FILE * pFile;
+    pFile = fopen ("myfile.txt","w"); // Violation 
+    if (pFile!=NULL)
+    {
+        fputs ("string",pFile);       // Violation 
+        fclose (pFile);               // Violation 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use Standard Library input/output functions.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.6
+
+2. ISO/IEC 9899:1990 Programming languages -- C
+   7.9 Input/output &lt;stdio.h&gt;
+
+3. ISO/IEC 9899:1999 Programming languages -- C
+   7.19 Input/output &lt;stdio.h&gt;
+   7.24.2 Formatted wide character input/output functions
+   7.24.3 Wide character input/output functions
+
+4. SEI CERT C Coding Standard
+   ERR02-C. Avoid in-band error indicators
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR02-C.+Avoid+in-band+error+indicators">https://wiki.sei.cmu.edu/confluence/display/c/ERR02-C.+Avoid+in-band+error+indicators</A>
+
+</PRE>
+</BODY>
+</HTML>

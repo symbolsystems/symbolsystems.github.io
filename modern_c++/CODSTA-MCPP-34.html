@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [CODSTA-MCPP-34]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A smart pointer shall only be used as a parameter type if it expresses lifetime semantics [CODSTA-MCPP-34-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A smart pointer shall only be used as a parameter type if it expresses
+lifetime semantics. If the object passed into the function is merely used
+without affecting the lifetime, it is preferable to pass it by reference
+or raw pointer instead." [AUTOSAR A8-4-11]
+
+This rule detects when a parameter of a smart pointer type is used within
+a function only to access the stored pointer by the dereference operators
+('operator*' or 'operator-&gt;') or the 'get()' function.
+
+This rule checks the following smart pointer types:
+'auto_ptr', 'shared_ptr', 'unique_ptr' and 'weak_ptr'.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule doesn't trigger if a parameter of a smart pointer type is not used
+in a function body.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid restricting the use of a function only to callers
+that use smart pointers. Also, it helps you limit a run-time cost of passing
+shared smart pointers.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the shared pointer is only used to access
+the 'i' member.
+
+#include &lt;memory&gt;
+
+class W {
+public:
+    int i;
+};
+
+void foo(std::shared_ptr&lt;W&gt; arg) {               // Violation
+    int i = arg-&gt;i;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix te code by replacing the shared poitner with a raw pointer.
+
+class W {
+public:
+    int i;
+};
+
+void foo(W* arg) {                               // OK
+    int i = arg-&gt;i;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-11 A smart pointer shall only be used as a parameter type
+   if it expresses lifetime semantics.
+
+</PRE>
+</BODY>
+</HTML>

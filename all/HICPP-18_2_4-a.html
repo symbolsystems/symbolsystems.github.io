@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use std::call_once rather than the Double-Checked Locking pattern [HICPP-18_2_4-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use std::call_once rather than the Double-Checked Locking pattern [HICPP-18_2_4-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Rather than locking a mutex and explicitly checking the pointer, every
+thread can just use 'std::call_once', safe in the knowledge that the pointer
+will have been initialized by some thread (in a properly synchronized
+fashion) by the time 'std::call_once' returns." [C++ Concurrency in Action]
+
+Double-Checked Locking pattern has the potential for nasty race conditions,
+because the read outside the first lock isn't synchronized with the write
+done by another thread inside the second lock.
+
+This rule detects Double-Checked Locking patterns.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The specific pattern recognized by the rule requires identical if conditions
+to be placed before and repeated after 'std::mutex::lock()' function call or
+the declaration of a local variable of one of following types:
+'std::unique_lock', 'std::lock_guard'.
+
+#include &lt;mutex&gt;
+std::mutex mut;
+
+void foo()
+{
+  //...
+  if (conditionA)               // Violation - Double-Checked Locking pattern
+  {
+    //...
+    std::lock_guard&lt;std::mutex&gt; lock(mut);
+    //...
+    if (conditionA) 
+    {
+    }
+  }
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of 'std::call_once' will typically have a lower overhead than using
+a mutex explicitly, especially when the initialization has already been
+done, so should be used in preference where it matches the required
+functionality." [C++ Concurrency in Action]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;atomic&gt;
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+std::mutex mut;
+static std::atomic&lt;int32_t *&gt; instance;
+
+int &amp;getInstance() 
+{
+  mut.lock();
+  if (!instance.load(std::memory_order_acquire))         // Violation
+  {
+    std::lock_guard&lt;std::mutex&gt; lock(mut);
+    if (!instance.load(std::memory_order_acquire))
+    {         
+      int32_t *i = new int32_t(0);
+      instance.store(i, std::memory_order_release);
+    }
+  }
+
+  return *instance.load(std::memory_order_relaxed);
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by using 'std::call_once' instead of the Double-Checked
+Locking pattern.
+
+#include &lt;cstdint&gt;
+#include &lt;mutex&gt;
+int32_t *instance;
+std::once_flag initFlag;
+
+void init() { instance = new int32_t(0); }
+
+int32_t &amp;getInstance() {
+  std::call_once(initFlag, init);                          // OK
+  return *instance;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Anthony Williams: C++ Concurrency in Action - Practical Multithreading,
+   2012, Manning Publications Co.
+
+2. High Integrity C++ Coding Standard
+   18.2.4. Use std::call_once rather than the Double-Checked Locking pattern
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use static_assert for assertions involving compile time constants [HICPP-7_1_10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use static_assert for assertions involving compile time constants [HICPP-7_1_10-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A static_assert will generate a compile error if its expression is not true.
+The earlier that a problem can be diagnosed the better. The earliest that a
+problem can be diagnosed is while the code is being written." [HIC++ v4.0,
+Rule 7.1.10]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using static_assert converts a runtime check and abort into a compile-time
+failure, which improves error detection.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cassert&gt;
+template &lt;typename T, int N&gt; bool f(T i) {
+    // Violation
+    assert(
+        (sizeof(T) * 8) == N &amp;&amp;
+        " Expect that the size of the type matches the value specified by N");
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cassert&gt;
+template &lt;typename T, int N&gt; bool f(T i) {
+    // OK
+    static_assert(
+        (sizeof(T) * 8) == N,
+        " Expect that the size of the type matches the value specified by N");
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.10. Use static assert for assertions involving compile time constants
+
+</PRE>
+</BODY>
+</HTML>

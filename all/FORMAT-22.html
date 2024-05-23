@@ -1,0 +1,127 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There should be no space between a increment/decrement operator (++/--) and its operand [FORMAT-22]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There should be no space between a increment/decrement operator (++/--) and its operand [FORMAT-22-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if there is space, tab, comment or new line
+character between a increment/decrement operator and its operand. The rule
+checks prefix and postfix operators.
+
+See also: FORMAT-17, FORMAT-18, FORMAT-21, FORMAT-45, FORMAT-46
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations on operators used inside preprocessor
+directives.
+
+The rule does not report a violation on "operator" construct (declaration and
+explicit call), for example:
+A&amp; operator ++ (A&amp;); // no violation reported
+operator++ (a); // no violation reported
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule promotes continuity in the relationship between the operators
+and the operands on which they act.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule can report incorrect violation if in the same line is a prefix
+and postfix increment/decrement operator.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int x) {
+    x ++; /* Violation */
+    x     /* Violation */
+    --;
+    ++ \
+    x;    /* Violation in line above */
+}
+
+#define M1(x) (x) ++; /* OK - macro definitions not checked */
+class A;
+A&amp; operator ++ (A&amp;);  /* OK - no violation on "operator" construct */
+void bar(A&amp; a) {
+    operator++ (a);   /* OK - no violation on "operator" construct */
+    ++ a;             /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int x) {
+    x++;    /* OK */
+    --x;    /* OK */
+    x--;    /* OK */
+    ++x;    /* OK */
+}
+
+#define M1(x) (x)++; /* OK */
+class A;
+A&amp; operator++(A&amp;);   /* OK */
+void bar(A&amp; a) {
+    operator++(a);   /* OK */
+    ++a;             /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 6 Style - 6.7 Miscellaneous - Rec. 27
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 63
+
+</PRE>
+</BODY>
+</HTML>

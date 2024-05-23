@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A default association shall appear as either the first or the last association of a generic selection [MISRA2012-RULE-23_8]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A default association shall appear as either the first or the last association of a generic selection [MISRA2012-RULE-23_8-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A default association shall only appear as either the first generic
+association in the association list, or the last - this rule only applies
+when a generic selection contains a default association."
+[MISRA C:2012 Amendment 3]
+
+This rule detects when a generic selection contains a default association
+that is not first or last in the association list.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Having a default association appear as either the first or last in the
+association list makes it easy to locate, clarifying the intent of the
+selection structure." [MISRA C:2012 Amendment 3]
+
+This rule helps you improve the readability of the code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Violation
+#define cbrt(X) _Generic((X),           \
+                    long double: cbrtl, \
+                    default: cbrt,      \
+                    float: cbrtf        \
+                )(X)
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix your code, move the default association to the first or last
+position in the association list.
+
+// OK
+#define cbrt(X) _Generic((X),           \
+                    default: cbrt,      \
+                    long double: cbrtl, \
+                    float: cbrtf        \
+                )(X)
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.8
+
+2. Programming languages -- C ISO/IEC 9899:2011
+   6.5.1.1 Generic selection
+
+</PRE>
+</BODY>
+</HTML>

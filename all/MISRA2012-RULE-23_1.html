@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A generic selection should only be expanded from a macro [MISRA2012-RULE-23_1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A generic selection should only be expanded from a macro [MISRA2012-RULE-23_1-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A generic selection expression should only be expanded from a function-like
+macro, with one of the macro's arguments expanded into the controlling expression
+of the generic selection." [MISRA C:2012 Amendment 3]
+
+This rule detects generic selections that are used outside of the macro
+definitions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Generic selections are useful to implement type queries or checks, or generic
+functions. If the generic selection is applied directly rather than expanded
+from a macro body, the type of the operand is already known locally and querying
+it is not necessary." [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int x;
+int y = _Generic(x, int: 1, default : 0);                      // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define M_IS_INT(X) _Generic((X), int : 1, default : 0)        // OK
+int x;
+int y =  M_IS_INT(x);
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.21 Rule 23.1
+
+</PRE>
+</BODY>
+</HTML>

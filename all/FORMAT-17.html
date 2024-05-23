@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no white space following '.' or '-&gt;' operator [FORMAT-17]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no white space following '.' or '-&gt;' operator [FORMAT-17-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if there is a space or tab character
+immediately following '.' or '-&gt;' operators.
+See also: FORMAT-18
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The violation is not reported if '.' or '-&gt;' is last in line ignoring
+white spaces, comments and backslashes. This allows splitting long
+expressions between lines.
+
+The violation is not reported if '.' or '-&gt;' is preceded by 'operator'
+keyword.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This promotes continuity in the relationship between the operators
+and the members/elements on which they act. These operators are used
+to access members/elements and cannot be considered separately from them.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct MyStruct {
+   int x;
+} myObj;
+void foo(struct MyStruct* myObjPtr) {
+    myObj.    x;     /* Violation */
+    myObjPtr-&gt; x; /* Violation */
+}
+#define MACRO a. b /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct MyStruct {
+    int x;
+} myObj;
+void fooR(struct MyStruct* myObjPtr) {
+    myObj.x;     /* OK */
+    myObjPtr-&gt;   /* OK: '-&gt;' is last in line*/
+          x;
+    myObj./*comment*/ x; /* OK: no space immediately after '.' */
+}
+#define MACRO a. /* OK: '.' is last in line */ \
+	  b
+#ifdef __cplusplus
+struct S {
+    int operator -&gt; (); /* OK: preceded by 'operator' keyword */
+};
+#endif
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 6 Style - 6.7 Miscellaneous - Rec. 27
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 63
+
+</PRE>
+</BODY>
+</HTML>

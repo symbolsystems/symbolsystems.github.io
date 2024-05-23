@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'errno_t' type should not be used [MISRAC2012-RULE_1_4-l]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'errno_t' type should not be used [MISRAC2012-RULE_1_4-l-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Updates to the C Standard have introduced new language features. The following
+shall not be used:
+- Other than defining __STDC_WANT_LIB_EXT1__ to '0', the facilities of Annex K
+(Boundschecking interfaces) shall not be used." [MISRA C:2012 Amendment 2]
+
+"1 The header &lt;errno.h&gt; defines a type.
+ 2 The type is errno_t which is the type int."
+[ISO/IEC 9899:2011, Annex K]
+
+This rule detects when the 'errno_t' type is used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Use of the language features restricted by this rule may have instances
+of undefined, unspecified or implementation-defined behaviour associated
+with them. In addition, features may also exhibit well defined behaviour
+that does not meet developer expectations." [MISRA C:2012 Amendment 2]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;errno.h&gt;
+
+errno_t i;                                      // Violation
+
+errno_t * p;                                    // Violation
+
+errno_t foo()                                   // Violation
+{
+    return sizeof(errno_t);                     // Violation
+}
+
+void bar(errno_t arg);                          // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use the 'errno_t' type.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 2 Updates for ISO/IEC 9899:2011 Core functionality
+   2.10 Section 8 - Rules, 2.10.3 Rule 1.4
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   Annex K, K.3.3 Common definitions &lt;stddef.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,159 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers that define functions with external linkage shall be unique [MISRAC2012-RULE_5_8-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers that define functions with external linkage shall be unique [MISRAC2012-RULE_5_8-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Regardless of scope, no identifier with static storage duration should
+be re-used across any source files in the project. This includes objects
+or functions with external linkage and any objects or functions with static
+storage class specifier."
+[AUTOSAR A2-10-5]
+
+This rule detects functions with external linkage whose names are reused as
+function names or as other identifiers.
+The rule assumes that two functions are duplicates only if both have the same
+signature and both are definitions.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule analyzes declarations and definitions in files in the testing scope.
+For this reason, the set of findings reported for the same file may vary
+depending on the scope of analysis.
+
+The rule operates on all files in the testing scope. For this reason, it is
+important to specify a testing scope that reflects the system architecture
+(for example, it may be appropriate to define a testing scope that corresponds
+to a single, complete, linkable module).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Enforcing uniqueness of identifier names in this manner helps avoid confusion."
+[MISRA C++ 2012]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+The following example assumes that the testing scope contains only
+'test1.cpp' and 'test2.cpp'.
+
+// test1.cpp
+
+int getCounter() { return 1; }               // Violation
+
+int foo;                                     // Violation
+
+char getC(void);                             // Violation
+
+// test2.cpp
+
+int getCounter() { return 1; }               // Violation
+
+void foo()                                   // Violation
+{
+}
+
+class getC                                   // Violation
+{
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix your code ensure the uniqueness of identifiers.
+
+The following example of code which does not result in a violation assumes
+that the testing scope contains only 'test.h', 'test1.cpp' and 'test2.cpp'.
+
+// test.h
+
+int getCounter() { return 1; }               // OK
+
+// test1.cpp
+
+#include "test.h"
+
+int getCounter1() { return 1; }              // OK
+
+int foo;                                     // OK
+
+char getC(void);                             // OK
+
+// test2.cpp
+
+#include "test.h"
+
+int getCounter2() { return 1; }              // OK
+
+void fooFunction()                           // OK
+{
+}
+
+class chair                                  // OK
+{
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-10-5. An identifier name of a function with static storage duration or a
+   non-member object with external or internal linkage should not be reused
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-10-5
+
+3. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 5.8
+
+</PRE>
+</BODY>
+</HTML>

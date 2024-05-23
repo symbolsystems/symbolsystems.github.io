@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Local variable names in variable declarations should not be enclosed in parentheses [FORMAT-49]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Local variable names in variable declarations should not be enclosed in parentheses [FORMAT-49-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"There is an ambiguity in the grammar involving expression-statements
+and declarations: An expression-statement with a function-style explicit
+type conversion as its leftmost subexpression can be indistinguishable
+from a declaration where the first declarator starts with a (. In those
+cases the statement is a declaration." [ISO/IEC 14882:2017]
+
+This rule detects local variable names that are enclosed in parentheses
+in variable declarations.
+
+See also: FORMAT-48, PB-79
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2021.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule only detects cases where the name of the declared variable is the only
+parentheses-enclosed identifier.
+
+The rule does not check variables with explicit initializers.
+
+The rule triggers when a function-like macro is used to declare a variable and
+the variable name is used as the macro argument:
+
+#define DECL(var) int var
+
+void f() {
+  DECL(i);   // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+A variable declaration with the variable name enclosed in parentheses is
+similar to an expression. This rule helps you improve code readability and
+prevent confusing declarations with expressions
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S1 {
+    int ms1;
+};
+
+S1 s1;
+
+void f1() {
+    S1(s1);         // Violation
+}
+
+void f2() {
+    int(i1);        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by removing the unnecessary parenthesis from
+the declaration.
+
+struct S1 {
+    int ms1;
+};
+
+S1 s1;
+
+void f1() {
+    S1 s2 = s1;     // OK
+}
+
+void f2() {
+    int i1 = 0;     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   9.8 Ambiguity resolution
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.0.1 Block scope declarations shall not be visually ambiguous
+
+3. SEI CERT C++ Coding Standard
+   DCL53-CPP. Do not write syntactically ambiguous declarations
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL53-CPP.+Do+not+write+syntactically+ambiguous+declarations">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL53-CPP.+Do+not+write+syntactically+ambiguous+declarations</A>
+
+</PRE>
+</BODY>
+</HTML>

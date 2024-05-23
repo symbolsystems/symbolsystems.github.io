@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The address of an object with thread storage duration shall not be assigned to an object with static storage duration [MISRAC2012-RULE_18_6-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The address of an object with thread storage duration shall not be assigned to an object with static storage duration [MISRAC2012-RULE_18_6-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The address of an object becomes indeterminate when the lifetime of that object
+expires. Any use of an indeterminate address results in undefined behaviour."
+[MISRA C:2012]
+
+The rule detects when the address of an object with thread storage duration
+is assigned to an object with static storage duration.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"An object whose identifier is declared with the storage-class specifier
+_Thread_local has thread storage duration. Its lifetime is the entire execution
+of the thread for which it is created, and its stored value is initialized when
+the thread is started." [ISO/IEC 9899:2011]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+The rule does not check control flow. For example, a violation will not be
+reported if the address of an object with thread-local storage is first
+assigned to a local pointer and then that pointer is assigned to another
+pointer of wider scope.
+
+#include "threads.h"
+
+int* gptr;
+
+void foo() {
+    static thread_local int thlocal;
+    int* lptr;
+    lptr = &amp;thlocal;
+    gptr = lptr;                                   // Not reported
+}
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include "threads.h"
+
+int* gptr;
+
+void func(void *id)
+{
+    static thread_local int thlocal;
+    gptr = &amp;thlocal;                               // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not assign the address of an object to another object of wider scope.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 18.6
+
+2. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.10 Rule 18.6
+
+3. ISO/IEC 9899:2011 Programming languages -- C
+   6.2.4 Storage durations of objects
+
+</PRE>
+</BODY>
+</HTML>

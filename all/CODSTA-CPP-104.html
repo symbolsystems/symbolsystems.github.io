@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The operand of the 'typeid' operator shall not contain any expression that has side effects [CODSTA-CPP-104]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The operand of the 'typeid' operator shall not contain any expression that has side effects [CODSTA-CPP-104-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The operand of typeid operator is evaluated only if it is a function call which
+returns a reference to a polymorphic type.
+Providing side effects to typeid operator, which takes place only under special
+circumstances, makes the code more difficult to maintain." [AUTOSAR A5-3-1]
+
+"Accessing an object designated by a volatile lvalue), modifying an object,
+calling a library I/O function, or calling a function that does any of those
+operations are all side effects, which are changes in the state of the execution
+environment." [ISO/IEC 14882:1998]
+
+This rule detects when one of the following operators is used as the operand of
+the 'typeid' operator:
+- assignment
+- increment
+- decrement
+- new
+- delete
+- throw
+
+See also: CODSTA-CPP-104_b, MISRA2004-12_3, MISRA2004-12_4_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code maintainability and prevent confusion.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the operands of the 'typeid' operators are
+increment operators.
+
+#include &lt;typeinfo&gt;
+
+void f1() {
+    int var;
+    typeid(var++);     // Violation
+    typeid(var += 5);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use an already incremented variable as the operand
+of the 'typeid' operators.
+
+#include &lt;typeinfo&gt;
+
+void f1() {
+    int var;
+    var++;
+    typeid(var);      // OK
+    var += 5;
+    typeid(var);      // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-3-1. Evaluation of the operand to the typeid operator shall not contain
+   side effects.
+
+2. High Integrity C++ Coding Standard
+   5.1.6. Do not code side effects into the right-hand operands of: &amp;&amp;, ||,
+   sizeof, typeid or a function passed to condition variable::wait
+
+3. SEI CERT C++ Coding Standard
+   EXP52-CPP. Do not rely on side effects in unevaluated operands
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands">https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP52-CPP.+Do+not+rely+on+side+effects+in+unevaluated+operands</A>
+
+</PRE>
+</BODY>
+</HTML>

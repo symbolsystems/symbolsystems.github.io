@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid tainted data in array indexes [CWE-20-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid tainted data in array indexes [CWE-20-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects array access operations that may result in out-of-bounds access.
+Specifically, it detects cases when an index value that is used to access an array element
+comes from a tainting function (e.g. user input) that can return malicious data,
+but has not been checked and ensured to be non-negative (applicable to signed types)
+and less than the size of the array. 
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v7.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+The potential to access arrays beyond their boundaries is a severe security threat.
+If an application has a vulnerability of this kind, it can be exploited to
+execute arbitrary code and gain full control over the application.
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Sources of tainted data" parameter allows you to specify which data
+sources the rule considers to be sources of tainted data. You can specify
+the following sources:
+   * Files
+   * Pipes
+   * Stream-oriented APIs (std::istream, CArchive and CFile from MFC)
+   * Low-level input (Windows API, POSIX)
+   * Console
+   * Environment variables
+   * Parameters of entry point methods
+   * Network
+   * Sockets
+
+The "Validating functions" parameter allows you to specify functions that can
+validate tainted data. The rule assumes that parameters, target objects, and
+return values are benign if one of the validating functions is called. 
+Fill in the following columns to configure a function.
+- 'Enabled' - enables or disables the validating function. If disabled, the rule
+    does not consider the function to be a validating function.
+- 'Fully qualified type name or namespace (wildcard)' - specifies
+    the fully qualified name of the type that declares the function. You can
+    use "*" for a function declared in any type.
+- 'Function name (wildcard)' - specifies the name of the function.
+- '+ definitions in subclasses' - if enabled, the information configured in
+    the current row applies to function with the specified name that are defined
+    in subclasses of the given class. Note that this applies to both instance
+    and non-instance functions.
+- "'this' object is validated" - if enabled,  the function cleans the object it
+    is called on.
+- 'Returns validated data' - if enabled, the function cleans its return value.
+- 'Validated parameters' - specifies which function parameters are cleaned by
+    the function. List 1-based indexes of parameters separated by a comma or
+    use "*" to specify that all function parameters are cleaned.
+
+The "Report unvalidated violations" parameter allows you to enable or disable
+reporting unvalidated violations. If enabled, Flow  Analysis does not check
+whether the path of the violation can be reached from the beginning of
+the function. Enabling this parameter may be useful in complex cases when
+restricted analysis depth prevents Flow Analysis from completing the violation
+validation procedure, but it may result in reporting false positives.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+See the SECURITY RELEVANCE section.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;stdio.h&gt;
+
+int array[100];
+
+int example()
+{
+  int i;
+  scanf("%d", &amp;i);
+  return array[i]; // VIOLATION ("i" is an unknown value possibly &lt; 0 or &gt;= 100)
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The following code will not trigger a violation:
+
+#include &lt;stdio.h&gt;
+
+int array[100];
+
+int example_r()
+{
+  int i;
+  scanf("%d", &amp;i);
+  if (i &lt; 0 || i &gt;= 100) {
+    return -1; // wrong input
+  }
+  return array[i]; // NO VIOLATION
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-20: Improper Input Validation
+<A HREF="http://cwe.mitre.org/data/definitions/20.html">http://cwe.mitre.org/data/definitions/20.html</A>
+
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+<A HREF="http://cwe.mitre.org/data/definitions/119.html">http://cwe.mitre.org/data/definitions/119.html</A>
+
+CWE-131: Incorrect Calculation of Buffer Size
+<A HREF="http://cwe.mitre.org/data/definitions/131.html">http://cwe.mitre.org/data/definitions/131.html</A>
+
+MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+Section 1: New directives, Dir 4.14
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-2-5 An array or container shall not be accessed beyond its range
+
+AUTOSAR C++14 Coding Guidelines
+Rule A27-0-1 Inputs from independent components shall be validated
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002520: The application must protect from canonical representation vulnerabilities.
+APSC-DV-002530: The application must validate all input.
+APSC-DV-002550: The application must not be vulnerable to XML-oriented attacks.
+APSC-DV-002560: The application must not be subject to input handling vulnerabilities.
+
+</PRE>
+</BODY>
+</HTML>

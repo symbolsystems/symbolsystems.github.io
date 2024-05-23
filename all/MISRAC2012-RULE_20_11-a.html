@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A macro parameter immediately following a # operator shall not immediately be followed by a ## operator [MISRAC2012-RULE_20_11-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A macro parameter immediately following a # operator shall not immediately be followed by a ## operator [MISRAC2012-RULE_20_11-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The order of evaluation associated with multiple #, multiple ## or a mix
+of # and ## preprocessor operators is unspecified. In particular, the result of
+a # operator is a string literal and it is extremely unlikely that pasting this
+to any other preprocessing token will result in a valid token."
+
+This rule detects macro parameters immediately following a # operator that are
+immediately followed by a ## operator.
+
+See also: MISRA2004-19_13
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unspecified behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#define M( x, y )  #x ## y         /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#define M1( x )    #x              /* OK */
+#define M( x, y )  M1(x) ## y      /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1990 Programming languages -- C
+   6.8.3.2 The # operator
+
+2. ISO/IEC 9899:1999 Programming languages -- C
+   6.10.3.2 The # operator
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 19.3.2 A macro parameter immediately following a # operator shall not be immediately followed by a ## operator
+
+4. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 20.11
+
+</PRE>
+</BODY>
+</HTML>

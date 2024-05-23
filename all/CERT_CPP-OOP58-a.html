@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Copy operations must not mutate the source object [CERT_CPP-OOP58-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Copy operations must not mutate the source object [CERT_CPP-OOP58-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Copy operations (copy constructors and copy assignment operators) are expected
+to copy the salient properties of a source object into the destination object,
+with the resulting object being a 'copy' of the original." [CERT-OOP58-CPP]
+
+"When implementing a copy operator, do not mutate any externally observable
+members of the source object operand or globally accessible information.
+Externally observable members include, but are not limited to, members
+that participate in comparison or equality operations, members whose values
+are exposed via public APIs, and global variables." [CERT-OOP58-CPP]
+
+This rule detects when a copy constructor or a copy assignment operator
+modifies a global variable or a source object operand that is passed as
+the first parameter of a const reference type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that an object is modified when a non-const member
+function is called on this object.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent unexpected behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int globVar = 0;
+
+class C {
+    mutable int m;
+
+public:
+    C(const C &amp;other) : m(other.m) {
+        other.m = 0;                                // Violation
+        globVar++;                                  // Violation
+    }
+
+    C&amp; operator=(const C &amp;other) {
+        if (&amp;other != this) {
+            m = other.m;
+            other.m = 0;                            // Violation
+            globVar++;                              // Violation
+        }
+        return *this;
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not modify source object operands and global variables in copy constructors
+and copy assignment operators.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   OOP58-CPP. Copy operations must not mutate the source object
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP58-CPP.+Copy+operations+must+not+mutate+the+source+object">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP58-CPP.+Copy+operations+must+not+mutate+the+source+object</A>
+
+</PRE>
+</BODY>
+</HTML>

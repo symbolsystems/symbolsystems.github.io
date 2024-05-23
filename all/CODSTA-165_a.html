@@ -1,0 +1,160 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The cast operation to essentially enumeration type is not allowed [CODSTA-165_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The cast operation to essentially enumeration type is not allowed [CODSTA-165_a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"An explicit cast may be introduced for legitimate functional reasons.
+However, some explicit casts are considered inappropriate:
+- A cast to an essentially enum type may result in a value that does
+  not lie within the set of enumeration constants for that type."
+  [MISRA C:2012 Rule 10.5]
+
+This rule detect cases when: 
+- an expression of an essential type other than enum is explicitly cast
+  to an essentially enum type
+- an expression of an essentially enum type is explicitly cast to a different 
+  essentially enum type
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Violations are not reported on casts from or to essentially Boolean types.
+Essentially Boolean types are checked by the CODSTA-165_b rule.
+
+The rule assumes that "essentially Boolean" type is defined as one of
+the following:
+  - _Bool type defined in C99 standard library 'stdbool'
+  - the result of a relational, equality and logical operator
+  - an enumeration type whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) and contains exactly 2 enumeration
+    constants
+  - typedef whose name begins with 'bool' (case insensitive)
+    or contains 'boolean' (case insensitive) to:
+    -- a char type defined explicitly as signed or unsigned
+    -- a short or int type
+    -- an enumeration type which contains exactly 2 enumeration constants
+
+Enumeration constants have "essentially Boolean" type if they are defined
+inside "essentially Boolean" types.
+
+Integer constants with values '0' and '1' are considered to be constants of
+"essentially Boolean" type.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"An enumerated type may be cast to an enumerated type provided that the cast
+is to the same essential enumerated type. Such casts are redundant."
+[MISRA C:2012 Rule 10.5]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents casts to an enum type which may result in a value that does
+not lie within the set of enumeration constants for that type.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef enum EN1 { E11, E12 } TE1;
+typedef enum EN2 { E21, E22 } TE2;
+
+void foo ( void )
+{
+    char ch;
+    int  i;
+    TE1 en1;
+    TE2 en2;
+
+    (TE1)ch;   /* Violation */
+    (TE2)i;    /* Violation */
+    (TE1)0;    /* Violation */
+    (TE1)en2;  /* Violation */
+    (TE2)E11;  /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of code not reported by rule */
+
+typedef enum EN1 { E11, E12 } TE1;
+typedef enum { FALSE, TRUE } Boolean;
+
+void foo ( void )
+{
+    char ch;
+    int  i;
+    TE1 en1;
+
+    (TE1)E11;      /* OK - but redundant cast */
+    (int)en1;      /* OK - cast from enum type is allowed */
+    (Boolean)en1;  /* OK - does not report on essentially Boolean types */
+    (TE1)FALSE;    /* OK - does not report on essentially Boolean types */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 10.5
+
+2. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.10 Rule 10.5
+
+</PRE>
+</BODY>
+</HTML>

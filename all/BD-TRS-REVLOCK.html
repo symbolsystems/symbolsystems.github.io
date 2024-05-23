@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not release a lock that has not been acquired [BD-TRS-REVLOCK]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not release a lock that has not been acquired [BD-TRS-REVLOCK-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects cases where a lock is released, but it has not been acquired 
+in the same method.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.2
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+Some functions are designed to release a lock they have not acquired, and separate
+wrapper functions may be responsible for locking and unlocking. Violations will be
+reported in such wrappers, unless their own multithreading API is defined in test
+configurations where the wrappers are defined as locking or unlocking functions.
+
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+Helps you prevent unlocking another thread's lock.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+
+void example(int a) {
+    for (int i = 0; i &lt; a; i++) {
+        pthread_mutex_lock(mutex);
+        // ...
+        pthread_mutex_unlock(mutex);
+    }
+    pthread_mutex_unlock(mutex); // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t* mutex;
+
+void example(int a) {
+    for (int i = 0; i &lt; a; i++) {
+        pthread_mutex_lock(mutex);
+        // ...
+        pthread_mutex_unlock(mutex);
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.13
+
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.2 Section 8 - Rules, Rule 22.17
+
+SEI CERT C Coding Standard
+POS48-C. Do not unlock or destroy another POSIX thread's mutex
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS48-C.+Do+not+unlock+or+destroy+another+POSIX+thread's+mutex">https://wiki.sei.cmu.edu/confluence/display/c/POS48-C.+Do+not+unlock+or+destroy+another+POSIX+thread's+mutex</A>
+
+</PRE>
+</BODY>
+</HTML>

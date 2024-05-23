@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointer subtraction shall only be applied to pointers that address elements of the same array [CODSTA-13_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointer subtraction shall only be applied to pointers that address elements of the same array [CODSTA-13_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Subtraction of pointers only gives well-defined results if the two pointers
+point (or at least behave as if they point) into the same array object."
+[MISRA-C:2004]
+
+This rule detects subtractions between expressions of pointer or array type
+that do not point to the same array.
+
+See also: BD-PB-PTRCMP
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not check the flow, which may result in reporting false positive
+or false negative violations, depending on how pointers are assigned on
+different paths.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule allows you to avoid undefined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( int* p ) {
+    int a1[3];
+    int a2[4];
+    int* p1 = a1;
+    int* p2 = a2;
+    int* p3 = 0;
+    int ptrdiff;
+
+    ptrdiff = p1 - p2;   // Violation
+    ptrdiff = p1 - p3;   // Violation
+    ptrdiff = p1 - p;    // Violation - it is not known where 'p' points
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by only subtracting pointers that point to the same
+object or array.
+
+/* Examples of correct code */
+void f1( ) {
+    int a1[3];
+
+    int* p1 = a1;
+    int* p2 = &amp;a1[2];
+    int ptrdiff;
+
+    ptrdiff = p1 - p2;   // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 17
+
+</PRE>
+</BODY>
+</HTML>

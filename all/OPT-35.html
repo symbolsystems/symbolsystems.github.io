@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not assign a variable to itself [OPT-35]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not assign a variable to itself [OPT-35-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Assigning a variable to itself is unnecessary and might be a sign of a
+logic error.
+
+It might be caused by a misspelled identifier name (typographical error).
+Or maybe the user intended to assign a different variable with the same name
+but different scope? This can result in a logic error and the code should be
+modified.
+
+It might be an unwanted/dead code left behind by mistake, for example after
+code refactoring or cleaning. In this case the code can be removed.
+
+A careful code review is needed to check what was the intention of programmer
+and how the code should be changed.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule will not report violations on complex expressions like:
+- elements of member array
+    s.ma[1] = s.ma[1];         // No Violation
+    ps-&gt;ma[1] = ps-&gt;ma[1];     // No Violation
+- objects represented in different ways
+    ps1-&gt;ms.mv = (*ps1).ms.mv; // No Violation
+    (&amp;s1)-&gt;ms.mv = s1.ms.mv;   // No Violation
+    *p = p[0];                 // No Violation
+    a[2] = a[1+1];             // No Violation
+    a[1] = *(a+1);             // No Violation
+- dereferenced expressions
+    *(p+1) = *(p+1);           // No Violation
+    
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule finds possible logic errors (bugs) which need code fixes,
+or unneeded code that can be removed which improves code clarity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S1{
+    int ms;
+};
+struct S2{
+    int ms;
+};
+int x;
+void foo1(S1* ps1, S2* ps2){ 
+    // The code should be carefully reviewed
+    ps1-&gt;ms = ps1-&gt;ms;  // Violation - this looks like a typo
+    x = x;              // Violation - this looks like a dead code
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S1{
+    int ms;
+};
+struct S2{
+    int ms;
+};
+int x;
+void foo1(S1* ps1, S2* ps2){
+    // During the review it was found out the first assignment was incorrect
+    // and the second one was not needed
+    ps1-&gt;ms = ps2-&gt;ms;  // OK
+    // Unnecessary assignment removed
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid casts down the inheritance hierarchy [OOP-28]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid casts down the inheritance hierarchy [OOP-28-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Downcasts can be eliminated in a number of ways. The best way is to replace
+such casts with calls to virtual functions, possibly also making each virtual
+function a no-op for any classes to which it doesn't truly apply. A second
+method is to tighten up the typing so that there is no ambiguity between
+the declared type of a pointer and the pointer type that you know is really
+there. Whatever the effort required to get rid of downcasts, it's effort well
+spent, because downcasts are ugly and error-prone, and they lead to code that's
+difficult to understand, enhance, and maintain"
+
+See also: OOP-29, OOP-35, OOP-49, OOP-50, OOP-52
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule allows to use downcasting via 'dynamic_cast' operator.
+"When you use dynamic_cast on a pointer, the cast is attempted,
+and if it succeeds (i.e., if the dynamic type of the pointer
+is consistent with the type to which it's being cast), 
+a valid pointer of the new type is returned.
+If the dynamic_cast fails, the null pointer is returned."
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents illegal casts and ensures that abstraction layer is not bypassed.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+    int foo( ) const;
+};
+
+class D : public B
+{
+public:
+    int foo( ) const;
+};
+ 
+void use(B const &amp; b){
+    D const *d = (D*) &amp;b;  // Violation	
+    d-&gt;foo();
+}
+
+int main( )
+{
+    D d;
+    use(d);
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class B
+{
+public:
+    virtual int foo( ) const = 0;
+};
+
+class D : public B
+{
+public:
+    virtual int foo( ) const;
+};
+ 
+void use1(B const &amp; b){
+    b.foo();               // OK - virtual function is used
+}
+
+void use2(B const &amp; b){
+    D const* d = dynamic_cast&lt;D const*&gt; (&amp;b); // OK - dynamic_cast is allowed
+    d-&gt;foo();               
+}
+
+int main( )
+{
+    D d;
+    use1(d);
+    use2(d);
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., 
+   Chapter: "Inheritance and Object-Oriented Design", Item 39
+
+2. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

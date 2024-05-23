@@ -1,0 +1,116 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not introduce virtual functions in a final class [CODSTA-MCPP-52]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not introduce virtual functions in a final class [CODSTA-MCPP-52-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Declaring a class as final explicitly specifies that the class cannot be
+inherited. Declaring a virtual function inside a class specifies that
+the function can be overriden in the inherited class, which is inconsistent"
+[AUTOSAR A10-3-3]
+
+"Declaring a class as final explicitly documents it as a leaf class because it
+cannot be used as a base class. Introducing a virtual function in such a class
+is, therefore, redundant because the function can never be overridden in a
+derived class." [HIC++ v4.0, Rule 9.1.5]
+
+The rule detects when a virtual function is declared in a final class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not trigger if the virtual function declared in a final class
+overrides a function from the base class and is declared as 'final'.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code readability and increase code consistency.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base {
+  public:
+    virtual void foo();                   // OK
+};
+
+class Derived final : public Base {
+  public:
+    void foo() override;                  // Violation
+    virtual void bar();                   // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base {
+  public:
+    virtual void foo();                   // OK
+};
+
+class Derived final : public Base {
+  public:
+    void foo() final;                     // OK
+    void bar();                           // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-3-3. Virtual functions shall not be introduced in a final class
+
+2. High Integrity C++ Coding Standard
+   9.1.5. Do not introduce virtual functions in a final class
+
+</PRE>
+</BODY>
+</HTML>

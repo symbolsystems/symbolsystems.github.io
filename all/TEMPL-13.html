@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare non-member generic functions in associated namespaces [TEMPL-13]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare non-member generic functions in associated namespaces [TEMPL-13-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Argument-dependent lookup (ADL) adds additional associated namespaces to the
+set of scopes searched when lookup is performed for the names of called
+functions. A generic function found in one of these additional namespaces would
+be added to the overload set and chosen by overload resolution, which is
+inconsistent with developer expectation." [MISRA C++:2008 Rule 14-5-1]
+
+This rule detects calls to generic non-member functions from associated
+namespaces.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes that a generic non-member function from an associated
+namespace can be called instead of a function from a global scope if they have
+the same names and the same number of arguments.
+
+"An associated namespace is an additional namespace that is searched during
+argument-dependent lookup. The set of associated namespaces is described
+in ISO/IEC 14882:2003, 3.4.2(2)." [MISRA C++:2008 Appendix C: Glossary]
+
+"A Generic function is a function template or operator template that can be
+called without explicit template arguments and whose parameters are of built-in
+type or which are generic parameters. [MISRA C++:2008 Appendix C: Glossary]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid confusions (see the Description section).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+template &lt;typename T&gt;
+class B
+{
+public:
+    B operator+ ( long rhs){}
+    void f ()
+    {
+        *this + 10;        // calls NS::operator+
+    }
+};
+
+namespace NS
+{
+    class A { };
+    template &lt;typename T&gt; bool operator+ ( T, int ); // Violation
+}
+
+int main()
+{
+    B&lt;NS::A&gt; b;
+    b.f();
+    return 1;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Non-member generic functions should not be declared in associated namespaces.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems. Chapter 6, Section 14, Rule 14-5-1
+
+</PRE>
+</BODY>
+</HTML>

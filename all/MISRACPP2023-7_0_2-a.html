@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+There shall be no conversion to type bool [MISRACPP2023-7_0_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+There shall be no conversion to type bool [MISRACPP2023-7_0_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports if any type (other than bool) is converted
+to bool through an implicit or explicit conversion.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"Contextual conversion to bool occurs when an operand of fundamental type is
+used as:
+* An operand to a logical operator; or
+* The first operand of the conditional operator; or
+* The condition of an if-statement or iteration-statement.
+
+The result of such a conversion may not be what the developer intended (for
+example, when an assignment is accidentally used as the condition to an
+if-statement). Therefore, wherever a contextual conversion to bool may occur,
+the corresponding expression shall have type bool (e.g. as a result of
+an explicit test)."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+"* A static_cast to bool is permitted for a class type having an explicit
+   operator bool.
+ * Contextual conversion to bool is permitted from a pointer, or from a class
+   type having an explicit operator bool.
+ * A bit-field of size 1 can be converted to bool — this is a common idiom used
+   when accessing hardware registers and there is no risk of confusion.
+ * In a while, a condition of the form type-specifier-seq declarator is not
+   required to have type bool as alternative mechanisms for achieving the same
+   effect generally require the scope of objects to be wider than necessary.
+   Note that a similar exception is not needed for the if statement, as
+   the if ( init-statementopt condition ) syntax was introduced in C++17."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent potential errors and avoid confusion.
+
+"Conversion from a fundamental type (see [basic.fundamental]) to bool depends
+on the interpretation of a non-zero value as true (see [conv.bool]). However,
+this interpretation may not be appropriate for APIs, such as POSIX, that do not
+use Boolean return values."
+[MISRA C++:2023]
+
+"In addition, fundamental types, unscoped enumeration types, and pointers will
+be implicitly converted on assignment to bool. The result of such implicit
+conversions may not be what the developer intended."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S
+{
+    int b:1;
+    explicit operator bool();
+};
+
+void f()
+{
+  int i1 = 1;
+  bool b1 = i1;               // Violation
+  if (i1) {}                  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S
+{
+    int b:1;
+    explicit operator bool();
+};
+
+void f()
+{
+  int i1 = 1;
+  bool b1 = i1 != 0;          // OK
+  if (i1 != 0) {}             // OK
+}
+
+
+// Examples of code compliant by exception:
+
+void f1()
+{
+  int* p1 = nullptr;
+  if (p1) {}                  // Exception - pointer in contextual conversion
+
+  S s;
+  if (s) {}                   // Exception - explicit conversion operator
+  if (s.b) {}                 // Exception - bit field
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 7.0.2 There shall be no conversion to type bool
+
+</PRE>
+</BODY>
+</HTML>

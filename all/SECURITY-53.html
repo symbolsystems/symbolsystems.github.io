@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'pthread_kill', 'pthread_sigqueue' and 'tgkill' functions should not be used to send signals to threads [SECURITY-53]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'pthread_kill', 'pthread_sigqueue' and 'tgkill' functions should not be used to send signals to threads [SECURITY-53-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not send an uncaught signal to kill a thread because the signal kills the
+entire process, not just the individual thread." [CERT-POS44-C]
+
+Signal dispositions are process-wide: for signals that do not have the
+corresponding handlers installed, the disposition of the signal, 'stop',
+'continue', or 'terminate', can affect the whole process.
+
+The rule detects the usage of functions sending signals to a thread:
+pthread_kill(), pthread_sigqueue(), or tgkill().
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined or undefined behavior
+caused by premature termination of a process.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;signal.h&gt;
+#include &lt;pthread.h&gt;
+
+void* func(void *foo) {
+    /* Execution of thread */
+}
+
+int main(void) {
+    int result;
+    pthread_t thread;
+
+    if ((result = pthread_create(&amp;thread, NULL, func, 0)) != 0) {
+        /* Handle Error */
+    }
+
+    /* The signal terminates the entire process */
+    if ((result = pthread_kill(thread, SIGTERM)) != 0) {      /* Violation */
+        /* Handle Error */
+    }
+
+    /* This point is not reached because the process terminates
+       at pthread_kill() */
+
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;signal.h&gt;
+#include &lt;pthread.h&gt;
+
+void* func(void *foo) {
+    /* Execution of thread */
+}
+
+int main(void) {
+    int result;
+    pthread_t thread;
+
+    if ((result = pthread_create(&amp;thread, NULL, func, 0)) != 0) {
+        /* Handle Error */
+    }
+
+    /* The process won't be terminated */
+    if ((result = pthread_cancel(thread)) != 0) {             /* OK */
+        /* Handle Error */
+    }
+
+    /* This point can be reached*/
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  SEI CERT C Coding Standard
+    POS44-C. Do not use signals to terminate threads
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS44-C.+Do+not+use+signals+to+terminate+threads">https://wiki.sei.cmu.edu/confluence/display/c/POS44-C.+Do+not+use+signals+to+terminate+threads</A>
+
+</PRE>
+</BODY>
+</HTML>

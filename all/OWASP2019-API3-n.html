@@ -1,0 +1,132 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Usage of system properties (environment variables) should be restricted [OWASP2019-API3-n]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Usage of system properties (environment variables) should be restricted [OWASP2019-API3-n-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects code that uses system properties, or environment variables:
+a violation is reported on each call of getenv()/putenv() functions from
+stdlib.h header.
+
+There are multiple issues and implementation defined behavior related to
+environment variables:
+
+- The string pointer returned by getenv() may be modified (overwritten) by
+  subsequent calls to the getenv() or other environment modifying functions.
+  The string shall not be modified by the program. If you keep using it without
+  making a copy you may end up with invalid (dangling) pointer or a pointer to
+  a different string then the one returned by the initial getenv() call. Even
+  making copy immediately is not completely safe - there's a race window
+  between getenv() call and copying the string.
+
+- Depending on the platform the variables may either be or not be
+  case-sensitive. The matching conditions are not well defined, for example
+  "VAR=value" might be matched on some systems but not on others.
+
+- Names of environment variables are not standard so depending on their
+  presence or values or setting them might not give expected results.
+
+- The functions for altering the environment are implementation defined,
+  for example putenv() is not a standard C99 function. putenv() need not be
+  reentrant (and therefore not required to be thread-safe)
+
+- Attackers can often change the value of environment variables, so limited
+  trust should be placed in their values.
+
+- Certain variables expected to be present in the environment can cause
+  insecure program behavior if they are missing or improperly set.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+By controlling use of environment variables in the applications, they are made 
+more secure. Environment variables can be used as security holes. 
+If a malicious user passes a specifically crafted string into a running program 
+via an environment variable, a buffer overflow attack can be launched. 
+On the other hand, if a program writes sensitive information 
+(such as a password) into an environment variable with putenv, it can be 
+captured and used to gain unauthorized privileges or access to sensitive data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdlib.h&gt;
+
+void foo( void ) {
+    char *envvar;
+    envvar = getenv( "LIB" );                   // Violation
+    putenv( "LIB=c:\\mylib;c:\\yourlib" );      // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Review each use of getenv/putenv functions and if it is correct
+suppress the violation.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. The Open Group Base Specifications
+   <A HREF="http://pubs.opengroup.org/onlinepubs/9699919799/functions/getenv.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/getenv.html</A>
+   <A HREF="http://pubs.opengroup.org/onlinepubs/9699919799/functions/putenv.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/putenv.html</A>
+
+2. Robert C. Seacord
+   CERT CS 15-392 Secure Programming - Environment Variables
+   <A HREF="https://www.securecoding.cert.org/confluence/download/attachments/3524/Environment+Variables+v3.pdf">https://www.securecoding.cert.org/confluence/download/attachments/3524/Environment+Variables+v3.pdf</A>
+
+3. Build Security In - GetEnv
+   <A HREF="https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/747-BSI.html">https://buildsecurityin.us-cert.gov/bsi/articles/knowledge/coding/747-BSI.html</A>
+
+4. PCI Data Security Standard (PCI DSS) Version 1.2
+   Requirement 6: Develop and maintain secure systems and applications
+
+5. SEI CERT C Coding Standard
+   ENV02-C. Beware of multiple environment variables with the same effective
+   name
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ENV02-C.+Beware+of+multiple+environment+variables+with+the+same+effective+name">https://wiki.sei.cmu.edu/confluence/display/c/ENV02-C.+Beware+of+multiple+environment+variables+with+the+same+effective+name</A>
+
+6. SEI CERT C Coding Standard
+   POS34-C. Do not call putenv() with a pointer to an automatic variable as
+   the argument
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/POS34-C.+Do+not+call+putenv%28%29+with+a+pointer+to+an+automatic+variable+as+the+argument">https://wiki.sei.cmu.edu/confluence/display/c/POS34-C.+Do+not+call+putenv%28%29+with+a+pointer+to+an+automatic+variable+as+the+argument</A>
+
+7. OWASP API Security Top 10-2019
+   API3-Excessive Data Exposure
+   <A HREF="https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md">https://github.com/OWASP/API-Security/blob/v1.4.1/2019/en/src/0xa3-excessive-data-exposure.md</A>
+
+</PRE>
+</BODY>
+</HTML>

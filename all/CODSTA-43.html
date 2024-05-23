@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The enumeration constant named 'TRUE' should be explicitly initialized by 1 value [CODSTA-43]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The enumeration constant named 'TRUE' should be explicitly initialized by 1 value [CODSTA-43-5]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The enumeration types are sometimes used to define boolean values.
+If the enumeration type contains an enumeration constant named 'TRUE', then 
+this constant should be explicitly initialized by 1 value. 
+It is allowed to use decimal, octal or hexadecimal values (e.g. 0001, 0x0001)
+and the number 1 can be followed by a suffix (e.g. 1u, 1l, 1UL).
+
+See also: CODSTA-24, CODSTA-25, CODSTA-42
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1()
+{
+    enum BOOL
+    {
+        FALSE, 
+        TRUE            // Violation
+    };
+}
+
+void foo2()
+{
+    enum BOOL
+    {
+        FALSE = 0u,
+        TRUE = !FALSE   // Violation
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1()
+{
+    enum BOOL
+    {
+        FALSE = 0,
+        TRUE = 1         // OK
+    };
+}
+
+void foo2()
+{
+   enum BOOL
+    {
+        FALSE = 0u,
+        TRUE = 1u        // OK
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Recommended by ParaSoft
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure the size of the variable length array is in valid range [BD-PB-VLASIZE]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure the size of the variable length array is in valid range [BD-PB-VLASIZE-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects declarations of variable-length arrays whose size argument may be
+outside a valid range.
+The rule triggers if the size argument can have a negative value, or it is not known
+whether the size argument is limited by an upper bound. 
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.4
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"If the size argument supplied to a variable length array is not a positive integer value,
+the behavior is undefined. Additionally, if the magnitude of the argument is excessive, the
+program may behave in an unexpected way. An attacker may be able to leverage this behavior
+to overwrite critical program data."
+[SEI CERT C Coding Standard, ARR32-C. Ensure size arguments for variable length arrays are in a valid range]
+  
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Report violation when upper size limit is set, but its value is unknown" parameter enables
+reporting rule violation when there is an upper bound for the size argument, but the exact value
+of the limit is not known when analyzing a given flow path.
+
+This option is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent potential runtime errors caused by incorrect
+memory allocation.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+void doSth(unsigned int size)
+{
+    int vla[size]; // VIOLATION
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Make sure that the size argument is within the valid range:
+
+void doSth(unsigned int size)
+{
+    if ((size &lt; 1) || (size &gt; 1000)) {
+        // Handle error...
+        return;
+    }
+    int vla[size]; // NO VIOLATION
+    // ...
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+SEI CERT C Coding Standard
+ARR32-C. Ensure size arguments for variable length arrays are in a valid range
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ARR32-C.+Ensure+size+arguments+for+variable+length+arrays+are+in+a+valid+range">https://wiki.sei.cmu.edu/confluence/display/c/ARR32-C.+Ensure+size+arguments+for+variable+length+arrays+are+in+a+valid+range</A>
+
+SEI CERT C Coding Standard
+MEM05-C. Avoid large stack allocations
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/MEM05-C.+Avoid+large+stack+allocations">https://wiki.sei.cmu.edu/confluence/display/c/MEM05-C.+Avoid+large+stack+allocations</A>
+
+</PRE>
+</BODY>
+</HTML>

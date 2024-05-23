@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Prefer iostream.h to stdio.h [MISRACPP2023-30_0_1-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Prefer iostream.h to stdio.h [MISRACPP2023-30_0_1-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule finds instances of stdio.h functions (such as scanf/printf)
+and suggests changing them to iostream.h functions
+(such as operator&gt;&gt; and operator&lt;&lt; ).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using instances of stdio.h functions (such as scanf/printf).
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+int main( ) {
+    printf("%s\n", "Hello World"); // Violation
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;iostream&gt;
+using namespace std;
+int main( ) {
+    cout&lt;&lt;"Hello World"&lt;&lt;endl; // OK
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 30.0.1 The C Library input/output functions shall not be used
+
+3. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter: "Shifting from C to C++", Item 2
+
+</PRE>
+</BODY>
+</HTML>

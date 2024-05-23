@@ -1,0 +1,113 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not cast from or to incomplete class at the point of casting [PB-54]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not cast from or to incomplete class at the point of casting [PB-54-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The operand of a cast using the cast notation can be “pointer to incomplete
+class type”. The destination type of a cast using the cast notation can be
+“pointer to incomplete class type”. In such cases, even if there is a
+inheritance relationship between the source and destination classes, whether
+the static_cast or reinterpret_cast interpretation is used is unspecified.
+
+The result of such cast is implementation defined.
+
+Rule checks C-style casts and reports a violation if operand of cast or
+destination type is pointer or reference to class or struct type which is not
+complete at the point of casting.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4.1
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+For templates rule checks only if types are complete at the end of translation
+unit - a violation is reported if only forward declaration is provided.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents implementation defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class X;
+class Y;
+class Z {};
+void foo(X* x, Y* y, Z* z)
+{
+    (X*)z; // Violation: cast to incomplete type
+    (Z*)y; // Violation: cast from incomplete type (at the point of casting)
+    (Y*)x; // Violation: cast from/to incomplete type
+};
+class Y {};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Provide complete type declaration or use C++-style casts
+class X;
+class Y {};
+class Z {};
+void foo(X* x, Y* y, Z* z)
+{
+    reinterpret_cast&lt;X*&gt;(z);    // OK
+    (Z*)y;                      // OK
+    reinterpret_cast&lt;Y*&gt;(x);    // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. C++ standard (ISO/IEC 14882:2003)
+   Section 5.4 Explicit type conversion (cast notation), point 6
+
+</PRE>
+</BODY>
+</HTML>

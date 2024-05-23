@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not declare entities in the standard library namespaces: posix, std and stdN [CODSTA-CPP-95_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not declare entities in the standard library namespaces: posix, std and stdN [CODSTA-CPP-95_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Top level namespaces with a name starting with 'std' and followed
+by a non-empty sequence of digits are reserved for future standardization.
+The behavior of a C++ program is undefined if it adds declarations or
+definitions to such a namespace." [ISO/IEC 14882:2017]
+
+This rule detects when any identifiers are defined within namespaces
+with the names 'posix', 'std', and 'stdN', where 'N' is any number.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+This rule does not apply to full and partial template specializations.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid confusion and unpredicted behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+namespace posix
+{
+    int a;            // Violation
+}
+namespace std
+{
+    class A           // Violation
+    {
+        int m1;
+    };
+}
+
+namespace std55
+{
+    void f();         // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;functional&gt;
+
+namespace myPosix
+{
+    int a;            // OK
+}
+
+namespace myStd
+{
+    class A           // OK
+    {
+        int m1;
+    };
+    void f();         // OK
+}
+
+namespace std
+{
+    template &lt;&gt; struct hash&lt; myStd::A &gt;                 // OK - Exception
+    {
+        size_t operator()( const myStd::A &amp; x ) const;
+    };
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2017 Programming languages - C++
+   20.5.4.2.3 Namespaces for future standardization
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 5.10.1 User-defined identifiers shall have an appropriate form
+
+</PRE>
+</BODY>
+</HTML>

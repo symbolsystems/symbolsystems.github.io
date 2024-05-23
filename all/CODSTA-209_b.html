@@ -1,0 +1,102 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use the macro ATOMIC_VAR_INIT [CODSTA-209_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use the macro ATOMIC_VAR_INIT [CODSTA-209_b-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The macro ATOMIC_VAR_INIT is an obsolescent feature."
+[ISO/IEC 9899:2017]
+
+This rule detects when the 'ATOMIC_VAR_INIT' identifier is used in the code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule reports all occurrences of the 'ATOMIC_VAR_INIT' identifier.
+For this reason, the rule may detect 'ATOMIC_VAR_INIT' that does not represent
+the macro from the 'stdatomic.h' library header file.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Features are declared as obsolescent by the C Standard when they are superseded
+by safer or better alternatives, or are considered to exhibit undesirable
+behaviour. Features declared as obsolescent by a particular version of the C
+Standard may be withdrawn in a later version" [MISRA C:2012 Amendment 3]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdatomic.h&gt;
+
+void foo ( void )
+{
+    atomic_int i = ATOMIC_VAR_INIT(1);                // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the ATOMIC_VAR_INIT macro.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+2. ISO/IEC 9899:2017 Programming languages -- C
+   7.31 Future library directions
+   7.31.8 Atomics &lt;stdatomic.h&gt;
+
+</PRE>
+</BODY>
+</HTML>

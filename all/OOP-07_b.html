@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Multiple inheritance shall not use any public implementations [OOP-07_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Multiple inheritance shall not use any public implementations [OOP-07_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Multiple inheritance shall only be allowed if "implementation" classes are not
+inherited with public access specifier.
+
+Rule checks only classes which have more than one direct parent class.
+
+A violation is reported if a direct base class is found, which is inherited
+with public access specifier, and the class is not an "interface".
+
+An "interface" is a class which has no member variables and all
+member functions (except for destructor) are pure virtual.
+
+See also: OOP-07_a, OOP-07, OOP-06, OOP-05, OOP-04, OOP-03
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Simpler and easier to maintain and understand inheritance hierarchy.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Non-interface (implementation)
+class A { int x; };
+
+// Non-interface (implementation)
+struct B { virtual void foo(); };
+
+// Interface
+struct C { virtual void foo() = 0; };
+
+// Examples of non-compliant code:
+
+// Implementation class 'A' with public inheritance
+struct D : public A, private B { };   // Violation
+
+// Implementation class 'B' with public inheritance
+class E : protected C, public B { };  // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Non-interface (implementation)
+class A { int x; };
+
+// Non-interface (implementation)
+struct B { virtual void foo(); };
+
+// Interface
+struct C { virtual void foo() = 0; };
+
+// Examples of compliant code:
+
+// Implementation class 'A' with non-public inheritance
+struct D : protected A, private B { };  // OK
+
+// Implementation class 'B' with non-public inheritance
+class E : protected C, private B { };   // OK
+
+// No multiple inheritance:
+struct F : public A { int x; };         // OK
+class G : public F { int x; };          // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Class Design and Inheritance", Rule 36
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10.8 Operator Overloading, AV Rule 88
+
+</PRE>
+</BODY>
+</HTML>

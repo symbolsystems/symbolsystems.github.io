@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Pointers to pointers should be avoided whenever possible [CODSTA-05]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Pointers to pointers should be avoided whenever possible [CODSTA-05-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Pointers to pointers are a source of bugs and result in obscure code.
+Containers or some other form of abstraction should be used instead"
+
+The rule reports a violation if pointer to pointer type is used in declaration
+of object, function or typedef. 
+The array type of function parameter is recognized as pointer, because arrays
+are converted to a pointer to the initial element of the array.
+
+See also: CODSTA-89, CODSTA-94, CODSTA-95, MISRA2004-17_5
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule does not report violation on the second argument to the 'main'
+function, which must have the type char*[].
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves the readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int** PPINT;   // Violation
+
+void foo1(){
+    int** a;           // Violation
+    int*** b;          // Violation
+    PPINT c;           // Violation
+}
+
+int** foo2();          // Violation
+
+// array is counted as pointer type for parameters
+void foo3(int *tab[]); // Violation
+
+void (**fp)();         // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of correct code
+#include &lt;vector&gt;
+
+// declare structure which has a member variable of the pointer type
+typedef struct S {
+    int* m_ptr;       // OK
+    void (*fp)();     // OK
+} *S_T;               // OK
+
+void foo1(){
+    S* a;             // OK
+    S_T b;            // OK
+}
+
+S_T foo2();           // OK
+S_T fptr;             // OK
+
+
+// Consider using a container instead of an array of pointers
+void foo3(const std::vector&lt;int*&gt;&amp; tab);
+
+// array is not counted as pointer type for variables
+int a[][2][3];        // OK
+
+// template arguments are not checked 
+std::vector&lt;int**&gt; x; // OK
+
+// exception for global 'main' function
+int main(int argc, char *argv[]);  // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 12 Pointers and References - Rec. 48
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.22 Pointers &amp; References, AV Rule 169
+
+3. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

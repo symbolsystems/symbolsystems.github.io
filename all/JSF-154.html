@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Bit-fields shall have explicitly unsigned integral or enumeration types only [JSF-154]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Bit-fields shall have explicitly unsigned integral or enumeration types only [JSF-154-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Bit-fields shall have explicitly unsigned integral or enumeration types only.
+Whether a plain (neither explicitly signed nor unsigned) char, short, int
+or long bit-field is signed or unsigned is implementation-defined."
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The use of wchar_t and bool type as a bit-field type is prohibited as
+ISO/IEC 14882:2003 does not explicitly define the underlying representation
+as signed or unsigned.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicitly declaring a bit-filed unsigned prevents unexpected sign extension
+or overflow"
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef signed int SINT;
+
+struct S
+{
+    char         b1:2;  /* Violation */
+    short        b2:2;  /* Violation */
+    int            :2;  /* Violation */
+    signed long  b4:2;  /* Violation */
+    SINT         b5:2;  /* Violation */
+    bool         b6:2;  /* Violation */
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef unsigned int UINT;
+typedef enum E {
+    E1, E2
+} ET;
+
+
+struct S
+{
+    unsigned char  b1:2;  /* OK */
+    unsigned short b2:2;  /* OK */
+    unsigned int     :2;  /* OK */
+    unsigned long  b4:2;  /* OK */
+    UINT           b5:2;  /* OK */
+    ET             b6:2;  /* OK */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   9.2.1. Declare bit-fields with an explicitly unsigned integral or
+   enumeration type
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.20 Unions and Bit Fields, AV Rule 154
+
+</PRE>
+</BODY>
+</HTML>

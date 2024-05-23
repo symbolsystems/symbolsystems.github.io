@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If a class declares a copy or move operation, or a destructor, either via '=default', '=delete', or via a user-provided declaration, then all others of these five special member functions shall be declared as well [CODSTA-MCPP-56]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If a class declares a copy or move operation, or a destructor, either via '=default', '=delete', or via a user-provided declaration, then all others of these five special member functions shall be declared as well [CODSTA-MCPP-56-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The semantics of five of the special member functions,
+- the copy constructor,
+- the move constructor,
+- the copy assignment operator,
+- the move assignment operator,
+- and the destructor,
+are closely related to each other.
+Language rules exist to generate the special member functions under certain
+conditions. For historical reasons, these language rules are not entirely
+consistent. For example, the presence of a destructor does not prevent the
+compiler from generating copy operations. However, it prevents the move
+operations from being generated. Thus it is required, in order to maintain
+consistency and document the programmer's intent, that either none or all of
+the five functions are declared." [AUTOSAR A12-0-1]
+
+This rule detects when a class declares explicitly a copy or move constructor,
+or a copy or move assignment operator, or a destructor, but not all of these
+five special member functions are declared in this class.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2022.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve maintainability and better document the programmer's
+intent.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class D {                           // Violation
+ public:
+  D(int x) : x_(x) {}
+  ~D() {}                           // There is only a destructor
+ private:
+  int x_;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by adding explicit declarations of the missing special
+member functions.
+
+class D {                           // OK
+public:
+  D(int x): x_(x) {}
+  D(const D&amp;d) = default;           // added a copy constructor
+  D(D&amp;&amp;d) = default;                // added a move constructor
+  D&amp; operator=(D const&amp;) = default; // added a copy assignment operator
+  D&amp; operator=(D&amp;&amp;) = default;      // added a move assignment operator
+  ~D() {}
+private:
+  int x_;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A12-0-1. If a class declares a copy or move operation, or a destructor,
+   either via '=default', '=delete', or via a user-provided declaration,
+   then all others of these five special member functions shall be declared
+   as well.
+
+</PRE>
+</BODY>
+</HTML>

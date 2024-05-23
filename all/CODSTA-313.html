@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The numeric value of an unscoped enumeration with no fixed underlying type shall not be used [CODSTA-313]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The numeric value of an unscoped enumeration with no fixed underlying type shall not be used [CODSTA-313-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports when in an evaluated context, an expression of unscoped
+enumeration type without a fixed underlying type is used:
+* as an operand to an arithmetic, bitwise, shift, logical,
+  or compound assignment operator
+* as an operand to relational and equality operators,
+  unless both operands have the same enumeration type
+* as the condition of a switch, unless all case constants are
+  enumerators of the same enumeration
+* as the source of an "assignment" or a static_cast, unless the target
+  has the same enumeration type, or is an integer type large enough
+  to accept all the values of the narrowest possible underlying type
+This rule also reports when the target type of a static_cast is
+an unscoped enumeration type without a fixed underlying type.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The following constructs are treated as assignments:
+* Assigning a value using the assignment operator; and
+* Initializing a variable, including within a lambda capture; and
+* Passing a function parameter by value, including passing a default value
+  for a function argument and passing a parameter to a function that is called
+  implicitly (such as the call to a constructor, to overloaded operators,
+  to operator() of closure types, ...); and
+* Returning a value from a function by value; and
+* Using a value in a switch statement’s case label (source expression), where
+  the target type is given by the adjusted type of the condition.
+Compound assignments are not 'assignments'."
+[MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The underlying type of an unscoped enumeration that does not have
+a fixed underlying type is implementation-defined, so any implicit
+conversion could yield surprising results." [MISRA C++:2023]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E {
+    e1a,
+    e1b
+};
+enum Other {
+    e2a = 1024
+};
+void g(unsigned char);
+void f(E e, Other o, bool b, int i) {
+    e + 1;      // Violation - operand of an arithmetic operator
+    2 &amp; e2a;    // Violation - operand of a bitwise operator
+
+    // Operands of relational and equality operators,
+    // operands have different types:
+    o &lt; b;      // Violation
+    e == e2a;   // Violation (left operand) // Violation (right operand)
+
+    // Some case constants are not enumerators of E:
+    switch (e)  // Violation
+    {
+    case e1b:
+    case e2a:
+        return;
+    }
+
+    // target type of the static_cast:
+    static_cast&lt;Other&gt;(i);          // Violation
+
+    // "assignment" to integer type that is not large enough,
+    // similar for the source of static_cast:
+    g(o);                           // Violation
+    static_cast&lt;unsigned char&gt;(o);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum E {
+    e1a,
+    e1b
+};
+enum Other {
+    e2a = 1024
+};
+enum class E_scoped { // Scoped enum
+    e1a_scoped,
+    e1b_scoped
+};
+enum Other_fut : unsigned int { // Fixed underlying type enum
+    e2a_fut = 1024
+};
+void g(int i);
+void f(E e, Other o, bool b, int i) {
+    sizeof(e + 1);  // OK - unevaluated context
+    2 &amp; e2a_fut;    // OK - enum with fixed underlying type
+
+    // Operands of relational and equality operators,
+    // operands have the same type:
+    o &lt; e2a;  // OK
+    e == e1b; // OK
+
+    // All case constants are enumerators of E:
+    switch (e) // OK
+    {
+    case e1b:
+    case e1a:
+        return;
+    }
+
+    static_cast&lt;Other_fut&gt;(i); // OK
+
+    // "assignment" to integer type that is large enough,
+    // similar for the source of static_cast:
+    g(o);                      // OK
+    static_cast&lt;unsigned int&gt;(o); // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 10.2.3 The numeric value of an unscoped enumeration with no fixed underlying type shall not be used
+
+</PRE>
+</BODY>
+</HTML>

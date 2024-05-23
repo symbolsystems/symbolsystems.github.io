@@ -1,0 +1,145 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If an identifier refers to a type, it shall not also refer to an object or a function in the same scope [AUTOSAR-A2_10_6-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If an identifier refers to a type, it shall not also refer to an object or a function in the same scope [AUTOSAR-A2_10_6-b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"For C compatibility, it is possible in C++ for a name to refer
+to both a type and object or a type and function. This can lead
+to confusion." [MISRA C++:2008 Rule 2-10-6]
+
+"A class name or enumeration name can be hidden by the name of an object, 
+function, or enumerator declared in the same scope. If a class or enumeration
+name and an object, function, or enumerator are declared in the same scope
+(in any order) with the same name, the class or enumeration name is hidden
+wherever the object, function, or enumerator name is visible." [ISO/IEC 14882]
+
+The rule reports a violation if in class scope is declared a type
+(class/struct/union or enumeration) and an object, a function
+or an enumeration constant with the same name.
+
+Identifiers are declared in a class scope if they are members
+of the class or they are members of the anonymous union declared
+in the class.
+
+See also: CODSTA-CPP-83, CODSTA-CPP-84, CODSTA-CPP-85, MISRA2004-5_2_a,
+          MISRA2004-5_2_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability of code and prevents confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class AAA {
+    class A1 {      // Violation - 'A1' refers also to the function
+        int m1;
+    };
+
+    int A1();       // Violation - 'A1' refers also to the class
+
+    struct S1 {     // Violation - 'S1' refers also to the member
+                    //             of anonymous union
+        int m1;
+    };
+
+    union {
+        int S1;     // Violation - 'S1' refers also to the struct
+    };
+
+    struct S2 {     // Violation - 'S2' refers also to the object
+        int m1;
+    } S2;           // Violation - 'S2' refers also to the struct
+
+    enum E1 {       // Violation - 'E1' refers also to the enumeration constant
+        E1          // Violation - 'E1' refers also to the enumeration type
+    };
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class AAA {
+public:
+    class A1 {        // OK - 'A1' does not refer to any object, function
+                      //      nor enumeration constant declared in a class scope
+        int m1;
+    };
+
+    int a1();         // OK - 'a1' does not refer to any type declared
+                      //      in a class scope
+
+    struct S1 {
+        int A1;       // OK - the object is declared in a class scope
+    };
+
+    void foo() {
+        int A1;       // OK - the object is declared in a local scope
+    }
+};
+
+class BBB : public AAA {
+public:
+    int A1;           // OK - the object is declared in a derived class scope
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-10-6. A class or enumeration name shall not be hidden by a variable,
+   function or enumerator declaration in the same scope.
+
+2. ISO/IEC 14882 Programming languages -- C++
+   3.3 Declarative regions and scopes
+
+3. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 2, Rule 2-10-6
+
+</PRE>
+</BODY>
+</HTML>

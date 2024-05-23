@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An explicit integral or floating-point conversion shall not increase the size of the underlying type of a cvalue expression [MISRA2008-5_0_8_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An explicit integral or floating-point conversion shall not increase the size of the underlying type of a cvalue expression [MISRA2008-5_0_8_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The value of a complex expression of floating type may only be cast
+to a narrower floating type." [MISRA-C:2004]
+
+"A cast applied to the result of an expression does not change the type in which
+the expression is evaluated, which may be contrary to developer expectations."
+[MISRA C++:2008]
+
+This rule detects when a complex expression of floating type is explicitly cast
+to a wider floating type.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"The term 'complex expression' is defined to mean any expression that is not:
+- a constant expression
+- an lvalue (i.e. an object)
+- the return value of a function" [MISRA-C:2004]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Complex expressions are often a source of confusion and it is therefore
+wise to be cautious. In order to comply with these rules, it may be necessary
+to use a temporary variable and introduce an extra statement." [MISRA-C:2004]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void f1( ) {
+    float f32a, f32b;
+    double f64a;
+
+    f64a = (double)(f32a/f32b);   /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void f1( ) {
+    float f32a, f32b;
+    double f64a;
+
+    f64a = (double)f32a/f32b;     /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M5-0-8. An explicit integral or floating-point conversion shall not increase
+   the size of the underlying type of a cvalue expression
+
+2. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 5, Rule 5-0-8
+
+3. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 10, Rule 10.4, 6.10.5 Complex expressions
+
+</PRE>
+</BODY>
+</HTML>

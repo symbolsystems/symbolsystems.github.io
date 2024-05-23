@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Nested block depth should not be higher than 5 [METRICS-23]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Nested block depth should not be higher than 5 [METRICS-23-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each level of nesting adds intellectual overhead when reading code because you
+need to maintain a mental stack. Prefer better functional decomposition to help
+avoid forcing readers to keep as much context in mind at a time"
+
+The rule reports violation if the nesting level in function is higher than 5.
+
+Following elements of code are recognized as levels:
+- if-else construction
+- try-catch construction
+- for, while, do-while loops
+- switch statement
+- block {} that is not a part of any of the above statements
+
+See also: METRICS-40
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is possible to change the allowed nesting level by modifying 
+one element of rule in Rule Wizard. The level is checked by expression
+in last "Count" node. The default "$$==5" expression imposes maximum
+nesting level of 5. For example, to report violation if nesting level is
+higher than 10, change the expression to "$$==10".
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Excessive block nesting depth (e.g. if, for, while, and try blocks) make 
+functions more difficult to understand and maintain, and often needlessly so."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo1(int i)
+{
+    if(i &gt; 1){
+        if(i &gt; 2){
+            if(i &gt; 3){
+                if(i &gt; 4){
+                    if(i &gt; 5){         // OK - 5 level
+                        ++i;
+                        if(i &gt; 6){     // Violation - 6 level
+                            ++i;
+                            if(i &gt; 7){ // OK - 7 level - violation already reported on level 6
+                                return i;
+                            }
+                        }
+                    } else {
+                        ++i;
+                        if(i == 6){     // Violation - 6 level
+                            return 6;
+                        }
+                    }
+                 }
+             }
+        }
+    }
+}
+
+int foo2(int i)
+{
+    if(i == 1)
+        return i;
+    else if(i == 2)
+        return i;
+    else if(i == 3)
+        return i;
+    else if(i == 4)
+        return i;
+    else if(i == 5)  // OK - 5 level
+        return i;
+    else if(i == 6)  // Violation - 6 level
+        return i;
+    else if(i == 7)  // OK - 7 level - violation already reported on level 6
+        return i;
+
+    // The above statement is in fact identical to following:
+
+    if(i == 1) {
+        return i;
+    } else {
+        if(i == 2) {
+            return i;
+        } else {
+            if(i == 3) {
+                return i;
+            } else {
+                if(i == 4) {
+                    return i;
+                } else {
+                    if(i == 5) { // OK - 5 level
+                        return i;
+                    } else {
+                        if(i == 6) { // Violation - 6 level
+                            return i;
+                        } else {
+                            if(i == 7) { // OK - 7 level - violation already reported on level 6
+                                return i;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+int foo3(int i)
+{
+    {
+        {
+            {
+                {
+                    {       // OK - 5 level
+                        {   // Violation - 6 level
+                            return i;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void foo4()
+{
+    // try-catch is linear and introduces one level, same as if-else:
+    try {                       // OK - 1 level
+    } catch(char) {     // OK - 1 level
+    } catch(int) {        // OK - 1 level
+    } catch(long) {     // OK - 1 level
+    } catch(float) {     // OK - 1 level
+    } catch(double) { // OK - 1 level
+    } catch(...) {          // OK - 1 level
+    }
+}
+
+int foo5(int i)
+{
+   while(i) { // 1
+       for(;;) { // 2
+           if(i) { // 3
+           } else { // still 3
+               switch(i) { // 4
+               case 1: // still 4
+                   ++i;
+                   {  // 5
+                       do { // 6 - Violation
+                           return i;
+                       } while(0);
+                   }
+               }
+           }
+       }
+   }
+}
+
+#define MACRO(x) { { { { { { return x; } } } } } }
+int foo6(int i)
+{
+    // Code from macros might produce violations
+    MACRO(i);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not nest statements more than 5 levels.
+"Avoid nested consecutive ifs where an &amp;&amp; condition will do.
+Prefer automatic cleanup via destructors over try blocks.
+Prefer algorithms: They're flatter than loops, and often better."
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Coding Style", Rule 20
+
+</PRE>
+</BODY>
+</HTML>

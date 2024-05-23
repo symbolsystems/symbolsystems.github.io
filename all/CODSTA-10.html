@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Storage type modifiers shall be associated with the type, not the variable or the function [CODSTA-10]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Storage type modifiers shall be associated with the type, not the variable or the function [CODSTA-10-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The placement of a storage-class specifier other than at the beginning
+of the declaration specifiers in a declaration is an obsolescent feature."
+[ISO/IEC 9899:2011]
+
+The C/C++ Standard allows any order of specifiers in a declaration.
+If a specifier (auto, extern, static, register) appears in a declaration,
+it should not be placed directly before variable or function name.
+
+This rule detects when one from the following specifiers: 'auto', 'extern',
+'static', 'register' is placed directly before a name in the variable
+or the function declaration.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations when specifiers are not connected
+directly with names of variables or functions:
+
+int static const var = 0;   /* No Violation */
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule improves the readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int static i;       // Violation
+void extern f1();   // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+static int i;       // OK
+extern void f1();   // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 3 Updates for ISO/IEC 9899:2011/2018
+   Phase 2 - New C11/C18 Features
+   2.3 Section 8 - Rules, 2.3.2 Rule 1.5
+
+2. Programming languages -- C ISO/IEC 9899:2011
+   6.11 Future language directions
+   6.11.5 Storage-class specifiers
+
+</PRE>
+</BODY>
+</HTML>

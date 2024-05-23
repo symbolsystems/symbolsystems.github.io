@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid initialization order problems across translation units by replacing non-local static objects with local static objects [INIT-12]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid initialization order problems across translation units by replacing non-local static objects with local static objects [INIT-12-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If initialization of a non-local static object in one translation unit uses
+a non-local static object in a different translation unit, the object it uses
+could be uninitialized, because the relative order of initialization
+of non-local static objects defined in different translation units is undefined.
+Fortunately, a small design change eliminates the problem entirely. All that has
+to be done is to move each non-local static object into its own function, where
+it's declared static. These functions return references to the objects they
+contain. Clients then call the functions instead of referring to the objects.
+In other words, non-local static objects are replaced with local static objects."
+
+"A static object is one that exists from the time it's constructed until the end
+of the program. Stack and heap-based objects are thus excluded. Included are
+global objects, objects defined at namespace scope, objects declared static
+inside classes, objects declared static inside functions, and objects declared
+static at file scope. Static objects inside functions are known as local static
+objects (because they're local to a function), and the other kinds of static
+objects are known as non-local static objects."
+
+The rule reports a violation if a non-local static object in one translation
+unit is initialized with another non-local static object that is defined
+in a different translation unit.
+The rule checks if an object is used:
+- directly in initializer of variable
+- in constructor of variable class/struct type
+- in a function called in initializer (two levels of function calls are checked)
+
+See also: OOP-08
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Variables used in sizeof are excluded. The sizeof does not use a value
+of the variable, but the type, so it does not matter that variable might
+be not initialized.
+There is allowed taking an address of variable.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"This approach is founded on C++'s guarantee that local static objects
+are initialized when the object's definition is first encountered during
+a call to that function. So if you replace direct accesses to non-local
+static objects with calls to functions that return references to local static
+objects, you're guaranteed that the references you get back will refer
+to initialized objects. As a bonus, if you never call a function emulating
+a non-local static object, you never incur the cost of constructing
+and destructing the object, something that can't be said for true non-local
+static objects."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class FileSystem{
+public:
+    int foo1();
+};
+
+// object 'tfs' is not defined in translation unit
+extern FileSystem tfs;
+
+class Directory {
+public:
+    Directory();
+};
+
+// object 'tfs' is used in constructor
+Directory::Directory(){
+    int d = tfs.foo1();
+}
+
+// object 'tfs' might be not initialized here
+Directory tempDir;     // Violation
+
+// examples of incorrect code:
+extern int x;
+int y = x;             // Violation
+
+extern const int xc;
+const int yc = xc;     // Violation
+
+extern int ex;
+int mode(){
+    int k = ex;
+    return k;
+}
+int ey = mode();       // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class FileSystem{
+public:
+    int foo1();
+};
+
+// object 'tfs' was moved to its own function,
+// where it is declared static
+FileSystem&amp; tfs(){
+    static FileSystem fs;
+    return fs;
+}
+
+class Directory {
+public:
+    Directory();
+};
+
+// function 'tfs' is used in constructor
+Directory::Directory(){
+    int d = tfs().foo1();
+}
+
+// object 'tempDir' was moved to its own function,
+// where it is declared static
+Directory&amp; tempDir(){
+    static Directory td;         // OK
+    return td;
+} 
+
+// examples of correct code:
+static int x;
+int y = x;                       // OK
+
+extern const int xc;
+const int xc = 0;
+const int yc = xc;               // OK
+
+int ex;
+int mode(){
+    int k = ex;
+    return k;
+}
+int ey = mode();                 // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 4
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.28 Portable Code, AV Rule 214
+
+3. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+4. SEI CERT C++ Coding Standard
+   DCL56-CPP. Avoid cycles during initialization of static objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL56-CPP.+Avoid+cycles+during+initialization+of+static+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL56-CPP.+Avoid+cycles+during+initialization+of+static+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

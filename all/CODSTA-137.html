@@ -1,0 +1,106 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The function call shall not be the operand of the sizeof operator [CODSTA-137]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The function call shall not be the operand of the sizeof operator [CODSTA-137-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The operand of a sizeof operator may be either an expression or may specify
+a type. If the operand contains an expression, a possible programming error
+is to expect that expression to be evaluated when it is actually not evaluated
+in most circumstances." [MISRA C:2012 Rule 13.6]
+
+The rule reports a violation if a function call is used in the operand 
+of the sizeof operator.
+
+See also: MISRA2004-12_3_c
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Any expressions appearing in the operand of a sizeof operator are not normally
+evaluated. This rule mandates that the evaluation of any such expression shall
+not contain side effects, whether or not it is actually evaluated."
+[MISRA C:2012 Rule 13.6]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+int glob;
+
+int foo1() {           // Function 'foo1' causes side effect
+    glob = 100;
+    return glob;
+}
+
+int foo2();            // Function 'foo2' may cause side effect or not
+
+int foo3(int x) {      // Function 'foo3' does not cause side effect
+    return x*x;
+}
+
+void foo_s() {
+    unsigned int ui;
+    ui = sizeof(foo1());             // Violation
+    ui = sizeof(foo2());             // Violation
+    ui = sizeof(foo3(2));            // Violation
+    ui = sizeof(printf("message"));  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use function calls in the operand of the sizeof operator
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 13.6
+
+</PRE>
+</BODY>
+</HTML>

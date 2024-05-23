@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Declare copy constructor and copy assignment operators with the 'delete' specifier to prevent copying of class [CODSTA-MCPP-06_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Declare copy constructor and copy assignment operators with the 'delete' specifier to prevent copying of class [CODSTA-MCPP-06_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+One of the ways to make a class uncopyable is to make its copy constructor and
+copy assignment operators private, with no implementation. This moves subtle
+run-time bugs into compile- or link- time. In C++11, we can now explicitly
+declare a class with deleted functions.
+
+This rule detects cases when the private undefined copy constructors or copy
+assignment operators are declared without the 'delete' specifier.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves the readability of code and makes your code clearer and safer.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class NonCopyable
+{
+private:
+    NonCopyable(const NonCopyable&amp;);                // Violation
+    NonCopyable&amp; operator=(const NonCopyable&amp;);     // Violation
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Foo
+{
+public:
+    Foo(const Foo&amp;) = delete;                       // OK
+    Foo&amp; operator=(const Foo&amp;) = delete;            // OK
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Scott Meyers, "Effective Modern C++, 42 specific ways to improve your use
+of C++11 and C++14", Chapter 3: "Moving to Modern C++." Item 11
+
+</PRE>
+</BODY>
+</HTML>

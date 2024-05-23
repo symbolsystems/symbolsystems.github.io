@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The number of arguments passed to a function shall match the number of parameters [CERT_C-DCL20-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The number of arguments passed to a function shall match the number of parameters [CERT_C-DCL20-a-1]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If the expression that denotes the called function has a type that includes 
+a prototype, the number of arguments shall agree with the number of parameters.
+If the expression that denotes the called function has a type that does not
+include a prototype, (...) if the number of arguments does not agree with
+the number of parameters, the behavior is undefined."
+
+The rule reports a violation if the number of arguments in a function call
+is different than the number of parameters in function prototype or in function
+definition.
+
+If the function does not have neither a prototype (declaration of a function
+that declares the types of its parameters) nor definition, then violation
+is not reported. However, it is recommended always declare function prototype
+before the function is called (see rule MISRA2004-8_1_b).
+
+See also: MISRA2004-8_1_b, MISRA2004-8_4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule is enabled only for C language.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* In many cases the function call where the number of arguments does not agree
+ * with the number of parameters will be flagged as syntax error */
+
+void foo1(void);
+void foo2(int);
+void foo3();
+void foo4();
+
+void myFunction(int p)
+{
+    foo1(1);     /* Violation - declaration does not have parameters */
+    foo2(2, p);  /* Violation - declaration has 1 parameter */
+    foo3(1);     /* Violation - implicit declaration does not have parameters */
+    foo4(1);     /* OK - 'foo4' does not have neither prototype nor definition */
+}
+
+void foo3(){}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* In many cases the function call where the number of arguments does not agree
+ * with the number of parameters will be flagged as syntax error */
+
+void foo1(void);
+void foo2(int);
+void foo3(int);
+void foo4(void);
+
+void myFunction(int p)
+{
+    foo1();     /* OK */
+    foo2(0);    /* OK */
+    foo3(1);    /* OK */
+    foo4();     /* OK */
+}
+
+void foo3(int){}
+void foo4(void){}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 16
+
+2. Misra Guidelines - Rule 78
+
+3. ISO/IEC 9899: 1990, 6.3.2.2 Function calls
+
+4. SEI CERT C Coding Standard
+   DCL20-C. Explicitly specify void when a function accepts no arguments
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL20-C.+Explicitly+specify+void+when+a+function+accepts+no+arguments">https://wiki.sei.cmu.edu/confluence/display/c/DCL20-C.+Explicitly+specify+void+when+a+function+accepts+no+arguments</A>
+
+</PRE>
+</BODY>
+</HTML>

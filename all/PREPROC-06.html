@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not allow absolute or relative path names in #include statements [PREPROC-06]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not allow absolute or relative path names in #include statements [PREPROC-06-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Hardcoding the path to a header file in a #include directive may necessitate
+changes to source code when it is reused or ported.
+Alternatively, the directory containing the header file should be passed
+to the compiler on command line (e.g. -i or /i option)." 
+[High Integrity C++]
+
+This rule detects absolute and relative path names in #include directives.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that:
+- An absolute path is a path that starts form the root of a file system. It
+begins with the root element "/", "\", or a drive letter (for example, "C:").
+- A relative path is a path that starts from a directory other than the root
+directory. It makes use of special symbols that represent the current directory
+(one dot ".") or parent directories (two dots "..").
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+When a path in an #include directive is hardcoded, it may become invalid when
+the location of the included file changes or when the source code is reused or
+ported. This makes code error-prone and adds an overhead of manually updating
+paths.
+This rule helps you avoid hardcoding paths in #include directives.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include "./inc/foo.h"      // Violation
+#include "inc/../bar.h"     // Violation
+#include "c:\\tmp\\goo.h"   // Violation
+#include "/tmp/goo.h"       // Violation
+#include &lt;sys/../time.h&gt;    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, do not use single or double dots as path elements and do not
+hardcode full paths to the header files in the #include directives.
+
+#include "inc/foo.h"        // OK
+#include "bar.h"            // OK
+#include "goo.h"            // OK + -I/tmp in compile options
+#include &lt;sys/time.h&gt;       // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 4 Source Code in Files - 4.4 Include Files - Rule 10
+
+2. High Integrity C++ Coding Standard
+   16.1.2. Do not include a path specifier in filenames supplied in #include
+   directives
+
+</PRE>
+</BODY>
+</HTML>

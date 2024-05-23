@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A 'try' statement of a 'try-block' should contain a potentially-throwing statement [MISRACPP2023-0_0_1-j]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A 'try' statement of a 'try-block' should contain a potentially-throwing statement [MISRACPP2023-0_0_1-j-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If a 'try' statement of a 'try-block' does not contain a potentially-throwing
+statement, then all its catch-handlers are unreachable.
+
+This rule detects when the body of a 'try' compound statement does not contain
+any statements that are potentially-throwing.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule does not report on function-try-blocks of constructors
+and destructors.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unreachable code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar() noexcept;
+void foo()
+{
+    try {
+        bar();
+    } catch (...) {     // Violation
+        // ...
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar() noexcept;
+void foo()
+{
+    bar();              // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 0.0.1 A function shall not contain unreachable statements
+
+</PRE>
+</BODY>
+</HTML>

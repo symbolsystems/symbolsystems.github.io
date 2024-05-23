@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The names of standard library macros, objects and functions shall not be reused [MISRAC2012-RULE_21_2-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The names of standard library macros, objects and functions shall not be reused [MISRAC2012-RULE_21_2-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where new versions of standard library macros, objects or functions are used
+by the programmer (e.g. enhanced functionality or checks of input values) the
+modified macro, object or function shall have a new name. This is to avoid any
+confusion as to whether a standard macro, object or function is being used or
+whether a modified version of that function is being used. So, for example, if
+a new version of the sqrt function is written to check that the input is not
+negative, the new function shall not be named 'sqrt', but shall be given a new
+name." [1]
+
+Rule checks if the following reserved names are used:
+- identifiers that begin with the underscore character
+
+See also: MISRA2004-20_2_a, MISRA2004-20_2_b, NAMING-33, CODSTA-92, 
+          CODSTA-92_a, CODSTA-92_b, CODSTA-93
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule prevents undefined behaviour.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Example of code which results in a violation:
+int _name();    // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Example of code which does not result in a violation:
+int my_name(); // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 20
+
+2. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 21.2
+
+3. SEI CERT C++ Coding Standard
+   DCL51-CPP. Do not declare or define a reserved identifier
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL51-CPP.+Do+not+declare+or+define+a+reserved+identifier">https://wiki.sei.cmu.edu/confluence/display/cplusplus/DCL51-CPP.+Do+not+declare+or+define+a+reserved+identifier</A>
+
+</PRE>
+</BODY>
+</HTML>

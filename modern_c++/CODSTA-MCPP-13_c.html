@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The 'std::forward' function should only be used to forward forwarding references [CODSTA-MCPP-13_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The 'std::forward' function should only be used to forward forwarding references [CODSTA-MCPP-13_c-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The 'std::forward' function should be used to forward forwarding references
+to other functions. Using it for other purposes can be misleading.
+
+This rule detects when the 'std::forward' function is used with an argument
+other than a forwarding reference.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+A forwarding reference is a function argument that is declared as an rvalue
+reference to a cv-unqualified function template parameter.
+
+A parameter of type 'auto&amp;&amp;' is also considered as a forwarding reference
+for the purpose of this rule.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you improve code consistency and clarity.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;utility&gt;
+class C { };
+
+void foo(C&amp; c){}
+void foo(C&amp;&amp; c){}
+
+void f1(C&amp;&amp; arg)
+{
+    foo(std::forward&lt;C&gt;(arg));       // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+To fix the code, use the 'std::forward' function to pass the forwarding
+reference and the 'std::move' function to pass the rvalue reference.
+
+#include &lt;utility&gt;
+class C { };
+
+void foo(C&amp; c){}
+void foo(C&amp;&amp; c){}
+
+void f1(C&amp;&amp; arg)
+{
+    foo(std::move(arg));       // OK
+}
+
+template&lt;class T&gt;
+void f2(T&amp;&amp; arg)
+{
+  foo(std::forward&lt;T&gt;(arg));   // OK
+}
+
+C retC();
+
+void instance(C c)
+{
+    f2(retC());
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   17.3.2. Use std::forward to forward universal references
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 28.6.2 Forwarding references and std::forward shall be used together
+
+</PRE>
+</BODY>
+</HTML>

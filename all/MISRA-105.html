@@ -1,0 +1,123 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All the functions pointed to by a single pointer to function shall be identical in the number and type of parameters and the return type [MISRA-105]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All the functions pointed to by a single pointer to function shall be identical in the number and type of parameters and the return type [MISRA-105-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a pointer to function is:
+- assigned to other pointer to function, or
+- initialized by other pointer to function, or
+- cast to type of pointer to function
+and pointed functions are not identical.
+The rule assumes that two functions are identical if they have the same number
+and types of parameters and the same return types.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is active for C code only.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Pointers to functions can easily violate type integrity, 
+so all pointed-to functions should be of identical type."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef int(*PTF1)(int, char*);
+typedef void(*PTF2)(int, char*);
+typedef int(*PTF3)(int, int);
+typedef int(*PTF4)(int, char*, ...);
+
+int foo1(int, char*);
+void foo2(int, char*);
+int foo3(int, int);
+int foo4(int, char*, ...);
+
+void test(void)
+{
+    PTF1 p1;
+    PTF2 p2 = foo1; /* Violation */
+    PTF3 p3;
+    PTF4 p4;
+
+    p1 = p2;          /* Violation */
+    p1 = p3;          /* Violation */
+    p1 = (PTF1)p4;    /* Violation */
+    p1 = foo2;        /* Violation */
+    p1 = (PTF1)foo3;  /* Violation */
+    p1 = foo4;        /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef int(*PTF1)(int, char*);
+typedef void(*PTF2)(int, char*);
+typedef int(*PTF3)(int, int);
+typedef int(*PTF4)(int, char*, ...);
+
+int foo1(int, char*);
+void foo2(int, char*);
+int foo3(int, int);
+int foo4(int, char*, ...);
+
+void test(void)
+{
+    PTF1 p1;
+    PTF2 p2 = foo2;  /* OK */
+    PTF3 p3;
+    PTF4 p4;
+
+    p1 = (PTF1)foo1; /* OK */
+    p3 = foo3;       /* OK */
+    p4 = (PTF4)foo4; /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+Misra Guidelines - Rule 105
+
+</PRE>
+</BODY>
+</HTML>

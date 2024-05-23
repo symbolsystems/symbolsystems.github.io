@@ -1,0 +1,142 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+If you'd like to support mixed-mode operations make operators a non-member functions [MISRACPP2023-16_6_1-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+If you'd like to support mixed-mode operations make operators a non-member functions [MISRACPP2023-16_6_1-a-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+In mixed-mode operations the compiler can use constructors for implicit
+conversions. This kind of implicit type conversion can be used on every
+parameter of every function call, but only for parameters listed in the
+parameter list, never for the object on which a member function is invoked.
+That's the reason why member operator functions that overload commutative
+binary operators work only half the time.
+
+To support mixed-mode arithmetic, make operator a non-member function,
+thus allowing compilers to perform implicit type conversions on all arguments.
+If the function needs access to the non-public members of the class, then 
+it should be defined as friend.
+
+The rule reports violations if a class contains constructor that can be used
+to implicit conversion and defines non-virtual binary operator function:
++, -, *, /, %, &gt;, &gt;=, &lt;, &lt;=, ==, !=, ||, &amp;&amp;, |, ^, &amp;. Additionally violations
+are reported always if &lt;&lt; or &gt;&gt; operator is defined as member function.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"operator&gt;&gt; and operator&lt;&lt; shouldn't be member functions. If they were, you'd
+have to put the String object on the left when you called the functions. 
+That would confuse everyone. If f is operator&gt;&gt; or operator&lt;&lt;, 
+make f a non-member function. If, in addition, f needs access to non-public 
+members of class C, make f a friend of C." [Effective C++ - Item 19]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule ensures consistent behaviour for mixed-mode operations.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+    C1();
+    C1(int);
+    const C1 operator+(const C1&amp; rhs) const;          // Violation
+    const C1 operator-(const C1&amp; rhs) const{          // Violation
+      return C1((*this).mem - rhs.mem);
+    }
+private:
+    int mem;
+};
+
+void fooadd1() {
+    C1 c1;
+  
+    c1 = c1 + 2;
+    c1 = c1 - 2;
+//  c1 = 2 + c1; // this code does not compile
+//  c1 = 2 - c1; // this code does not compile
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C1 {
+public:
+    C1();
+    C1(int);
+    friend const C1 operator-(const C1&amp; lhs, const C1&amp; rhs); // OK
+private:
+    int mem;
+};
+
+const C1 operator+(const C1&amp; lhs, const C1&amp; rhs);            // OK
+const C1 operator-(const C1&amp; lhs, const C1&amp; rhs){            // OK
+    return C1(lhs.mem - rhs.mem);
+}
+
+void fooadd1() {
+    C1 c1;
+  
+    c1 = c1 + 2;
+    c1 = c1 - 2;
+    c1 = 2 + c1; // this code does compile
+    c1 = 2 - c1; // this code does compile
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 16.6.1 Symmetrical operators should only be implemented as non-member functions
+
+3. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter: "Classes and Functions:
+   Design and Declaration", Item 19
+
+</PRE>
+</BODY>
+</HTML>

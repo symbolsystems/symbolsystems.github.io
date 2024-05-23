@@ -1,0 +1,156 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not use enumerations in boolean condition [CODSTA-151]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not use enumerations in boolean condition [CODSTA-151-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule reports a violation when you use an enumeration in a boolean
+condition.
+
+See also: CODSTA-CPP-89, PB-68
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+An exception is made for an enumeration type which:
+   * contains 'bool' in name (case insensitive), and
+   * has at least one enumerator constant with value zero, and
+   * has at least one enumerator constant with non-zero value
+Such enumeration type is recognized as a "boolean" type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Not using enumerations in boolean conditions is a good code practice.
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+In some cases an enumeration type can be designed to be used in enumeration
+conditions. For example, it may contain an enumerator constant with a value
+of 0 (meaning "false"), and all other enumerator constants mean "true". It is not
+possible to detect such cases automatically, so a violation will be reported.
+For example:
+
+    enum OptionNameEquality {
+        OptionNameNotEqual,
+        OptionNameEqual,
+        OptionNameCmdLineEqual,
+    };
+    void onEqual(enum OptionNameEquality e) {
+        if (e); /* Violation */
+    }
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+enum E {
+    EC1,
+    EC2,
+    EC3
+};
+int x;
+void foo(enum E e)
+{
+    if (e);                 /* Violation: in 'if' condition */
+    x = ((x &gt; 0) &amp;&amp; EC2);   /* Violation: operand of boolean operator '&amp;&amp;' */
+    e ? ++x: --x;           /* Violation: in '?:' condition */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+enum E {
+    EC1,
+    EC2,
+    EC3
+};
+
+int x;
+void foo(enum E e, int b)
+{
+    if (e != EC1);
+    x = ((x &gt; 0) &amp;&amp; (EC2 != EC1));
+    b ? ++x: --x;
+}
+
+/* An exception for "boolean" enumeration: */
+
+enum A_Bool_T { /* Contains "bool" in name */
+    /* At least one constant with value 0: */
+    FALSE = 0, /* Names of enumeration constants are not important */
+    OFF = 0,
+
+    /* At least one constant with non-zero value: */
+    TRUE = -1,
+    NO = -1
+
+    /* No other values */
+};
+
+void bar(enum A_Bool_T b)
+{
+    if (b); /* OK - "A_Bool_T" is recognized as a "boolean" type */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. CWE-398 
+   <A HREF="http://cwe.mitre.org/data/definitions/398.html">http://cwe.mitre.org/data/definitions/398.html</A>
+
+</PRE>
+</BODY>
+</HTML>

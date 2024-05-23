@@ -1,0 +1,148 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The pointer arguments to the Standard Library function 'memcmp' shall point to either a pointer type, an essentially signed type, an essentially unsigned type, an essentially Boolean type or an essentially enum type [MISRA2012-RULE-21_16]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The pointer arguments to the Standard Library function 'memcmp' shall point to either a pointer type, an essentially signed type, an essentially unsigned type, an essentially Boolean type or an essentially enum type [MISRA2012-RULE-21_16-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects cases when an argument passed to the 'memcmp()' function
+is a pointer to one of the following types:
+- essentially character,
+- essentially floating,
+- struct/union,
+- function,
+- void.
+
+The term "essential type" is defined by the MISRA C:2012 standard.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.6
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The Standard Library function 'memcmp' performs a byte by byte comparison
+of the first n bytes of the two objects pointed at by the first and the second
+argument. This may cause the following problems:
+- Structures may be not equal, even when their members hold the same values.
+  They may contain padding with an indeterminate value between their members
+  and 'memcmp' will include this in its comparison. It cannot be assumed that
+  the padding will be equal, even when the values of the structure members are
+  the same.
+- Unions have similar concerns along with the added complication that they may
+  incorrectly be reported as having the same value when the representation
+  of different, overlapping members are coincidentally the same.
+- The same values of objects with essentially floating type may be stored using
+  different representations.
+- Essentially char arrays are most frequently used to store character string,
+  an attempt to compare such arrays using 'memcmp' may indicate an error
+  as the number of characters to be compared will be determined by the value
+  of the 'size_t' argument rather than the location of the null characters
+  used to terminate the strings. The result may therefore depend on the
+  comparison of characters which are not part of the respective strings.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;string.h&gt;
+
+struct S
+{
+    int i;
+    float f;
+};
+
+union U
+{
+    int i;
+    float f;
+};
+
+void f1(struct S *s1,
+        struct S *s2,
+        union U  *u1,
+        union U  *u2)
+{
+    memcmp( s1, s2, sizeof(struct S) );    /* Violation */
+    memcmp( u1, u2, sizeof(union U) );     /* Violation */
+}
+
+void f2()
+{
+    char str1[] = "task";
+    char str2[] = {'t', 'a', 's', 'k'};
+    memcmp( str1, str2, 4);                /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* examples of correct code */
+#include &lt;string.h&gt;
+
+struct S
+{
+    int i;
+    unsigned short *us;
+};
+
+void f1(struct S *s1, struct S *s2)
+{
+    memcmp(&amp;s1-&gt;i, &amp;s2-&gt;i, sizeof(int));                    /* OK */
+    memcmp(s1-&gt;us, s2-&gt;us, sizeof(unsigned short));         /* OK */
+}
+
+void f2(unsigned int *uiArr1,
+        unsigned int *uiArr2)
+{
+    memcmp( uiArr1, uiArr2, sizeof(uiArr1) );               /* OK */
+    memcmp( &amp;uiArr1[0], &amp;uiArr2[0], sizeof(uiArr1[0]) );    /* OK */
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 1 Additional security guidelines for MISRA C:2012
+   Section 2: New rules, Rule 21.16
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,122 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Variable should be used in context of single critical section [MISRA2012-DIR-5_1_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Variable should be used in context of single critical section [MISRA2012-DIR-5_1_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule detects when a global variable or method parameter passed as a pointer or reference
+is used in more than one critical section in the context of a single method.
+Using a variable in many critical sections in a single method does not guarantee the
+atomicity of the method. If the method is executed by more than one thread, this
+may result in an incorrect state of the synchronized object.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.1
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+The rule does not check whether a given method is executed in parallel
+by multiple threads. The violation is reported solely based on the existence of the
+synchronization mechanism in the code of the analyzed method.
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"When a multi-step operation on a shared resource cannot be guaranteed to execute independent
+of interference, then the resulting behavior can be unpredictable. Improper synchronization
+could lead to data or memory corruption, denial of service, etc.." [CWE-662]
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent incorrect states of objects in the application.
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is an example that will trigger a violation:
+
+#include &lt;pthread.h&gt;
+#include &lt;string.h&gt;
+
+pthread_mutex_t* mutex;
+
+void convertByConversionUnit(char *buffer, char* input) {
+    pthread_mutex_lock(mutex);
+    int len = (int) strlen(buffer);
+    pthread_mutex_unlock(mutex);
+    
+    //do some work
+    
+    pthread_mutex_lock(mutex);
+    strncpy(buffer, input, (unsigned int) len); // VIOLATION
+    pthread_mutex_unlock(mutex);
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+The example can be repaired by performing unlocking on all the branches:
+
+#include &lt;pthread.h&gt;
+#include &lt;string.h&gt;
+
+pthread_mutex_t* mutex;
+
+int convertByConversionUnitFix(char *buffer, char* input) {
+    pthread_mutex_lock(mutex);
+    int len = (int) strlen(buffer);
+
+    //do some work
+
+    strncpy(buffer, input, (unsigned int) len); // NO VIOLATION
+    pthread_mutex_unlock(mutex);
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+CWE-662: Improper Synchronization
+<A HREF="https://cwe.mitre.org/data/definitions/662.html">https://cwe.mitre.org/data/definitions/662.html</A>
+
+MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018 Phase 3 - Multi-threading and atomics
+2.1 Section 7 - Directives, Dir 5.1
+
+</PRE>
+</BODY>
+</HTML>

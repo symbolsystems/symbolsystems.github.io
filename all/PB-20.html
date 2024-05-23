@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not slice derived objects [PB-20]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not slice derived objects [PB-20-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Do not initialize an object of base class type with an object of derived class
+type, except through references, pointers, or pointer-like abstractions (such as
+std::unique_ptr, or std::shared_ptr).
+
+An object deriving from a base class typically contains additional member
+variables that extend the base class. When by-value assigning or copying
+an object of the derived type to an object of the base type, those additional
+member variables are not copied because the base class contains insufficient
+space in which to store them. This action is commonly called slicing the object
+because the additional members are 'sliced off' the resulting object."
+[CERT-OOP51-CPP]
+
+This rule detects when an expression of a derived class with virtual functions
+or additional member variables relative to the base class is assigned
+to the base object class by value.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.0
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent the slicing problem, and improve code consistency
+and runtime performance.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    virtual void someFun();
+private:
+    int m1;
+};
+
+class Derived: public Base
+{
+public:
+    virtual void someFun();
+private:
+    int m1;
+    int m2;
+};
+
+void f1(Base b);
+
+void f2() {
+    Derived d;
+    Base b = Derived{};  // Violation
+    f1(d);               // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    virtual void someFun();
+private:
+    int m1;
+};
+
+class Derived: public Base
+{
+public:
+    virtual void someFun();
+private:
+    int m1;
+    int m2;
+};
+
+void f1(Base&amp; b);
+
+void f2() {
+    Derived d;
+    Base* b = new Derived();   // OK
+    f1(d);                     // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C++ Coding Standard
+   OOP51-CPP. Do not slice derived objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP51-CPP.+Do+not+slice+derived+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP51-CPP.+Do+not+slice+derived+objects</A>
+
+2. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 4, Item 20
+
+3. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.,
+   Chapter: "Classes and Functions: Design and Declaration", Item 22
+
+4. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 3
+
+5. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Design Style", Rule 09
+
+6. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 9 Function - 9.1 Function Arguments - Rec. 43
+
+</PRE>
+</BODY>
+</HTML>

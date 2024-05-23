@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The function shall resolve to a function declared previously in the translation unit [TEMPL-14]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The function shall resolve to a function declared previously in the translation unit [TEMPL-14-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Argument-dependent lookup(ADL) adds additional associated namespaces to the set
+of scopes searched when lookup is performed for the names of called functions.
+For function templates, ADL is performed at the point of instantiation of the
+function template, and so it is possible that a function declared after the
+template may be called." [MISRA C++:2008 Rule 14-6-2]
+
+This rule detects when a function that is declared after a template
+is called in a template function.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.3
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+"To ensure that ADL does not take place when calling a function with a dependent
+argument, the postfix-expression denoting the called function can either
+be a qualified name or a parenthesized expression." [MISRA C++:2008 Rule 14-6-2]
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you avoid unexpected calls to functions that are declared
+after the function call, as well as prevent confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void b ( int );
+template &lt;typename T&gt; void f(T const &amp; t)
+{
+    b(t);           // Violation - Calls NS::b declared after f
+}
+
+namespace NS
+{
+    struct A
+    {
+        operator int ( ) const;
+    };
+    void b(A const &amp;) {
+    }
+}
+
+int main()
+{
+    NS::A a;
+    f(a);
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void b ( int );
+template &lt;typename T&gt; void f(T const &amp; t)
+{
+    ::b(t);        // OK - Calls ::b
+}
+
+namespace NS
+{
+    struct A
+    {
+        operator int ( ) const;
+    };
+    void b(A const &amp;) {
+    }
+}
+
+int main()
+{
+    NS::A a;
+    f(a);
+    return 0;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems. Chapter 6, Section 14, Rule 14-6-2
+
+</PRE>
+</BODY>
+</HTML>

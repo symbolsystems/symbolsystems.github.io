@@ -1,0 +1,146 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Do not inline large functions [HICPP-7_1_5-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Do not inline large functions [HICPP-7_1_5-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The definition of an inline function needs to be available in every
+translation unit that uses it. This in turn requires that the definitions of
+inline functions and types used in the function definition must also be
+visible.
+
+The inline keyword is just a hint, and compilers in general will only inline a
+function body if it can be determined that performance will be improved as a
+result.
+
+As the compiler is unlikely to inline functions that have a large number of
+statements and expressions, inlining such functions provides no performance
+benefit but will result in increased dependencies between translation units.
+
+Given an approximate cost of 1 for every expression and statement, the
+recommended maximum cost for a function is 32." [HIC++ v4.0, Rule 7.1.5]
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule is only checked if a function is called in an inline function
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps improve code clarity by prompting you to remove extraneous
+inline function keywords that the compiler is not likely to call inline due to
+the size of the function.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+namespace NS {
+class C {
+  public:
+    C(int32_t) {
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+    }
+    int32_t foo() {
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        return 1;
+    }
+
+  private:
+    int m_i;
+};
+// violation: Cost greater than 32
+inline int32_t foo(int32_t i) {
+    C c(i);
+    return c.foo();
+}
+} // namespace NS
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+namespace NS {
+class C {
+  public:
+    C(int32_t) {
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+    }
+    int32_t foo() {
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        m_i = (m_i + m_i + m_i + m_i + m_i + m_i + m_i);
+        return 1;
+    }
+
+  private:
+    int m_i;
+};
+// Ok: Don't inline
+int32_t foo(int32_t i) {
+    C c(i);
+    return c.foo();
+}
+} // namespace NS
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.5. Do not inline large functions
+
+</PRE>
+</BODY>
+</HTML>

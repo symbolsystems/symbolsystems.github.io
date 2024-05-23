@@ -1,0 +1,296 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Function called in global or namespace scope shall not throw unhandled exceptions [MISRA2008-15_5_3_i]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Function called in global or namespace scope shall not throw unhandled exceptions [MISRA2008-15_5_3_i-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If a program throws an unhandled exception, it terminates in an implementation
+defined manner. In particular, it is implementation defined whether the call
+stack is unwound before termination, so the destructors of any automatic objects
+may or may not be invoked." [MISRA C++:2008 Rule 15-3-4]
+
+The rule reports a violation if the function called in global or namespace scope:
+- throws an exception that is not handled by any try-catch in this function, or
+- contains the call of the function declared with an exception placed in
+  exception-specification that is not handled by any try-catch in this function.
+
+The function can be called implicitly (e.g. the call of constructor when
+the global object is created) or explicitly (e.g. the call of function 
+initializing the global object). 
+
+see also: EXCEPT-13
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+- If the body of called function is not visible (function is defined
+  in different translation unit), then the rule can not check if the
+  function throws any exception, so violations on such calls are not
+  reported.
+- The rule checks only exceptions thrown directly from called function
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"The objective of this rule is that a program should catch
+all exceptions that it is expected to throw." [MISRA C++:2008 Rule 15-3-4]
+
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+
+Some compilers (most notably Microsoft Visual Studio C++ Compiler) might 
+ignore some exception specifications. This can also depend on used compiler 
+options. In such case no violation will be reported.
+
+In following cases violations can be not reported even if the function
+throws exception that is not handled:
+
+- if a thrown exception and the handler are of type pointer or array
+  and there is neither standard pointer conversion nor qualification
+  conversion between types.
+
+  int foo1(){
+      int** ppi;
+      const int* cpi;
+    
+      try {
+          throw ppi;              
+      } catch (short** pps) {
+          // Exception of type 'int**' is not handled
+      }
+  
+      try {
+          throw cpi;
+      } catch (int* pi) {
+          // Exception of type 'const int*' is not handled
+      }
+    
+      return 0;
+  }
+
+  int x1 = foo1();      // No Violation
+
+- if a handler type is an ambiguous base class
+
+  class BaseException {};
+  class Exception1 : public BaseException {};
+  class Exception2 : public BaseException {};
+  class DerivedException : public Exception1, public Exception2 {};
+
+  int foo2() {    
+      try {
+          throw DerivedException();
+      } catch (BaseException be) {
+          // Exception of type 'DerivedException' is not handled
+      }
+  }
+
+  int x2 = foo2();      // No Violation
+
+- if an exception is rethrown from catch with ... handler
+
+  int foo3() {
+      try {
+          // ...
+      } catch(...) {
+          throw;
+      }
+  }
+
+  int x3 = foo3();      // Type thrown is unknown so no violation
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Exception{};
+
+class P1{
+public:
+    P1() {
+        throw Exception(); 
+        // Constructor throws an unhandled exception
+    }
+};
+
+P1 p1;            // Violation - implicit call of constructor
+
+
+int foo1() {
+    short s;
+    try {
+        throw s;
+    } catch (int i) {
+        // Exception is not handled by catch
+    } 
+    return 0;
+}
+
+int x1 = foo1();  // Violation
+
+
+int foo2() {
+    try {
+        //...
+    } catch (int i) {
+        throw;
+        // Exception of int type is rethrown
+    } 
+    return 0;
+}
+
+int x2 = foo2();  // Violation
+
+
+void throwException() throw (Exception) {}
+
+int foo3() {
+    try {
+        throwException();
+    } catch (int e) {
+        //...
+    }
+    return 0;
+}
+
+int x3 = foo3();  // Violation - reported only if the compiler
+                  // supports exception specifications
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Exception{};
+
+class P1{
+public:
+    P1() {
+        try {
+            throw Exception(); 
+        } catch (Exception e) {
+            // Exception is thrown by catch
+        }
+    }
+};
+
+P1 p1;            // OK - implicit call of constructor
+
+
+int foo1() {
+    short s;
+    try {
+        throw s;
+    } catch (int i) {
+        // Exception is not handled by catch
+    } 
+    catch (short i) {
+        // Exception is handled by catch
+    } 
+    return 0;
+}
+
+int x1 = foo1();  // OK
+
+
+int foo2() {
+    try {
+        throw int();
+    } catch (...) {
+        // Exception is handled by catch
+    } 
+    return 0;
+}
+
+int x2 = foo2();  // OK
+
+
+void throwException() throw (Exception) {}
+
+int foo3() {
+    try {
+        throwException();
+    } catch (Exception&amp; e) {
+        // Exception is handled by catch
+    }
+    return 0;
+}
+
+int x3 = foo3();  // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A15-2-1. Constructors that are not noexcept shall not be invoked before
+   program startup
+
+2. AUTOSAR C++14 Coding Guidelines
+   A15-5-3. The std::terminate() function shall not be called implicitly
+
+3. AUTOSAR C++14 Coding Guidelines
+   M15-3-4. Each exception explicitly thrown in the code shall have a handler
+   of a compatible type in all call paths that could lead to that point
+
+4. MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+   Chapter 6, Section 15, Rule 15-3-4, Rule 15-5-3
+
+5. Programming languages -- C++ ISO/IEC 14882:2011 
+   15.5.1 The std::terminate() function
+
+6. SEI CERT C++ Coding Standard
+   ERR50-CPP. Do not abruptly terminate the program
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program">https://wiki.sei.cmu.edu/confluence/display/cplusplus/ERR50-CPP.+Do+not+abruptly+terminate+the+program</A>
+
+</PRE>
+</BODY>
+</HTML>

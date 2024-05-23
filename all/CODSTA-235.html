@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The library functions 'rewind', 'setbuf' and 'ctime' should not be used [CODSTA-235]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The library functions 'rewind', 'setbuf' and 'ctime' should not be used [CODSTA-235-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"When you have a choice of two functions to accomplish the same task, prefer
+the one with better error checking and reporting." [CERT C-ERR07]
+
+This rule detects when the following C standard library functions are used:
+'ctime', 'rewind' and 'setbuf'.
+
+See also: MISRA2004-20_10
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule helps you prevent undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;time.h&gt;
+void f(){
+    time_t * t1;
+    ctime(t1);        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;time.h&gt;
+void f(){
+    time_t * t1;
+    localtime(t1);    // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. SEI CERT C Coding Standard
+   ERR07-C. Prefer functions that support error checking over equivalent
+   functions that don't
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/ERR07-C.+Prefer+functions+that+support+error+checking+over+equivalent+functions+that+don%27t">https://wiki.sei.cmu.edu/confluence/display/c/ERR07-C.+Prefer+functions+that+support+error+checking+over+equivalent+functions+that+don%27t</A>
+
+</PRE>
+</BODY>
+</HTML>

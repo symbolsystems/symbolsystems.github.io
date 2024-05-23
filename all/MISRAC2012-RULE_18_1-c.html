@@ -1,0 +1,184 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array [MISRAC2012-RULE_18_1-c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array [MISRAC2012-RULE_18_1-c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+This rule reports violations in the following cases:
+- a pointer arithmetic operation is performed on a non-array object (see also PARAMETERS)
+- the resulting pointer does not address an element of the allocated array
+or the element one beyond the end of that array.
+
+This rules applies to the following expressions:
+  pointer_expression + integer_expression
+  integer_expression + pointer_expression
+  pointer_expression - integer_expression
+  ++ pointer_expression
+  pointer_expression ++
+  -- pointer_expression
+  pointer_expression --
+  &amp; pointer_expression [ integer_expression ]
+  &amp; integer_expression [ pointer_expression ]
+  
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+v10.3.3
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+"It is undefined behaviour if the result obtained from one of the above expressions 
+is not a pointer to an element of the array pointed to by pointer_expression or 
+an element one beyond the end of that array".
+[MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 5, Rule 5-0-16]
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+The "Allow pointer arithmetic on non-array objects, treating them as one-element arrays"
+parameter disables reporting violations whenever pointer arithmetic operation is performed
+on a non-array object, treating them as they were one-element arrays.
+This parameter is disabled by default.
+
+The "Report violations when pointer within the bounds of the structure is out of the field bounds"
+parameter enables reporting violations in two cases:
+- the result of the pointer arithmetic exceeds the bounds of the structure whose last field is an
+array with size declared to have a length of 0 or 1,
+- the result of the pointer arithmetic exceeds the bounds of the field, even if it points to
+a location within the containing structure object.
+This parameter is disabled by default.
+
+The "Report when the pointer addresses one element beyond the end of the array" parameter
+enables reporting violations when the resulting pointer points at one element beyond the end
+of an array.
+For example, with this parameter enabled, the rule will report the following violation:
+int32_t a2[ 10 ];
+int32_t * p2 = &amp;a2 [ 10 ];   // VIOLATION
+This parameter is disabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+The rule helps you avoid unexpected behavior which may lead to failures at runtime. This helps
+also to ensure robustness of the application as a whole.
+
+
+</PRE>
+<STRONG>
+DRAWBACKS
+</STRONG>
+<PRE>
+N/A
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+Here is sample code that triggers a violation:
+
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+void f1 ( const int32_t * a1 ) 
+{ 
+   int32_t a2[ 10 ];
+   const int32_t * p1 = &amp;a1 [  1 ];   // VIOLATION - a1 is not an array
+         int32_t * p2 = &amp;a2 [ 10 ];   // NO VIOLATION 
+         int32_t * p3 = &amp;a2 [ 11 ];   // VIOLATION 
+}
+void f2 ( ) 
+{ 
+   int32_t b; 
+   int32_t c [ 10 ];
+   f1 ( &amp;b ); 
+   f1 ( c ); 
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Replace the non-array variables with arrays, and assign at most one element
+beyond the end of the array:
+
+#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+void f1 ( const int32_t * a1 ) 
+{ 
+   int32_t a2[ 10 ];
+   const int32_t * p1 = &amp;a1 [  1 ];   // NO VIOLATION
+         int32_t * p2 = &amp;a2 [ 10 ];   // NO VIOLATION 
+         int32_t * p3 = &amp;a2 [  9 ];   // NO VIOLATION 
+}
+void f2 ( ) 
+{ 
+   int32_t b [  2 ]; 
+   int32_t c [ 10 ];
+   f1 ( b ); 
+   f1 ( c ); 
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+MISRA C++:2008 Guidelines for the use of the C++ language in critical systems
+Chapter 6, Section 5, Rule 5-0-16
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems 
+Section 8: Rules, Rule 18.1
+
+MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+Rule 8.7.1 Pointer arithmetic shall not form an invalid pointer
+
+AUTOSAR C++14 Coding Guidelines
+Rule A5-2-5 An array or container shall not be accessed beyond its range
+
+AUTOSAR C++14 Coding Guidelines
+Rule M5-0-16 A pointer operand and any pointer resulting from pointer arithmetic using that operand shall both address elements of the same array
+
+</PRE>
+</BODY>
+</HTML>

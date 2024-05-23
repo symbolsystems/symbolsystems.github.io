@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A cast should not convert a pointer type to 'intptr_t' and 'uintptr_t' types [MISRACPP2023-8_2_7-b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A cast should not convert a pointer type to 'intptr_t' and 'uintptr_t' types [MISRACPP2023-8_2_7-b-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Casting between a pointer and an integer type may be unavoidable when
+addressing memory mapped registers or other hardware specific features.
+However, even such casts are not recommended, so this rule prohibits
+casts to 'uintptr_t' and 'intptr_t' types that are unsigned and signed
+integer types that guarantee to be able to represent all possible pointer
+values. UINT_PTR and INT_PTR are their equivalents on Windows systems.
+
+This rule detects when an expression of a pointer type is explicitly cast to
+typedefs with names: uintptr_t, intptr_t, UINT_PTR and INT_PTR.
+
+See also: MISRA2004-11_3_a
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.2
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent implementation-defined behavior.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdint.h&gt;
+
+void f1(int *pint) {
+    uintptr_t v1 = (uintptr_t)pint;   // Violation
+    intptr_t v2 = (intptr_t)pint;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not cast a pointer type to UINT_PTR, INT_PTR, uintptr_t, or intptr_t types.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 8.2.7 A cast should not convert a pointer type to an integral type
+
+</PRE>
+</BODY>
+</HTML>

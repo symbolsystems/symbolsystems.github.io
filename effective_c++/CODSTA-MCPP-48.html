@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Multiple output values from a function should be returned as a struct or tuple [CODSTA-MCPP-48]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Multiple output values from a function should be returned as a struct or tuple [CODSTA-MCPP-48-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+You should return multiple values from a function as a struct or tuple, which
+clearly states the function's output parameters. Doing so also helps avoid the
+confusion of passing the values as a reference in a function call.
+
+There is no additional overhead associated with running a struct or tuple for
+compilers that support return-value-optimization.
+
+This rule reports when output parameters in non-void functions are detected.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2020.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+This rule assumes:
+ - that an output parameter is a parameter of non-const reference type,
+ - that the parameter is assigned in a function via an assignment operator, and
+ - that the parameter is not used within the assigned function in any other way.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps prevent the misuse of output parameters and improves code
+clarity and readability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+In the following example, the 'remainder' output parameter is used in a
+non-void function.
+
+int divide(int dividend, int divisor, int&amp; remainder) // Violation
+{
+    remainder = dividend % divisor;
+    return dividend / divisor;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix the code by returning the remainder as part of a tuple instead of
+using the output parameter.
+
+#include &lt;tuple&gt;
+
+std::tuple&lt;int, int&gt; divide(int dividend, int divisor, int remainder) // OK
+{
+    return std::make_tuple(dividend / divisor, dividend % divisor);
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A8-4-4 Multiple output values from a function should be returned as a struct
+   or tuple.
+
+</PRE>
+</BODY>
+</HTML>

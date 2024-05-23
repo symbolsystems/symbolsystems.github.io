@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Use auto id = expr when declaring a variable that is the same type as the initializer function call [HICPP-7_1_8-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Use auto id = expr when declaring a variable that is the same type as the initializer function call [HICPP-7_1_8-a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+When declaring variables that are initialized with function calls, the type is
+specific on the return of the function, as well as in the declaration type.
+Using the auto specifier to implicitly deduce the initializer type will ensure
+that future changes to function declarations will not result in unexpected,
+implicit conversions.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v10.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Using auto in place of the explicit type prevents future problems if type names
+change.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+int32_t foo(); // Type 'int32_t ' specified here
+int main() {
+    int32_t i = foo(); // Violation: Type 'int32 t' again specified here
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;cstdint&gt;
+int32_t foo(); // Type 'int32_t ' specified here
+int main() {
+    auto i = foo(); // OK: 'i' deduced to have 'int32 t'.
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   7.1.8. Use auto id = expr when declaring a variable to have the same type
+   as its initializer function call
+
+</PRE>
+</BODY>
+</HTML>

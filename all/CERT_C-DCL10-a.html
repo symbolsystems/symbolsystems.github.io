@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The number of format specifiers in the format string and the number of corresponding arguments in the invocation of a string formatting function should be equal [CERT_C-DCL10-a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The number of format specifiers in the format string and the number of corresponding arguments in the invocation of a string formatting function should be equal [CERT_C-DCL10-a-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The variable arguments to a variadic function are not checked for type by
+the compiler. As a result, the programmer is responsible for ensuring that
+they are compatible with the corresponding parameter after the default argument
+promotions." [DCL11-C.]
+
+This rule detects function calls where the number of format specifiers
+in the argument of string type is different than the number of optional
+arguments that are passed to the invocation of a string formatting function.
+
+This rule checks the string formatting functions that fulfill the following
+conditions:
+- their names include "printf" or "scanf", for example, printf(), fprintf(),
+scanf(), fscanf() (case insensitive)
+- they are variadic functions with the ellipsis preceded by a parameter of
+string type
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not detect a mismatch between the type specified by the format
+specifier included in the string argument and the type of the corresponding
+argument that is passed to the invocation of a string formatting function.
+See the following rules to detect mismatching format specifiers: PB-45, PB-46,
+PB-47, PB-48, PB-49.
+
+This rule assumes the following values in the string argument to be format
+specifiers:
+%c, %d, %i, %e, %E, %f, %g, %G, %a, %A, %o, %s, %u, %x, %X, %p, %n
+Other values are not supported and will be ignored while determining
+the number of arguments of the function call.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you prevent abnormal program termination or unintended
+information disclosure.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    unsigned int value = 10;
+    const char* name = "file.c";
+    printf("file %s, number %u", name);               // Violation
+    printf("file %s, number %u", name, name, value);  // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;
+
+int main(){
+    unsigned int value = 10;
+    const char* name = "file.c";
+    printf("file %s, number %u", name, value);  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 9899:1999 Programming languages -- C
+   7.19.6 Formatted input/output functions
+
+2. <A HREF="http://www.cplusplus.com/reference/clibrary/cstdio/printf/">http://www.cplusplus.com/reference/clibrary/cstdio/printf/</A>
+
+3. <A HREF="http://www.cplusplus.com/reference/clibrary/cstdio/scanf/">http://www.cplusplus.com/reference/clibrary/cstdio/scanf/</A>
+
+4. SEI CERT C Coding Standard
+   FIO47-C. Use valid format strings
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FIO47-C.+Use+valid+format+strings">https://wiki.sei.cmu.edu/confluence/display/c/FIO47-C.+Use+valid+format+strings</A>
+
+5. SEI CERT C Coding Standard
+   DCL10-C. Maintain the contract between the writer and caller of variadic
+   functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL10-C.+Maintain+the+contract+between+the+writer+and+caller+of+variadic+functions">https://wiki.sei.cmu.edu/confluence/display/c/DCL10-C.+Maintain+the+contract+between+the+writer+and+caller+of+variadic+functions</A>
+
+6. SEI CERT C Coding Standard
+   DCL11-C. Understand the type issues associated with variadic functions
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions">https://wiki.sei.cmu.edu/confluence/display/c/DCL11-C.+Understand+the+type+issues+associated+with+variadic+functions</A>
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,152 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid wraparounds when performing arithmetic integer operations [MISRA2012-DIR-4_1_k]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid wraparounds when performing arithmetic integer operations [MISRA2012-DIR-4_1_k-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+An integer overflow occurs when an integer value is incremented to a value that
+is too large to store in the associated representation. When this occurs for
+unsigned integers, the value can wrap to become a very small number.
+For example: UINT_MAX + 1
+
+Similarly, an integer underflow occurs when an integer value is decremented to
+a value that is too small to store in the associated representation. When this
+occurs for unsigned integers, the value can wrap to become a very large number.
+For example: UINT_MIN - 1
+
+While this may be intended behavior in circumstances that rely on
+wrapping, it can have serious consequences if the wrap is unexpected.
+
+This rule reports a violation when an overflow or underflow occurs in the
+unsigned integer arithmetic operation.
+
+See also BD-PB-INTUB
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+2023.1
+
+
+</PRE>
+<STRONG>
+SECURITY RELEVANCE
+</STRONG>
+<PRE>
+Integer overflow can sometimes trigger buffer overflows that can
+be used to execute arbitrary code, as well as lead to memory corruption. This
+is usually outside the scope of a program's implicit security policy.
+
+Unexpected integer overflow can be very dangerous if the result value is used in
+a sensitive area, such as:
+- Integer operands of any pointer arithmetic, including array indexing
+- The assignment expression for the declaration of a variable length array
+- The postfix expression preceding square brackets [] or the expression in
+square brackets [] of a subscripted designation of an element of an array object
+- Function arguments of type size_t or rsize_t (for example, an argument to a
+memory allocation function)
+- Loop conditions
+- In security-critical code
+
+
+</PRE>
+<STRONG>
+PARAMETERS
+</STRONG>
+<PRE>
+'Violate on overflow' - when enabled, violations will be reported when an
+overflow occurs, i.e. the result of the arithmetic operation is higher than the
+upper boundary value for the given type.
+This option is enabled by default.
+
+'Violate on underflow' - when enabled, violations will be reported when an
+underflow occurs, i.e. the result of the arithmetic operation is lower than
+zero.
+This option is enabled by default.
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+This rule helps you prevent unexpected behavior (see SECURITY RELEVANCE).
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void example() {
+    unsigned char c = 255;
+    c += 1; // VIOLATION
+}
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+Use a wider type or validate ranges before the arithmetic operation:
+
+void repair() {
+    unsigned char c = 255;
+    if (c &lt; 255) {
+        c += 1; // NO VIOLATION
+    }
+}
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+2022 CWE Top 25 Most Dangerous Software Errors
+2019 CWE Top 25 Most Dangerous Software Errors
+CWE-190: Integer Overflow or Wraparound
+<A HREF="http://cwe.mitre.org/data/definitions/190.html">http://cwe.mitre.org/data/definitions/190.html</A>
+
+CWE-191: Integer Underflow (Wrap or Wraparound)
+<A HREF="http://cwe.mitre.org/data/definitions/191.html">http://cwe.mitre.org/data/definitions/191.html</A>
+
+MISRA C:2012 Guidelines for the use of the C language in critical systems
+Section 7: Directives, Dir 4.1
+ 
+SEI CERT C Coding Standard
+INT08-C. Verify that all integer values are in range
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT08-C.+Verify+that+all+integer+values+are+in+range">https://wiki.sei.cmu.edu/confluence/display/c/INT08-C.+Verify+that+all+integer+values+are+in+range</A>
+
+SEI CERT C Coding Standard
+INT30-C. Ensure that unsigned integer operations do not wrap
+<A HREF="https://wiki.sei.cmu.edu/confluence/display/c/INT30-C.+Ensure+that+unsigned+integer+operations+do+not+wrap">https://wiki.sei.cmu.edu/confluence/display/c/INT30-C.+Ensure+that+unsigned+integer+operations+do+not+wrap</A>
+
+High Integrity C++ Coding Standard
+4.2.2 Ensure that data loss does not demonstrably occur in an integral expression
+
+AUTOSAR C++14 Coding Guidelines
+Rule A4-7-1 An integer expression shall not lead to data loss
+
+DISA Application Security and Development Security Technical Implementation Guide (STIG)
+APSC-DV-002590: The application must not be vulnerable to overflow attacks.
+
+</PRE>
+</BODY>
+</HTML>

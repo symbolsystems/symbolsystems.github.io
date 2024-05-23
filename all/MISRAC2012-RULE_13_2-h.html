@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The value of an expression with atomic type should be independent from thread interleaving [MISRAC2012-RULE_13_2-h]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The value of an expression with atomic type should be independent from thread interleaving [MISRAC2012-RULE_13_2-h-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+If an atomic variable is accessed more than once between two adjacent sequence
+points, it can be modified by another thread. This may cause the value of the
+expression to depend on the order of read/write operations.
+
+This rule detects when there is more than one modification access to the
+parameter or variable with volatile-qualified or atomic type, or there is
+more than one read access to the same parameter or variable with atomic type
+between two adjacent sequence points.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+2023.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you ensure that expressions are written in a manner that
+consistently produces the same value.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int foo1( _Atomic int x1) {
+    return x1 * x1;                           // Violation
+}
+int foo2( _Atomic int x1) {
+    _Atomic int x2;
+    x2 = x1++ + 1;                            // Violation
+    return x2;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can improve your code by storing the value of an object
+with atomic type in a local variable.
+
+int foo1( _Atomic int x1) {
+    int y1 = x1;
+    return y1 * y1;                           // OK
+}
+int foo2( _Atomic int x1) {
+    _Atomic int x2;
+    x1++;
+    x2 = x1 + 1;                              // OK
+    return x2;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. MISRA C:2012 Amendment 4 Updates for ISO/IEC 9899:2011/2018
+   Phase 3 - Multi-threading and atomics
+   2.2 Section 8 - Rules, 2.2.9 Rule 13.2
+
+2. ISO/IEC 9899:2011 Programming languages -- C
+   Annex C: Sequence points
+
+</PRE>
+</BODY>
+</HTML>

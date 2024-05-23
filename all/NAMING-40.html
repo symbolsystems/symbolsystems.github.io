@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Only the first word of the name of a class, structure, namespace, enumeration, or typedef will begin with an uppercase letter [NAMING-40]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Only the first word of the name of a class, structure, namespace, enumeration, or typedef will begin with an uppercase letter [NAMING-40-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The first word of the name of a class, structure, namespace, enumeration,
+or type created with typedef will begin with an uppercase letter.
+All others letters will be lowercase."
+
+See also: NAMING-10, NAMING-33
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If one wants to eliminate some abbreviations from checking it can be done by
+adding abbreviation string to array 'allowed_abbreviation' in rule's python
+method 'add_abbreviation' e.g. allowed_abbreviation = ["RGB", "IBM"]
+
+The rule does not check names beginning with underscore. Underscore is often
+used as the first character in the name of identifier from standard library,
+so in order to avoid name collisions, identifiers should not begin with '_'.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The first letter of a typedef name may be in lowercase if the typedef
+is a class member or when it is used as a replacement for primitive types.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves readability and maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class sample_class                  // Violation
+{
+   // ...
+};
+
+struct Sample_Struct                // Violation
+{
+   // ...
+};
+
+enum RGB_colors {red, green, blue}; // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Sample_class                  // OK
+{
+   // ...
+};
+
+struct Sample_struct                // OK
+{
+   // ...
+};
+
+// When array 'allowed_abbreviation' in rule's python method
+// 'add_abbreviation' will be modified in the following way:
+// allowed_abbreviation = ["RGB"]
+// then violation in line below won't be reported
+enum RGB_colors {red, green, blue}; // OK
+
+typedef int integral_type;          // OK - exception
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+N/A
+
+</PRE>
+</BODY>
+</HTML>
