@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+More than 2 levels of pointer indirection shall not be used [JSF-170]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+More than 2 levels of pointer indirection shall not be used [JSF-170-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Use of more than 2 levels of indirection can seriously impair the ability
+to understand the bahaviour of the code, and should therefore be avoided."
+[MISRA-C:1998]
+
+The rule reports a violation if more than 2 levels of pointer indirection
+is used in declaration of object, function or typedef. 
+The array type of function parameter is recognized as pointer, because arrays
+are converted to a pointer to the initial element of the array.
+
+See also: CODSTA-05, CODSTA-89, CODSTA-94, CODSTA-95
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves readability and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+/* Examples of non-compliant code: */
+
+typedef int*** PPINT;  /* Violation */
+
+void foo1(){
+    int*** a;  /* Violation */
+    PPINT b;   /* Violation */
+}
+
+int*** foo2(); /* Violation */
+
+void foo3(
+    const char*** p1,     /* Violation */
+    const char** p2[],    /* Violation */
+    const char* p3[2][2]  /* Violation */
+    );
+
+const char*** v1;     /* Violation */
+char*** v2[10];       /* Violation */
+
+void (***fp)(); /* Violation */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+/* Examples of compliant code: */
+
+typedef int** PPINT;  /* OK */
+
+void foo1() {
+    int** a;   /* OK */
+    PPINT b;   /* OK */
+}
+
+int** foo2();  /* OK */
+
+void foo3(
+    const char** p1,     /* OK */
+    const char* p2[],    /* OK */
+    const char p3[2][2]  /* OK */
+    );
+
+const char** v1;     /* OK */
+char** v2[10];       /* OK */
+int v3[2][2][2];     /* OK */
+
+void (**fp)(); /* OK */
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.22 Pointers &amp; References, AV Rule 170
+
+2. Origin: Misra Guidelines - Rule 102
+
+</PRE>
+</BODY>
+</HTML>

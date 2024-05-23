@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Arguments should be passed by reference [JSF-117]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Arguments should be passed by reference [JSF-117-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule detects where an object has been passed by value instead
+of by reference. Passing objects by reference is more efficient 
+than passing by value because no new objects are being created
+and because it avoids the "slicing problem."
+See also: PB-20, PB-23, OPT-33
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+There also may be a situation where the object is so small that it would be 
+more efficient to pass by value instead of by reference.
+
+Due to C++'s type system and the fact that QString, RWCString and CString  
+are implicitly shared, they may be treated like ints or other basic types.
+
+The rule does not report violations on smart pointers: scoped_ptr, scoped_array,
+unique_ptr, shared_ptr, shared_array, auto_ptr, intrusive_ptr and weak_ptr.
+If the function does some operation that works specifically on smart pointers
+then they should be passed by value.
+
+This rule does not report when the virtual function returns an object by value.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Improves code consistency and runtime performance.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+public:
+    const A violation( A a ) {       // Violation - passing parameter by value
+        return a;                    // Violation - returning by value
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class A {
+public:
+    const A&amp; valid( const A &amp;a ) {   // OK
+        return a;                    // OK
+    }
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 9 Function - 9.1 Function Arguments - Rec. 43
+
+2. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+3. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Design Style", Rule 09
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.13 Functions, AV Rule 125
+
+5. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.,
+   Chapter: "Classes and Functions: Design and Declaration", Item 22
+
+6. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 1, Item 3
+
+7. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 4, Item 20
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,154 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A copy constructor shall copy all data members and bases [JSF-077]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A copy constructor shall copy all data members and bases [JSF-077-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A class may contain many data members as well as exist within an inheritance
+hierarchy. Hence the copy constructor must copy all members, including those
+in base classes."
+See also: INIT-11, MRM-43
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations on variables of class/struct type.
+If a copy constructor of base class is called then the rule assumes
+that all variables from a base class are copied.
+If in constructor is called default copy assignment operator,
+then the rule assumes that all member variables are initialized.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Ensure data members and bases are properly handled when an object is copied."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    Base();
+    Base (int x) : base_member (x) { }
+    Base (const Base&amp; rhs) : base_member (rhs.base_member) {}
+private:
+   int base_member;
+};
+
+class Derived : public Base
+{
+public:
+    Derived (int x, int y, int z) : Base (x),
+    derived_member_1 (y),
+    derived_member_2 (z) { }
+		
+    Derived(const Derived&amp; rhs)         // Violation
+    {
+    }
+	
+private:
+    int derived_member_1;
+    int derived_member_2;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base
+{
+public:
+    Base();
+    Base (int x) : base_member (x) { }
+    Base (const Base&amp; rhs) : base_member (rhs.base_member) {}
+private:
+   int base_member;
+};
+
+class Derived : public Base
+{
+public:
+    Derived (int x, int y, int z) : Base (x),
+    derived_member_1 (y),
+    derived_member_2 (z) { }
+		
+    Derived(const Derived&amp; rhs) : Base(rhs),             // OK
+    derived_member_1 (rhs.derived_member_1),
+    derived_member_2 (rhs.derived_member_2) 
+    {
+    }
+	
+private:
+    int derived_member_1;
+    int derived_member_2;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 77
+
+2. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., 
+   Chapter: "Constructors, Destructors, and Assignment Operators", Item 16
+
+3. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 12
+
+4. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

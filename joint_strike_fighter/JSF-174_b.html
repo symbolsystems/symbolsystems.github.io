@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The null pointer shall not be de-referenced [JSF-174_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The null pointer shall not be de-referenced [JSF-174_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Where a function returns a pointer and that pointer is subsequently 
+de-referenced, the program should first check that the pointer is not NULL."
+If a control statement contains in condition non-dereferenced pointer, then 
+the rule assumes that this pointer is checked. In such cases rule does not
+report violations in spite of it does not check if a control statement is
+really used to prevent null pointer dereference. 
+See also: MISRA-107_a, BD-PB-NP
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Complying with this rule leads to safer code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S{
+    int si;
+};
+
+struct S* ret_ptr(struct S* p){
+    return p;
+}
+
+void func(int i){
+    struct S* s;
+    struct S* ptr;
+
+    s = ret_ptr(ptr);
+    /* here pointer 's' should be checked */
+    s-&gt;si = i;    /* Violation - pointer 's' may be null */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S{
+    int si;
+};
+
+struct S* ret_ptr(struct S* p){
+    return p;
+}
+
+int check(struct S* p){
+    if(p == 0)
+        return 0;
+    if(p &gt; 0)
+        return 1;
+}
+
+void func1(int i){
+    struct S* s;
+    struct S* ptr;
+
+    s = ret_ptr(ptr);
+    if(s){
+        s-&gt;si = i;    /* OK - pointer 's' was checked in 'if' condition */
+    }
+
+}
+
+void func2(int i){
+    struct S* s;
+    struct S* ptr;
+
+    s = ret_ptr(ptr);
+    if(!s){
+        return;
+    }
+    s-&gt;si = i;       /* OK - pointer 's' was checked in 'if' condition */
+
+}
+
+void func3(int i){
+    struct S* s;
+    struct S* ptr;
+
+    s = ret_ptr(ptr);
+    if(check(s)){
+        s-&gt;si = i;   /* OK - pointer 's' was checked in 'check' function */
+    }
+}
+
+void func4(int i){
+    struct S* s;
+    struct S* ptr;
+
+    s = ret_ptr(ptr);
+    if(s == 0){
+        s-&gt;si = i;    /* OK - pointer 's' was checked in 'if' condition.
+                         The 'if' condition is not correct, but the rule
+                         does not check such cases. To detect this issue
+                         could be used Bug Detectiv rule - BD-PB-NP */
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin: Misra Guidelines - Rule 107
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.22 Pointers &amp; References, AV Rule 174
+
+3. <A HREF="http://cwe.mitre.org/data/definitions/476.html">http://cwe.mitre.org/data/definitions/476.html</A>
+
+4. ISO/DIS 26262
+   point 8.4.4
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid conversions of constant values to a narrower type [JSF-180_d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid conversions of constant values to a narrower type [JSF-180_d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if an integer or enumeration constant is passed
+to a type that is not enough to hold its value.
+See also: MISRA-043, MISRA2004-10_1_b, MISRA2004-10_1_d, MISRA2004-10_2_a,
+MISRA2004-10_2_b, PORT-27
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.2
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule does not report violations on complex constant expressions.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents a loss of data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo1(){
+    unsigned char c = 256;  // Violation
+    short s = 32768;        // Violation
+    int i = 2147483648;     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo1(){
+    unsigned short c = 256;       // OK
+    int s = 32768;                // OK
+    unsigned int i = 2147483648;  // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A4-7-1. An integer expression shall not lead to data loss
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 180
+
+3. Origin: Misra Guidelines rule 43
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Each expression-statement will be on a separate line [JSF-042]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Each expression-statement will be on a separate line [JSF-042-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Each expression statement and identifier declaration shall be placed
+on a separate line." [AUTOSAR A7-1-7]
+
+This rule detects lines that contain one of the following:
+- more than one semicolon.
+- a semicolon that is not the last token on the line.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+The rule assumes that two semicolons that separate expressions in the header
+of the 'for' loop can be placed on the same line, for example:
+
+  void f() {
+      int i;
+      for( i = 0; i &lt; 10; ++i) {   // OK
+          //...
+      }
+  }
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Declaring an identifier on a separate line makes the identifier declaration
+easier to find and the source code more readable." [AUTOSAR A7-1-7]
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(int arg);
+
+void foo()
+{
+    int i; char c;                   // Violation
+    if (i == 0) { i++; bar(i); }     // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+You can fix your code by placing each statement on a separate line.
+
+void bar(int arg);
+
+void foo()
+{
+    int i;                           // OK
+    char c;                          // OK
+    if( i == 0) {                    // OK
+        i++;                         // OK
+        bar(i);                      // OK
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A7-1-7. Each expression statement and identifier declaration shall be
+   placed on a separate line
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 42
+
+</PRE>
+</BODY>
+</HTML>

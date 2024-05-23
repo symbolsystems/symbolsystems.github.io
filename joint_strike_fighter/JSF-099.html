@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Namespaces will not be nested more than two levels deep [JSF-099]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Namespaces will not be nested more than two levels deep [JSF-099-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Namespaces will not be nested more than two levels deep.
+Please see Example section on how the nesting level is defined.
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+It is possible to change the allowed nesting level by modifying 
+rule in Rule Wizard. The level can be changed by adding 
+(for example by using copy-paste) or removing the 
+MemberOf:namespace elements.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Simplicity and clarity. 
+Deeply nested namespaces can be difficult to comprehend and use correctly.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+namespace A {               // OK: depth = 1
+    namespace B {           // OK: depth = 2
+        namespace C {       // Violation: depth = 3
+            namespace D {   // Violation: depth = 4
+            }
+        }
+        namespace {         // Violation: depth = 3
+        }
+    }
+    namespace X {           // OK: depth = 2
+    }
+}
+namespace A {               // OK: depth = 1
+    namespace X {           // OK: depth = 2
+        namespace Y {       // Violation: depth = 3
+        }
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+It is not allowed to use more than 2 namespace nesting levels.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+Chapter 4.11 Namespaces, AV Rule 99
+
+</PRE>
+</BODY>
+</HTML>

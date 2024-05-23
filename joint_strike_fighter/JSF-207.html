@@ -1,0 +1,162 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Unencapsulated global data will be avoided [JSF-207]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Unencapsulated global data will be avoided [JSF-207-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Rule reports a violation if a variable is declared in a namespace (global,
+named or anonymous namespace) or as a public static class/struct member.
+
+"Global data is dangerous since no access protection is provided with respect
+to the data."
+
+There are multiple reasons why global variables should be avoided:
+- there is no control over who uses them and how
+- they can be used in multiple places which is harder to track than variables
+  with local scope
+- functions which use them are implicitly coupled together
+- variables accessible from multiple threads might require synchronization to
+  prevent concurrency issues
+- global variables pollute global namespace - they can be used by mistake and
+  can result in problems during linking 
+- initialization order might not be clear
+
+See also: CODSTA-CPP-18
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+JSF suggests:
+
+"If multiple clients require access to a single resource, that resource should
+be wrapped in a class that manages access to that resource. For example,
+semantic controls that prohibit unrestricted access may be provided (e.g.
+singletons and input streams)."
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+No violation is reported on:
+- const variables with simple type, for example:
+  const int x; // OK
+  const float * const ptr; // OK
+- const function pointers, for example:
+  void (* const fp)(); // OK
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Global variables increase program complexity. They can be used in multiple,
+not connected places. There is no control over who uses it and how.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+int x = 0;                  // Violation
+void foo(); // uses/modifies x
+void bar(); // uses/modifies x
+
+namespace N {
+struct S {
+public:
+    // ...
+    static int y;   // Violation
+};
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// There is no one way to "fix" the code.
+// Review the code if the variable must be globally accessible. Maybe it can
+// be moved to one function or class which use it, or maybe common code can
+// be factored out to one class? Consider also using common patterns like
+// singletons to control access to the variable.
+
+// For example:
+class Util {
+public:
+    void foo(); // uses/modifies x
+    void bar(); // uses/modifies x
+private:
+    // All code which use this variable was placed in this class
+    int x;  // OK
+};
+
+namespace N {
+class S {
+public:
+    // ...
+private:
+    // After analysis it turned out the variable did not have to be public
+    static int y;   // OK
+};
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Cunningham &amp; Cunningham, Inc.
+   <A HREF="http://c2.com/cgi/wiki?GlobalVariablesAreBad">http://c2.com/cgi/wiki?GlobalVariablesAreBad</A>
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.26 Memory Allocation, AV Rule 207
+
+3. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.7.2 Global variables shall not be used
+
+</PRE>
+</BODY>
+</HTML>

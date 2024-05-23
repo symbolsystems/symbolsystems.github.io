@@ -1,0 +1,125 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+A switch expression will not represent a Boolean value [JSF-195]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+A switch expression will not represent a Boolean value [JSF-195-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The Standard requires the controlling expression of a switch statement to have
+an integer type. Since the type that is used to implement Boolean values
+is an integer, it is possible to have a switch statement controlled by a Boolean
+expression. In this instance an if-else construct would be more appropriate."
+
+The rule reports a violation if in a switch condition is used:
+- equality operator (==, !=), or
+- logical operator (!, &amp;&amp;, ||), or
+- relational operator (&lt;, &gt;, &lt;=, &gt;=), or
+- parameter/variable/expression of boolean type or reference to boolean type.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents using values that are effectively Boolean in switch condition.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int i)
+{
+    switch(i == 0)           /* Violation */
+    {
+        case 0 :
+            /* ... */  
+            break;
+        default:
+            /* ... */ 
+            break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int i)
+{
+    switch(i)                /* OK */
+    {
+        case 0 :
+            /* ... */  
+            break;
+        default:
+            /* ... */ 
+            break;
+    }
+  
+    if(i == 0)               /* OK */
+    {
+        /* ... */ 
+    }
+    else
+    {
+        /* ... */ 
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   M6-4-3. A switch statement shall be a well-formed switch statement
+
+2. AUTOSAR C++14 Coding Guidelines
+   M6-4-7. The condition of a switch statement shall not have bool type
+
+3. High Integrity C++ Coding Standard
+   6.1.4. Ensure that a switch statement has at least two case labels,
+   distinct from the default label
+
+4. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 195
+
+5. MISRA C++:2008 Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 6, Rule 6-4-3, Rule 6-4-7
+
+6. MISRA C:2012 Guidelines for the use of the C language in critical systems
+   Section 8: Rules, Rule 16.7
+
+7. MISRA-C:2004 Guidelines for the use of the C language in critical systems
+   Chapter 6, Section 15, Rule 15.4
+
+8. Origin: Misra Guidelines - Rule 63
+
+</PRE>
+</BODY>
+</HTML>

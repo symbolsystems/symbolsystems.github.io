@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An assignment operator shall assign all data bases [JSF-083_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An assignment operator shall assign all data bases [JSF-083_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A class may contain many data members as well as exist within an inheritance
+hierarchy. Hence the assignment operator must assign all members, including
+those in base classes."
+The rule reports a violation if the assignment operator does not assign
+all data bases. Data members are checked by rule INIT-11.
+The data from a base class can be assigned directly inside body of assignment
+operator or inside body of function called from assignment operator
+(three levels of nested function's calls are checked).
+See also: INIT-11, MRM-41
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule assumes that member variable might be initialized 
+by passing its non-const pointer to an external function.
+If an assignment operator from a base class is called then
+the rule assumes that all data from this class are assigned. 
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Ensure data bases are properly handled under assignment."
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base1 {
+public:
+    Base1();
+    Base1(Base1&amp;);
+    Base1&amp; operator=(const Base1&amp; rhs);
+private:
+    int m1;
+    int m2;
+};
+
+Base1&amp; Base1::operator=(const Base1&amp; rhs){
+    m1 = rhs.m1;
+    m2 = rhs.m2;
+    return *this;
+}
+
+class Derived1 : public Base1 {
+public:
+    Derived1();
+    Derived1(Derived1&amp;);
+    Derived1&amp; operator=(const Derived1&amp; rhs);
+private:
+    int md1;
+    int md2;
+};
+
+Derived1&amp; Derived1::operator=(const Derived1&amp; rhs){   // Violation: m1, m2
+    md1 = rhs.md1;
+    md2 = rhs.md2;
+    return *this;
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base1 {
+public:
+    Base1();
+    Base1(Base1&amp;);
+    Base1&amp; operator=(const Base1&amp; rhs);
+private:
+    int m1;
+    int m2;
+};
+
+Base1&amp; Base1::operator=(const Base1&amp; rhs){
+    m1 = rhs.m1;
+    m2 = rhs.m2;
+    return *this;
+}
+
+class Derived1 : public Base1 {
+public:
+    Derived1();
+    Derived1(Derived1&amp;);
+    Derived1&amp; operator=(const Derived1&amp; rhs);
+private:
+    int md1;
+    int md2;
+};
+
+Derived1&amp; Derived1::operator=(const Derived1&amp; rhs){   // OK
+    Base1::operator=(rhs);
+    md1 = rhs.md1;
+    md2 = rhs.md2;
+    return *this;
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 83
+
+2. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., 
+   Chapter: "Constructors, Destructors, and Assignment Operators", Item 16
+
+3. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc., Chapter 2, Item 12
+
+4. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+</PRE>
+</BODY>
+</HTML>

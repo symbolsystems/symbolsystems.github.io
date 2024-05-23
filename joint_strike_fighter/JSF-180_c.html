@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Avoid implicit conversions from wider to narrower floating type [JSF-180_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Avoid implicit conversions from wider to narrower floating type [JSF-180_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"C performs many type conversions implicitly and silently,
+so as to harmonize types within an expression before evaluating it.
+Some of these conversions can result in loss of information. 
+Such implicit conversions shall not be used, but explicit casts
+should be used instead." [Misra C:1998 Rule 43]
+
+The above applies also to the C++ standard.
+
+This rule detects cases when the value of an expression of floating type
+is assigned to an object with a narrower 'underlying type'.
+
+The rule does not report a violation if a non-complex floating constant
+is implicitly converted to a narrower floating type. These cases are reported
+by the MISRA2004-10_2_d rule.
+
+See also: MISRA-043, PORT-27, PORT-28
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The following operations are covered by this rule:
+- Assignment by means of one of the assignment operators;
+- Passing an argument to a function, in which case the argument is copied as 
+  if by assignment to the corresponding parameter;
+- Returning an expression from a function, in which case the result is copied
+  as if by assignment to an object with the function's return type;
+- Using an expression to initialize all or part of an object, including a 
+  compound literal in C99, in which case the expression is copied as if by 
+  assignment to the destination;
+- The conversion of the constant expression in a switch statement's case label
+  to the promoted type of the controlling expression.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+"Explicit casts should normally only be used in the case where a conversion 
+which could result in a loss of information is specifically required by the 
+programmer. If the static checking of implicit conversions is overridden by
+the use of explicit casts in this way, then the programmer should be aware
+of the issues of truncation and lost of precision associated with the operation,
+and should provide appropriate checking of values in the code."
+[Misra C:1998 Rule 43]
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void bar(float f);
+
+float foo(double d)
+{
+    long double ld;
+    float f1 = ld;   // Violation
+    f1 = d;          // Violation
+    bar(2.0 + 1.2);  // Violation
+    return d;        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void bar(float f);
+
+float foo(double d)
+{
+    long double ld;
+    float f1 = (float)ld;   // OK
+    f1 = (float)d;          // OK
+    bar(2.0f + 1.2f);       // OK
+    return (float)d;        // OK
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1.  AUTOSAR C++14 Coding Guidelines
+    A4-7-1. An integer expression shall not lead to data loss
+
+2.  AUTOSAR C++14 Coding Guidelines
+    M5-0-6. An implicit integral or floating-point conversion shall not reduce
+    the size of the underlying type
+
+3.  High Integrity C++ Coding Standard
+    4.3.1. Do not convert an expression of wider floating point type to a
+    narrower floating point type
+
+4.  ISO/DIS 26262
+    point 8.4.4
+
+5.  JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+    Chapter 4.23 Type Conversions, AV Rule 180
+
+6.  MISRA C++:2008 Guidelines for the use of the C++ language in critical
+    systems, Chapter 6, Section 5, Rule 5-0-6
+
+7.  MISRA-C:2004 Guidelines for the use of the C language in critical systems
+    Chapter 6, Section 10
+
+8.  Origin: Misra Guidelines rule 43
+
+9.  SEI CERT C Coding Standard
+    FLP03-C. Detect and handle floating-point errors
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors">https://wiki.sei.cmu.edu/confluence/display/c/FLP03-C.+Detect+and+handle+floating-point+errors</A>
+
+10. SEI CERT C Coding Standard
+    FLP34-C. Ensure that floating-point conversions are within range of the new
+    type
+    <A HREF="https://wiki.sei.cmu.edu/confluence/display/c/FLP34-C.+Ensure+that+floating-point+conversions+are+within+range+of+the+new+type">https://wiki.sei.cmu.edu/confluence/display/c/FLP34-C.+Ensure+that+floating-point+conversions+are+within+range+of+the+new+type</A>
+
+</PRE>
+</BODY>
+</HTML>

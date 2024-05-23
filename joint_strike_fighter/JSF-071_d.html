@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Uninitialized nonstatic member variables shall not be used in base class constructors [JSF-071_d]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Uninitialized nonstatic member variables shall not be used in base class constructors [JSF-071_d-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Do not pass nonstatic data members to base class constructors in constructor
+initialization list, because member variables are not initialized yet at that
+point. 
+
+Only "this" object member variables are checked (base class members are not
+checked).
+
+C++ standard specifies following initialization order:
+  1. initialize virtual base classes
+  2. initialize direct base classes
+  3. initialize nonstatic data members
+  4. execute body of the constructor
+
+This rule reports a violation when you use member variable (initialized in
+step 3) as part of direct or virtual base class constructor (executed in
+steps 1 and 2) in constructor initialization list. The violation is reported
+both when the value or the address of the variable is used.
+
+See also: INIT-13, INIT-13_b, INIT-13_c
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. No violation is reported on base class member variables, even if they are
+   not initialized yet
+
+2. Due to technical limitations, for some compilers or with some compilation 
+   options a violation might be not reported on const members initialized in
+   class scope. For example:
+    struct B {
+      B ( int );
+    };
+    struct S : public B {
+      const int x = 1;
+      S () :
+        B ( x )    // no violation is reported
+      {
+      }
+    };
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using uninitialized value.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of code which causes violations
+struct Base {
+    Base ( int );
+    Base ( int* );
+};
+struct Derived : public Base {
+    Derived ( char );
+    Derived ( short );
+    Derived ( int );
+    int m;
+};
+Derived::Derived (char) :
+    Base ( this-&gt;m )    // Violation
+{
+}
+Derived::Derived ( short ) :
+    m(0),
+    Base ( m )          // Violation
+{
+}
+Derived::Derived ( int ) :
+    Base ( &amp;m )         // Violation
+{
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of code which do not cause violations
+struct Base {
+    Base ( int );
+    int y;
+};
+struct Derived : public Base {
+    Derived ( char );
+    Derived ( Derived *d );
+    Derived ( short );
+    int m;
+};
+Derived::Derived ( char ) :
+    Base ( sizeof m )   // OK - operand of "sizeof"
+{
+}
+Derived::Derived ( Derived *d ) :
+    Base ( d-&gt;m )       // OK - member of some unspecified object
+{                       // (not "this" member)
+}
+Derived::Derived ( short ) :
+    Base ( y )          // OK - not "this" member
+{
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2003 Programming languages -- C++
+   12.6.2 Initializing bases and members, point 5
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 71
+
+</PRE>
+</BODY>
+</HTML>

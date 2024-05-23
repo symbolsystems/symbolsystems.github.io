@@ -1,0 +1,165 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+An inherited nonvirtual function shall not be redefined in a derived class [JSF-094]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+An inherited nonvirtual function shall not be redefined in a derived class [JSF-094-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Nonvirtual functions are statically bound. In essence, a nonvirtual 
+function will hide its corresponding base class version. Hence a single 
+derived class object may behave either as a base class object or as a 
+derived class object depending on the way in which it was accessed - either 
+through a base class pointer/reference or a derived class pointer/reference.
+To avoid this duality in behavior, nonvirtual functions should never be 
+redefined."[3]
+
+The rule reports a violation if in a derived class a member function is
+declared and this function has the same name, cv-qualifiers (const/volatile
+function) and equivalent parameter declarations as a non-virtual member
+function in a base class.
+
+Because the member function in the base class is not virtual there is no
+overriding - the function in the derived class hides the function in the
+base class.
+
+To detect cases where a member function in derived class hides a member
+function in a base class and cv-qualifiers are different or parameter
+declarations are not equivalent, use OOP-53.
+
+See also: OOP-53
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Equivalent parameter declarations are such that:
+- are identical
+- differ only in the use of equivalent typedef “types”
+- differ only in a pointer * versus an array []
+- differ only in that one is a function type and the other is
+  a pointer to the same function type
+- differ only in the presence or absence of const and/or volatile
+- differ only in their default arguments
+
+Rule also reports a violation on static functions:
+  struct Base {
+    static void foo();
+    void bar();
+  };
+  struct Derived : public Base {
+    void foo();         // Violation
+    static void bar();  // Violation
+  };
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents misinterpretating which function is called.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class Base{
+public:
+    void foo1();
+};
+
+class Derived : public Base{
+public:
+    void foo1();                                 // Violation
+};
+
+void foo(){
+    Derived D;
+    Base* b = &amp;D;
+    Derived* d = &amp;D;
+
+    b-&gt;foo1();   // calls Base::foo1()
+    d-&gt;foo1();   // calls Derived::foo1()
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class Base{
+public:
+    virtual void foo1();
+};
+
+class Derived : public Base{
+public:
+    void foo1();                                 // OK
+};
+
+void foo(){
+    Derived D;
+    Base* b = &amp;D;
+    Derived* d = &amp;D;
+
+    b-&gt;foo1();   // calls Derived::foo1()
+    d-&gt;foo1();   // calls Derived::foo1()
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A10-2-1. Non-virtual public or protected member functions shall not be
+   redefined in derived classes
+
+2. C++ standard (ISO/IEC 14882:2003)
+   Section 10.3 Virtual functions, Section 13.1 Overloadable declarations
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 94
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.4.2 Derived classes shall not conceal functions that are inherited from their bases
+
+5. Scott Meyers, "Effective C++: 50 Specific Ways to Improve
+   Your Programs and Design", Second Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc.,
+   Chapter: "Inheritance and Object-Oriented Design", Item 37
+
+6. Scott Meyers, "Effective C++: 55 Specific Ways to Improve
+   Your Programs and Design", Third Edition, Addison-Wesley,
+   (C) 2005 Pearson Education, Inc., Chapter 6, Item 36
+
+</PRE>
+</BODY>
+</HTML>

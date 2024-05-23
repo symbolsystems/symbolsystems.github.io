@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every possible measure should be taken to avoid type casting [JSF-183]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every possible measure should be taken to avoid type casting [JSF-183-4]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Explicit type conversions (casts) are used when a programmer want to get
+around the compiler's typing system; for success in this endeavour,
+the programmer must use them correctly. Problems which the compiler avoids
+may arise, such as if the processor demands that data of a given type be 
+located at certain addresses or if data is truncated because a data type
+does not have the same size as the original type on a given platform. 
+Explicit type conversions between objects of different types lead,
+at best, to code that is difficult to read." [Ellemtel 92]
+
+The rule reports a violation if a cast to primitive type (including pointers
+and references to primitive types) is used.
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Explicit type conversions may be used to convert a pointer to a base class
+to a pointer of a derived class.
+Explicit type conversion must be used to convert an anonymous bit-stream
+to an object.
+Generally, explicit type conversions are needed for reading an external
+representation of an object.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Rule improves clarity and maintainability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+unsigned char foo_uc();
+
+void foo1( ) {
+    signed char sc;
+    sc += (signed char)foo_uc();  // Violation
+}
+
+void foo2(const int* cp) {
+    int pi = (int) cp;            // Violation
+}
+
+void foo3(int p) {
+    double d = (double)p + 10.0;  // Violation 
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Every possible measure should be taken to avoid type casting.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 13 Type Conversions - Rule 43
+
+2. High Integrity C++ Coding Standard
+   4.2.2. Ensure that data loss does not demonstrably occur in an integral
+   expression
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.23 Type Conversions, AV Rule 183
+
+</PRE>
+</BODY>
+</HTML>

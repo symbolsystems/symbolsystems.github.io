@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The #ifdef, #else, #elif preprocessor directives should not be used [JSF-026]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The #ifdef, #else, #elif preprocessor directives should not be used [JSF-026-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Limit the use of the pre-processor to those cases where it is necessary."
+[JOINT STRIKE FIGHTER]
+
+Conditional code compilation can hinder testing and maintenance and should
+therefore be kept to a minimum.
+
+This rule detects when the #ifdef, #else, and #elif preprocessor directives are
+used in code.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule helps you improve code maintainability.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#ifdef M1    // Violation
+// ..
+#elif M2     // Violation
+// ..
+#else        // Violation
+//..
+#endif
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use the #ifdef, #else,or #elif preprocessor directives.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. High Integrity C++ Coding Standard
+   16.1.1. Use the preprocessor only for implementing include guards, and
+   including header files with include guards
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.6 Pre-Processing Directives, AV Rule 26
+
+3. MISRA C++:2008 - Guidelines for the use of the C++ language in critical
+   systems, Chapter 6, Section 16, Rule 16-2-1
+
+4. The Power of Ten - Rules for Developing Safety Critical Code.
+   Rule 8
+
+</PRE>
+</BODY>
+</HTML>

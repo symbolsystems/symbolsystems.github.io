@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Destructor shall not be called manually [JSF-070.1_b]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Destructor shall not be called manually [JSF-070.1_b-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Don't try to play with object lifetime by calling the destructor manually.
+After you call an object's destructor, its lifetime is over and it is undefined
+and generally unsafe to do anything with it."
+
+The rule reports violations on explicit calls of destructors.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A();
+    ~A();
+};
+
+void foo( ) {
+    A obj;
+    obj.~A( );        // Violation
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Don't call destructor explicitly.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. General Principles of Software Validation;
+   Final Guidance for Industry and FDA Staff
+   Document issued on: January 11, 2002
+
+2. Herb Sutter, Andrei Alexandrescu, "C++ Coding Standards," Addison-Wesley, 
+   (C) 2005 Pearson Education, Inc.
+   Chapter: "Type Safety", Rule 99
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 70.1
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 21.6.3 Advanced memory management shall not be used
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Every switch statement will have at least two cases and a potential default [JSF-196]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Every switch statement will have at least two cases and a potential default [JSF-196-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if a 'switch' statement has less than two 'case'
+labels. 
+A 'switch' statement with only one 'case' label can be replaced with 'if'
+statement.
+A 'switch' statement with no 'case' labels is unnecessary and can be removed.
+
+See also: CODSTA-41, MISRA2004-15_5
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule enforces a simple and consistent structure on to the 'switch' statement.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo(int i, int j) 
+{
+    switch(i){      // Violation
+    default:
+        i = i + 10;
+        break;
+    }
+    
+    switch(j){      // Violation
+    case 1:
+    	j = j + 5;
+        break;
+    default:
+        j = j + 10;
+        break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void foo(int i, int j, int k) 
+{
+    // OK - switch statement is unnecessary
+    i = i + 10;
+    
+    // OK - switch statement is replaced with if-else construct
+    if(j == 1){       
+    	j = j + 5;
+    } else {
+        j = j + 10;
+    }  
+    
+    // OK - switch statement with two case labels
+    switch(k){
+    case 0:
+    case 1:
+    	k = k + 5;
+        break;
+    default:
+        k = k + 10;
+        break;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A6-4-1. A switch statement shall have at least two case-clauses, distinct
+   from the default label
+
+2. High Integrity C++ Coding Standard
+   6.1.4. Ensure that a switch statement has at least two case labels,
+   distinct from the default label
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.24 Flow Control Structures, AV Rule 196
+
+</PRE>
+</BODY>
+</HTML>

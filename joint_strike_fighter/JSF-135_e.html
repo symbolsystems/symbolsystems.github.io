@@ -1,0 +1,124 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Identifiers declared in an inner class scope shall not hide identifiers declared in outer class scope [JSF-135_e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Identifiers declared in an inner class scope shall not hide identifiers declared in outer class scope [JSF-135_e-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If an identifier is declared in an inner scope and it uses the same name
+as an identifier that already exists in an outer scope, then the innermost
+declaration will "hide" the outer one. This may lead to developer confusion."
+
+The rule reports a violation if an identifier declared in an inner class scope
+hides an identifier declared in an outer class scope or in public/protected 
+section outer class's parents.
+
+See also: CODSTA-CPP-83, CODSTA-CPP-84, MISRA2004-5_2_a, MISRA2004-5_2_b
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Hiding names of identifiers can lead to errors and confusions.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class C {
+public:
+    C();
+    typedef enum E {EN} ET;
+	
+    class D {
+    public:
+        struct ET{       // Violation - typedef to enum is hidden
+            int m;
+        };
+    private:
+        int x;           // Violation - static member is hidden
+    };
+	
+private:
+    static int x;
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+class C {
+public:
+    C();
+    typedef enum E {EN} ET;
+	
+    class D {
+    public:
+        struct ST{       // OK - the name of struct was changed
+            int m;
+        };
+    private:
+        int x;           // OK - non static members are not hidden
+    };
+	
+private:
+    int x;
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A2-10-1. An identifier declared in an inner scope shall not hide an
+   identifier declared in an outer scope
+
+2. High Integrity C++ Coding Standard
+   3.1.1. Do not hide declarations
+
+3. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.15 Declarations and Definitions, AV Rule 135
+
+4. MISRA C++:2023 Guidelines for the use of C++17 in critical systems
+   Rule 6.4.1 A variable declared in an inner scope shall not hide a variable declared in an outer scope
+
+</PRE>
+</BODY>
+</HTML>

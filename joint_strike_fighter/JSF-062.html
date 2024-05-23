@@ -1,0 +1,144 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The dereference operator '*' and the address-of operator '&amp;' will be directly connected with the type-specifier [JSF-062]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The dereference operator '*' and the address-of operator '&amp;' will be directly connected with the type-specifier [JSF-062-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"The int32* p; form emphasizes type over syntax while the int32 *p; form
+emphasizes syntax over type. Although both forms are equally valid C++, the
+heavy emphasis on types in C++ suggests that int32* p; is the preferable form."
+
+"Traditionally, C recommendations indicate that '*' should be written
+together with the variable name, since this reduces the probability of
+making a mistake when declaring several variables in the same declaration
+statement (the operator `*' only applies to the variable on which it operates).
+Since the declaration of several variables in the same statement is not
+recommended, however, such a advice is unneeded."
+
+The rule checks declarations of typedefs, variables, named parameters
+and function's return types.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The declaration of several variables in the same statement is not recommended 
+(see rule FORMAT-33).
+
+Care should be taken when several identifiers are declared in one statement.
+The "*" only applies to the variable on which it operates, for example:
+   int x, *y;  // OK
+declares x with type 'int' and y with type 'int*'. Such declarations are
+confusing. To prevent changing the meaning of the declaration this rule does
+not report on such declarations, except for the first declared identifier:
+   int *x, y;  // Violation
+It is recomended to declare identifiers separately:
+   int* x;
+   int y;
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule emphasize that the "*" and "&amp;" are part of the type definition.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+struct S {
+    // Pointer connected with identifier:
+    int *foo();             // Violation - return type
+
+    // Reference connected with identifier:
+    static int&amp;var;         // Violation - variable
+};
+
+// Pointer not connected with type:
+typedef S ** S_PTR_PTR;     // Violation - typedef
+
+// Pointer not connected with the type
+int *                       // Violation - return type
+S::foo() { }
+
+// Reference not connected with type:
+void bar(S_PTR_PTR &amp; p);    // Violation - parameter
+
+// Examples of some specific cases:
+
+// No violation reported when multiple variables declared in one declaration,
+// (except for the first variable). Such declarations are not recommended.
+int x1, *p1;                // OK
+int *x2, p2;                // Violation
+
+// Violation is reported only when "*" or "&amp;" is directly before identifier.
+// In example below before the "p3" identifier there's a "const":
+int * const p3 = 0;         // OK
+int * const * p4 = 0;       // Violation
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+struct S {
+    int* foo();             // OK
+    static int&amp; var;        // OK
+};
+typedef S** S_PTR_PTR;      // OK
+int*                        // OK
+S::foo() { }
+void bar(S_PTR_PTR&amp; p);     // OK
+
+// It is recommended to declare only one identifier in a statement:
+int x1;                     // OK
+int* p1;                    // OK
+
+int * const p3 = 0;         // OK
+int * const* p4 = 0;        // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 6 Style - 6.5 Pointers and References - Rec. 26
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.9 Style, AV Rule 62
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Each variable declaration will be commented [JSF-132_a]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Each variable declaration will be commented [JSF-132_a-3]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+This rule requires that every declaration of a local or a global variable
+should have a comment. The rule accepts comments that are placed in the
+line of the declaration or in the line directly before the declaration
+(only if this line does not contain any other code).
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v7.1
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The rule does not check the content of the comment.
+2. If a declaration is used inside a macro definition, then this rule
+   requires comments on every expansion of this macro.
+3. If a variable has a declaration and a definition, then the comment
+   is required for both.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule improves the readability of code.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Violations are reported on every declaration of the local or global
+// variable in this section.
+
+extern int x1;
+int x1 = 10;
+// comment
+void foo1() {  // comment
+    int v1;
+
+    // comment
+
+    int v2;
+    int * ptr1, ptr2;
+}
+
+#define defVar1(var) { int j = var; }
+
+void foo1(int v, int k) {
+    defVar1(v)
+    defVar1(k)
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// All declarations in this section are commented.
+
+// comment
+extern int x1;
+int x1 = 10;   // comment
+// comment
+void foo1() {  // comment
+    int v1;    // comment
+
+    /*
+     * comment
+     */
+    int v2;
+    /* comment */
+    int * ptr1, ptr2;
+}
+
+#define defVar1(var) { int j = var; }
+
+void foo1(int v, int k) {
+    // comment
+    defVar1(v)
+    defVar1(k)  // comment
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.14 Comments, AV Rule 132
+
+</PRE>
+</BODY>
+</HTML>

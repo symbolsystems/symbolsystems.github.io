@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Ensure that array indices are within the bounds of the array [JSF-015]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Ensure that array indices are within the bounds of the array [JSF-015-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Ensure that array indices are within the bounds of the array size before using them to index the array.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+This rule prevents from getting/putting values which are out of range.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+void foo() 
+{
+    int j;
+    int k[10]; 
+    int m;
+	m = k[j]; /* Violation */
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+void moo() 
+{
+    int j;
+    int k[10];
+    int m;
+
+    if ((j &lt; 10) &amp;&amp; (j &gt;= 0)) /* OK */
+	{
+	m = k[j];
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Misra Guidelines - Rule 4
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.4.3 Run-Time Checks, AV Rule 15
+
+</PRE>
+</BODY>
+</HTML>

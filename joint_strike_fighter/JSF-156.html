@@ -1,0 +1,101 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+All the members of a structure (or class) shall be named [JSF-156]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+All the members of a structure (or class) shall be named [JSF-156-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"All the members of a structure (or class/union) shall be named and shall only
+be accessed via their names. Reading/writing to unnamed locations in memory
+is error prone."
+
+"Provided the elements of the structure are only ever accessed by their name,
+the programmer needs to make no assumptions about the way the bit fields are
+stored within the structure."
+
+The rule reports a violation if an unnamed member variable of bit field type
+is declared in class/struct/union.
+
+See also: MISRA2004-3_5, MISRA2004-6_4
+
+
+
+</PRE>
+<STRONG>
+EXCEPTIONS
+</STRONG>
+<PRE>
+
+Unnamed bit-fields of width zero are allowed.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using unaccessible data.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+typedef signed int t;
+
+struct S {
+    unsigned :4;          /* Violation */
+    const t:5;            /* Violation */
+    enum E{E1, E2} :5;    /* Violation */
+};
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+typedef signed int t;
+
+struct S {
+    unsigned       bf1:4;    /* OK */
+    const t        bf2:5;    /* OK */
+    enum E{E1, E2} bf3:5;    /* OK */
+    
+    unsigned :0; /* OK - Exception */
+};
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. Origin:  Misra Guidelines rule 113
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.21 Operators, AV Rule 156
+
+</PRE>
+</BODY>
+</HTML>

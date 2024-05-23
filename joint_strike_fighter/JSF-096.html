@@ -1,0 +1,141 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Arrays shall not be treated polymorphically [JSF-096]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Arrays shall not be treated polymorphically [JSF-096-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"If you've passed an array of derived class objects to base class pointer,
+your compilers are probably wrong. In that case, they'd assume each object
+in the array is the size of a base class, but each object would actually
+be the size of a derived class. Derived classes usually have more data members
+than their base classes, so derived class objects are usually larger than base
+class objects. If it is, the pointer arithmetic to base class will be wrong
+for arrays of derived class objects.
+The problem pops up in a different guise if you try to delete an array
+of derived class objects through a base class pointer.
+The 'language specification' says the result of deleting an array of derived
+class objects through a base class pointer is undefined, but we know what that
+really means: executing the code is almost certain to lead to grief.
+Polymorphism and pointer arithmetic simply don't mix. Array operations almost
+always involve pointer arithmetic, so arrays and polymorphism don't mix."
+
+See also: PB-10
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+The rule checks only direct conversions. If a pointer to an array of derived 
+class objects is first converted to a pointer to derived class object and later
+to base class object, then violation is not reported.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents unexpected and undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+public:
+    A();
+    int i;
+};
+
+class B : public A {
+public:
+    B();
+    int i;
+    int j;
+};
+
+void b1(A* a);
+
+void foo1(){
+    A* ap = new B[3];          // Violation
+    B bt[5];
+	
+    ap = bt;                   // Violation
+    ap = static_cast&lt;A*&gt;(bt);  // Violation
+	
+    b1(bt);                    // Violation
+}
+
+void foo2(){
+    B* bp = new B[3];
+    A* ap = bp;          // No Violation - not direct conversion
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not convert an array of derived class objects to base class pointer.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. AUTOSAR C++14 Coding Guidelines
+   A5-0-4. Pointer arithmetic shall not be used with pointers to non-final
+   classes
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 96
+
+3. Scott Meyers, "More Effective C++: 35 New Ways to Improve 
+   Your Programs and Designs", Addison-Wesley, Copyright 1996,
+   Chapter: "Basics", Item 3
+
+4. SEI CERT C++ Coding Standard
+   CTR56-CPP. Do not use pointer arithmetic on polymorphic objects
+   <A HREF="https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR56-CPP.+Do+not+use+pointer+arithmetic+on+polymorphic+objects">https://wiki.sei.cmu.edu/confluence/display/cplusplus/CTR56-CPP.+Do+not+use+pointer+arithmetic+on+polymorphic+objects</A>
+
+</PRE>
+</BODY>
+</HTML>

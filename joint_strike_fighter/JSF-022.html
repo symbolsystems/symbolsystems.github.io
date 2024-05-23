@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+The input/output library &lt;stdio.h&gt; shall not be used [JSF-022]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+The input/output library &lt;stdio.h&gt; shall not be used [JSF-022-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"Streams and file I/O have a large number of unspecified, 
+undefined and implementation-defined behaviours associated with them.
+It is assumed that they will not normally be needed in production 
+code in embedded systems.
+If any of the features of stdio.h need to be used in production code, 
+then the issues associated with the feature need to be understood."
+
+This rule recognizes following #include directives:
+    #include &lt;stdio.h&gt;
+    #include &lt;cstdio&gt;
+
+See also: MISRA2004-20_9
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. The only recognized form of #include directive is the form with the '&lt; &gt;'
+delimiters. Please see Example section.
+
+2. This rule cross-checks original source files (#include directives) and
+preprocessed output (#line's). A violation is reported only if the stdio header
+is actually included in current translation unit (a #line for stdio.h or cstdio
+file is present).
+
+If the stdio header is actually included in current translation unit,
+a violation is reported on all #include directives, even if they are 
+conditionally compiled. For example:
+   /* header.h: */
+   #include &lt;stdio.h&gt;    /* Violation reported */
+   /* source.c: */
+   #include "header.h"
+   #if 0
+     /* A violation is reported on following #include directive because in 
+      * current translation unit the stdio file is included somewhere    
+      */
+     #include &lt;stdio.h&gt;  /* Violation reported */
+   #endif
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents form problems associated with a large number of unspecified,
+undefined and implementation-defined behaviour associated 
+with streams and file I/O.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stdio.h&gt;  /* Violation */
+#include &lt;cstdio&gt;   /* Violation */
+
+/* #include directives which use quotes as delimiters are not recognized: */
+#include "stdio.h"  /* OK - "stdio.h" not recognized */
+#include "cstdio"   /* OK - "cstdio" not recognized */
+
+/* #include direcives which use macro to specify header are not recognized: */
+#define HEADER &lt;stdio.h&gt;
+#include HEADER     /* OK - macros not recognized */
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Do not use stdio library.
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.5 Libraries, AV Rule 22
+
+</PRE>
+</BODY>
+</HTML>

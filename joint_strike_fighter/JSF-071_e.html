@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Uninitialized nonstatic member variables of nonvirtual base classes shall not be used in virtual base class constructors [JSF-071_e]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Uninitialized nonstatic member variables of nonvirtual base classes shall not be used in virtual base class constructors [JSF-071_e-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Do not pass nonstatic data members of nonvirtual base classes to virtual base
+class constructors in constructor initialization list, because they are not
+initialized yet at that point.
+
+C++ standard specifies following initialization order:
+  1. initialize virtual base classes
+  2. initialize direct base classes
+  3. initialize nonstatic data members
+  4. execute body of the constructor
+
+This rule reports a violation when you use member variable of nonvirtual base
+class (initialized in step 2) as part of virtual base class constructor
+(executed in step 1) in constructor initialization list. The violation is
+reported both when the value or the address of the variable is used.
+
+See also: INIT-13, INIT-13_a, INIT-13_c
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+1. Rule does not check cases where a member variable is inherited both from a
+   virtual and a nonvirtual base class (no violation is reported on such
+   variables). Such cases are checked by rule INIT-13_c. For example:
+    struct A {
+      int a;
+      A ( int );
+    };
+    struct B : public virtual A {
+      B ( );
+    };
+    struct C : public A {
+      C ( );
+    };
+    struct D : public B, public C { // "A" is both virtual and nonvirtual base
+      D () :
+        A ( C::a ) // no violation is reported on "a" member
+      {
+      }
+    };
+
+2. For some compilers or with some compilation options a violation might be not
+   reported on const members initialized in class scope. For example:
+    struct B {
+      const int x = 1;
+    };
+    struct V {
+      V ( int );
+    };
+    struct S : public virtual V, public B {
+      S () :
+        V ( x )    // no violation is reported
+      {
+      }
+    };
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents using uninitialized value.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of code which causes violations
+struct VirtualBase {
+    VirtualBase ( int );
+    VirtualBase ( int* );
+};
+struct NonvirtualBase {
+    int m;
+};
+struct Derived : public virtual VirtualBase, public NonvirtualBase {
+    Derived ( char );
+    Derived ( short );
+    Derived ( int );
+};
+Derived::Derived (char) :
+    VirtualBase ( this-&gt;m )    // Violation
+{
+}
+Derived::Derived ( short ) :
+    VirtualBase ( m )          // Violation
+{
+}
+Derived::Derived ( int ) :
+    VirtualBase ( &amp;m )         // Violation
+{
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+// Examples of code which do not cause violations
+struct VirtualBase {
+    VirtualBase ( int );
+    int y;
+};
+struct NonvirtualBase {
+    int m;
+};
+struct Derived : public virtual VirtualBase, public NonvirtualBase {
+    Derived ( char );
+    Derived ( NonvirtualBase *d );
+    Derived ( short );
+};
+Derived::Derived ( char ) :
+    VirtualBase ( sizeof m )   // OK - operand of "sizeof"
+{
+}
+Derived::Derived ( NonvirtualBase *d ) :
+    VirtualBase ( d-&gt;m )       // OK - member of some unspecified object
+{
+}
+Derived::Derived ( short ) :
+    VirtualBase ( y )          // OK - not a member of nonvirtual base class
+{
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. ISO/IEC 14882:2003 Programming languages -- C++
+   12.6.2 Initializing bases and members, point 5
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 71
+
+</PRE>
+</BODY>
+</HTML>

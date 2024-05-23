@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Arrays shall not be used in global functions [JSF-097_c]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Arrays shall not be used in global functions [JSF-097_c-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+Arrays degenerate to pointers when passed as function parameters.
+
+This "array decay" problem has long been known to be a source of errors.
+
+For example sizeof() will not return the size of the array even if the parameter
+declaration specifies the number of array elements.
+
+This rule checks only global functions. 
+
+See also: CODSTA-CPP-55
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.5
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+Joint Strike Fighter coding standard requires the use of a special 'Array'
+class.
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Prevents giving impression that global function parameter declared as array
+behaves as an array.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+// Examples of non-compliant code:
+
+void foo1(int t1[]);              // Violation
+void foo2(int x, float t2[10]);   // Violation
+typedef int TAB[];
+int foo3(TAB t3);                 // Violation
+int foo3(TAB t3) {                // Violation
+  return t3[0];
+}
+int foo4(int []);                 // Violation
+
+// Because we report on the parameter, if a typedef is used to declare a
+// function, the violation is reported on the typedef
+typedef void (FUNC1)(int t5[]);   // Violation
+FUNC1 foo5;
+
+static void foo6(int t6[10]);     // Violation
+
+#ifdef __cplusplus
+namespace {
+  void foo7(int t7[]);            // Violation (in C++)
+}
+#endif
+
+// No violation if not used
+typedef void (FUNC_UNUSED)(int t[]);
+
+// Function pointers are not checked
+void (*fp)(int t[]);  // OK
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#ifdef __cplusplus
+
+// Use some kind of wrapper for raw arrays
+class ArrayWrapper;
+void foo1(ArrayWrapper &amp;t1);                      // OK
+
+// Pass array by reference
+void foo2(int (&amp;t2)[10]);                         // OK
+
+#endif // __cplusplus
+
+// Explicitly declare parameter as pointer type,
+// passing also the array size if needed
+void foo3(int *t);                                // OK
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Classes, AV Rule 97
+
+</PRE>
+</BODY>
+</HTML>

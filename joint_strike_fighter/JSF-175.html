@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+NULL identifier shall not be used; use plain 0 instead [JSF-175]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+NULL identifier shall not be used; use plain 0 instead [JSF-175-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+"A pointer shall not be compared to NULL or be assigned NULL;
+use plain 0 instead. The NULL macro is an implementation-defined
+C++ null pointer constant that has been defined in multiple ways
+including 0, 0L, and (void*)0."
+
+The rule reports a violation on each NULL identifier in code
+(not only compared or assigned to pointer) due to it assumes
+that each use of NULL shall be replaced by 0.
+
+
+
+</PRE>
+<STRONG>
+NOTES
+</STRONG>
+<PRE>
+
+If a NULL identifier is not a macro (e.g. is a constant variable)
+then violation is reported by rule as well (on declaration and use).
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+Due to C++’s stronger type-checking, the rule advises
+the use plain 0 rather than any suggested NULL macro. 
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+#include &lt;stddef.h&gt;
+
+void foop(int* p);
+int* ptr = NULL;      // Violation
+
+int* foo(int* par ) {
+    int* ptr1 = NULL; // Violation
+    
+    if(par == NULL){  // Violation
+        return NULL;  // Violation	
+    } else {
+    	foop(NULL);   // Violation
+    	return par;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+#include &lt;stddef.h&gt;
+
+void foop(int* p);
+int* ptr = 0;          // OK
+
+int* foo(int* par ) {
+    int* ptr1 = 0;     // OK
+    
+    if(par == 0){      // OK
+        return 0;      // OK	
+    } else {
+    	foop(0);       // OK
+    	return par;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. [Ellemtel 92] "Programming in C++: Rules and Recommendations"
+   Ellemtel Telecommunication Systems Laboratories, Sweden.
+   From: 12 Pointers and References - Rule 42
+
+2. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.22 Pointers &amp; References, AV Rule 175
+
+</PRE>
+</BODY>
+</HTML>

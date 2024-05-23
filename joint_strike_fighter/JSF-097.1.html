@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<LINK REL="stylesheet" HREF="book.css" TYPE="text/css">
+<TITLE>
+Neither operand of an equality operator (== or !=) shall be a pointer to a virtual member function [JSF-097.1]
+</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<STRONG>
+Neither operand of an equality operator (== or !=) shall be a pointer to a virtual member function [JSF-097.1-2]
+</STRONG>
+<BR><BR>
+<STRONG>
+DESCRIPTION
+</STRONG>
+<PRE>
+
+The rule reports a violation if either operand of an equality operator
+(== or !=) is a pointer to a virtual member function. The result of such
+operation is unspecified according to C++ standard section 5.10(2):
+
+  "If both operands are null, they compare equal.
+   Otherwise if only one is null, they compare unequal.
+   Otherwise if either is a pointer to a virtual member function,
+   the result is unspecified."
+
+Note that although the standard allows comparing pointer to member with null,
+this rule reports a violation - such comparison is pointless as it is always
+false.
+
+
+
+</PRE>
+<STRONG>
+SINCE
+</STRONG>
+<PRE>
+
+v9.4
+
+
+
+</PRE>
+<STRONG>
+BENEFITS
+</STRONG>
+<PRE>
+
+The rule prevents undefined behaviours.
+
+
+
+</PRE>
+<STRONG>
+EXAMPLE
+</STRONG>
+<PRE>
+
+class A {
+public:
+    virtual void foov();
+};
+class B : public A {
+public:
+    virtual void foov();
+};
+typedef void (A::*MFP)();
+int bar(MFP fp){
+    if(fp == A::foov){ // Violation
+        return 1;
+    }
+    if(A::foov == B::foov){ // Violation
+        return 0;
+    }
+    if(0 != &amp;A::foov){ // Violation
+        return 1;
+    }
+    if(A::foov == 0){ // Violation
+        return 0;
+    }
+    if(fp != 0){ // OK - rule does not check variables
+        return 1;
+    }
+    if(!A::foov) { // OK - rule checks explicit "==", "!=" operators
+        return 0;
+    }
+}
+
+
+
+</PRE>
+<STRONG>
+REPAIR
+</STRONG>
+<PRE>
+
+Neither operand of an equality operator (== or !=) shall be a pointer
+to a virtual member function
+
+
+
+</PRE>
+<STRONG>
+REFERENCES
+</STRONG>
+<PRE>
+
+1. JOINT STRIKE FIGHTER, AIR VEHICLE, C++ CODING STANDARDS
+   Chapter 4.10 Libraries, AV Rule 97.1
+
+</PRE>
+</BODY>
+</HTML>
